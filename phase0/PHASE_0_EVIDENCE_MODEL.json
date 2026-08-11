@@ -1,0 +1,181 @@
+{
+  "schema_version": "1.1",
+  "recorded_date_utc": "2026-08-10",
+  "project": "XAU/USD Autonomous Trading Agent",
+  "phase": "Phase 0",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "evidence_bundle": {
+    "filename": "xauusd-phase0-evidence-20260809T235355Z-c6a411ea.zip",
+    "sha256": "021f658ac2acb463d17e17d4ad2150f3fcb24750fce49789024e3b150645c62f",
+    "sidecar_sha256_match": true,
+    "internal_manifest_sha256": "b032e078b7fce8d313dc6225d2878584712e95350e47ab42b174756896f12226",
+    "internal_manifest_files_and_sizes_match": true,
+    "collector_version": "0.1.1",
+    "policy_version": "phase0-readonly-v1",
+    "capture_started_utc": "2026-08-09T23:53:55.209Z",
+    "capture_completed_utc": "2026-08-09T23:53:58.336Z",
+    "collector_status": "PASS",
+    "collector_reported_errors": []
+  },
+  "identity": {
+    "contracting_legal_entity": {
+      "value": "Exness (SC) Ltd",
+      "source_kind": "owner_supplied_personal_area_observation",
+      "source_locator": "Personal Area footer",
+      "verification_status": "RECORDED_PENDING_ACCOUNT_LINKED_DOCUMENT_HASH",
+      "must_not_alias_to": [
+        "mt5_account_serving_company",
+        "mt5_terminal_vendor_company",
+        "mt5_trade_server"
+      ]
+    },
+    "personal_area_account_type_label": {
+      "value": "Pro — MT5 Demo — USD",
+      "source_kind": "owner_supplied_personal_area_observation",
+      "source_locator": "Personal Area account card",
+      "verification_status": "PARTIALLY_CORROBORATED_BY_MT5_FIELDS"
+    },
+    "mt5_account_serving_company": {
+      "value": "Exness Technologies Ltd",
+      "source_kind": "hashed_mt5_capture",
+      "source_locator": "ACCOUNT.json:company",
+      "verification_status": "VERIFIED_FROM_RECEIVED_BUNDLE",
+      "property_semantics": "MetaQuotes ACCOUNT_COMPANY: company that serves the account"
+    },
+    "mt5_trade_server": {
+      "value": "Exness-MT5Trial15",
+      "source_kind": "hashed_mt5_capture",
+      "source_locator": "ACCOUNT.json:server",
+      "verification_status": "VERIFIED_FROM_RECEIVED_BUNDLE"
+    },
+    "mt5_terminal_vendor_company": {
+      "value": "MetaQuotes Ltd.",
+      "source_kind": "hashed_mt5_capture",
+      "source_locator": "TERMINAL.json:before.company and TERMINAL.json:after.company",
+      "verification_status": "VERIFIED_FROM_RECEIVED_BUNDLE"
+    },
+    "country_of_residence": {
+      "value": "Pakistan",
+      "source_kind": "owner_supplied_statement",
+      "verification_status": "RECORDED_NOT_LEGAL_ELIGIBILITY_PROOF"
+    },
+    "legal_client_classification": {
+      "value": "RETAIL_CLIENT",
+      "source_kind": "agreement_default_rule",
+      "source_locator": "Client Agreement v038 Part A 3.1-3.3, PDF page 14",
+      "verification_status": "PROVISIONAL_UNLESS_WRITTEN_RECATEGORIZATION_NOTICE_EXISTS",
+      "must_not_alias_to": ["account_observation.margin_mode_interpretation"]
+    }
+  },
+  "account_observation": {
+    "account_fingerprint": "hmac-sha256:0ff34275178366159d9ba67586446c72fa361401753424078a7b2b8070549054",
+    "account_fingerprint_scope": "stable_only_within_this_evidence_run",
+    "trade_mode_raw": 0,
+    "trade_mode_interpretation": "ACCOUNT_TRADE_MODE_DEMO",
+    "currency": "USD",
+    "balance": 10000.0,
+    "equity": 10000.0,
+    "leverage": 2000,
+    "margin_mode_raw": 2,
+    "margin_mode_interpretation": "ACCOUNT_MARGIN_MODE_RETAIL_HEDGING",
+    "open_orders": 0,
+    "open_positions": 0
+  },
+  "automation_observation": {
+    "account_trade_allowed": true,
+    "account_trade_expert": true,
+    "selected_symbol_trade_mode_raw": 4,
+    "terminal_trade_allowed": false,
+    "terminal_external_python_trading_disabled_before": true,
+    "terminal_external_python_trading_disabled_after": true,
+    "interpretation": "Technical capability and read-only-guard evidence only; not contractual or jurisdictional authorization."
+  },
+  "runtime_observation": {
+    "operating_system": "Windows Server 2022 build 10.0.20348",
+    "machine": "AMD64",
+    "python": "CPython 3.12.10 64-bit",
+    "metatrader5_package": "5.0.6090",
+    "mt5_terminal_build": 6104,
+    "mt5_terminal_build_date_reported": "8 Aug 2026"
+  },
+  "symbol_observation": {
+    "selected_symbol": "XAUUSD",
+    "selection_reason": "single_visible_gold_candidate",
+    "path": "Pro\\Forex\\XAUUSD",
+    "currency_base": "XAU",
+    "currency_profit": "USD",
+    "digits": 3,
+    "point": 0.001,
+    "trade_tick_size": 0.001,
+    "trade_tick_value": 0.1,
+    "trade_contract_size": 100.0,
+    "trade_exemode_raw": 2,
+    "trade_exemode_interpretation": "SYMBOL_TRADE_EXECUTION_MARKET",
+    "filling_mode_raw": 1,
+    "filling_mode_interpretation": ["SYMBOL_FILLING_FOK"],
+    "order_mode_raw": 127,
+    "order_mode_interpretation": ["SYMBOL_ORDER_MARKET", "SYMBOL_ORDER_LIMIT", "SYMBOL_ORDER_STOP", "SYMBOL_ORDER_STOP_LIMIT", "SYMBOL_ORDER_SL", "SYMBOL_ORDER_TP", "SYMBOL_ORDER_CLOSEBY"],
+    "order_gtc_mode_raw": 0,
+    "order_gtc_mode_interpretation": "SYMBOL_ORDERS_GTC",
+    "trade_calc_mode_raw": 0,
+    "trade_calc_mode_interpretation": "SYMBOL_CALC_MODE_FOREX",
+    "volume_min": 0.01,
+    "volume_step": 0.01,
+    "volume_max": 200.0,
+    "volume_limit": 0.0,
+    "trade_stops_level_raw": 0,
+    "trade_freeze_level_raw": 0,
+    "swap_mode_raw": 1,
+    "swap_long": -523.8,
+    "swap_short": 0.0,
+    "swap_rollover3days_raw": 3,
+    "generic_vs_observed_policy": "STORE_SEPARATELY_AND_FLAG_DISCREPANCIES; DEMO_VALUES_DO_NOT_TRANSFER_TO_REAL_ACCOUNT",
+    "static_constraint_warning": "Point-in-time raw fields only; zero does not authorize hard-coding or bypass runtime validation."
+  },
+  "objective_review": {
+    "zip_path_safety_check": "PASS",
+    "all_json_parse": "PASS",
+    "accepted_collector_source_hashes_match_bundle_provenance": "PASS",
+    "bar_rows": 3072,
+    "bar_duplicate_timestamps": 0,
+    "bar_non_monotonic_transitions": 0,
+    "bar_invalid_ohlc_rows": 0,
+    "tick_rows": 2000,
+    "tick_backwards_transitions": 0,
+    "tick_duplicate_millisecond_rows": 11,
+    "tick_crossed_or_nonpositive_quotes": 0,
+    "current_tick_age_at_completion_seconds": 3.857,
+    "tick_array_tail_age_at_completion_seconds": 2110.335,
+    "calculation_vectors": 8,
+    "calculation_profit_max_absolute_error_usd": 7.275846591880963e-13,
+    "calculation_margin_max_absolute_error_usd": 0.002118999999999538,
+    "calculation_oracle_tolerance_usd": 0.0050001,
+    "calculation_oracle_status": "PASS"
+  },
+  "legal_documentary_evidence": {
+    "review_file": "EXNESS_SC_LEGAL_APPLICABILITY_REVIEW.md",
+    "primary_agreement": {"version": "038", "date": "2026-07-24", "sha256": "ae02ca31a9e2ba1d8ef81cc973caa169e901aa6d802b4f9949a05e3cb1217ddc"},
+    "general_business_terms": {"version": "021", "date": "2025-08-12", "sha256": "a8e8e0942d402c415770943283ef2f44b4d680339530d28b167fc79928174b11"},
+    "automation_authorization_status": "UNRESOLVED_WRITTEN_EXNESS_CLARIFICATION_REQUIRED",
+    "missing_documents": ["API Terms of Use"],
+    "account_linked_screenshot_status": "PENDING"
+  },
+  "coexistence_policy": {
+    "dedicated_account": true,
+    "manual_xauusd": "PROHIBITED",
+    "external_signals_or_copiers": "PROHIBITED",
+    "other_eas_or_automation": "PROHIBITED",
+    "unknown_exposure_action": "QUARANTINE_NEW_RISK_AND_ALERT",
+    "automatic_unknown_exposure_close": "NOT_AUTHORIZED"
+  },
+  "unresolved": [
+    "Account-linked redacted screenshot proving contracting entity and PA account label",
+    "Pakistan-specific eligibility and absence/presence of written client recategorization",
+    "Exact account acceptance/effective linkage for supplied agreement revisions",
+    "API Terms of Use plus written entity/account/jurisdiction-specific EA, Python, AI, VPS and automated-data-access clarification",
+    "Authoritative weekly XAUUSD trading-session schedule",
+    "24-hour VPS soak plus restart and reconnect validation",
+    "Owner risk policy, news/data licensing, model contract, and remaining Gate 0 decisions"
+  ]
+}
