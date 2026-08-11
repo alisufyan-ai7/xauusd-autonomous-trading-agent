@@ -1,7 +1,7 @@
 # News and Event Protection Specification
 
-**Status:** Phase 0 candidate specification  
-**Version:** 0.1  
+**Status:** Phase 0 deterministic protection baseline frozen; provider procurement and empirical calibration remain open  
+**Version:** 1.0  
 **Date:** 2026-08-11  
 **Authorization boundary:** Research/design only. No paid provider purchase, external-data transmission, or trading is authorized.
 
@@ -11,11 +11,11 @@ The initial purpose is to prevent unsafe entries around material gold events and
 
 ## 2. Protected taxonomy
 
-Initial scheduled high-impact candidates:
+Frozen initial scheduled taxonomy:
 
 - US employment: NFP/Employment Situation and unemployment; CPI; PCE/Personal Income and Outlays;
 - FOMC decisions/statements, press conferences, minutes, and preclassified material Federal Reserve communications;
-- other events only after objective inclusion criteria, including GDP, retail sales, PPI, jobless claims, Treasury/refunding or central-bank events where evidence shows material XAUUSD impact.
+- Tier 2 monitoring: US jobless claims and pre-announced material Federal Reserve communications. GDP, retail sales, PPI, Treasury/refunding, non-US central-bank events, and other releases are excluded from the protected calendar unless prospectively promoted by a versioned research decision; the independent shock breaker still applies.
 
 Unscheduled shocks—material Fed surprises, geopolitical escalation, market closure, or abnormal price/liquidity behavior—are handled first by a source-independent volatility/spread/data-quality circuit breaker. Headlines alone must not trigger discretionary model execution.
 
@@ -31,14 +31,14 @@ States: `HEALTHY`, `PRE_LOCK`, `EVENT_ACTIVE`, `POST_LOCK`, `NORMALIZATION_PENDI
 
 Any protected event interval is half-open `[event_time - pre_window, event_time + minimum_post_window)`. Overlapping intervals union; the most restrictive rule wins. Schedule changes recompute future windows but never retroactively erase the audit record. Cancellation is honored only from a sufficiently authoritative, fresh source; unresolved conflict remains locked.
 
-Provisional windows requiring empirical freeze before implementation:
+Frozen conservative specification windows (subject only to a later append-only owner/research change before trading):
 
-| Event class | Pre-lock candidate | Minimum post-lock candidate |
+| Event class | Frozen pre-lock | Frozen minimum post-lock |
 |---|---:|---:|
 | Tier 1: NFP, CPI, PCE, FOMC decision/press conference | 30 min | 30 min, then normalization |
-| Tier 2: selected Fed communications, claims/other proven events | 15 min | 15 min, then normalization |
+| Tier 2: scheduled material Fed communications and US jobless claims | 15 min | 15 min, then normalization |
 
-These are research starting points, not approved production parameters. FOMC statement and press conference may be separate event times whose union extends protection.
+FOMC statement and press conference are separate event records whose intervals union. Tentative/all-day events, missing authoritative time, or unresolved schedule conflicts remain locked from the start of the configured horizon until corrected or operator-cleared; they cannot be treated as proof of a safe interval.
 
 During any lock: reject new entries and pending risk-increasing intents; management of existing exposure requires a separately frozen policy. Event Guard never causes model-predicted entry direction.
 
@@ -55,11 +55,27 @@ Time elapsed is necessary but insufficient. Resumption requires all of:
 
 The independent shock breaker enters `SHOCK_LOCK` on abnormal spread, return/range, quote gap, stale/discontinuous ticks, or provider/market anomaly. Thresholds use only past data available at the observation time and must be stress-tested. Release requires sustained normalization plus minimum hold time; repeated trips escalate to operator alert/quarantine. OpenAI cannot release it.
 
+### 5.1 Frozen evaluation order and fail-closed result
+
+For every prospective entry, evaluate in this order: clock/data health; session; provider/calendar health; scheduled interval union; shock breaker; sustained normalization. Any `UNKNOWN`, stale, unavailable, contradictory, or boundary-equal unsafe value returns `LOCKED`. Windows use `start <= now < end`; no entry whose validation/expected submission latency could cross `start` may proceed.
+
+The guard snapshots its calendar/version and evaluation timestamp into the intent. A schedule update, clock jump, provider degradation, or new event invalidates all not-yet-submitted intents. Resumption always requires fresh analysis; queued proposals do not survive a lock.
+
+### 5.2 Calibration contract
+
+Shock and normalization constants must be selected prospectively from chronological training data and then frozen before evaluation. The versioned configuration must define: tick-staleness maximum; absolute and robust-baseline spread limits; return/range and quote-gap horizons/multiples; minimum shock hold; normalization duration; repeated-trip window/count; minimum sample count; and behavior when a baseline is unavailable. Missing samples or unavailable baselines mean `LOCKED`, never a relaxed default. Calibration must report false-lock rate, missed-shock rate, lock duration, session/regime sensitivity, and tail cases on untouched chronological validation data.
+
 ## 6. Provider health and failure policy
 
 Health covers source fetch success, age, clock offset, schema validity, duplicate/missing IDs, schedule completeness, update latency, disagreement, rate-limit state, and rights/entitlement validity. Before each decision the guard requires a calendar horizon covering the maximum pre-lock plus operational buffer. Missing/stale/conflicting calendars fail closed for new entries. Cached last-known events may extend an existing lock but cannot prove the absence of a new event.
 
 Provider revisions, postponements, cancellations, and unscheduled updates remain append-only. Alerts must distinguish provider outage, parser failure, rights expiry, schedule conflict, shock lock, and ordinary protected window.
+
+### 6.1 Frozen provider admission requirements
+
+An operational source is inadmissible until a recorded review verifies: authoritative provenance/coverage for every frozen Tier 1 event; UTC/IANA timezone semantics and DST behavior; stable IDs plus revisions/cancellations/postponements; update latency history; documented uptime/status and rate limits; deterministic machine-readable access; automation/VPS/storage/derived-use/audit-retention rights; credential handling; historical replay availability or an approved archival method; and total cost. A provider marketing label such as “high impact” is not the taxonomy authority.
+
+Production design requires either (a) one licensed operational provider continuously reconciled to official-source schedules with discrepancies locking entries, or (b) two licensed operational providers with a frozen source-priority/conflict rule. Scraping an undocumented public page is not acceptable. No paid source may be procured without owner approval. Until a provider passes admission and health tests, the Event Guard is `SOURCE_UNHEALTHY` and automated entry remains disabled.
 
 ## 7. Analyst minimization contract
 
@@ -71,11 +87,10 @@ Golden/event-replay tests must cover DST changes; same-minute/overlapping events
 
 Required acceptance: zero new-entry approvals inside any expected lock; deterministic results for identical versioned inputs; no unlock on missing/conflicting/unhealthy data; no look-ahead in baselines; complete transition audit; property/mutation tests demonstrate boundary and comparison correctness.
 
-## 9. Unresolved items and owner decisions
+## 9. Remaining decisions/evidence
 
 - Select the first operational calendar/provider or redundant design after rights, coverage, latency, reliability, and cost comparison. No paid service without owner approval.
-- Freeze exact protected taxonomy, impact mapping, pre/post windows, shock thresholds, normalization durations, and schedule horizon using prospective research.
+- Calibrate and freeze shock thresholds, normalization duration, schedule horizon, and health SLA using prospective research; the evaluation semantics and missing-data behavior above are already frozen.
 - Decide treatment of existing exposure/pending orders around events; no emergency action is implied here.
 - Define material Fed communications and geopolitical alert provenance without admitting unreliable headline triggers.
 - Set provider budget, retention, latency/health SLA, and permitted OpenAI fields.
-
