@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.1",
-  "recorded_date_utc": "2026-08-10",
+  "schema_version": "1.3",
+  "recorded_date_utc": "2026-08-11",
   "project": "XAU/USD Autonomous Trading Agent",
   "phase": "Phase 0",
   "gate_0_status": "INCOMPLETE",
@@ -23,7 +23,7 @@
       "value": "Exness (SC) Ltd",
       "source_kind": "owner_supplied_personal_area_observation",
       "source_locator": "Personal Area footer",
-      "verification_status": "RECORDED_PENDING_ACCOUNT_LINKED_DOCUMENT_HASH",
+      "verification_status": "ACCOUNT_LINKED_SCREENSHOT_CAPTURED_BY_HASH",
       "must_not_alias_to": [
         "mt5_account_serving_company",
         "mt5_terminal_vendor_company",
@@ -157,9 +157,61 @@
     "review_file": "EXNESS_SC_LEGAL_APPLICABILITY_REVIEW.md",
     "primary_agreement": {"version": "038", "date": "2026-07-24", "sha256": "ae02ca31a9e2ba1d8ef81cc973caa169e901aa6d802b4f9949a05e3cb1217ddc"},
     "general_business_terms": {"version": "021", "date": "2025-08-12", "sha256": "a8e8e0942d402c415770943283ef2f44b4d680339530d28b167fc79928174b11"},
-    "automation_authorization_status": "UNRESOLVED_WRITTEN_EXNESS_CLARIFICATION_REQUIRED",
-    "missing_documents": ["API Terms of Use"],
-    "account_linked_screenshot_status": "PENDING"
+    "automation_authorization_status": "MT5_PYTHON_OPERATIONALLY_SUPPORTED_BY_ACCOUNT_SPECIFIC_SUPPORT_EVIDENCE; EXTERNAL_AI_AMBIGUITY_OWNER_ACCEPTED_AS_RESIDUAL_RISK_UNDER_MINIMIZATION; NO_EXNESS_OPENAI_APPROVAL_CLAIMED",
+    "api_terms_status": "OFFICIAL_VERSION_2026-07-15_001_CLAUSE_VERIFIED; API_KEY_CHANNEL_ACTIVATION_PER_1.1_1.2; DIRECT_APPLICABILITY_TO_NO_KEY_MT5_PYTHON_NOT_ESTABLISHED; RAW_FILE_HASH_UNCAPTURED_NON_BLOCKING",
+    "api_terms": {
+      "title": "API Terms of Use",
+      "version": "15 July 2026 / 001",
+      "pages": 7,
+      "authoritative_url": "https://www.exness.com/cdn/media/docs/exness-api-terms-of-use.pdf",
+      "reviewed_utc": "2026-08-11",
+      "raw_file_sha256": null,
+      "raw_file_hash_status": "NOT_CAPTURED_CDN_DENIED_DIRECT_BYTE_RETRIEVAL_OPTIONAL_EVIDENCE_HARDENING",
+      "scope_activation_clauses": ["1.1", "1.2", "1.3", "4.2", "4.3"],
+      "automation_ai_clauses": ["4.5", "4.6(A)", "4.6(C)"],
+      "channel_interpretation": "GOVERNS_EXNESS_API_AND_API_KEYS_WHEN_KEYS_CREATED_OR_GENERATED_THROUGH_EXNESS_WEBSITE; DO_NOT_INFER_DIRECT_GOVERNANCE_OF_CURRENT_NO_KEY_MT5_PYTHON_CHANNEL",
+      "gate_0_blocker": false
+    },
+    "proprietary_exness_client_api_status": "NOT_CURRENTLY_AVAILABLE_PER_ACCOUNT_SPECIFIC_SUPPORT",
+    "account_linked_screenshot_status": "CAPTURED_CONFIDENTIAL_HASH_ONLY"
+  },
+  "owner_supplied_account_specific_support_evidence": {
+    "classification": "CONFIDENTIAL_HASH_REFERENCE_ONLY",
+    "personal_area_account_and_footer": {
+      "sha256": "5314545229a580d161bafa59153842ebbf360dd882f8134b26e41d968969714d",
+      "findings": ["Demo", "MT5", "Pro", "USD 10000", "Exness (SC) Ltd footer"],
+      "contains_visible_account_number": true
+    },
+    "support_screenshots": [
+      {"sha256": "a8b63d87b0b183d3cb8a5958718ac0ab141b85847a87607a8a857df0b7fc0ee2", "finding": "live support context and trading API question"},
+      {"sha256": "a8e4bca5f636addac941f9bffb87b2c959ae63465ea6540de73ec3765dc9a571", "finding": "no proprietary client API for data retrieval or trading"},
+      {"sha256": "63305ea87dff72657e7fd40f6c04c6f1d839883869fafe505f7ea6346bd7d428", "finding": "EAs and MT5 Python API identified as auto-trading alternatives"},
+      {"sha256": "848540ec6879acbe2232e6bf2022e055f4a1505d33f154b01a402d5aefc61a58", "finding": "compatible EAs, scripts and indicators may be installed; no Exness EA service"}
+    ],
+    "evidence_scope": "Owner-supplied account-specific operational support evidence; not a contract amendment, data-transmission authorization, or trading gate approval."
+  },
+  "architecture": {
+    "broker_path": "Exness MT5 -> local Python -> deterministic Risk Governor -> MT5 Python execution",
+    "reasoning_path": "MT5/market data -> deterministic local feature calculations -> OpenAI analytical proposal -> deterministic semantic/risk validation -> MT5 Python execution",
+    "openai_role": "ADVISORY_NO_CREDENTIALS_NO_DIRECT_EXECUTION",
+    "proprietary_exness_api_path": "UNAVAILABLE_UNLESS_CONTRARY_WRITTEN_EVIDENCE",
+    "external_data_transmission_status": "OWNER_ACCEPTED_RESIDUAL_CONTRACTUAL_DATA_USE_AMBIGUITY; MINIMIZED_DERIVED_FEATURES_ONLY; EXNESS_EXPLICIT_APPROVAL_NOT_ESTABLISHED",
+    "preferred_external_input_design": "LOCALLY_DERIVED_MINIMIZED_FEATURES",
+    "prohibited_external_fields": ["credentials", "account_number", "server_or_account_identifiers", "ticket_order_deal_position_ids", "exact_balance_equity_margin_or_risk_state", "unnecessary_bulk_raw_ticks_or_history"],
+    "risk_and_execution_location": "LOCAL_DETERMINISTIC_ONLY"
+  },
+  "risk_policy": {
+    "status": "POLICY_A_APPROVED_FOR_SPECIFICATION_ONLY",
+    "approved_strategy_allocation_usd": 10000.0,
+    "per_trade_formula": "0.0025 * min(current_balance, current_equity, approved_strategy_allocation)",
+    "concurrent_planned_risk_usd": 50.0,
+    "daily_loss_ceiling_usd": 75.0,
+    "weekly_loss_ceiling_usd": 150.0,
+    "strategy_drawdown_ceiling_usd": 500.0,
+    "strategy_drawdown_ceiling_fraction": 0.05,
+    "automatic_upward_scaling": false,
+    "loss_accounting": "period-start adjusted strategy equity versus current adjusted strategy equity; normalize deposits/withdrawals/transfers; realized/unrealized P&L are reconciliation components, not independently double-counted totals",
+    "implementation_status": "FORMULA_AND_TESTS_NOT_YET_FROZEN; NO_TRADING_AUTHORIZED"
   },
   "coexistence_policy": {
     "dedicated_account": true,
@@ -170,12 +222,10 @@
     "automatic_unknown_exposure_close": "NOT_AUTHORIZED"
   },
   "unresolved": [
-    "Account-linked redacted screenshot proving contracting entity and PA account label",
     "Pakistan-specific eligibility and absence/presence of written client recategorization",
     "Exact account acceptance/effective linkage for supplied agreement revisions",
-    "API Terms of Use plus written entity/account/jurisdiction-specific EA, Python, AI, VPS and automated-data-access clarification",
     "Authoritative weekly XAUUSD trading-session schedule",
     "24-hour VPS soak plus restart and reconnect validation",
-    "Owner risk policy, news/data licensing, model contract, and remaining Gate 0 decisions"
+    "Exact Risk Governor adjusted-equity formulas/tests, news/data licensing, Analyst contract, execution state machine and remaining Gate 0 decisions"
   ]
 }
