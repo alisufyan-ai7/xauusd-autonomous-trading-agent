@@ -1,6 +1,6 @@
 # Deterministic Risk Governor Mathematics — Policy A
 
-**Document status:** Proposed frozen Phase 0 engineering specification  
+**Document status:** Policy constants and core mathematics frozen; enumerated dependencies remain open  
 **Scope:** Mathematics and test vectors only; no order submission or trading implementation  
 **Policy authority:** D-0045 / owner-approved Policy A  
 **Authorization:** Gate 0 incomplete; external Python trading remains disabled
@@ -29,6 +29,8 @@
 
 Controlled runtime inputs include current balance `B(t)`, current equity `E(t)`, verified cash-flow ledger, strategy inception baseline, daily/weekly boundary snapshots, owned open positions, owned pending orders, current symbol specifications, prices, spread, costs, and conservative slippage/gap allowances. Time boundaries use one frozen project timezone (recommended UTC); changing it requires a controlled specification decision.
 
+The seven Policy A constants above are owner-approved and normative. They may not be changed by configuration, a model response, or an implementation default. Runtime inputs and their provenance are not policy constants. Until each open methodology in section 12 is frozen, a value dependent on that methodology is `UNKNOWN` and new risk is rejected; an implementation must not substitute zero.
+
 ## 3. Per-trade risk cap
 
 Applicable capital:
@@ -43,6 +45,8 @@ Examples: `K=10,000 -> 25.00`; `K=9,000 -> 22.50`; `K=8,000 -> 20.00`; `B=E=15,0
 
 Risk scales downward automatically. It never scales upward beyond `A` without a new owner decision.
 
+`B(t)` and `E(t)` must be same-snapshot, broker-reconciled USD decimals. If either is missing, stale, non-positive, in another currency without a frozen conversion rule, or inconsistent with the reconciled account state, no positive cap exists and the result is fail-closed. Cent rounding is toward zero for a non-negative cap (equivalently floor to USD 0.01).
+
 ## 4. Planned loss and deterministic sizing
 
 For a candidate volume `v`, define conservative loss-to-protective-stop in USD:
@@ -51,11 +55,15 @@ For a candidate volume `v`, define conservative loss-to-protective-stop in USD:
 
 `L_price(v)` must be calculated using the broker-reported tick size/value or an independently verified order-profit calculation for the exact symbol, side, entry, stop and volume. The calculation must remain valid when tick value differs by profit/loss direction. Every price and volume is normalized conservatively to broker increments; rounding may not increase allowed risk.
 
+All five components are non-negative. A missing or unverified component is not treated as zero. Entry uses the worst executable price allowed by the still-open execution/slippage specification; stop uses the adverse broker-normalized stop. For a range entry, sizing uses the worst loss-producing admissible entry. The method must demonstrate monotonic non-decreasing `L_plan(v)` over the broker volume grid; otherwise sizing fails closed.
+
 Deterministic volume:
 
 `v* = max { v in broker_volume_grid : v <= strategy_volume_cap and L_plan(v) <= R_trade_max }`
 
 If the set is empty, return `REJECT_RISK_BELOW_MIN_VOLUME`. Model-proposed volume is ignored as authority; at most it may be logged as non-authoritative input.
+
+`strategy_volume_cap` is not established by Policy A and may not default to broker maximum. Until it is frozen, it is an open dependency and no sized approval may be emitted. Grid enumeration starts at broker `volume_min`, advances by exact `volume_step`, and never rounds upward. The selected result must be re-priced and re-tested after normalization rather than inferred solely by division.
 
 An order without a valid protective stop, or whose stop cannot be accepted under current stop/freeze rules, is rejected. No martingale, grid/recovery expansion, failed-trade averaging, or confidence override is permitted.
 
@@ -92,6 +100,8 @@ Therefore:
 
 The baseline equity includes any open P/L at the boundary. Subsequent realized P/L, unrealized P/L, commission and swap are reconciliation components of the equity change and are **not added again**. An unclassified balance operation, missing cash-flow history, boundary gap or reconciliation mismatch fails closed.
 
+The interval convention is `(t0,t]`: the reconciled boundary snapshot already contains all postings through `t0`, and only later-posted external flows enter `F`. Corrections/reversals retain their signed ledger effect and immutable linkage. A cash-flow event whose effective time straddles an unavailable boundary is unresolved rather than guessed. Day/week rollover requires a reconciled boundary snapshot; a restart may replay the journal but may not synthesize a favorable baseline from the first post-restart observation.
+
 A candidate is admissible only if, with `L_future = sum_i(L_increment_i) + L_plan(candidate)`:
 
 - `L_day(t) < D` and `L_day(t) + L_future <= D`; and
@@ -111,9 +121,13 @@ Maintain a cash-flow-normalized continuous equity index from strategy inception:
 
 New risk requires `DD(t) < M` and `DD(t) + L_future <= M`. The high-water mark is not increased by deposits and is not decreased by withdrawals. A breach blocks new risk; it does not itself authorize closing positions.
 
+`H(t)` advances only on a reconciled observation. Missing intervals, ledger discontinuity or an inability to reconstruct inception-normalized equity makes drawdown state `UNKNOWN` and blocks new risk. A withdrawal cannot erase a prior drawdown, and a deposit cannot manufacture recovery.
+
 ## 8. Full-risk-equivalent loss pause
 
 Each independently completed trade/setup instance `j` stores its immutable admission risk budget `Rj > 0` and final net trading P/L `Pj`, including commission and swap. Sequential pullback zones are independent instances; Zone B can exist only after fresh analysis and never as recovery for Zone A.
+
+An instance is complete only when every linked fill, partial close, commission, swap and residual position/order is reconciled. Multi-leg/partial-exit attribution and the treatment of later broker adjustments must be frozen before this pause can be implemented; until then an ambiguous completion blocks new risk rather than prematurely resetting the streak.
 
 Loss equivalent:
 
@@ -179,6 +193,18 @@ Unless specified, USD values are exact, state is fresh/reconciled, no news/sessi
 | RG-038 | day loss `60`, week loss `120`, drawdown `470`, candidate `20` | daily prospective `80`, week `140`, DD `490`; reject because daily fails |
 | RG-039 | day loss `40` already includes an open unrealized loss; existing additional loss from current mark to stop `20`; candidate `15` | prospective daily `75`; pass without double-counting prior unrealized loss |
 | RG-040 | same as RG-039 but candidate `15.01` | prospective daily `75.01`; reject |
+| RG-041 | `B=10,000; E=0` | fail closed; no positive trade cap |
+| RG-042 | `B=10,000; E=9,999.999` | `K=9,999.999`; raw cap `24.9999975`; cap `24.99` |
+| RG-043 | balance and equity are from different snapshots | reject inconsistent state |
+| RG-044 | commission, swap, slippage or gap buffer is required but unavailable | reject; missing component is not zero |
+| RG-045 | valid volumes `0.01,0.02,0.03`; planned losses `12.40,24.90,37.30`; cap `25` | select `0.02`, then re-price/re-test it |
+| RG-046 | range entry can fill at 2,350.00–2,351.00; BUY stop fixed; upper entry has greater loss | size from 2,351.00 worst admissible entry |
+| RG-047 | cash flow posts exactly at reconciled boundary and is included in `E(t0)` | exclude it from `(t0,t]`; do not normalize twice |
+| RG-048 | restart has no reconstructable day-boundary snapshot | daily state unknown; block new risk |
+| RG-049 | deposit raises raw equity above prior high, then is normalized out | `H` does not rise solely from deposit |
+| RG-050 | trade has residual `0.01` volume or unreconciled commission | instance not complete; do not reset/update `Q_streak` |
+| RG-051 | `Q_streak=2.99`; next `qj=0.01` exact decimal | pause at exactly `3.00` |
+| RG-052 | unknown strategy volume cap | no sized approval; fail closed |
 
 ## 11. Property and invariant tests required before implementation
 
@@ -192,6 +218,21 @@ Unless specified, USD values are exact, state is fresh/reconciled, no news/sessi
 - Restart/replay of the same event journal produces identical state and decisions.
 - Duplicate fills/events are idempotent; omitted/out-of-order events fail closed pending reconciliation.
 
-## 12. Remaining freeze dependencies
+## 12. Freeze boundary and remaining dependencies
 
-This document does not authorize implementation or trading. Before final freeze, the central specification must bind: trading-day/week UTC boundaries; cost/slippage/gap buffer methodology; exact strategy P/L attribution; operator pause-resumption policy; margin reserve; and execution-state reason enums. Any change to Policy A limits or upward scaling requires a new explicit owner decision.
+The owner-approved constants, applicable-capital formula, adjusted-equity method, drawdown method, prospective-limit inequalities, no-double-counting rule, and fail-closed invariants in this document are frozen for Phase 0 specification/testing. They do not authorize implementation or trading.
+
+The following are genuine dependencies and are **not** silently frozen here:
+
+| Dependency | Decision/evidence class | Effect while open |
+|---|---|---|
+| Exact trading-day and trading-week boundaries/timezone | engineering specification | daily/weekly state cannot be production-authoritative |
+| Commission, swap, slippage and gap-buffer formula/data source | research + engineering specification | no `L_plan` approval |
+| Strategy volume cap independent of broker maximum | owner decision or controlled risk specification | no sized approval |
+| Exact multi-leg, partial-close and broker-adjustment P/L attribution | engineering specification | ambiguous instance completion blocks risk |
+| Pause-resumption authority and procedure | owner decision | pause cannot resume automatically |
+| Margin reserve and stress rule | owner decision + diagnostic evidence | no final margin pass |
+| Account/symbol calculation evidence, including asymmetric tick value | diagnostic | no account-specific sizing approval |
+| Canonical reason-code/state enums shared with execution spec | engineering specification | interface not finally hashable |
+
+Any change to Policy A monetary limits, risk fraction, allocation, loss-equivalent threshold, or upward scaling requires a new explicit owner decision and append-only Decision Log entry.
