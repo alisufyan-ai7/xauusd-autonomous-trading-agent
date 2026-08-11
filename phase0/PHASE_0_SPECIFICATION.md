@@ -1,13 +1,14 @@
 # XAU/USD Autonomous Trading Agent — Phase 0 Specification and Validation Dossier
 
-**Document status:** Draft 0.6 — not frozen  
-**Date:** 2026-08-10 (UTC)  
+**Document status:** Draft 0.9 — not frozen  
+**Date:** 2026-08-11 (UTC)  
 **Production implementation:** Prohibited until every Phase 0 exit criterion is satisfied  
 **Source handoff SHA-256:** `1024ae7fe3cea0305f424e35aa959d9b9fc4863ffa1e7effefecc5df51dd4406`
 
 ## 1. Current verdict
 
-**Gate 0 is NOT complete.** One intended-VPS/read-only demo-account evidence run and ten owner-supplied legal documents have been reviewed. The documents establish an Exness (SC) Ltd agreement set and a default Retail Client classification, but external-Python/AI/data-access authorization remains ambiguous, the API Terms and account-linked screenshot are missing, and the authoritative symbol session schedule, continuous-host/restart evidence, owner risk policy, AI contract, execution state machine, news-feed SLA, and quantitative release thresholds remain unresolved. No production trading code may be started yet.
+**Version:** Draft 0.9 — 2026-08-11 UTC  
+**Gate 0 is NOT complete.** Exness/API investigation is sufficiently complete for Phase 0: client-owned MT5 Python automation is operationally supported; no proprietary Exness client API is currently available; API Terms Version 15 July 2026 / 001 are channel-scoped under D-0048; and D-0049 accepts the remaining external-AI contractual/data-use ambiguity as residual owner risk. This is not a claim that Exness approved OpenAI processing. Strict local derivation and data minimization are mandatory. Seven candidate technical specifications now cover the Risk Governor, minimized Analyst contract, five setup families, execution/reconciliation, read-only session/VPS diagnostics, news protection and replay methodology. Empirical diagnostics, provider/source choices, evaluation results and marked thresholds remain unresolved. No production or trading-capable implementation may begin.
 
 The present work authorizes only specification, read-only evidence collection, test-harness design, and validation experiments that cannot send, modify, or cancel orders.
 
@@ -42,7 +43,7 @@ Screenshots alone, successful compilation, “no errors observed,” and a singl
 | A-003 | Gold contract size is 100 troy ounces and minimum is 0.01 lot | Observed for current demo target only | The reviewed capture reports contract size 100, tick size 0.001, tick value USD 0.10 per lot-tick, and minimum/step 0.01 lot. Eight broker calculation vectors agreed with an independent contract/leverage oracle within half a cent. Runtime broker fields remain authoritative and must be revalidated before any later order operation. |
 | A-004 | Published stop levels can be hard-coded | Rejected | Exness says stop levels can change and directs clients to current contract specifications. Read live broker properties and validate again immediately before submission. |
 | A-005 | `order_check()` guarantees a fill | Rejected | MetaQuotes explicitly states successful checking does not guarantee execution. `order_send` result plus subsequent order/deal/position reconciliation is required. |
-| A-006 | Account supports multiple independent XAU/USD positions | Technically observed for current demo target; policy unresolved | `account_info.margin_mode=2`, which maps to `ACCOUNT_MARGIN_MODE_RETAIL_HEDGING`; MetaQuotes defines that mode as allowing individual positions for one symbol. The first-release coexistence/manual-trade policy remains open, and a future target must be rediscovered rather than assumed. |
+| A-006 | Account supports multiple independent XAU/USD positions | Technically observed; coexistence policy separately resolved | `account_info.margin_mode=2` maps to `ACCOUNT_MARGIN_MODE_RETAIL_HEDGING`. D-0034 prohibits manual/copy/other-EA coexistence on the dedicated account. Technical mode, legal Retail Client status and coexistence policy are non-interchangeable. |
 | A-007 | Broker bars/ticks can use local VPS time | Rejected | MetaQuotes documents UTC for MT5 Python bar/tick time. Store UTC only; convert to named zones only at presentation/session-rule boundaries. |
 | A-008 | Risk of 0.75–1.5% per trade is acceptable | Unvalidated policy hypothesis | No external source can prove suitability or profitability. Must be explicitly approved, stress-tested, and bounded by live-stage caps. |
 | A-009 | Minimum R:R of 1.8 is inherently profitable | Rejected | R:R alone does not establish expectancy. Validate per setup/regime using out-of-sample net returns and uncertainty intervals. |
@@ -218,9 +219,16 @@ It must enforce:
 - entry expiry and one-way state transitions;
 - commission, swap where relevant, and conservative transaction costs in R:R/expectancy filters.
 
-### 8.2 Risk limits are unresolved
+### 8.2 Approved Risk Policy A specification baseline
 
-The handoff values of 0.75–1.5% per trade, 2% concurrent risk, and 3% daily loss are **not accepted**. They are policy candidates. Before Gate 0 freeze, the owner must approve capital-at-risk limits and the project must define different caps for shadow, demo, tiny live, and scaled live stages.
+Policy A is approved for specification and deterministic testing only. It does not authorize demo or live trading.
+
+- Per-trade planned risk: `0.25% × min(current_balance, current_equity, approved_strategy_allocation)`; initial `approved_strategy_allocation = USD 10,000`.
+- It scales downward automatically as balance/equity falls and never scales above USD 25 merely because capital exceeds the approved allocation. Any allocation increase requires a new owner decision.
+- Concurrent planned risk: USD 50; daily loss ceiling: USD 75; weekly loss ceiling: USD 150; total strategy drawdown ceiling: USD 500 / 5% of the reference allocation.
+- Pause after approximately three full-risk-equivalent losses; the exact deterministic accumulation/cooldown definition and tests must be frozen before Risk Governor implementation.
+- Daily and weekly loss are computed as period-start adjusted strategy equity versus current adjusted strategy equity, normalizing deposits, withdrawals and transfers. Realized and unrealized P/L reconcile that equity change and must not be added in a way that double-counts one economic loss.
+- No AI-confidence override, martingale, grid/recovery loss expansion, or averaging a failed trade.
 
 Recommended safety baseline for discussion—not an approved setting:
 
@@ -336,7 +344,7 @@ Gate 0 cannot be marked complete until all items below are satisfied:
 
 - [ ] Contracting entity is linked to the intended account by a redacted documentary record; jurisdiction/residence/client classification, applicable agreement version/date, and automated-trading restrictions are reviewed.
 - [x] One read-only account/VPS/terminal/symbol probe has been run and its byte-exact evidence reviewed under D-0030.
-- [ ] Exact supported account mode and unrelated/manual-position coexistence policy are approved; the demo target technically reports retail hedging.
+- [x] Dedicated-account coexistence policy approved by D-0034; demo target separately reports technical retail hedging.
 - [ ] Authoritative account-specific XAUUSD weekly trading sessions are captured and specified.
 - [ ] Intended VPS restart/reconnect and 24-hour soak evidence passes.
 - [ ] Risk policy is approved in cash/equity terms for every deployment stage.
@@ -356,7 +364,7 @@ These do not require the owner to review source code:
 
 1. A redacted Personal Area/account-information record that binds `Exness (SC) Ltd` and `Pro — MT5 Demo — USD` to the intended account without exposing login, name, address, email, or documents; plus the exact accepted Client Agreement/General Business Terms version or effective date.
 2. Confirmation of country of residence/client classification and any entity-, jurisdiction-, account-, VPS-, API-, EA-, or automated-trading restrictions shown in the Personal Area or governing documents.
-3. Whether unrelated/manual XAUUSD trades may coexist. The current safe default remains **no coexistence; unknown exposure quarantines new entries** until explicitly decided.
+3. Emergency treatment beyond quarantine for unknown exposure. Coexistence itself is decided by D-0034: it is prohibited; unknown exposure quarantines new risk and alerts, without automatic closure.
 4. Maximum acceptable loss limits stated as: per trade, daily, weekly, and total strategy drawdown; and whether emergency closure of unrecognized exposure is authorized or must only quarantine/alert.
 5. Acceptable decision latency and monthly OpenAI/news-data budget.
 6. Preferred operator alert channels and required response expectations.
@@ -412,13 +420,15 @@ The canonical clause-level review is `EXNESS_SC_LEGAL_APPLICABILITY_REVIEW.md`. 
 
 The owner is provisionally classified as a Retail Client under Client Agreement Part A 3.1-3.3 unless Exness has issued written notice otherwise. This must never be aliased to MT5 retail-hedging margin mode.
 
-Automation is **not contractually cleared**. Part D 4.1 contemplates EAs and automated processes but reserves Exness acceptance/rejection discretion. Part C 2.3(A)/(G) creates unresolved restrictions involving AI analysis and automated information access. API Terms are incorporated but missing. Until written clarification:
+Basic client-owned MT5 Python/EA automation is operationally supported by account-specific written Exness support evidence. Exness support also states that no proprietary client trading/data API is currently available, so no Exness API-key interface is assumed. The official API Terms of Use, Version 15 July 2026 / 001, are scoped under D-0048 to Exness API/API-Key use and are not presumed to govern the present no-key MT5 Python channel.
 
-- external-Python trading protection stays enabled;
-- no risk-changing MT5 call is authorized;
-- no Exness platform/account/price data is transmitted to OpenAI;
-- Custom Indicator data is not used externally;
-- all legal/jurisdiction silence is treated as unresolved, not permission.
+Under D-0049, external-AI processing ambiguity is an owner-accepted residual risk rather than a Gate 0 blocker; Exness has not explicitly approved it. MT5 data is obtained locally; indicators, structure, regimes, levels and volatility are computed locally; only necessary derived setup features may be sent to OpenAI. Credentials, account/server identifiers, ticket IDs, exact account/risk/margin state and unnecessary bulk/raw feeds are prohibited. External-Python trading protection remains enabled and no risk-changing MT5 call is authorized. Reopen Exness research only for contradictory authoritative evidence or a material channel/data-use change.
+
+## 18A. Frozen architecture boundary
+
+The intended broker path is `Exness MT5 -> local Python -> deterministic Risk Governor -> MT5 Python execution`. The reasoning path is `MT5/market data -> deterministic local features -> OpenAI analytical proposal -> deterministic semantic/risk validation -> MT5 Python execution`.
+
+OpenAI is an analytical component, never broker interface or execution authority. It has no MT5 credentials or order-sending capability. A proposal passes schema validation, snapshot/freshness validation, semantic validation, deterministic Risk Governor and the execution state machine before an order can exist. Malformed, contradictory, stale or unsafe output yields `NO_TRADE`, `REJECT` or `QUARANTINE`. Model-proposed lot size never overrides deterministic sizing.
 
 ## 19. Dedicated-account coexistence policy
 
@@ -447,9 +457,9 @@ Generic published Pro-account expectations and the account-specific evidence mus
 
 ## 21. Phase 0 work products and remaining design contracts
 
-- Owner risk choices are in `OWNER_RISK_DECISION_SHEET.md`; all are proposals until explicitly approved.
+- Risk Policy A is approved under D-0045; candidate deterministic mathematics and vectors are in `specifications/RISK_GOVERNOR_POLICY_A_SPEC.md`.
 - Ranked blockers and plain-language actions are in `GATE_0_BLOCKERS_AND_OWNER_ACTIONS.md`.
-- A future session probe and VPS reliability harness must meet the same frozen-source, forbidden-call, manifest, behavioral-test and terminal-protection standard as collector v0.1.1.
+- The candidate read-only session/VPS plan is `specifications/XAUUSD_SESSIONS_VPS_READONLY_DIAGNOSTIC_PLAN.md`; any runnable artifact requires separate verification and authorization.
 - The OpenAI Analyst remains structurally isolated from credentials and execution. Its strict schema, semantic rules, freshness binding, enums, bounded failures/retries, injection corpus, pinned model, latency/cost and audit hashes must be frozen before implementation. Zero unsafe approvals on a finite corpus remains necessary evidence, never universal proof.
-- The five setup families remain unimplemented until mathematical definitions exist. A deeper Zone B after Zone A invalidation is always a fresh analysis/trade, never averaging, martingale, grid or recovery exposure.
-- News/data, deterministic state machine and prospective backtest governance remain governed by Sections 9-11 and the blockers register; no paid provider may be purchased without owner approval.
+- Candidate objective definitions for all five families are in `specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md`. Any rule marked unresolved fails closed. Zone B after Zone A invalidation is always a fresh analysis/trade, never averaging, martingale, grid or recovery exposure.
+- Candidate Analyst, execution/reconciliation, news and replay/backtest contracts are stored under `phase0/specifications/`; empirical evidence and explicitly marked owner/provider choices remain open. No paid provider may be purchased without owner approval.
