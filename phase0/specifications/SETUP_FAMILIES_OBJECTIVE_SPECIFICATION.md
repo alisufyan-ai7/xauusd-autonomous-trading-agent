@@ -1,8 +1,8 @@
 # Phase 0 Objective Setup-Family Specification
 
 **Document ID:** P0-SETUPS-001  
-**Version:** 0.1-draft  
-**Status:** Engineering specification candidate; not approved for trading  
+**Version:** 1.0-rc1  
+**Status:** Frozen research-algorithm baseline; verification evidence incomplete; not approved for trading  
 **Scope:** XAUUSD research, replay, and deterministic proposal validation only  
 **Authorization boundary:** This document does not authorize order submission, automated demo trading, or real trading. External Python trading remains disabled.
 
@@ -18,7 +18,7 @@ This document converts five named setup families into objective candidate algori
 
 `MUST`, `MUST NOT`, `SHALL`, and `REQUIRED` are normative. Each predicate has exactly three evaluation states: `TRUE`, `FALSE`, or `UNKNOWN`. Any required predicate that is `FALSE` or `UNKNOWN` makes the family ineligible and produces `NO_TRADE` with reason codes. No discretionary visual interpretation may replace a predicate.
 
-This is a pre-optimization baseline. The numerical constants below are candidate values to freeze before the first formal replay. They MUST NOT be tuned after observing out-of-sample results without declaring a new version and counting a new research trial.
+This is the precommitted pre-optimization baseline for the first registered replay. The numerical constants below are frozen for that research generation. They MUST NOT be tuned after any validation or out-of-sample result is viewed without declaring a new version, preserving this version, registering the change as a new research trial, and protecting a new holdout where required. “Frozen” describes the algorithm, not completion of its golden-vector evidence and not authorization to trade.
 
 ## 2. Common data and calculation contract
 
@@ -77,6 +77,8 @@ A level's tolerance is:
 
 A level is `tested` when a completed H1 bar's range intersects `[level-level_tol, level+level_tol]`. Tests separated by fewer than four H1 bars count as one test. A level is valid when it has at least two distinct tests, or is the most recent confirmed swing at an otherwise qualifying trend impulse boundary.
 
+All ATR-dependent thresholds in one evaluation use the ATR value at the decision instant unless a clause explicitly says otherwise. A swing or level is identified solely from information available when it becomes confirmed; later bars may invalidate it but may not move its historical timestamp or price. When more than one eligible level is described as “nearest,” choose the smallest absolute price distance in the required direction; equal distance selects the older confirmation timestamp, then the lower canonical level ID. Absence of an eligible level makes that target `UNKNOWN`, never discretionary.
+
 ### 2.5 Impulse leg
 
 A bullish impulse is the move from a confirmed H1 swing low `L0` to a later confirmed H1 swing high `H0` satisfying all of:
@@ -131,8 +133,10 @@ Only one live proposal/order/position may derive from a setup key. Re-evaluation
 - Structural stop is placed beyond the invalidating structure plus `stop_buffer = max(3*tick_size, 0.10*ATR_M15(14))`.
 - TP1 is the nearer of the family's first structural target and `1.5R` only if that target is at least `1.5R`; otherwise reject.
 - Final TP is the family's declared structural target and must be at least `2.0R`; otherwise reject.
-- Partial-exit fraction, break-even behavior, and trailing behavior are intentionally `UNRESOLVED`; no family passes specification freeze until these are separately selected and encoded. Backtests MUST NOT silently invent them.
+- For the v1.0 research baseline, TP1 is informational only: no partial exit occurs there. The position exits 100% at the final target, structural stop, deterministic time/session exit, or another separately specified protective exit, whichever becomes executable first.
+- Break-even moves and trailing stops are prohibited in v1.0. A stop may change only through a future versioned rule that is absent from this baseline.
 - No stop may be widened after entry. No target may be moved farther to make a failed reward/risk check pass.
+- If both stop and target are reachable within one bar and tick sequencing is unavailable, replay MUST select the adverse sequence (stop first). Live/shadow evaluation uses actual timestamped quotes/events.
 
 ## 3. Family 1 — Trend Pullback (`TPB`)
 
@@ -310,6 +314,8 @@ At one decision instant, every family is evaluated independently. The selector a
 
 The selector cannot choose based on AI confidence. The Analyst may classify or propose a candidate, but deterministic validation recomputes every predicate.
 
+Family evaluation order has no semantic effect. Every family receives the identical immutable snapshot. A candidate cannot consume or alter state until selection finishes; only the selected candidate may atomically reserve its setup key.
+
 ## 9. Pass/fail output contract
 
 Each family evaluation emits a trace containing:
@@ -332,7 +338,7 @@ Minimum reason codes include:
 
 ## 10. Required pre-implementation test vectors
 
-Before Gate 0 can treat this specification as frozen, a separate golden-vector set must cover at least:
+Before Gate 0 can treat this frozen algorithm as verified, a separate golden-vector set must cover at least:
 
 - one exact pass and one failure for every normative predicate in every family;
 - long/short symmetry for every formula;
@@ -361,22 +367,21 @@ Property tests must demonstrate:
 - long/short mirror datasets produce mirrored decisions within tick precision;
 - no family reads a forming candle or a not-yet-confirmed pivot.
 
-## 11. Unresolved decisions required before freeze
+## 11. Remaining evidence-dependent closures
 
-This candidate is not yet a complete frozen strategy contract. The following require explicit engineering/owner disposition before implementation or formal strategy search:
+The algorithmic predicates, numerical thresholds, selection rule, and v1.0 exit policy above are frozen for the first registered research generation. The following dependencies remain unresolved and therefore prevent an end-to-end executable specification or formal acceptance run:
 
-1. partial-exit fraction and whether TP1 is informational or executable;
-2. break-even and trailing-stop behavior, including whether either is allowed;
-3. precise session-close management buffer;
-4. final news-event taxonomy, lock windows, resumption and provider-health contract;
-5. spread-history source and behavior before 20 eligible sessions exist;
-6. whether tick volume is admitted as a feature (v0.1 does not use it);
-7. permitted holding across daily session break/weekend (v0.1 makes no authorization);
-8. formal cost/slippage model used for net reward/risk;
-9. empirical review of candidate constants followed by a predeclared freeze, without observing out-of-sample outcomes;
-10. interaction between one-proposal-at-a-time selection and an owner-approved concurrent-risk policy.
+1. precise session-close management buffer, derived from account-specific sessions and measured close/reopen behavior;
+2. final news-event taxonomy, lock windows, resumption and provider-health contract;
+3. licensed spread-history source and fail-closed behavior until 20 eligible same-time sessions exist;
+4. permitted holding across daily breaks/weekends (absent approval, new entries that could survive a known break are ineligible and replay closes remaining exposure at the last conservatively executable quote before the break);
+5. formal empirical cost, latency, slippage, gap, swap and commission model used for net reward/risk;
+6. interaction between one-proposal-at-a-time selection and the approved concurrent-risk ceiling;
+7. complete golden vectors and independent long/short symmetry review.
 
 Until these are resolved, an end-to-end evaluator MUST return `SPEC_UNRESOLVED` before any executable intent could be constructed.
+
+Tick volume is retained in the input schema for data lineage but is not used by any v1.0 predicate. Adding it as a feature is a versioned research change.
 
 ## 12. Research governance
 
