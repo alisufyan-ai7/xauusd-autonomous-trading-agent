@@ -1,8 +1,8 @@
 # Replay/Backtest Methodology and Precommitted Acceptance Criteria
 
-**Status:** Phase 0 candidate research specification  
-**Version:** 0.1  
-**Date:** 2026-08-11  
+**Status:** Phase 0 frozen methodology baseline; dataset/provider-dependent fields remain open
+**Version:** 1.0-rc1  
+**Date:** 2026-08-11
 **Authorization boundary:** Offline research/framework design only. A passing replay cannot authorize automated demo or real trading.
 
 ## 1. Research unit and registry
@@ -27,7 +27,9 @@ Orders use bid/ask, symbol tick/point/volume rules, executable side, latency, sl
 
 Freeze chronological development, validation, and untouched final out-of-sample intervals before optimization. Use walk-forward folds where justified. Apply embargo/purging when label horizons overlap split boundaries. All scalers, thresholds, regimes, support/resistance, feature selection, and model/prompt tuning fit on past/development data only.
 
-The final holdout is opened once for the frozen candidate. A failed holdout cannot be repeatedly tuned against; a material change creates a new research generation with a newly protected later holdout or prospective evidence. Report market-regime, setup, session, year/quarter/month, long/short, event proximity, and volatility breakdowns without selecting only favorable slices.
+The final holdout is opened once for the frozen candidate. Before opening it, the registry MUST contain its immutable dataset-range hash, exact split timestamps, purge/embargo duration, eligible metric code hash, acceptance-rule version, and signed/dated holdout-opening record. A failed holdout cannot be repeatedly tuned against; a material change creates a new research generation with a newly protected later holdout or prospective evidence. Report market-regime, setup, session, year/quarter/month, long/short, event proximity, and volatility breakdowns without selecting only favorable slices.
+
+Unless a longer setup horizon is proved, purge each split by the maximum possible observation-to-final-exit horizon and embargo the later partition by the maximum feature lookback whose fitted state could cross the boundary. Exact durations remain dataset/specification dependent and MUST be frozen before any trial. Random shuffling and random train/test splits are prohibited.
 
 ## 5. Trial accounting and overfitting control
 
@@ -37,7 +39,7 @@ Use Probability of Backtest Overfitting and Deflated Sharpe Ratio where their as
 
 ## 6. Precommitted candidate acceptance criteria
 
-These conservative criteria are candidates for owner/specification approval before the first strategy search; exact confidence method and concentration constants marked TBD must be frozen first.
+These conservative criteria are precommitted for the first formal research generation. Dataset construction, empirical cost distributions, and power-derived sample requirements must still be frozen before the first trial; that does not permit changing the outcome thresholds below after results are seen.
 
 ### 6.1 Mandatory validity gates
 
@@ -53,11 +55,12 @@ All must pass:
 ### 6.2 Economic/statistical gates
 
 - Primary metric: out-of-sample net expectancy per unit of planned initial risk (`R`), after modeled costs. It must be positive.
-- A predeclared confidence interval for OOS mean `R` must have lower bound greater than a **material-loss floor** (candidate `-0.05R`; requires approval), and the point estimate must remain positive. Bootstrap must preserve temporal dependence (stationary/moving block or justified alternative).
+- A two-sided 95% confidence interval for OOS mean `R` must have lower bound greater than `-0.05R`, and the point estimate must remain positive. Use a stationary or moving-block bootstrap with block length selected from development-data dependence before holdout opening; record seed and at least 10,000 resamples. If bootstrap validity cannot be justified, predeclare a more conservative dependence-robust alternative before results.
 - Total and setup-level sample size must be justified prospectively from minimum detectable effect, dependence, variance, and desired interval width; no universal count is invented after results. Sparse families are `INSUFFICIENT_EVIDENCE`, not accepted.
-- Selection-adjusted evidence must pass a predeclared DSR/PBO or justified alternative threshold. Candidate: DSR probability at least 0.95 and PBO at most 0.20, subject to method-validation and owner approval.
+- Selection-adjusted evidence must achieve Deflated Sharpe Ratio probability `>= 0.95` and estimated Probability of Backtest Overfitting `<= 0.20` when their assumptions are defensible. If either method is inapplicable, the registry must explain why before holdout opening and substitute a predeclared family-wise-error or false-discovery procedure plus selection-aware simulation; absence of a valid correction is `INSUFFICIENT_EVIDENCE`.
 - OOS maximum drawdown, daily/weekly loss paths, and loss streaks under base and stress costs must remain inside Policy A when replayed with the approved allocation and deterministic pause rules. Breach is rejection, not merely a lower score.
-- Concentration limits must be frozen before results: no single month, session, event cluster, or small trade subset may provide an unacceptable share of total net profit. Exact limit is TBD after a methodology choice that does not inspect strategy outcomes.
+- Positive OOS net profit must not depend on one narrow cluster: no calendar month may contribute more than 50% of aggregate positive-month profit, no UTC session bucket more than 60% of aggregate positive-session profit, and removing the best five trades must not make net expectancy less than or equal to `-0.05R`. These are fragility gates, not permission to discard observations. A family with too little coverage to evaluate them is `INSUFFICIENT_EVIDENCE`.
+- At least 75% of completed chronological walk-forward OOS folds must have non-negative net expectancy, and aggregate expectancy excluding the best fold must remain greater than `-0.05R`. The exact number and duration of folds are power/data dependent and frozen before trials.
 
 ### 6.3 Robustness gates
 
@@ -71,7 +74,9 @@ Candidate must remain non-catastrophic and policy-compliant under, at minimum:
 - subperiod/regime/session/setup removal and block resampling;
 - data-quality exclusions and plausible symbol/broker property variation.
 
-“Non-catastrophic” means no risk-rule violation, no loss beyond the approved strategy drawdown ceiling under the base allocation, and no operational inconsistency; positive profit under every stress is not required. Exact stress distributions and severity quantiles must be frozen from empirical evidence before testing.
+“Non-catastrophic” means no risk-rule violation, no loss beyond the approved strategy drawdown ceiling under the base allocation, and no operational inconsistency; positive profit under every stress is not required. Exact stress distributions and severity quantiles must be frozen from empirical evidence before testing. Base-case acceptance additionally requires that doubling all modeled variable transaction costs does not reduce OOS expectancy below `-0.05R`; this deterministic sensitivity does not replace empirical tail stresses.
+
+Stress results cannot improve the base ledger through favorable random draws. Paired scenarios use identical decisions and random streams where possible, with only the declared adverse variable changed. Every stochastic stress reports seed-level results and the prespecified aggregation rule.
 
 ## 7. Reporting
 
@@ -83,12 +88,12 @@ No annualized return, Sharpe, win rate, or profitable curve alone constitutes ac
 
 Passing this specification and a later Gate 3 replay only permits consideration of non-executing live shadow validation. Shadow must cover at least the frozen duration/event/regime requirements and reconcile live versus replay features. Demo execution, tiny live, and scaling each require later explicit owner authorization and separate evidence. Risk must never scale automatically beyond the USD 10,000 approved allocation.
 
-## 9. Unresolved research/decisions
+## 9. Remaining pre-trial closures
 
 - Select licensed historical bid/ask/tick, session, and news sources and retention rights; no purchase is approved.
 - Freeze dataset date range, split dates, walk-forward scheme, embargo, and final holdout policy per setup horizon.
 - Freeze fill/latency/slippage/gap/swap/commission models using account-specific evidence.
-- Approve confidence procedure, material-loss floor, DSR/PBO (or alternative) thresholds, concentration limits, minimum detectable effect, and stress distributions before optimization.
-- Define treatment of correlated trades, overlapping setups, partial exits, multiple testing across five families, and strategy-combination allocation.
+- Freeze minimum detectable effect, dependence estimate, desired precision/power, and resulting sample/coverage requirement without inspecting strategy outcomes.
+- Validate the stated confidence, DSR/PBO and concentration procedures against the eventual dataset structure; any necessary substitute must be declared before holdout opening and may not weaken thresholds based on observed performance.
+- Define treatment of correlated trades, overlapping setups, multiple testing across five families, and strategy-combination allocation. The v1.0 setup baseline has no partial exits.
 - Freeze prospective shadow duration, required event/regime coverage, and replay/live feature tolerance.
-
