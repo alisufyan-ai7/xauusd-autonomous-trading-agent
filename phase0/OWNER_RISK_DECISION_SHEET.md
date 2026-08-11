@@ -1,6 +1,6 @@
 # Owner Risk Decision Sheet - USD 10,000 Reference Allocation
 
-**Status:** Proposals only; no option is approved until the owner explicitly selects it.  
+**Status:** Policy A approved as Phase 0 specification baseline by D-0045; no trading authorized.  
 **Gate 0:** INCOMPLETE  
 **Important:** “planned loss” is the broker-calculated stop loss before gap/slippage stress. A stop is not a loss guarantee.
 
@@ -18,22 +18,17 @@ Counts assume full planned-risk losses and ignore gaps, slippage, commissions, s
 
 | Control | Recommended proposal | Deterministic behavior after breach |
 |---|---|---|
-| Risk basis | Minimum of current balance, current equity, and $10,000 strategy allocation | Never increase dollar risk because equity has fallen; increasing allocation requires new approval. |
+| Risk basis | `0.25% × min(current_balance, current_equity, approved_strategy_allocation)` where initial allocation is USD 10,000 | Scales down automatically; never scales above approximately USD 25 unless a new owner decision increases allocation. |
 | Per trade | $25 / 0.25% planned; also pass adverse-gap/slippage stress | Reject new order if broker-computed worst case exceeds cap. No “high confidence” override. |
 | Concurrent | $50 / 0.50%, including pending orders and correlated/unknown exposures conservatively | Quarantine new risk. Unknown exposure is counted at a conservative bound until reconciled. |
-| Daily | $75 / 0.75%, measured on realized P/L plus adverse open-equity movement from UTC day baseline | Cancel only agent-owned risk-increasing pending orders if later authorized; no new risk until next approved trading day and incident review. |
-| Weekly | $150 / 1.50%, same equity-aware method from Monday 00:00 UTC baseline unless broker session boundary is later approved | Pause through the next weekly boundary; operator acknowledgement required. |
+| Daily | USD 75 measured as period-start adjusted strategy equity versus current adjusted strategy equity | Normalize/exclude deposits, withdrawals and transfers. Realized/unrealized P/L reconcile the equity change and are not separately summed if that double-counts loss. |
+| Weekly | USD 150 using the same adjusted-equity method from the frozen weekly boundary | Pause through the next weekly boundary; operator acknowledgement required. Exact formula/tests must be frozen. |
 | Total drawdown | $500 / 5.00% from high-water strategy equity | Indefinite halt; formal review and explicit reauthorization. Automatic reset is prohibited. |
 | Consecutive losses | 3 closed full-risk-equivalent losses; partial losses accumulated in R | Pause at least through the next full broker session and require diagnostics; exact cool-down remains to approve. |
 | Margin/free margin | Project stressed positions using broker `order_calc_margin` plus higher-margin/news stress. Require projected margin level >= 1,000% and projected free margin >= 90% of equity; stricter of risk or margin rule wins. | Reject new risk. Leverage 1:2000 is not a reason to relax cash-loss caps. Threshold requires demo stress validation. |
 | Tiny live | $5 / 0.05% planned loss per trade, one position/pending setup at a time, maximum $10 aggregate open risk; 0.01 lot is only a volume floor, not an entitlement | Halt on first reconciliation/safety incident; performance cannot justify scaling by itself. |
 | Unknown exposure | No automatic ownership or closure | `QUARANTINED`: block all new risk and alert. Emergency closure policy remains open. |
 
-## 3. Decisions requested from the owner
+## 3. Recorded decision and remaining specification work
 
-Choose A, B, or C, or provide changes to individual rows. The recommended answer is:
-
-> Approve Policy A as the Phase 0 risk specification baseline, subject to later demo validation. Keep automatic closure of unknown exposure unauthorized.
-
-Approval freezes limits for specification/testing only. It does not authorize trading. Any later increase requires a new Decision Log entry and fresh evidence.
-
+The owner approved Policy A on 2026-08-11 for specification/testing only. Automatic closure of unknown exposure remains unauthorized. The exact adjusted-equity formula, cash-flow normalization, R-equivalent loss accumulation, boundaries, gap/slippage stress and test vectors remain to be frozen before Risk Governor implementation. Any later increase requires a new Decision Log entry and fresh evidence.
