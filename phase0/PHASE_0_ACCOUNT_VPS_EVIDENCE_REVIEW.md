@@ -84,7 +84,7 @@ The bundle also explicitly lacks the authoritative weekly symbol trading-session
 - country of residence, client classification, and applicable restrictions;
 - explicit review of entity/account/jurisdiction-specific EA, Python API, VPS, and automated-trading terms;
 - authoritative XAUUSD weekly sessions;
-- manual/unrelated-position coexistence policy;
+- emergency action beyond D-0034 quarantine for unknown exposure; coexistence itself is prohibited on the dedicated account;
 - 24-hour VPS soak, restart, reconnect, update, and clock-drift evidence;
 - the other risk, data/news, OpenAI, execution, and validation decisions already listed in the Phase 0 specification.
 
