@@ -1,14 +1,14 @@
 # XAU/USD Autonomous Trading Agent — Phase 0 Specification and Validation Dossier
 
-**Document status:** Draft 0.9 — not frozen  
+**Document status:** Draft 1.0 — controlled technical-baseline revision; Gate 0 incomplete  
 **Date:** 2026-08-11 (UTC)  
 **Production implementation:** Prohibited until every Phase 0 exit criterion is satisfied  
 **Source handoff SHA-256:** `1024ae7fe3cea0305f424e35aa959d9b9fc4863ffa1e7effefecc5df51dd4406`
 
 ## 1. Current verdict
 
-**Version:** Draft 0.9 — 2026-08-11 UTC  
-**Gate 0 is NOT complete.** Exness/API investigation is sufficiently complete for Phase 0: client-owned MT5 Python automation is operationally supported; no proprietary Exness client API is currently available; API Terms Version 15 July 2026 / 001 are channel-scoped under D-0048; and D-0049 accepts the remaining external-AI contractual/data-use ambiguity as residual owner risk. This is not a claim that Exness approved OpenAI processing. Strict local derivation and data minimization are mandatory. Seven candidate technical specifications now cover the Risk Governor, minimized Analyst contract, five setup families, execution/reconciliation, read-only session/VPS diagnostics, news protection and replay methodology. Empirical diagnostics, provider/source choices, evaluation results and marked thresholds remain unresolved. No production or trading-capable implementation may begin.
+**Version:** Draft 1.0 — 2026-08-11 UTC  
+**Gate 0 is NOT complete.** Exness/API investigation is sufficiently complete for Phase 0 under D-0043, D-0048, D-0049 and D-0050. Draft 1.0 freezes the deterministic core mathematics and test-vector contract for Policy A; the advisory/minimized Analyst safety boundary; objective first-replay algorithms for the five setup families; execution/reconciliation/idempotency behavior; initial news taxonomy and lock semantics; the read-only sessions/VPS diagnostic protocol; and the replay/backtest methodology and prospective acceptance gates. “Frozen” means controlled specification baseline, not empirical validation or trading authorization. The exact external-model configuration, data/provider rights, account-specific sessions, runnable diagnostic artifact and soak/restart evidence, empirical cost/shock calibration, golden-vector executions, and other enumerated dependencies remain open. No production or trading-capable implementation may begin.
 
 The present work authorizes only specification, read-only evidence collection, test-harness design, and validation experiments that cannot send, modify, or cancel orders.
 
@@ -56,7 +56,7 @@ Screenshots alone, successful compilation, “no errors observed,” and a singl
 | A-016 | Publicly reachable market/news data may be stored, transformed, sent to OpenAI, or redistributed without restriction | Rejected | Every source requires a provenance and rights record. Government material may be public domain subject to source-specific terms and attribution, while exchange/vendor data may require non-display, derived-data, redistribution, retention, or cloud-processing rights. Unknown rights fail closed and block the source. |
 | A-017 | Zero unsafe model approvals on a frozen evaluation corpus proves the model is universally safe | Rejected | It is a necessary release test for the tested model/prompt/schema/corpus only. It cannot cover all future inputs, market regimes, provider changes, or model behavior. Deterministic validation, the Risk Governor, and an execution-isolated model boundary remain authoritative on every decision. |
 
-## 5. Frozen safety principles (candidate for Gate 0 approval)
+## 5. Frozen safety principles
 
 These are normative requirements, not strategy hypotheses:
 
@@ -342,32 +342,27 @@ No universal minimum trade count is declared yet; the minimum must be derived fr
 
 Gate 0 cannot be marked complete until all items below are satisfied:
 
-- [ ] Contracting entity is linked to the intended account by a redacted documentary record; jurisdiction/residence/client classification, applicable agreement version/date, and automated-trading restrictions are reviewed.
+- [x] Account-specific Personal Area/support evidence is preserved by confidential hash, with contracting entity and technical/account-serving identities kept separate; remaining external-AI ambiguity is owner-accepted under D-0049.
 - [x] One read-only account/VPS/terminal/symbol probe has been run and its byte-exact evidence reviewed under D-0030.
 - [x] Dedicated-account coexistence policy approved by D-0034; demo target separately reports technical retail hedging.
 - [ ] Authoritative account-specific XAUUSD weekly trading sessions are captured and specified.
 - [ ] Intended VPS restart/reconnect and 24-hour soak evidence passes.
-- [ ] Risk policy is approved in cash/equity terms for every deployment stage.
-- [ ] Setup families included in first implementation have algorithmic specifications; vague families are deferred.
+- [x] Policy A constants, adjusted-equity mathematics, sizing boundary and normative vectors are frozen for specification/testing; enumerated account/cost/operational dependencies still fail closed.
+- [x] The first five setup families have objective v1.0-rc1 first-replay algorithms; golden-vector verification remains pending.
 - [ ] Analyst JSON Schema, semantic rules, prompt policy, model benchmark, and data-governance policy are frozen.
-- [ ] Execution/position state machine and idempotency/reconciliation algorithms are frozen.
+- [x] Execution/position state machine and idempotency/reconciliation core are frozen, including one risk-increasing attempt per intent and uncertainty quarantine; broker mappings remain validation dependencies.
 - [ ] News/calendar source, protected events, health SLA, licensing/provenance rights, and lockout/resumption rules are frozen.
 - [ ] Data retention, audit schema, secret handling, operator access, kill switch, incident response, rollback, and recovery are frozen.
-- [ ] Backtest dataset plan, trial accounting, split methodology, cost model, and acceptance thresholds are frozen before optimization.
+- [ ] Trial accounting, split methodology and prospective acceptance gates are frozen; licensed dataset selection and empirical cost/fill models remain open before optimization.
 - [ ] Gate 1–7 test matrices map each requirement to objective evidence.
 - [ ] All critical `TBD`, `TBR`, and `UNKNOWN` items are resolved or explicitly deferred outside the first release.
 - [ ] Specification and Decision Log hashes are recorded and owner approval is explicit.
 
-## 15. Blocking inputs/evidence needed from the owner
+## 15. Owner decisions required only when implementation-ready packets exist
 
 These do not require the owner to review source code:
 
-1. A redacted Personal Area/account-information record that binds `Exness (SC) Ltd` and `Pro — MT5 Demo — USD` to the intended account without exposing login, name, address, email, or documents; plus the exact accepted Client Agreement/General Business Terms version or effective date.
-2. Confirmation of country of residence/client classification and any entity-, jurisdiction-, account-, VPS-, API-, EA-, or automated-trading restrictions shown in the Personal Area or governing documents.
-3. Emergency treatment beyond quarantine for unknown exposure. Coexistence itself is decided by D-0034: it is prohibited; unknown exposure quarantines new risk and alerts, without automatic closure.
-4. Maximum acceptable loss limits stated as: per trade, daily, weekly, and total strategy drawdown; and whether emergency closure of unrecognized exposure is authorized or must only quarantine/alert.
-5. Acceptable decision latency and monthly OpenAI/news-data budget.
-6. Preferred operator alert channels and required response expectations.
+No immediate owner action is required for this revision. When the corresponding engineering/research comparison is ready, owner decisions will be requested for: OpenAI account/privacy/retention/spend settings; news and historical-data provider/budget; strategy volume cap and margin reserve; emergency handling and pause resumption beyond quarantine; operator alert/response expectations; and any statistical-method substitute or combination-allocation rule that materially changes the frozen baseline. Until decided, the affected path remains disabled or fails closed.
 
 ## 16. Authoritative source register
 
@@ -411,8 +406,8 @@ Accessed 2026-08-07 through 2026-08-10:
 - The 2,000-row tick array is a count-limited forward sample from one hour before collection and is not the latest tick tail or a complete hour.
 - No OpenAI API key or intended API project was used; model availability, rate limits, latency, cost, schema behavior, and retention settings remain untested for the owner's account.
 - No production news provider is selected or licensed.
-- Risk limits and statistical thresholds require explicit owner approval and prospective freezing.
-- Setup definitions remain taxonomy labels rather than executable mathematical specifications.
+- Policy A monetary limits are approved and its core mathematics are frozen; account-specific cost, margin and volume-cap inputs remain open.
+- Setup definitions are objective frozen research algorithms, but their golden-vector verification and empirical acceptance remain incomplete.
 
 ## 18. Legal-document evidence and automation boundary
 
@@ -457,9 +452,9 @@ Generic published Pro-account expectations and the account-specific evidence mus
 
 ## 21. Phase 0 work products and remaining design contracts
 
-- Risk Policy A is approved under D-0045; candidate deterministic mathematics and vectors are in `specifications/RISK_GOVERNOR_POLICY_A_SPEC.md`.
+- Risk Policy A is approved under D-0045; frozen core mathematics and 52 normative vectors are in `specifications/RISK_GOVERNOR_POLICY_A_SPEC.md`.
 - Ranked blockers and plain-language actions are in `GATE_0_BLOCKERS_AND_OWNER_ACTIONS.md`.
-- The candidate read-only session/VPS plan is `specifications/XAUUSD_SESSIONS_VPS_READONLY_DIAGNOSTIC_PLAN.md`; any runnable artifact requires separate verification and authorization.
+- The frozen read-only session/VPS protocol is `specifications/XAUUSD_SESSIONS_VPS_READONLY_DIAGNOSTIC_PLAN.md`; the runnable artifact and account/VPS evidence run require separate byte-exact verification and authorization.
 - The OpenAI Analyst remains structurally isolated from credentials and execution. Its strict schema, semantic rules, freshness binding, enums, bounded failures/retries, injection corpus, pinned model, latency/cost and audit hashes must be frozen before implementation. Zero unsafe approvals on a finite corpus remains necessary evidence, never universal proof.
-- Candidate objective definitions for all five families are in `specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md`. Any rule marked unresolved fails closed. Zone B after Zone A invalidation is always a fresh analysis/trade, never averaging, martingale, grid or recovery exposure.
-- Candidate Analyst, execution/reconciliation, news and replay/backtest contracts are stored under `phase0/specifications/`; empirical evidence and explicitly marked owner/provider choices remain open. No paid provider may be purchased without owner approval.
+- Frozen first-replay definitions for all five families are in `specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md`. Zone B after Zone A invalidation is always a fresh analysis/trade, never averaging, martingale, grid or recovery exposure.
+- Frozen-core Analyst, execution/reconciliation, news and replay/backtest contracts are stored under `phase0/specifications/`; each document names the empirical evidence and owner/provider choices that remain open. No paid provider may be purchased without owner approval.
