@@ -1,7 +1,7 @@
 # Execution, Reconciliation, and Idempotency State-Machine Specification
 
-**Status:** Phase 0 candidate specification; no implementation authorization  
-**Version:** 0.1  
+**Status:** Phase 0 deterministic baseline frozen; broker-specific mappings remain validation dependencies  
+**Version:** 1.0  
 **Date:** 2026-08-11  
 **Authorization boundary:** External Python trading remains disabled. This document specifies later behavior only; it authorizes no `order_send`, order modification/cancellation, position close, demo trading, or live trading.
 
@@ -62,6 +62,20 @@ Cross-cutting terminal/control states: `EXPIRED`, `CANCELLED`, `QUARANTINED`, `I
 
 Every transition is an ACID transaction containing prior state/version, event, actor, timestamps, evidence references, transition reason, and new state. Compare-and-swap on version prevents concurrent writers.
 
+### 3.1 Frozen transition rules
+
+The transition relation is allow-listed; an unlisted event/state pair is a protocol error and enters `INCIDENT`. Terminal states never transition back to an active intent. A fresh analysis always creates a new intent.
+
+- `APPROVED -> READY` requires one coherent preflight snapshot and an exact Governor approval for the request hash.
+- `READY -> SUBMITTING` is the only transition that may authorize a later risk-increasing broker call, and only after the durable transaction commits.
+- `SUBMITTING` may become `ACKNOWLEDGED` only with a syntactically valid broker result tied to the exact attempt; otherwise it becomes `SUBMISSION_UNCERTAIN`.
+- `ACKNOWLEDGED` may become `RECONCILED_OPEN`, `RECONCILED_CLOSED`, or `SUBMISSION_UNCERTAIN`; acknowledgement alone never proves exposure state.
+- Any active state becomes `EXPIRED` only when reconciliation proves there is no attributable live or historical exposure. Otherwise expiry produces uncertainty/quarantine.
+- Any unexpected account, symbol, ownership, ledger, lease, or broker-state observation enters `QUARANTINED`; evidence corruption or an impossible transition enters `INCIDENT`.
+- Recovery from `QUARANTINED` or `INCIDENT` is a separately audited operator action after root cause and full reconciliation. It cannot resume the old intent or emit a broker request.
+
+At most one lifecycle writer may hold the account/symbol lease. Losing the lease immediately removes call authority. Wall-clock reversal never changes ordering; durable sequence and monotonic time order local events.
+
 ## 4. Submission protocol
 
 1. Acquire a single-writer lease scoped to environment + account fingerprint + symbol.
@@ -73,7 +87,9 @@ Every transition is an ACID transaction containing prior state/version, event, a
 7. Persist raw result, then reconcile broker orders/deals/positions. Retcodes are inputs to reconciliation, not final truth.
 8. Transition only on uniquely attributable broker evidence. Ambiguity becomes `SUBMISSION_UNCERTAIN` then `QUARANTINED` after the bounded reconciliation deadline.
 
-No automatic resubmission follows timeout, process crash, IPC failure, or missing response. A new submission attempt requires evidence that the earlier request created no exposure, proposal/market freshness still passes, and an explicit frozen retry rule. Conservative Phase 0 default: expire the intent and require fresh analysis.
+No automatic resubmission follows timeout, process crash, IPC failure, missing response, or a broker rejection. **Frozen first-release rule:** there is exactly one risk-increasing submission attempt per intent. If reconciliation proves no exposure was created, that intent becomes `REJECTED`, `EXPIRED`, or `CANCELLED`; any later attempt requires a fresh proposal, snapshot, Governor decision, intent ID, and idempotency key.
+
+The durable call fence is `(environment, account_fingerprint, intent_id, attempt_no=1, request_hash)`, unique in storage. The outbox worker must atomically claim it by compare-and-swap. A claimed row is never reclaimed for another call after crash; it is reconciled as uncertain.
 
 ## 5. Attribution and reconciliation
 
@@ -83,6 +99,8 @@ Reconciliation occurs at startup; before and after every later authorized broker
 
 Required checks include volume conservation across orders, deals and positions; side and net/gross exposure under retail hedging; price/SL/TP conformity within broker rounding; pending versus filled/cancelled state; partial fills/closes; fees/swap; and absence of orphan orders.
 
+The reconciliation snapshot is one logical observation cut: account fingerprint, open orders, open positions, and bounded deal/order history are read with start/end timestamps. If the broker state changes during the cut or linkage/history is incomplete, the result is uncertain and no new risk is permitted. Closure requires (1) zero remaining owned order/position volume, (2) conserved entry/exit deal volume after broker rounding, and (3) the history horizon covering the entire intent lifetime.
+
 ## 6. Partial fills, OCO, and management races
 
 - A partial entry creates actual exposure immediately. Recompute residual allowed risk before considering any remainder; default is cancel the remainder if safely attributable and supported by later authorization, otherwise quarantine.
@@ -91,11 +109,13 @@ Required checks include volume conservation across orders, deals and positions; 
 - If both OCO legs appear executable/fill during a race, do not assume one cancelled the other. Reconcile all deals/orders/positions, cancel nothing blindly, and enter incident/quarantine if exposure differs from policy.
 - Failed Zone A is closed as its own trade. Zone B needs a new proposal, snapshot, intent, idempotency key, and risk approval; it is never recovery/averaging.
 
+**Frozen first-release management scope:** no synthetic OCO, automatic partial-profit leg, trailing stop, break-even move, pending-entry replacement, or automatic remainder resubmission is permitted until its broker-specific state table and demo evidence pass a later gate. Protective SL/TP attached in the original exact request may be specified later only after account capabilities are probed. Uncertain exits block all new risk and require reconciliation/operator escalation; they never authorize an inverse order as a presumed close.
+
 ## 7. Restart and recovery
 
 Startup begins with execution disabled. Load the append-only ledger, verify its hash chain/checkpoints and schema, acquire the lease, fingerprint the connected terminal/account/symbol, then reconcile complete broker state. `SUBMITTING`, uncertain, orphaned, conflicting, unknown, corrupt, or mismatched state remains quarantined. A watchdog may restart analysis/read-only services, but cannot automatically enable execution. Repeated restart/reconciliation failure escalates to `INCIDENT`.
 
-## 8. Preimplementation test vectors
+## 8. Frozen preimplementation test vectors
 
 The later deterministic harness must prove, without a broker call:
 
@@ -112,14 +132,25 @@ The later deterministic harness must prove, without a broker call:
 11. database unavailable/corrupt or lease lost prevents submission;
 12. risk-reducing operations cannot invert a position or increase gross exposure.
 
+Additional mandatory vectors:
+
+13. duplicate outbox claim and lease takeover yield zero additional calls;
+14. a rejected/expired/cancelled intent cannot return to `READY`;
+15. a broker result with mismatched request ID/hash is conflicting evidence;
+16. history truncation prevents closure;
+17. an external order with a colliding comment/magic remains unknown, not owned;
+18. restart from every persisted state has one deterministic fail-closed outcome;
+19. clock rollback preserves sequence ordering and blocks freshness-dependent action;
+20. exit volume exceeding reconciled remaining volume is rejected before any call.
+
 Acceptance for specification freeze: all transitions have total deterministic handling; forbidden transitions are machine-enumerable; every uncertain state prohibits new risk; golden, property, mutation, crash-point, and concurrency tests are specified with expected outcomes. Broker-specific behavior remains for later demo gate and is not inferred.
 
-## 9. Unresolved items
+## 9. Remaining validation dependencies (do not reopen the frozen core)
 
 - Exact MT5 retcode-to-event table and account-specific partial-fill behavior.
-- Whether/which pending-order, SL/TP, or OCO management policy is in the first release.
 - Bounded reconciliation intervals/timeouts derived from measured VPS/broker latency.
 - Exact magic/comment encoding limits and collision strategy on the target account.
 - Owner decision for emergency handling beyond quarantine/alert; automatic closure is not approved.
 - Retention, operator acknowledgement, incident severity, and manual recovery/runbook rules.
 
+These dependencies may narrow supported behavior or keep execution disabled. They may not weaken single-attempt fencing, uncertainty quarantine, unique attribution, broker-authoritative reconciliation, or the prohibition on unapproved risk increase.
