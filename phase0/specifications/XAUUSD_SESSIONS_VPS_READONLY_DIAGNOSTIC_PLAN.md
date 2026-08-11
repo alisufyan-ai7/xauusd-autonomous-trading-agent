@@ -1,7 +1,7 @@
 # XAUUSD Sessions and VPS Reliability — Read-Only Diagnostic Plan
 
-**Status:** Phase 0 diagnostic design; execution requires a separately verified artifact and explicit operator authorization  
-**Version:** 0.1  
+**Status:** Phase 0 read-only diagnostic protocol frozen; runnable artifact and account/VPS run evidence pending  
+**Version:** 1.0  
 **Date:** 2026-08-11  
 **Hard boundary:** Keep **Disable automated trading via external Python API** enabled. No order check/send, order change/cancel, position close, login/account switching, symbol selection, market-book subscription, or other risk-changing operation is permitted.
 
@@ -20,6 +20,10 @@ Any diagnostic artifact must be separately versioned, hashed, statically allow-l
 - redact account number, names, paths, IPs, and other secrets from review output while hashing protected originals;
 - record executable/source/config/dependency hashes and the terminal/account/symbol fingerprint;
 - write append-only timestamped observations locally, with no OpenAI or other external transmission.
+
+The package verifier must reject source or bytecode containing these MT5 capabilities (including aliases/wrappers): `initialize` with credentials or account switching, `login`, `order_check`, `order_send`, `orders_get` followed by any mutation path, position close, order modify/remove, `symbol_select`, market-book add/release, or terminal-setting changes. Read-only `initialize()` without credentials may be admitted solely to attach to the already-running terminal if static/runtime tests prove that it cannot switch accounts or enable trading; otherwise the operator must initialize the terminal manually and the collector must fail.
+
+Runtime fake-module tests must expose every allowed function and trap every other attribute access, not merely known forbidden names. Network egress must be absent or OS-blocked except MT5 terminal IPC and separately approved clock checks; the artifact itself must not contact broker websites, OpenAI, telemetry, package registries, or update services.
 
 ## 3. Session evidence protocol
 
@@ -66,7 +70,7 @@ Network interruption and restart actions can affect availability; they require a
 
 ## 5. Sampling and evidence format
 
-Provisional sampling: health every 5 seconds, account/symbol fingerprint every 60 seconds, session table at start/end and after MT5/build change. Boundary observations should increase frequency without rate-limit abuse. Exact intervals remain subject to measured overhead.
+Frozen initial sampling: health/tick observation every 5 seconds; account/symbol fingerprint every 60 seconds; session table at start, end, reconnect, and build/account/symbol change. During the ten minutes on each side of an expected session boundary, sample health/tick every second if the fake-module/load test and terminal observation show no instability. Missed deadlines are recorded as gaps; they are never backfilled. Any future interval change is versioned and requires re-verification.
 
 Each record uses UTC ISO-8601 plus monotonic time, sequence number, prior-record hash, test/scenario ID, process/session boot IDs, protection flag, connection/health state, redacted fingerprint, tick broker time and receipt time, clock-offset estimate, build/version, error code/class, and raw protected evidence reference/hash. Manifest distinguishes physically packaged files from protected evidence referenced only by hash.
 
@@ -74,7 +78,23 @@ Each record uses UTC ISO-8601 plus monotonic time, sequence number, prior-record
 
 Immediately stop collection and mark the run invalid if the external-Python protection flag is false, account/symbol fingerprint changes unexpectedly, static/runtime verifier fails, an unapproved MT5 method is invoked, output cannot be durably recorded, or a credential appears in output. Disconnect, stale tick, schedule disagreement, multiple-terminal ambiguity, clock drift, or build change are diagnostic findings and make health fail closed; they do not justify any corrective trading action.
 
-## 7. Unresolved diagnostics/research
+## 7. Package verification and acceptance contract
+
+Before the owner is asked to run anything, a release directory must contain source, locked dependency manifest, configuration schema, allow-list, generated forbidden-call inventory, fake-MT5 tests, redaction tests, hash-chain tests, restart tests, static-verifier report, test report, operator instructions, and SHA-256 manifest. The release archive hash and every included file hash are immutable. Protected outputs are not placed in GitHub; GitHub stores only redacted reports and hashes under the evidence policy.
+
+Minimum pre-run acceptance is all tests passing with:
+
+1. zero reachable risk-changing or account-switching calls;
+2. every non-allow-listed MT5 attribute trapped by the fake module;
+3. startup and shutdown both prove the external-Python protection flag is true;
+4. intentional credential/account/path/IP fixtures are redacted while protected originals hash consistently;
+5. interruption at every write point yields either a valid prior record or an explicitly invalid tail, never a silently valid altered chain;
+6. attach failure, terminal loss, stale tick, account/build/symbol drift, clock breach, disk failure, and multiple-terminal ambiguity all fail health closed;
+7. the package performs no trading, configuration mutation, account switching, symbol selection, market-book subscription, or external analytical transmission.
+
+The account/VPS evidence phase passes only after an operator-approved run produces: a complete 24-hour soak; a weekly session table; at least one observed relevant close/reopen or daily break (extend beyond 24 hours if needed); the approved restart/network scenarios; no safety-boundary violation; and a signed/redacted findings report with raw evidence hashes. A 24-hour run that does not cross a boundary is useful reliability evidence but does not close the session objective.
+
+## 8. Remaining diagnostics/research
 
 - Exact account-specific weekly sessions and holiday exception source have not yet been captured.
 - Soak duration beyond the minimum 24 hours and event/weekend boundary coverage may be required after initial evidence.
@@ -83,4 +103,3 @@ Immediately stop collection and mark the run invalid if the external-Python prot
 - Multiple-terminal discovery and path redaction need objective verification in the new collector.
 - MT5 auto-update control/rollback and Windows patch policy need operational decisions.
 - Any future real account needs a new fingerprinted probe before use.
-
