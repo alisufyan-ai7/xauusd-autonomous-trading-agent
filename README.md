@@ -15,4 +15,4 @@ The canonical Phase 0 dossier is `phase0/PHASE_0_SPECIFICATION.md`. The append-o
 - `policies/`: document and evidence handling rules.
 - `.github/workflows/`: automated record and collector validation.
 
-The tag `phase0-v0.6` identifies the initial GitHub migration baseline. It is a documentation/evidence checkpoint, not Gate 0 approval.
+The planned tag `phase0-v0.6` will identify this initial GitHub migration baseline once published. It is a documentation/evidence checkpoint, not Gate 0 approval.
