@@ -44,7 +44,8 @@
     "analyst_contract": "PASS_35_OF_35",
     "replay_acceptance_oracle": "PASS_15_OF_15",
     "setup_execution_implemented_suite": "PASS_21_OF_21_TEST_METHODS",
-    "raw_ohlc_setup_feature_oracle": "PASS_21_OF_21_TEST_METHODS; PARTIAL_FAMILY_COVERAGE",
+    "raw_ohlc_setup_feature_oracle": "PASS_26_OF_26_TEST_METHODS; PARTIAL_FAMILY_COVERAGE_WITH_RSR_CROSS_TIMEFRAME_SLICE",
+    "vps_reliability_fault_oracle": "PASS_25_OF_25_SCENARIO_TRACES_AND_7_OF_7_TEST_METHODS; OFFLINE_ONLY",
     "vps_diagnostic_package": "PASS_3_OF_3_TEST_METHODS",
     "full_ohlc_derived_setup_golden_corpus": "INCOMPLETE",
     "licensed_historical_replay": "INSUFFICIENT_EVIDENCE"
@@ -67,7 +68,13 @@
     "technical_first_candidate": "Trading Economics",
     "contract_comparison_candidate": "Benzinga",
     "public_terms_primary_rejection": "EODHD",
-    "recommendation": "NO_PURCHASE_QUOTE_AND_TRIAL_REVIEW"
+    "recommendation": "NO_PURCHASE_QUOTE_AND_TRIAL_REVIEW",
+    "outreach_status": "PREPARED; NO TRIAL OR COMMERCIAL TERMS ACCEPTED"
+  },
+  "owner_open_policy_packet": {
+    "status": "AWAITING_EXPLICIT_SELECTION",
+    "recommended_bundle": "V1+M1+E1+P1+A1",
+    "automatic_unknown_exposure_closure_authorized": false
   },
   "remaining_gate_0_blockers": [
     "authoritative weekly and holiday XAUUSD sessions",

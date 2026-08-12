@@ -1,6 +1,6 @@
 # Public Decision Log Addendum — 2026-08-12
 
-This publication-safe addendum preserves decisions D-0056 through D-0065 without republishing mixed confidential account/legal records.
+This publication-safe addendum preserves decisions D-0056 through D-0069 without republishing mixed confidential account/legal records.
 
 | ID | Status | Decision | Gate effect |
 |---|---|---|---|
@@ -14,3 +14,7 @@ This publication-safe addendum preserves decisions D-0056 through D-0065 without
 | D-0063 | Accepted | Add an independent pure raw-OHLC feature oracle with 16/16 passing tests. | Core feature/look-ahead/mirror/tick coverage advances; every family lifecycle predicate is not yet complete. |
 | D-0064 | Accepted | Fast-forward private `main` to the sanitized closure commit and authorize no-purchase provider outreach. | No paid trial, subscription, annual commitment, binding commercial term or licence acceptance is authorized. |
 | D-0065 | Accepted | Expand the raw-OHLC oracle to 21/21 tests across additional TPB/BRT/FBR/RSR/MOC predicates. | Full cross-timeframe family lifecycle coverage remains incomplete. |
+| D-0066 | Accepted | Fast-forward private `main` to `9085081246ae36c105114fe474b23ba3d787808c` and prepare approved non-binding provider inquiries. | No purchase, auto-renewal, binding term, trial activation or licence acceptance is authorized. |
+| D-0067 | Accepted | Expand the raw-OHLC oracle to 26/26 tests with H1/M15 binding and a bounded RSR lifecycle slice. | Other family lifecycles and full golden-corpus acceptance remain incomplete. |
+| D-0068 | Accepted | Add an offline reliability oracle passing 25/25 exact scenario traces and 7/7 tests. | Controlled VPS observations remain required; simulation is not operational evidence. |
+| D-0069 | Accepted | Issue a conservative owner-decision packet recommending `V1 + M1 + E1 + P1 + A1` without adopting it. | The five policies remain open until explicit owner selection. |
