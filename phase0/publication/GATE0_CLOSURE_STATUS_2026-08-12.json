@@ -44,6 +44,7 @@
     "analyst_contract": "PASS_35_OF_35",
     "replay_acceptance_oracle": "PASS_15_OF_15",
     "setup_execution_implemented_suite": "PASS_21_OF_21_TEST_METHODS",
+    "raw_ohlc_setup_feature_oracle": "PASS_21_OF_21_TEST_METHODS; PARTIAL_FAMILY_COVERAGE",
     "vps_diagnostic_package": "PASS_3_OF_3_TEST_METHODS",
     "full_ohlc_derived_setup_golden_corpus": "INCOMPLETE",
     "licensed_historical_replay": "INSUFFICIENT_EVIDENCE"

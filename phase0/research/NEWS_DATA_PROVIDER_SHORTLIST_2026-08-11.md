@@ -74,4 +74,4 @@ Provider procurement remains open. Until one candidate passes contractual review
 
 Request written trial/quote responses from Trading Economics and Benzinga using the eight-question matrix above. Prefer a 14–30 day non-renewing evaluation. Do not submit payment details or accept annual terms. Admission requires a sample feed to pass timezone/DST, stable-ID, revision, cancellation, completeness, stale-source, rate-limit and source-disagreement tests against official BLS/BEA/Federal Reserve/DOL schedules.
 
-Current recommendation for owner approval: **authorize quote/trial outreach to Trading Economics and Benzinga only; authorize no purchase.**
+Owner decision D-0064: **no-purchase quote/trial outreach to Trading Economics and Benzinga is authorized.** The controlled inquiry is prepared in `PROVIDER_OUTREACH_PACKET_2026-08-12.md`. No message has been submitted because the official channels require sender contact confirmation at the external action boundary. No paid trial, subscription, annual commitment, binding commercial term or licence acceptance is authorized.
