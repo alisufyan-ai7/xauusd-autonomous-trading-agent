@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["analyst-benchmark-1.0"]},
+    "analysis_id": {"type": "string"},
+    "snapshot_id": {"type": "string"},
+    "decision": {"type": "string", "enum": ["NO_TRADE", "PROPOSE_TRADE"]},
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "VALID_SETUP", "NO_VALID_SETUP", "POOR_LOCATION", "PRICE_EXTENDED",
+          "INSUFFICIENT_RR", "CONFLICTING_TIMEFRAMES", "UNCERTAIN_STRUCTURE",
+          "VOLATILITY_ABNORMAL", "SPREAD_BLOCKED", "EVENT_RISK", "STALE_INPUT",
+          "RISK_STATE_BLOCKED", "UNRESOLVED_BROKER_STATE", "INSUFFICIENT_DATA",
+          "MODEL_UNCERTAIN", "UNTRUSTED_TEXT_IGNORED"
+        ]
+      }
+    },
+    "summary": {"type": "string"},
+    "proposal": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {"kind": {"type": "string", "enum": ["NONE"]}},
+          "required": ["kind"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {"type": "string", "enum": ["TRADE"]},
+            "setup_family": {"type": "string", "enum": ["TPB", "BRT", "FBR", "RSR", "MOC"]},
+            "direction": {"type": "string", "enum": ["BUY", "SELL"]},
+            "entry_price": {"type": "string"},
+            "stop_loss": {"type": "string"},
+            "target_1": {"type": "string"},
+            "target_final": {"type": "string"},
+            "confidence": {"type": "integer", "minimum": 0, "maximum": 100},
+            "evidence_refs": {"type": "array", "items": {"type": "string"}}
+          },
+          "required": ["kind", "setup_family", "direction", "entry_price", "stop_loss", "target_1", "target_final", "confidence", "evidence_refs"]
+        }
+      ]
+    }
+  },
+  "required": ["schema_version", "analysis_id", "snapshot_id", "decision", "reason_codes", "summary", "proposal"]
+}

@@ -1,8 +1,8 @@
 # Execution, Reconciliation, and Idempotency State-Machine Specification
 
 **Status:** Phase 0 deterministic baseline frozen; broker-specific mappings remain validation dependencies  
-**Version:** 1.0  
-**Date:** 2026-08-11  
+**Version:** 1.0.1  
+**Date:** 2026-08-12  
 **Authorization boundary:** External Python trading remains disabled. This document specifies later behavior only; it authorizes no `order_send`, order modification/cancellation, position close, demo trading, or live trading.
 
 ## 1. Safety invariants
@@ -74,6 +74,14 @@ The transition relation is allow-listed; an unlisted event/state pair is a proto
 - Any unexpected account, symbol, ownership, ledger, lease, or broker-state observation enters `QUARANTINED`; evidence corruption or an impossible transition enters `INCIDENT`.
 - Recovery from `QUARANTINED` or `INCIDENT` is a separately audited operator action after root cause and full reconciliation. It cannot resume the old intent or emit a broker request.
 
+Events are typed before transition evaluation. Precedence is total and fixed:
+
+1. `EVIDENCE_CORRUPTION` or `PROTOCOL_INVALID` -> `INCIDENT`.
+2. Otherwise `SAFETY_OBSERVATION` (unknown/conflicting account, symbol, ownership, ledger, lease or broker state) -> `QUARANTINED`.
+3. Otherwise `NORMAL_TRANSITION` is evaluated against the allow-listed transition relation; an unlisted pair is reclassified `PROTOCOL_INVALID` and enters `INCIDENT`.
+
+If one input contains more than one event class, the highest item above wins. Thus corruption/impossible protocol evidence can never be downgraded to quarantine, and a valid safety observation cannot be misclassified as a normal transition.
+
 At most one lifecycle writer may hold the account/symbol lease. Losing the lease immediately removes call authority. Wall-clock reversal never changes ordering; durable sequence and monotonic time order local events.
 
 ## 4. Submission protocol
@@ -114,6 +122,26 @@ The reconciliation snapshot is one logical observation cut: account fingerprint,
 ## 7. Restart and recovery
 
 Startup begins with execution disabled. Load the append-only ledger, verify its hash chain/checkpoints and schema, acquire the lease, fingerprint the connected terminal/account/symbol, then reconcile complete broker state. `SUBMITTING`, uncertain, orphaned, conflicting, unknown, corrupt, or mismatched state remains quarantined. A watchdog may restart analysis/read-only services, but cannot automatically enable execution. Repeated restart/reconciliation failure escalates to `INCIDENT`.
+
+After ledger integrity and broker reconciliation succeed, the persisted-state outcome is total:
+
+| Persisted state | Restart outcome |
+|---|---|
+| `OBSERVED` | `OBSERVED` |
+| `PROPOSED` | `PROPOSED` |
+| `REJECTED` | `REJECTED` |
+| `APPROVED` | `APPROVED` (fresh preflight required; no call authority) |
+| `READY` | `APPROVED` (prior readiness is revoked; fresh preflight required) |
+| `SUBMITTING` / `SUBMISSION_UNCERTAIN` / `ACKNOWLEDGED` | `QUARANTINED` |
+| `RECONCILED_OPEN` / `MANAGING` | `QUARANTINED` pending full exposure/runbook reconciliation |
+| `EXIT_SUBMITTING` / `EXIT_UNCERTAIN` | `QUARANTINED` |
+| `RECONCILED_CLOSED` | `RECONCILED_CLOSED` |
+| `EXPIRED` | `EXPIRED` |
+| `CANCELLED` | `CANCELLED` |
+| `QUARANTINED` | `QUARANTINED` |
+| `INCIDENT` | `INCIDENT` |
+
+Any ledger/hash/schema corruption overrides this table and produces `INCIDENT`. Any account/symbol/ownership/lease/broker mismatch overrides a non-incident outcome and produces `QUARANTINED`. No restart outcome grants broker-call authority; `APPROVED` must pass a new `APPROVED -> READY` preflight after a separately authorized later gate.
 
 ## 8. Frozen preimplementation test vectors
 
