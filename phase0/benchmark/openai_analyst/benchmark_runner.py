@@ -9,9 +9,10 @@ ROOT = Path(__file__).parent
 MODELS = ("gpt-5.6-terra", "gpt-5.6-sol", "gpt-5.6-luna")
 PRICES = {
     "gpt-5.6-terra": (2.00, 12.00),
-    "gpt-5.6-sol": (5.00, 30.00),
+    "gpt-5.6-sol": (4.00, 20.00),
     "gpt-5.6-luna": (0.20, 1.20),
 }
+OWNER_BUDGET_CEILING_USD = 8.0
 MAX_OUTPUT_TOKENS = 1200
 FORBIDDEN = ("account_number", "account number", "exact_balance", "ticket_id", "password", "api_key", "server_id")
 
@@ -81,8 +82,8 @@ def validate_files():
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--live",action="store_true"); ap.add_argument("--budget",type=float,default=10.0); ap.add_argument("--output",type=Path,default=ROOT/"BENCHMARK_RESULTS.json"); args=ap.parse_args()
-    if args.budget<=0 or args.budget>10: raise SystemExit("budget must be >0 and <=10")
+    ap=argparse.ArgumentParser(); ap.add_argument("--live",action="store_true"); ap.add_argument("--budget",type=float,default=OWNER_BUDGET_CEILING_USD); ap.add_argument("--output",type=Path,default=ROOT/"BENCHMARK_RESULTS.json"); args=ap.parse_args()
+    if args.budget<=0 or args.budget>OWNER_BUDGET_CEILING_USD: raise SystemExit(f"budget must be >0 and <={OWNER_BUDGET_CEILING_USD:g}")
     schema,cases,prompt=validate_files()
     if not args.live:
         print(json.dumps({"status":"DRY_PASS","models":MODELS,"cases":len(cases),"local_blocks":sum(c["expected"]=="LOCAL_BLOCK" for c in cases),"max_budget_usd":args.budget,"store":False,"tools":[]},indent=2)); return 0

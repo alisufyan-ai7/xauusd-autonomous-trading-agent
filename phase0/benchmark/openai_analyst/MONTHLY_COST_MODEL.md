@@ -11,7 +11,7 @@ Official list prices used for standard API processing, per one million tokens:
 | Model | Input | Output | Intended role |
 |---|---:|---:|---|
 | GPT-5.6 Terra | USD 2.00 | USD 12.00 | Primary |
-| GPT-5.6 Sol | USD 5.00 | USD 30.00 | Challenger/evaluation only |
+| GPT-5.6 Sol | USD 4.00 | USD 20.00 | Challenger/evaluation only |
 | GPT-5.6 Luna | USD 0.20 | USD 1.20 | Cost baseline |
 
 Sources: [Terra](https://developers.openai.com/api/docs/models/gpt-5.6-terra), [Sol](https://developers.openai.com/api/docs/models/gpt-5.6-sol), and [Luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna). Prices can change and must be rechecked before a production budget is frozen.
@@ -28,12 +28,12 @@ Monthly cost is:
 
 | Eligible calls/day | Terra primary | Sol if used for every call | Luna if used for every call |
 |---:|---:|---:|---:|
-| 10 | USD 2.28 | USD 5.70 | USD 0.23 |
-| 24 | USD 5.47 | USD 13.68 | USD 0.55 |
-| 50 | USD 11.40 | USD 28.50 | USD 1.14 |
-| 96 | USD 21.89 | USD 54.72 | USD 2.19 |
+| 10 | USD 2.28 | USD 4.20 | USD 0.23 |
+| 24 | USD 5.47 | USD 10.08 | USD 0.55 |
+| 50 | USD 11.40 | USD 21.00 | USD 1.14 |
+| 96 | USD 21.89 | USD 40.32 | USD 2.19 |
 
-Recommended planning envelope for the proposed event-driven design is **USD 3–10/month for Terra** while the local gate averages roughly 10–40 eligible calls/day. Sol should remain a sampled challenger rather than run on every production candidate; a 10% Sol audit sample adds about 25% to Terra-only model spend under equal token usage. Luna is a cost comparator, not an automatic fallback.
+Recommended planning envelope for the proposed event-driven design is **USD 3–10/month for Terra** while the local gate averages roughly 10–40 eligible calls/day. Sol should remain a sampled challenger rather than run on every production candidate; a 10% Sol audit sample adds about 18% to Terra-only model spend under equal token usage. Luna is a cost comparator, not an automatic fallback.
 
 These figures exclude any future licensed market/news data, VPS, monitoring, storage, or network costs. No paid data provider has been approved.
 
@@ -44,12 +44,12 @@ The frozen corpus has 16 live-eligible cases across three models (48 requests) a
 | Model | Reserved maximum for 16 requests |
 |---|---:|
 | Terra | USD 0.3436 |
-| Sol | USD 0.8588 |
+| Sol | USD 0.5768 |
 | Luna | USD 0.0344 |
-| **Total** | **USD 1.2368** |
+| **Total** | **USD 0.9548** |
 
-This is below the owner-approved USD 10 ceiling. Actual cost should be lower if responses use fewer than the 1,200-token maximum. The runner stops before a request whose reservation could exceed the cumulative ceiling and performs no retries.
+This is below the owner-approved USD 8 ceiling. Actual cost should be lower if responses use fewer than the 1,200-token maximum. The runner stops before a request whose reservation could exceed the cumulative ceiling and performs no retries.
 
 ## Budget recommendation
 
-Keep the benchmark project hard limit at USD 10. After the live run, replace the 2,000/300 planning assumptions with measured p50/p95 tokens and candidate frequency from non-trading replay. Do not approve a production monthly budget until those two measured quantities exist.
+Keep the benchmark project hard limit at USD 8 and the USD 4 alert. After the live run, replace the 2,000/300 planning assumptions with measured p50/p95 tokens and candidate frequency from non-trading replay. Do not approve a production monthly budget until those two measured quantities exist.

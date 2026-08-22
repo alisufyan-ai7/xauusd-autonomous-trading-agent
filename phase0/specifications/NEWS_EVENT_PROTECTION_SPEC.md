@@ -1,8 +1,8 @@
 # News and Event Protection Specification
 
-**Status:** Phase 0 deterministic protection baseline frozen; provider procurement and empirical calibration remain open  
-**Version:** 1.0  
-**Date:** 2026-08-11  
+**Status:** Phase 0 deterministic protection baseline frozen; free official-source design selected for conformance evaluation; empirical calibration remains open  
+**Version:** 1.1  
+**Date:** 2026-08-22  
 **Authorization boundary:** Research/design only. No paid provider purchase, external-data transmission, or trading is authorized.
 
 ## 1. Purpose and authority
@@ -23,7 +23,7 @@ Unscheduled shocks—material Fed surprises, geopolitical escalation, market clo
 
 Every event has provider/source lineage; stable event ID; taxonomy/version; impact class; currency/region; title; scheduled time in UTC; source timezone/IANA zone; initial publication, receipt, last-update and cancellation timestamps; tentative/all-day flags; revision/postponement status; source payload hash; parser version; rights record; and health/conflict status. Time without a verified timezone is invalid.
 
-Source priority and conflict resolution must be frozen. Official BLS, BEA, Federal Reserve, and DOL schedules are authoritative for their own releases, but operational use requires monitored machine-readable acquisition or a licensed provider. Any provider must have documented rights for automation, storage, VPS/cloud processing, derived states, audit retention, and—if used—OpenAI transmission. Unknown rights block that source.
+Source priority and conflict resolution must be frozen. Official BLS, BEA, Federal Reserve, Census, and DOL schedules are authoritative for their own releases. Operational use may use a first-party machine-readable feed or a monitored, hashed official schedule snapshot with a versioned parser and fail-closed schema-drift detection. A paid aggregator is not required when the official-source design passes coverage, timezone, freshness, revision, outage, retention, and replay conformance. Any third-party provider still requires documented rights for automation, storage, VPS/cloud processing, derived states, audit retention, and—if used—OpenAI transmission. Unknown rights block that third-party source.
 
 ## 4. Deterministic lock state
 
@@ -71,11 +71,13 @@ Health covers source fetch success, age, clock offset, schema validity, duplicat
 
 Provider revisions, postponements, cancellations, and unscheduled updates remain append-only. Alerts must distinguish provider outage, parser failure, rights expiry, schedule conflict, shock lock, and ordinary protected window.
 
-### 6.1 Frozen provider admission requirements
+### 6.1 Frozen source admission requirements
 
-An operational source is inadmissible until a recorded review verifies: authoritative provenance/coverage for every frozen Tier 1 event; UTC/IANA timezone semantics and DST behavior; stable IDs plus revisions/cancellations/postponements; update latency history; documented uptime/status and rate limits; deterministic machine-readable access; automation/VPS/storage/derived-use/audit-retention rights; credential handling; historical replay availability or an approved archival method; and total cost. A provider marketing label such as “high impact” is not the taxonomy authority.
+An operational source is inadmissible until a recorded review verifies: authoritative provenance/coverage for every frozen Tier 1 event; UTC/IANA timezone semantics and DST behavior; deterministic stable local IDs plus revisions/cancellations/postponements; update latency history; observed availability and polite acquisition limits; deterministic machine-readable access or a monitored/versioned official-page parser; permitted local automation/storage/derived-use/audit retention; credential handling if applicable; historical replay availability or an approved hash-chained archival method; and total cost. A provider marketing label such as “high impact” is not the taxonomy authority.
 
-Production design requires either (a) one licensed operational provider continuously reconciled to official-source schedules with discrepancies locking entries, or (b) two licensed operational providers with a frozen source-priority/conflict rule. Scraping an undocumented public page is not acceptable. No paid source may be procured without owner approval. Until a provider passes admission and health tests, the Event Guard is `SOURCE_UNHEALTHY` and automated entry remains disabled.
+The selected first design is local normalization of the official BLS iCalendar, BEA iCalendar/JSON, Federal Reserve FOMC and monthly calendars, and Census economic-indicator schedule. DOL is also required if the frozen Tier-2 jobless-claims event remains protected; the other four agencies do not publish that release. FRED may corroborate release dates but cannot supply or override an authoritative event time. The agency's own schedule wins for its release; any disagreement, unverified timezone, parser drift, missing horizon, or stale snapshot locks entries.
+
+A paid aggregator such as Trading Economics is an optional later upgrade only if registered Gate 0 tests demonstrate a material official-source gap—for example, unacceptable update latency, incomplete scheduled Fed-communication coverage, or insufficient revision history—that cannot be closed safely with first-party sources. No paid source or charging/auto-renewing trial may be activated without owner approval. Until the official-source acquisition and conformance evidence passes, the Event Guard is `SOURCE_UNHEALTHY` and automated entry remains disabled.
 
 ## 7. Analyst minimization contract
 
@@ -89,7 +91,7 @@ Required acceptance: zero new-entry approvals inside any expected lock; determin
 
 ## 9. Remaining decisions/evidence
 
-- Select the first operational calendar/provider or redundant design after rights, coverage, latency, reliability, and cost comparison. No paid service without owner approval.
+- Complete live acquisition/revision/holiday conformance for the selected official-source design. Escalate to a paid-provider decision only on a documented material gap. No paid service without owner approval.
 - Calibrate and freeze shock thresholds, normalization duration, schedule horizon, and health SLA using prospective research; the evaluation semantics and missing-data behavior above are already frozen.
 - Decide treatment of existing exposure/pending orders around events; no emergency action is implied here.
 - Define material Fed communications and geopolitical alert provenance without admitting unreliable headline triggers.

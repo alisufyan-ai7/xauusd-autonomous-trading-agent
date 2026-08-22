@@ -5,17 +5,24 @@ from decimal import Decimal
 from pathlib import Path
 
 from feature_oracle import (
-    Bar, adx, atr, bar_geometry, breakout_bar, brt_retest, completed_bars,
+    Bar, RSRLifecycle, adx, advance_rsr_lifecycle, atr, bar_geometry,
+    bind_completed_timeframes, breakout_bar, brt_retest, completed_bars,
     confirmation_sequence, confirmed_swings, correlation, ema, fbr_hold_and_confirm,
     fbr_reclaim, mirror_bars, moc_compression, moc_trigger, normalize_price,
-    rejection_bar, reward_risk, rsi, rsr_location, tpb_zones, true_ranges,
-    validate_series,
+    rejection_bar, reward_risk, rsi, rsr_location, select_rsr_range, tpb_zones,
+    true_ranges, validate_series,
 )
 
 
 def series(closes, *, start=0, step=900, width=2.0):
     return [Bar(start + i * step, c - 0.25, c + width / 2, c - width / 2, c, 10)
             for i, c in enumerate(closes)]
+
+
+def raw_h1_range(cycles=4):
+    pattern = [110, 115, 119, 115, 110, 105, 101, 105]
+    return [Bar(i * 3600, c, c + 1, c - 1, c, 10)
+            for i, c in enumerate(pattern * cycles)]
 
 
 class RawOHLCFeatureTests(unittest.TestCase):
@@ -35,6 +42,13 @@ class RawOHLCFeatureTests(unittest.TestCase):
         eligible = completed_bars(bars, decision, 900)
         self.assertEqual(len(eligible), 19)
         self.assertNotIn(bars[-1], eligible)
+
+    def test_cross_timeframe_binding_excludes_both_forming_bars(self):
+        h1 = series([100, 101, 102], step=3600)
+        m15 = series(range(9), step=900)
+        bound_h1, bound_m15 = bind_completed_timeframes(h1, m15, 7199)
+        self.assertEqual([b.time for b in bound_h1], [0])
+        self.assertEqual([b.time for b in bound_m15], [0, 900, 1800, 2700, 3600, 4500, 5400])
 
     def test_integrity_fail_closed_and_known_session_break(self):
         bars = series(range(20))
@@ -140,6 +154,66 @@ class RawOHLCFeatureTests(unittest.TestCase):
         self.assertFalse(rsr_location(103.001, 100, 120, "LONG"))
         self.assertTrue(rsr_location(117, 100, 120, "SHORT"))
         self.assertFalse(rsr_location(110, 100, 120, "LONG"))
+
+    def test_rsr_raw_h1_window_selects_shortest_then_most_recent(self):
+        bars = raw_h1_range()
+        selected = select_rsr_range(bars, atr_h1=10, level_tol=.5)
+        self.assertIsNotNone(selected)
+        assert selected is not None
+        self.assertEqual((selected.start_index, selected.end_index), (8, 31))
+        self.assertEqual((selected.lower, selected.upper, selected.width), (100, 120, 20))
+        self.assertGreaterEqual(len(selected.lower_test_indices), 2)
+        self.assertGreaterEqual(len(selected.upper_test_indices), 2)
+
+    def test_rsr_raw_window_width_boundary_mirror_and_recent_break(self):
+        bars = raw_h1_range(3)
+        exact_atr = 20 / 1.5
+        selected = select_rsr_range(bars, atr_h1=exact_atr, level_tol=.5)
+        self.assertIsNotNone(selected)
+        self.assertIsNone(select_rsr_range(bars, atr_h1=exact_atr + .001, level_tol=.5))
+        mirrored = select_rsr_range(mirror_bars(bars, 110), atr_h1=exact_atr, level_tol=.5)
+        self.assertIsNotNone(mirrored)
+        assert selected is not None and mirrored is not None
+        self.assertAlmostEqual(selected.lower, 220 - mirrored.upper)
+        self.assertAlmostEqual(selected.upper, 220 - mirrored.lower)
+        broken = list(bars)
+        broken[-1] = Bar(broken[-1].time, 105, 123, 104, 122, 10)
+        self.assertIsNone(select_rsr_range(broken, atr_h1=10, level_tol=.5))
+
+    def test_rsr_cluster_lifecycle_requires_away_then_distinct_return(self):
+        state = RSRLifecycle("lower:test:1")
+        state = advance_rsr_lifecycle(state, event="M15_RESERVE", event_time=100)
+        self.assertEqual(state.status, "PENDING")
+        state = advance_rsr_lifecycle(state, event="M15_EXPIRED", event_time=200)
+        self.assertEqual(state.status, "CONSUMED")
+        state = advance_rsr_lifecycle(state, event="H1_MOVE_AWAY", event_time=3600, away_fraction=.399)
+        state = advance_rsr_lifecycle(
+            state, event="H1_RETURN_NEW_CLUSTER", event_time=7200,
+            new_cluster_id="lower:test:2",
+        )
+        self.assertEqual((state.cluster_id, state.status), ("lower:test:1", "CONSUMED"))
+        state = advance_rsr_lifecycle(state, event="H1_MOVE_AWAY", event_time=10800, away_fraction=.40)
+        same = advance_rsr_lifecycle(
+            state, event="H1_RETURN_NEW_CLUSTER", event_time=14400,
+            new_cluster_id="lower:test:1",
+        )
+        self.assertEqual(same.status, "CONSUMED")
+        fresh = advance_rsr_lifecycle(
+            same, event="H1_RETURN_NEW_CLUSTER", event_time=18000,
+            new_cluster_id="lower:test:2",
+        )
+        self.assertEqual(fresh, RSRLifecycle("lower:test:2", "READY", 18000, 0.0))
+
+    def test_h1_invalidation_cancels_cross_timeframe_rsr_eligibility(self):
+        state = advance_rsr_lifecycle(
+            RSRLifecycle("upper:test:7"), event="M15_RESERVE", event_time=900,
+        )
+        state = advance_rsr_lifecycle(state, event="H1_RANGE_INVALIDATED", event_time=3600)
+        self.assertEqual(state.status, "INVALIDATED")
+        state = advance_rsr_lifecycle(state, event="M15_FILLED", event_time=4500)
+        self.assertEqual(state.status, "INVALIDATED")
+        with self.assertRaisesRegex(ValueError, "non-monotonic"):
+            advance_rsr_lifecycle(state, event="M15_RESERVE", event_time=4500)
 
     def test_moc_trigger_bounds_and_fresh_compression(self):
         compression = [Bar(i, 100, 101, 99.5, 100.2) for i in range(3)]

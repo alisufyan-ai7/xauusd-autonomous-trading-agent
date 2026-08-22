@@ -1,5 +1,5 @@
 import json, unittest
-from benchmark_runner import MODELS, local_block, payload, request_body, reserve_cost, validate_files
+from benchmark_runner import MODELS, OWNER_BUDGET_CEILING_USD, PRICES, local_block, payload, request_body, reserve_cost, validate_files
 
 class BenchmarkTests(unittest.TestCase):
     def test_files_and_local_blocks(self):
@@ -18,5 +18,11 @@ class BenchmarkTests(unittest.TestCase):
             text=json.dumps(payload(case)).lower()
             for forbidden in ("account_number","ticket_id","server_id","password","api_key","exact_balance"):
                 self.assertNotIn(forbidden,text)
+
+    def test_owner_budget_and_current_price_table_are_frozen(self):
+        self.assertEqual(8.0, OWNER_BUDGET_CEILING_USD)
+        self.assertEqual((2.0, 12.0), PRICES["gpt-5.6-terra"])
+        self.assertEqual((4.0, 20.0), PRICES["gpt-5.6-sol"])
+        self.assertEqual((0.2, 1.2), PRICES["gpt-5.6-luna"])
 
 if __name__=="__main__": unittest.main(verbosity=2)

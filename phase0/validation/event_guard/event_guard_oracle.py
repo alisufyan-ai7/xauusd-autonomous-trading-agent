@@ -1,0 +1,236 @@
+"""Independent, offline oracle for the free official-source Event Guard design.
+
+This module deliberately performs no network access and has no trading imports.  It
+tests normalization, source-health, reconciliation, interval, and shock-lock
+semantics against captured/constructed official-source shapes.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+import hashlib
+import json
+import re
+from zoneinfo import ZoneInfo
+
+UTC = timezone.utc
+EASTERN = "America/New_York"
+WINDOWS = {"TIER_1": (30, 30), "TIER_2": (15, 15)}
+
+
+@dataclass(frozen=True)
+class Event:
+    source: str
+    source_id: str
+    title: str
+    scheduled_utc: datetime
+    source_timezone: str
+    taxonomy: str
+    tier: str
+    status: str = "SCHEDULED"
+    payload_sha256: str = ""
+
+    def __post_init__(self):
+        if self.scheduled_utc.tzinfo is None or self.scheduled_utc.utcoffset() != timedelta(0):
+            raise ValueError("scheduled_utc must be timezone-aware UTC")
+        if self.tier not in WINDOWS:
+            raise ValueError("unknown tier")
+        if self.status not in {"SCHEDULED", "CANCELLED", "SUSPENDED", "TENTATIVE"}:
+            raise ValueError("unknown status")
+
+
+def canonical(value) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+
+
+def payload_hash(value) -> str:
+    return hashlib.sha256(canonical(value).encode("utf-8")).hexdigest()
+
+
+def local_to_utc(date_text: str, time_text: str, zone: str = EASTERN) -> datetime:
+    """Normalize an explicit IANA-zone local timestamp to UTC."""
+    if not zone or "/" not in zone:
+        raise ValueError("verified IANA timezone required")
+    local = datetime.strptime(f"{date_text} {time_text}", "%Y-%m-%d %H:%M").replace(
+        tzinfo=ZoneInfo(zone)
+    )
+    return local.astimezone(UTC)
+
+
+def parse_utc(value: str) -> datetime:
+    if value.endswith("Z"):
+        value = value[:-1] + "+00:00"
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        raise ValueError("timezone missing")
+    return parsed.astimezone(UTC)
+
+
+def classify(title: str) -> tuple[str, str] | None:
+    text = re.sub(r"\s+", " ", title).strip().lower()
+    rules = (
+        (("employment situation",), ("US_EMPLOYMENT", "TIER_1")),
+        (("consumer price index", "cpi"), ("US_CPI", "TIER_1")),
+        (("personal income and outlays",), ("US_PCE", "TIER_1")),
+        (("fomc statement", "federal open market committee statement"), ("FOMC_STATEMENT", "TIER_1")),
+        (("fomc press conference",), ("FOMC_PRESS_CONFERENCE", "TIER_1")),
+        (("fomc minutes",), ("FOMC_MINUTES", "TIER_1")),
+        (("initial claims", "jobless claims", "unemployment insurance weekly claims"), ("US_JOBLESS_CLAIMS", "TIER_2")),
+        (("fed speech", "federal reserve speech", "fed testimony"), ("FED_COMMUNICATION", "TIER_2")),
+    )
+    for names, result in rules:
+        if any(name in text for name in names):
+            return result
+    return None
+
+
+def _unfold_ics(text: str) -> list[str]:
+    unfolded: list[str] = []
+    for raw in text.replace("\r\n", "\n").split("\n"):
+        if raw.startswith((" ", "\t")) and unfolded:
+            unfolded[-1] += raw[1:]
+        else:
+            unfolded.append(raw)
+    return unfolded
+
+
+def parse_ics(text: str, source: str, default_zone: str | None = None) -> list[Event]:
+    """Parse the small RFC 5545 subset used by BLS/BEA release calendars."""
+    blocks: list[dict[str, str]] = []
+    current: dict[str, str] | None = None
+    for line in _unfold_ics(text):
+        if line == "BEGIN:VEVENT":
+            current = {}
+        elif line == "END:VEVENT" and current is not None:
+            blocks.append(current)
+            current = None
+        elif current is not None and ":" in line:
+            key, value = line.split(":", 1)
+            current[key] = value.replace("\\,", ",").replace("\\;", ";")
+
+    events: list[Event] = []
+    for item in blocks:
+        title = item.get("SUMMARY", "")
+        category = classify(title)
+        if category is None:
+            continue
+        dt_key = next((key for key in item if key.startswith("DTSTART")), None)
+        if dt_key is None:
+            raise ValueError("DTSTART missing")
+        raw = item[dt_key]
+        zone_match = re.search(r"TZID=([^;:]+)", dt_key)
+        if raw.endswith("Z"):
+            scheduled = datetime.strptime(raw, "%Y%m%dT%H%M%SZ").replace(tzinfo=UTC)
+            source_zone = "UTC"
+        else:
+            zone = zone_match.group(1) if zone_match else default_zone
+            if not zone:
+                raise ValueError("verified IANA timezone required")
+            scheduled = datetime.strptime(raw, "%Y%m%dT%H%M%S").replace(
+                tzinfo=ZoneInfo(zone)
+            ).astimezone(UTC)
+            source_zone = zone
+        status = item.get("STATUS", "CONFIRMED").upper()
+        normalized_status = "CANCELLED" if status == "CANCELLED" else "SCHEDULED"
+        taxonomy, tier = category
+        source_id = item.get("UID") or hashlib.sha256(
+            f"{source}|{title}|{scheduled.isoformat()}".encode()
+        ).hexdigest()
+        events.append(Event(source, source_id, title, scheduled, source_zone, taxonomy, tier,
+                            normalized_status, payload_hash(item)))
+    return events
+
+
+def parse_bea_json(text: str) -> list[Event]:
+    raw = json.loads(text)
+    events: list[Event] = []
+    for title, body in raw.items():
+        category = classify(title)
+        if category is None:
+            continue
+        taxonomy, tier = category
+        for timestamp in body.get("release_dates", []):
+            scheduled = parse_utc(timestamp)
+            source_id = hashlib.sha256(f"BEA|{title}|{timestamp}".encode()).hexdigest()
+            events.append(Event("BEA_JSON", source_id, title, scheduled, "UTC", taxonomy, tier,
+                                payload_sha256=payload_hash({"title": title, "timestamp": timestamp})))
+    return events
+
+
+def parse_official_rows(rows: list[dict], source: str, zone: str = EASTERN) -> list[Event]:
+    """Normalize monitored Fed/Census/DOL schedule rows after snapshot extraction."""
+    events: list[Event] = []
+    for row in rows:
+        category = classify(row["title"])
+        if category is None:
+            continue
+        status = row.get("status", "SCHEDULED").upper()
+        if status in {"SUSPENDED", "TENTATIVE"} and not row.get("date"):
+            # A time-less protected row cannot prove a safe interval.
+            raise ValueError("protected suspended/tentative row lacks authoritative time")
+        scheduled = local_to_utc(row["date"], row["time"], zone)
+        taxonomy, tier = category
+        source_id = row.get("id") or hashlib.sha256(
+            f"{source}|{row['title']}|{scheduled.isoformat()}".encode()
+        ).hexdigest()
+        events.append(Event(source, source_id, row["title"], scheduled, zone, taxonomy, tier,
+                            status, payload_hash(row)))
+    return events
+
+
+def reconcile_authoritative(events: list[Event]) -> tuple[bool, list[str]]:
+    """Fail closed when two authoritative snapshots disagree on the same event ID."""
+    seen: dict[tuple[str, str], Event] = {}
+    conflicts: list[str] = []
+    for event in events:
+        key = (event.source, event.source_id)
+        previous = seen.get(key)
+        if previous and (previous.scheduled_utc != event.scheduled_utc or previous.status != event.status):
+            conflicts.append(f"{event.source}:{event.source_id}")
+        seen[key] = event
+    return not conflicts, sorted(set(conflicts))
+
+
+def fred_date_cross_check(event: Event, fred_release_date: str | None) -> bool:
+    """FRED can corroborate the date only; it is never used as the event clock."""
+    if fred_release_date is None:
+        return True
+    return event.scheduled_utc.astimezone(ZoneInfo(EASTERN)).date().isoformat() == fred_release_date
+
+
+def interval(event: Event) -> tuple[datetime, datetime]:
+    pre, post = WINDOWS[event.tier]
+    return event.scheduled_utc - timedelta(minutes=pre), event.scheduled_utc + timedelta(minutes=post)
+
+
+def guard_state(now: datetime, events: list[Event], *, source_healthy: bool,
+                shock_locked: bool, normalized: bool = True) -> str:
+    now = now.astimezone(UTC)
+    if not source_healthy:
+        return "SOURCE_UNHEALTHY"
+    if shock_locked:
+        return "SHOCK_LOCK"
+    for event in events:
+        if event.status in {"TENTATIVE", "SUSPENDED"}:
+            return "SOURCE_UNHEALTHY"
+        if event.status == "CANCELLED":
+            continue
+        start, end = interval(event)
+        if start <= now < event.scheduled_utc:
+            return "PRE_LOCK"
+        if event.scheduled_utc <= now < end:
+            return "EVENT_ACTIVE" if now == event.scheduled_utc else "POST_LOCK"
+        if now >= end and not normalized:
+            return "NORMALIZATION_PENDING"
+    return "HEALTHY"
+
+
+def entry_allowed(now: datetime, events: list[Event], *, source_healthy: bool,
+                  shock_locked: bool, normalized: bool, submission_latency: timedelta) -> bool:
+    if guard_state(now, events, source_healthy=source_healthy,
+                   shock_locked=shock_locked, normalized=normalized) != "HEALTHY":
+        return False
+    crossing = now.astimezone(UTC) + submission_latency
+    return all(event.status == "CANCELLED" or crossing < interval(event)[0] or now >= interval(event)[1]
+               for event in events)

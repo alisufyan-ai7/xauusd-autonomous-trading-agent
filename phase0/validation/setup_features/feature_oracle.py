@@ -24,8 +24,48 @@ class Bar:
     tick_volume: int = 1
 
 
+@dataclass(frozen=True)
+class RangeWindow:
+    """One unambiguous RSR range derived from completed H1 bars."""
+
+    start_index: int
+    end_index: int
+    lower: float
+    upper: float
+    lower_swing_indices: tuple[int, ...]
+    upper_swing_indices: tuple[int, ...]
+    lower_test_indices: tuple[int, ...]
+    upper_test_indices: tuple[int, ...]
+
+    @property
+    def width(self) -> float:
+        return self.upper - self.lower
+
+
+@dataclass(frozen=True)
+class RSRLifecycle:
+    """Minimal cross-timeframe lifecycle for one RSR boundary-test cluster.
+
+    It deliberately models eligibility/reservation only. It cannot create an
+    order or position and does not replace execution/reconciliation state.
+    """
+
+    cluster_id: str
+    status: str = "READY"
+    last_event_time: int = -1
+    max_away_fraction: float = 0.0
+
+
 def completed_bars(bars: Sequence[Bar], decision_time: int, period_seconds: int) -> list[Bar]:
     return [bar for bar in bars if bar.time + period_seconds <= decision_time]
+
+
+def bind_completed_timeframes(
+    h1_bars: Sequence[Bar], m15_bars: Sequence[Bar], decision_time: int,
+) -> tuple[list[Bar], list[Bar]]:
+    """Return the immutable H1/M15 information set visible at a decision."""
+    return (completed_bars(h1_bars, decision_time, 3600),
+            completed_bars(m15_bars, decision_time, 900))
 
 
 def validate_series(
@@ -169,6 +209,125 @@ def regression_slope(values: Sequence[float]) -> float | None:
     y_mean = sum(values) / len(values)
     denom = sum((i - x_mean) ** 2 for i in range(len(values)))
     return sum((i - x_mean) * (v - y_mean) for i, v in enumerate(values)) / denom
+
+
+def _separated_tests(bars: Sequence[Bar], level: float, tolerance: float) -> tuple[int, ...]:
+    tests: list[int] = []
+    for i, bar in enumerate(bars):
+        if bar.low <= level + tolerance and bar.high >= level - tolerance:
+            if not tests or i - tests[-1] >= 4:
+                tests.append(i)
+    return tuple(tests)
+
+
+def _pivot_level_clusters(
+    bars: Sequence[Bar], pivot_indices: Sequence[int], tolerance: float,
+) -> list[tuple[float, tuple[int, ...]]]:
+    """Return maximal price clusters with at least two confirmed pivots."""
+    ordered = sorted(((bars[i].high, i) for i in pivot_indices), key=lambda item: (item[0], item[1]))
+    clusters: dict[tuple[int, ...], float] = {}
+    for left in range(len(ordered)):
+        members: list[tuple[float, int]] = []
+        for right in range(left, len(ordered)):
+            if ordered[right][0] - ordered[left][0] > tolerance:
+                break
+            members.append(ordered[right])
+        if len(members) >= 2:
+            indexes = tuple(sorted(i for _, i in members))
+            clusters[indexes] = median(price for price, _ in members)
+    maximal = {indexes: price for indexes, price in clusters.items()
+               if not any(set(indexes) < set(other) for other in clusters)}
+    return sorted(((price, indexes) for indexes, price in maximal.items()),
+                  key=lambda item: (item[0], item[1]))
+
+
+def _low_pivot_level_clusters(
+    bars: Sequence[Bar], pivot_indices: Sequence[int], tolerance: float,
+) -> list[tuple[float, tuple[int, ...]]]:
+    inverted = [Bar(b.time, -b.open, -b.low, -b.high, -b.close, b.tick_volume) for b in bars]
+    return [(-price, indexes) for price, indexes in _pivot_level_clusters(inverted, pivot_indices, tolerance)]
+
+
+def select_rsr_range(
+    bars: Sequence[Bar], *, atr_h1: float, level_tol: float,
+    minimum_window: int = 24, maximum_window: int = 120,
+) -> RangeWindow | None:
+    """Select the shortest, then most-recent, unambiguous valid RSR window.
+
+    Bars must already be completed H1 bars. If one selected time window admits
+    multiple different boundary pairs, this bounded oracle fails closed rather
+    than inventing a boundary-pair tie-break absent from P0-SETUPS-001.
+    """
+    if atr_h1 <= 0 or level_tol < 0 or minimum_window < 5 or maximum_window < minimum_window:
+        raise ValueError("range parameters")
+    limit = min(maximum_window, len(bars))
+    for size in range(minimum_window, limit + 1):
+        for start in range(len(bars) - size, -1, -1):
+            window = bars[start:start + size]
+            high_pivots, low_pivots = confirmed_swings(window)
+            uppers = _pivot_level_clusters(window, high_pivots, level_tol)
+            lowers = _low_pivot_level_clusters(window, low_pivots, level_tol)
+            candidates: list[RangeWindow] = []
+            for upper, upper_swings in uppers:
+                for lower, lower_swings in lowers:
+                    width = upper - lower
+                    if not 1.5 * atr_h1 <= width <= 5.0 * atr_h1:
+                        continue
+                    upper_tests = _separated_tests(window, upper, level_tol)
+                    lower_tests = _separated_tests(window, lower, level_tol)
+                    if len(upper_tests) < 2 or len(lower_tests) < 2:
+                        continue
+                    inside = sum(lower - level_tol <= b.close <= upper + level_tol for b in window)
+                    if inside / size < 0.80:
+                        continue
+                    slope = regression_slope([b.close for b in window])
+                    if slope is None or abs(slope * (size - 1)) > 0.30 * width:
+                        continue
+                    if any(b.close > upper + 0.15 * atr_h1 or b.close < lower - 0.15 * atr_h1
+                           for b in window[-12:]):
+                        continue
+                    candidates.append(RangeWindow(
+                        start, start + size - 1, lower, upper,
+                        tuple(start + i for i in lower_swings),
+                        tuple(start + i for i in upper_swings),
+                        tuple(start + i for i in lower_tests),
+                        tuple(start + i for i in upper_tests),
+                    ))
+            unique = {(c.lower, c.upper, c.lower_swing_indices, c.upper_swing_indices): c
+                      for c in candidates}
+            if len(unique) == 1:
+                return next(iter(unique.values()))
+            if len(unique) > 1:
+                return None
+    return None
+
+
+def advance_rsr_lifecycle(
+    state: RSRLifecycle, *, event: str, event_time: int,
+    away_fraction: float | None = None, new_cluster_id: str | None = None,
+) -> RSRLifecycle:
+    """Advance bounded H1/M15 RSR cluster state with fail-closed ordering."""
+    if event_time <= state.last_event_time:
+        raise ValueError("non-monotonic lifecycle event")
+    if event == "M15_RESERVE":
+        status = "PENDING" if state.status == "READY" else state.status
+        return RSRLifecycle(state.cluster_id, status, event_time, state.max_away_fraction)
+    if event in {"M15_FILLED", "M15_CANCELLED", "M15_EXPIRED"}:
+        status = "CONSUMED" if state.status == "PENDING" else state.status
+        return RSRLifecycle(state.cluster_id, status, event_time, state.max_away_fraction)
+    if event == "H1_RANGE_INVALIDATED":
+        return RSRLifecycle(state.cluster_id, "INVALIDATED", event_time, state.max_away_fraction)
+    if event == "H1_MOVE_AWAY":
+        if away_fraction is None or not 0 <= away_fraction:
+            raise ValueError("away_fraction")
+        moved = max(state.max_away_fraction, away_fraction)
+        return RSRLifecycle(state.cluster_id, state.status, event_time, moved)
+    if event == "H1_RETURN_NEW_CLUSTER":
+        if (state.status == "CONSUMED" and state.max_away_fraction >= 0.40
+                and new_cluster_id and new_cluster_id != state.cluster_id):
+            return RSRLifecycle(new_cluster_id, "READY", event_time, 0.0)
+        return RSRLifecycle(state.cluster_id, state.status, event_time, state.max_away_fraction)
+    raise ValueError("event")
 
 
 def bar_geometry(bar: Bar) -> dict[str, float | None]:
