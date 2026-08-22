@@ -7,24 +7,29 @@
 
 On the separately configured benchmark host, from this directory:
 
+For the one approved v1.1 diagnostic rerun after the preserved v1.0 cost of USD 0.1579348:
+
 ```text
+git pull --ff-only
 python -m unittest -v test_benchmark.py
-python benchmark_runner.py --live --budget 8
+python benchmark_runner.py --budget 8 --prior-spend 0.1579348
+python benchmark_runner.py --live --budget 8 --prior-spend 0.1579348
 ```
 
 Do not echo, print, export to a file, paste, or pass `OPENAI_API_KEY` on the
 command line. The runner reads it only from the environment and terminates
 before any call if it is absent.
 
-Expected output artifact: `BENCHMARK_RESULTS.json`. Return that JSON for
+Expected output artifact: `BENCHMARK_RESULTS_V1_1.json`. Return that JSON for
 independent verification. It contains no API key, prompt, response text,
 broker/account identifier, or trading authority. Before accepting it, verify:
 
 - all 48 live-eligible model/case calls are present and both prohibited-data
   cases are local blocks with zero cost;
 - every request/result row maps to Terra, Sol, or Luna only;
-- cumulative estimated cost is at most USD 8;
+- `prior_spend_usd` is USD 0.1579348 and cumulative estimated cost is at most USD 8;
 - zero unsafe expected/observed mismatches;
+- every component in each live row's `checks` object is `true`;
 - response hashes, token usage and latency are populated;
 - the report says `store:false` and `tools:[]`.
 

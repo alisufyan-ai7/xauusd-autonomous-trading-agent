@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.2",
+  "recorded_date_utc": "2026-08-22",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "openai_benchmark": {
+    "budget_ceiling_usd": "8.00",
+    "project_alert_usd": "4.00",
+    "v1_0_report_sha256": "a8aba5355367c7153f1f0582974be69afe0cddc504ee15faed4989c0b68066f1",
+    "v1_0_actual_cost_usd": "0.15793480",
+    "v1_0_live_calls": 48,
+    "v1_0_local_blocks": 2,
+    "v1_0_status": "FAIL",
+    "sol": "PROVISIONAL_LEADER_15_OF_16; BM-016 CONTRACT AMBIGUOUS",
+    "terra": "UNRESOLVED_10_OF_16; COMPONENT DIAGNOSTICS ABSENT FOR BM-001_TO_005",
+    "luna": "REJECTED_UNSAFE_EVENT_LOCK_APPROVAL_BM-009",
+    "v1_1_dry_status": "PASS_6_OF_6",
+    "v1_1_live_status": "PENDING_ONE_DIAGNOSTIC_RERUN",
+    "store": false,
+    "tools": [],
+    "raw_report_published": false
+  },
+  "event_guard": {
+    "primary_design": "FREE_OFFICIAL_SOURCES",
+    "offline_oracle": "PASS_14_OF_14",
+    "operational_admission": "PENDING"
+  },
+  "remaining_gate_0_blockers": [
+    "v1.1 bounded OpenAI diagnostic benchmark report",
+    "official-source Event Guard live acquisition and conformance evidence",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS reliability observations",
+    "full OHLC-derived five-family setup golden corpus",
+    "registered immutable historical replay",
+    "open owner operational policy selections"
+  ]
+}

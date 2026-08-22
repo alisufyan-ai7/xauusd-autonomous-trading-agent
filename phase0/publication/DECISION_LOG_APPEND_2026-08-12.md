@@ -1,6 +1,6 @@
 # Public Decision Log Addendum — 2026-08-12
 
-This publication-safe addendum preserves decisions D-0056 through D-0071 without republishing mixed confidential account/legal records.
+This publication-safe addendum preserves decisions D-0056 through D-0072 without republishing mixed confidential account/legal records.
 
 | ID | Status | Decision | Gate effect |
 |---|---|---|---|
@@ -20,3 +20,4 @@ This publication-safe addendum preserves decisions D-0056 through D-0071 without
 | D-0069 | Accepted | Issue a conservative owner-decision packet recommending `V1 + M1 + E1 + P1 + A1` without adopting it. | The five policies remain open until explicit owner selection. |
 | D-0070 | Accepted | Evaluate a free official-source Event Guard first, normalize official schedules to UTC, and combine it with the independent shock breaker. | Paid aggregators are deferred unless registered tests prove a material gap; live source conformance remains open. |
 | D-0071 | Accepted | Use the separately configured USD 8 OpenAI project for the `store:false`, tool-free Terra/Sol/Luna benchmark. | Local dry validation passes; live host output is pending and cannot authorize trading. |
+| D-0072 | Accepted | Preserve the first live benchmark by hash and aggregate results, reject Luna on an event-lock unsafe proposal, and issue one diagnostic v1.1 rerun. | Sol is provisional leader; Terra remains unresolved; the rerun carries prior spend inside the existing USD 8 ceiling. Raw benchmark evidence is not published. |
