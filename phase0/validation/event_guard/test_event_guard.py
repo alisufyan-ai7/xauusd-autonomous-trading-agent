@@ -94,6 +94,27 @@ END:VCALENDAR
         with self.assertRaisesRegex(ValueError, "unsupported or unverified timezone"):
             parse_ics(text, "UNAPPROVED_SOURCE")
 
+    def test_live_bls_us_eastern_alias_is_dst_safe_and_source_scoped(self):
+        text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:winter-live-shape
+SUMMARY:Employment Situation
+DTSTART;TZID=US-Eastern:20260109T083000
+END:VEVENT
+BEGIN:VEVENT
+UID:summer-live-shape
+SUMMARY:Consumer Price Index
+DTSTART;TZID=US-Eastern:20260709T083000
+END:VEVENT
+END:VCALENDAR
+"""
+        events = parse_ics(text, "BLS_ICS")
+        self.assertEqual([at("2026-01-09T13:30:00Z"), at("2026-07-09T12:30:00Z")],
+                         [item.scheduled_utc for item in events])
+        self.assertTrue(all(item.source_timezone == "America/New_York" for item in events))
+        with self.assertRaisesRegex(ValueError, "unsupported or unverified timezone"):
+            parse_ics(text, "UNAPPROVED_SOURCE")
+
     def test_unknown_bls_timezone_is_rejected(self):
         text = """BEGIN:VCALENDAR
 BEGIN:VEVENT

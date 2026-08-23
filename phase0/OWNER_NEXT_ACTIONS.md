@@ -8,10 +8,11 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 Owner-approved direction and remaining actions:
 
 1. Event data: the free official-source design is the primary candidate and now
-   passes 39/39 offline tests. The 14-record private chain, all six 304 cache
+   passes 40/40 offline tests. The 21-record private chain and all thirteen 304 cache
    identities, BEA horizon and four exact-time Fed month pages are independently
-   verified. The live BLS body exposed a source-specific Windows timezone-alias
-   defect; R13 fixes it without broadening any other source. Pull R13 and rerun
+   verified. The R13 rerun identified the exact live BLS timezone identifier as
+   `US-Eastern`; R14 admits only that observed BLS alias without broadening any
+   other source. Pull R14 and rerun
    `run_private_capture.ps1` against the same private directory to prove BLS CPI
    and Employment UTC horizons. Keep DOL
    jobless claims fail-closed until a first-party forward schedule with holiday

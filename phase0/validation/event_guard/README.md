@@ -11,7 +11,7 @@ Run:
 python -m unittest -v test_event_guard.py test_source_conformance.py
 ```
 
-The 39 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
+The 40 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
 monitored Fed/Census/DOL schedule rows, frozen taxonomy filtering, overlapping
 FOMC intervals, exact boundaries, source conflicts, cancellation/tentative
 behavior, optional FRED date-only cross-checking, submission-latency crossing,
@@ -25,9 +25,10 @@ Windows does not normally ship the IANA timezone database used by
 its wheel hash in `requirements-win-py312.txt`. A missing database produces an
 explicit fail-closed diagnostic rather than an unexplained timezone lookup.
 The BLS calendar is documented as Eastern time but can carry Windows calendar
-timezone identifiers. Only the source-scoped `Eastern Standard Time` and
-`US Eastern Standard Time` aliases are mapped to `America/New_York`; the same
-identifiers from another source, and every unknown identifier, are rejected.
+timezone identifiers. Only the source-scoped `Eastern Standard Time`,
+`US Eastern Standard Time` and live-observed `US-Eastern` aliases are mapped to
+`America/New_York`; the same identifiers from another source, and every unknown
+identifier, are rejected.
 
 Schema fingerprints are derived from captured body content. The capture utility
 cannot label a body conforming merely by copying the expected registry value.

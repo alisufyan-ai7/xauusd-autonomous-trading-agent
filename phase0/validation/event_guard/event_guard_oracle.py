@@ -21,6 +21,7 @@ WINDOWS = {"TIER_1": (30, 30), "TIER_2": (15, 15)}
 BLS_ZONE_ALIASES = {
     "Eastern Standard Time": EASTERN,
     "US Eastern Standard Time": EASTERN,
+    "US-Eastern": EASTERN,
 }
 
 
