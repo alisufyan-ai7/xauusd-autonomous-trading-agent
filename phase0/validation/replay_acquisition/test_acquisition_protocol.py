@@ -130,6 +130,24 @@ class AcquisitionProtocolTests(unittest.TestCase):
         self.assertIn("SPLIT_OUTSIDE_ACQUISITION_RANGE",
                       evaluate_plan(plan, {"terms.txt": TERMS}).reason_codes)
 
+    def test_declared_purge_and_embargo_durations_are_enforced(self):
+        plan = fixture()
+        plan["split"]["purge_seconds"] += 3600
+        plan["split"]["embargo_seconds"] += 3600
+        plan["split_map_sha256"] = split_hash(plan["split"])
+        resign(plan)
+        reasons = evaluate_plan(plan, {"terms.txt": TERMS}).reason_codes
+        self.assertIn("PURGE_GAP_TOO_SHORT", reasons)
+        self.assertIn("EMBARGO_GAP_TOO_SHORT", reasons)
+
+    def test_terms_must_be_effective_at_review_and_acquisition(self):
+        plan = fixture()
+        plan["rights"]["terms_effective_date"] = "2020-01-02"
+        resign(plan)
+        reasons = evaluate_plan(plan, {"terms.txt": TERMS}).reason_codes
+        self.assertIn("TERMS_NOT_EFFECTIVE_AT_REVIEW", reasons)
+        self.assertIn("TERMS_NOT_EFFECTIVE_AT_ACQUISITION", reasons)
+
     def test_holdout_random_split_and_transform_relaxation_fail(self):
         plan = fixture()
         plan["registration"]["holdout_status"] = "OPEN"
@@ -158,6 +176,17 @@ class AcquisitionProtocolTests(unittest.TestCase):
         altered[0]["bytes"] += 1
         self.assertEqual("FAIL_CLOSED", verify_sealed_inventory(
             altered, artifacts, inventory_root(descriptors)).status)
+
+    def test_inventory_root_is_order_independent_and_paths_are_repository_safe(self):
+        artifacts = {"raw/a.bin": b"alpha", "raw/b.bin": b"beta"}
+        descriptors = [{"path": path, "bytes": len(body), "sha256": sha256_bytes(body)}
+                       for path, body in artifacts.items()]
+        self.assertEqual(inventory_root(descriptors), inventory_root(list(reversed(descriptors))))
+        unsafe_artifacts = {"../private/raw.bin": b"secret"}
+        unsafe = [{"path": "../private/raw.bin", "bytes": 6,
+                   "sha256": sha256_bytes(b"secret")}]
+        self.assertEqual("FAIL_CLOSED", verify_sealed_inventory(
+            unsafe, unsafe_artifacts, inventory_root(unsafe)).status)
 
     def test_module_has_no_network_broker_model_process_or_write_capability(self):
         tree = ast.parse(Path(__file__).with_name("acquisition_protocol.py").read_text())

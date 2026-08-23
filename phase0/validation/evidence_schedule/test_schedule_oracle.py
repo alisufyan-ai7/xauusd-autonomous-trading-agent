@@ -85,6 +85,27 @@ class EvidenceScheduleTests(unittest.TestCase):
         self.assertIn("BLS_ICS_NO_ADJACENT_TRANSITION_PAIR", reasons)
         self.assertIn("SESSION_BOUNDARY_PHASE_INCOMPLETE", reasons)
 
+    def test_expected_inventory_cannot_pass_when_all_dense_tasks_are_absent(self):
+        result = build_schedule(self.start, self.end, (), ())
+        healthy, reasons = verify_transition_coverage(
+            result.tasks, expected_boundary_ids=(self.boundary.boundary_id,),
+            expected_event_ids=(self.event.event_id,),
+        )
+        self.assertFalse(healthy)
+        self.assertIn(f"{self.boundary.boundary_id}_EXPECTED_BOUNDARY_INCOMPLETE", reasons)
+        self.assertIn(f"{self.event.event_id}_EXPECTED_EVENT_INCOMPLETE", reasons)
+
+    def test_expected_dense_event_and_boundary_inventory_passes_only_when_complete(self):
+        result = build_schedule(self.start, self.end, (self.event,), (self.boundary,))
+        healthy, reasons = verify_transition_coverage(
+            result.tasks, expected_boundary_ids=(self.boundary.boundary_id,),
+            expected_event_ids=(self.event.event_id,),
+        )
+        self.assertTrue(healthy, reasons)
+        duplicate = result.tasks + (result.tasks[0],)
+        self.assertIn("DUPLICATE_CAPTURE_TASK",
+                      verify_transition_coverage(duplicate)[1])
+
     def test_capability_boundary_is_explicit(self):
         result = build_schedule(self.start, self.end, (), ())
         altered = list(result.tasks)

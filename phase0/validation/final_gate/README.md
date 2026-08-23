@@ -1,10 +1,10 @@
 # Final Gate 0 evidence-matrix oracle
 
-This pure evaluator enforces the fourteen-item inventory and the rule that every
-item must be `PASS` before Gate 0 can pass. Missing, duplicate, unknown,
-`PENDING` or `FAIL_CLOSED` items cannot be promoted. It also fixes trading
-authorization to false, requires external Python trading to remain disabled and
-rejects an unrecorded immediate owner-action request.
+This pure evaluator enforces the fourteen-item inventory and derives `PASS`
+only when every frozen claim has exactly one admitted, typed receipt whose
+SHA-256 matches a supplied sanitized repository artifact. Editing status text
+alone cannot promote an item. Requirements, provenance, safe relative paths,
+private hash-only publication, timestamps and safety guards are all checked.
 
 ```text
 python -m unittest -v test_matrix_oracle.py

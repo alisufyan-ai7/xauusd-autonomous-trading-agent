@@ -7,14 +7,14 @@
 
 This revision publishes only sanitized technical records, source/test artifacts, broker technical metadata and evidence hashes explicitly approved by the owner.
 
-R24 publishes only owner-independent research and offline procedure evidence:
-the public-source historical-data licensing review, fail-closed acquisition and
-inventory sealing, prospective empirical calibration, read-only transition and
-session schedules, and the final Gate 0 evidence matrix. It carries forward the
-R22/R23 state without republishing private content or paths. No historical
-market dataset, provider correspondence, private artifact or model response is
-published. The work caused no download, trial, purchase, outreach, restart,
-network fault, alert delivery, broker action, OpenAI call or charge.
+R25 publishes only owner-independent offline hardening: receipt-bound Gate 0
+status derivation, stricter acquisition rights/split/path admission,
+post-event-observation continuity, and explicit expected transition/session
+inventory checks. It carries forward R24 without republishing private content
+or paths. No historical market dataset, provider correspondence, private
+artifact or model response is published. The work caused no download, trial,
+purchase, outreach, restart, network fault, alert delivery, broker action,
+OpenAI call or charge.
 
 Excluded from this revision:
 

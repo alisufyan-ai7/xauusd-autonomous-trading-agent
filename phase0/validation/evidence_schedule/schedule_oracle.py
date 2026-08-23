@@ -184,8 +184,14 @@ def build_schedule(
                           tuple(tasks), schedule_hash(tasks) if not unique else None)
 
 
-def verify_transition_coverage(tasks: tuple[CaptureTask, ...]) -> tuple[bool, tuple[str, ...]]:
+def verify_transition_coverage(
+    tasks: tuple[CaptureTask, ...], *, expected_boundary_ids: tuple[str, ...] = (),
+    expected_event_ids: tuple[str, ...] = (),
+) -> tuple[bool, tuple[str, ...]]:
     reasons: list[str] = []
+    task_ids = [task.task_id for task in tasks]
+    if len(task_ids) != len(set(task_ids)):
+        reasons.append("DUPLICATE_CAPTURE_TASK")
     routine = [task for task in tasks if task.phase == "ROUTINE_PAIRABLE"]
     for source in EVENT_SOURCES:
         source_tasks = [task for task in routine if task.target == source]
@@ -202,4 +208,19 @@ def verify_transition_coverage(tasks: tuple[CaptureTask, ...]) -> tuple[bool, tu
     if any(phases != {"BEFORE", "INSIDE", "AFTER"}
            for phases in boundary_groups.values()):
         reasons.append("SESSION_BOUNDARY_PHASE_INCOMPLETE")
+    for boundary_id in expected_boundary_ids:
+        if boundary_groups.get(boundary_id) != {"BEFORE", "INSIDE", "AFTER"}:
+            reasons.append(f"{boundary_id}_EXPECTED_BOUNDARY_INCOMPLETE")
+
+    dense_phases = {"T_MINUS_24H", "T_MINUS_6H", "T_MINUS_1H", "T_PLUS_15M", "T_PLUS_2H"}
+    event_groups: dict[str, set[str]] = {}
+    for task in tasks:
+        if task.task_id.startswith("EG-EVENT-") and task.phase in dense_phases:
+            suffix = f"-{task.phase}"
+            if task.task_id.endswith(suffix):
+                event_id = task.task_id.removeprefix("EG-EVENT-")[:-len(suffix)]
+                event_groups.setdefault(event_id, set()).add(task.phase)
+    for event_id in expected_event_ids:
+        if event_groups.get(event_id) != dense_phases:
+            reasons.append(f"{event_id}_EXPECTED_EVENT_INCOMPLETE")
     return not reasons, tuple(reasons)

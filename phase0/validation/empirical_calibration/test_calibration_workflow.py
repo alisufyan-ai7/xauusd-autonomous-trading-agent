@@ -53,7 +53,8 @@ def make_plan(rows):
         holdout_status="SEALED_UNVIEWED", minimum_rows_per_session=5,
         minimum_post_event_rows=8, minimum_complete_events=2,
         quantile_probability=.99, normalization_ratio_limit=1.5,
-        consecutive_normal_rows=3, code_sha256=H, split_map_sha256=H,
+        consecutive_normal_rows=3, max_post_event_gap_seconds=60,
+        code_sha256=H, split_map_sha256=H,
     )
 
 
@@ -101,6 +102,27 @@ class CalibrationWorkflowTests(unittest.TestCase):
         plan = replace(self.plan, derived_dataset_sha256=rows_hash(incomplete))
         self.assertIn("COMPLETE_EVENT_RECOVERY_INSUFFICIENT",
                       calibrate(plan, incomplete).reason_codes)
+
+    def test_post_event_recovery_must_be_contiguously_observed(self):
+        altered = []
+        for row in self.rows:
+            if row.event_id == "event-1" and row.observed_utc.minute >= 25:
+                altered.append(replace(row, observed_utc=row.observed_utc + timedelta(minutes=5)))
+            else:
+                altered.append(row)
+        altered = tuple(sorted(altered, key=lambda row: row.observed_utc))
+        plan = replace(self.plan, derived_dataset_sha256=rows_hash(altered),
+                       train_end_utc=datetime(2025, 1, 1, 0, 40, tzinfo=UTC))
+        self.assertIn("COMPLETE_EVENT_RECOVERY_INSUFFICIENT",
+                      calibrate(plan, altered).reason_codes)
+
+    def test_validation_must_follow_frozen_training_cutoff(self):
+        altered = tuple(replace(row, observed_utc=row.observed_utc - timedelta(minutes=20))
+                        if row.partition == "VALIDATION" else row for row in self.rows)
+        altered = tuple(sorted(altered, key=lambda row: row.observed_utc))
+        plan = replace(self.plan, derived_dataset_sha256=rows_hash(altered))
+        self.assertIn("VALIDATION_BEFORE_TRAIN_CUTOFF",
+                      calibrate(plan, altered).reason_codes)
 
     def test_freeze_cutoff_rights_and_policy_fail_closed(self):
         bad = replace(

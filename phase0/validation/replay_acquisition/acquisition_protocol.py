@@ -18,6 +18,7 @@ from urllib.parse import urlparse
 
 SCHEMA_VERSION = "xauusd-acquisition-plan-1.0"
 HEX = re.compile(r"^[0-9a-f]{64}$")
+SAFE_RELATIVE_PATH = re.compile(r"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$")
 REQUIRED_RIGHTS = (
     "automated_use", "local_retention", "derived_data",
     "historical_replay", "internal_audit_retention",
@@ -107,6 +108,7 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
         reasons.append("PROVIDER_OR_ENTITLEMENT_INCOMPLETE")
 
     rights = plan.get("rights")
+    terms_effective = reviewed = None
     if (not isinstance(rights, dict)
             or rights.get("review_status") != "APPROVED_FOR_INTERNAL_EVALUATION"
             or any(rights.get(key) is not True for key in REQUIRED_RIGHTS)
@@ -119,10 +121,12 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
         reasons.append("RIGHTS_NOT_ESTABLISHED")
     else:
         try:
-            date.fromisoformat(rights["terms_effective_date"])
+            terms_effective = date.fromisoformat(rights["terms_effective_date"])
             reviewed = _utc(rights["reviewed_utc"])
             if registered is not None and reviewed > registered:
                 reasons.append("RIGHTS_REVIEW_AFTER_REGISTRATION")
+            if terms_effective > reviewed.date():
+                reasons.append("TERMS_NOT_EFFECTIVE_AT_REVIEW")
         except (KeyError, TypeError, ValueError):
             reasons.append("RIGHTS_NOT_ESTABLISHED")
         body = terms_artifacts.get(rights["terms_artifact"])
@@ -145,6 +149,9 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
             or acquisition.get("immutable_after_seal") is not True
             or acquisition.get("credentials_in_manifest") is not False):
         reasons.append("ACQUISITION_PROCEDURE_INVALID")
+    elif terms_effective is not None and acquisition_start is not None \
+            and terms_effective > acquisition_start.date():
+        reasons.append("TERMS_NOT_EFFECTIVE_AT_ACQUISITION")
 
     frames = plan.get("timeframes")
     if not isinstance(frames, dict) or set(frames) != set(TIMEFRAMES):
@@ -179,6 +186,10 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
     elif acquisition_start is not None and acquisition_end is not None:
         if split_times[0] < acquisition_start or split_times[-1] > acquisition_end:
             reasons.append("SPLIT_OUTSIDE_ACQUISITION_RANGE")
+        if (split_times[2] - split_times[1]).total_seconds() < split["purge_seconds"]:
+            reasons.append("PURGE_GAP_TOO_SHORT")
+        if (split_times[5] - split_times[4]).total_seconds() < split["embargo_seconds"]:
+            reasons.append("EMBARGO_GAP_TOO_SHORT")
 
     registration = plan.get("registration")
     if (not isinstance(registration, dict)
@@ -209,8 +220,11 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
 
 
 def inventory_root(descriptors: list[dict[str, Any]]) -> str:
-    frozen = [[row.get("path"), row.get("sha256"), row.get("bytes")]
-              for row in descriptors]
+    frozen = sorted(
+        ([row.get("path"), row.get("sha256"), row.get("bytes")]
+         for row in descriptors),
+        key=lambda row: str(row[0]),
+    )
     return canonical_hash(frozen)
 
 
@@ -228,7 +242,8 @@ def verify_sealed_inventory(
             continue
         path = row.get("path")
         body = artifacts.get(path)
-        if (not isinstance(path, str) or not path or body is None
+        if (not isinstance(path, str) or SAFE_RELATIVE_PATH.fullmatch(path) is None
+                or path.startswith("/") or ".." in path.split("/") or body is None
                 or row.get("bytes") != len(body)
                 or row.get("sha256") != sha256_bytes(body)):
             reasons.append("ARTIFACT_HASH_OR_SIZE_MISMATCH")

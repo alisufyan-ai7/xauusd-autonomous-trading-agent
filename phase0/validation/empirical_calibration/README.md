@@ -9,6 +9,10 @@ training-only candidates for:
 - adverse latency-move **slippage proxy**, gap and round-trip cost stresses; and
 - sustained post-event normalization duration across complete event recoveries.
 
+R25 requires validation observations to follow the frozen training cutoff and
+rejects a claimed consecutive normalization run if its post-event observation
+stream contains a gap larger than the prospectively frozen maximum.
+
 Run from this directory:
 
 ```text

@@ -11,7 +11,11 @@ The frozen plan provides:
 - daily refresh of the official Exness instrument-hours and holiday pages;
 - extra T-14d/T-7d/T-24h/T-1h source checks for holiday boundaries; and
 - read-only XAUUSD `BEFORE`, `INSIDE`, `AFTER` terminal observations for each
-  declared close/reopen interval.
+declared close/reopen interval.
+
+R25 binds completeness checks to the explicitly expected release and boundary
+IDs, so an empty schedule can no longer satisfy an expected dense-event or
+`BEFORE`/`INSIDE`/`AFTER` observation inventory. Duplicate task IDs also fail.
 
 Run from this directory:
 

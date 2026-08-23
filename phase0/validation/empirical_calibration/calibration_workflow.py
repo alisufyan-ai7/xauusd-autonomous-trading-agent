@@ -79,6 +79,7 @@ class CalibrationPlan:
     quantile_probability: float
     normalization_ratio_limit: float
     consecutive_normal_rows: int
+    max_post_event_gap_seconds: int
     code_sha256: str
     split_map_sha256: str
 
@@ -135,6 +136,7 @@ def _quantile(values: list[float], probability: float) -> float:
 
 def _complete_recoveries(
     rows: tuple[Observation, ...], *, ratio_limit: float, consecutive: int,
+    max_gap_seconds: int,
 ) -> list[int]:
     by_event: dict[str, list[Observation]] = {}
     for row in rows:
@@ -145,7 +147,13 @@ def _complete_recoveries(
         event_rows.sort(key=lambda item: item.observed_utc)
         start = event_rows[0].observed_utc
         streak = 0
+        previous: datetime | None = None
         for row in event_rows:
+            if previous is not None \
+                    and (row.observed_utc - previous).total_seconds() > max_gap_seconds:
+                # Missing observations cannot prove continuous normalization.
+                break
+            previous = row.observed_utc
             normal = (
                 row.spread_points / row.spread_baseline_points <= ratio_limit
                 and row.absolute_return_bps / row.return_baseline_bps <= ratio_limit
@@ -176,6 +184,7 @@ def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowR
         reasons.append("FREEZE_CHRONOLOGY_INVALID")
     if (plan.minimum_rows_per_session < 1 or plan.minimum_post_event_rows < 1
             or plan.minimum_complete_events < 1 or plan.consecutive_normal_rows < 1
+            or plan.max_post_event_gap_seconds < 1
             or not 0.5 < plan.quantile_probability < 1
             or plan.normalization_ratio_limit <= 1):
         reasons.append("CALIBRATION_POLICY_INVALID")
@@ -188,6 +197,8 @@ def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowR
     validation = tuple(row for row in rows if row.partition == "VALIDATION")
     if any(row.observed_utc > plan.train_end_utc for row in training):
         reasons.append("TRAIN_CUTOFF_VIOLATION")
+    if any(row.observed_utc <= plan.train_end_utc for row in validation):
+        reasons.append("VALIDATION_BEFORE_TRAIN_CUTOFF")
     for session in SESSIONS:
         if sum(row.session == session and row.event_phase == "NORMAL" for row in training) \
                 < plan.minimum_rows_per_session:
@@ -198,6 +209,7 @@ def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowR
     recoveries = _complete_recoveries(
         post_rows, ratio_limit=plan.normalization_ratio_limit,
         consecutive=plan.consecutive_normal_rows,
+        max_gap_seconds=plan.max_post_event_gap_seconds,
     )
     if len(recoveries) < plan.minimum_complete_events:
         reasons.append("COMPLETE_EVENT_RECOVERY_INSUFFICIENT")

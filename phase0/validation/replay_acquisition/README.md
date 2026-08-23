@@ -6,7 +6,10 @@ local retention, derived data, replay and audit retention, plus explicit
 retention treatment after termination. It also freezes the exact H4/H1/M15
 inventory, source semantics, read-only GET acquisition, private output location,
 raw-byte preservation, deterministic transforms and a strictly chronological
-sealed split/embargo/holdout map.
+sealed split/embargo/holdout map. R25 additionally enforces the declared purge
+and embargo durations, requires terms to be effective at review/acquisition,
+rejects absolute/traversal inventory paths and makes the inventory root
+independent of descriptor order.
 
 Run from this directory:
 
