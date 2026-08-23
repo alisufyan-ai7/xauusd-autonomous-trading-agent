@@ -7,7 +7,7 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 
 Owner-approved direction and remaining actions:
 
-1. Open operational policies: select or modify `V1 + M1 + E1 + P1 + A1` in `OWNER_OPEN_POLICY_DECISION_PACKET.md`; no choice becomes normative until explicitly approved and appended.
+1. Open operational policy: approve or modify M1 after reviewing its exact thresholds. V1, E1, P1, A1 and `NO` automatic closure are accepted for specification/testing under D-0074; they grant no execution authority.
 2. Event data: the free official-source design is the primary candidate. Complete BLS/BEA/Fed/Census/DOL acquisition and conformance testing before reconsidering a paid aggregator. Do not activate or purchase any paid or auto-renewing provider trial.
 3. Historical replay data: no source is admitted. The local official-source snapshot archive may support event-time replay prospectively; market-data replay still requires separately verified coverage, provenance and retention rights.
 4. VPS/session evidence: capture the remaining weekly/holiday session boundaries and controlled restart/reconnect/network/clock/build observations using read-only artifacts only.

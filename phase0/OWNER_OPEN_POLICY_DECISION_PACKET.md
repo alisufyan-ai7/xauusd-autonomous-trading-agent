@@ -1,8 +1,15 @@
 # Owner Open-Policy Decision Packet — Gate 0
 
-**Status:** DRAFT FOR OWNER DECISION; no option is approved by this document  
+**Status:** PARTIALLY APPROVED under D-0074; margin option remains open  
 **Scope:** Strategy volume cap, margin reserve, emergency handling, pause/resumption, and operator alerts  
 **Trading authorization:** NONE; external Python trading must remain disabled
+
+**Recorded owner selection (2026-08-23):** `V1 + E1 + P1 + A1` for
+specification and testing only; automatic closure of unknown exposure `NO`;
+primary alert `EMAIL`; secondary alert `TELEGRAM_PUSH`; acknowledgement role
+`OWNER_DESIGNATED_ACKNOWLEDGER`. `M1` is not approved pending confirmation of
+its exact numeric thresholds. The personal identity-to-role mapping is retained
+outside the sanitized repository record.
 
 ## 1. How to decide
 
@@ -22,7 +29,7 @@ The observed Phase 0 XAUUSD profile reports a 0.01-lot minimum and step, but thi
 
 **Proposed freeze text for V1:** `strategy_volume_cap = min(0.01 lot, account_validated_cap)` for the first separately approved execution stage. Volume is enumerated from current broker `volume_min` in exact `volume_step`, rounded down, then fully re-priced and re-tested. There is no entitlement to trade the minimum volume.
 
-**Owner selection:** `V1 / V2 / V3 / modified: ____________________`
+**Owner selection:** `V1 — APPROVED FOR SPECIFICATION AND TESTING (D-0074)`
 
 ## 3. Decision 2 — Margin reserve and stress rule
 
@@ -36,7 +43,7 @@ Both the current-state test and the stressed-state test must pass. `Projected ma
 
 For every option: missing/stale margin inputs, a failed `order_calc_margin`, currency ambiguity, non-finite values, account-fingerprint change, or an unfrozen equity shock makes the result `UNKNOWN` and rejects new risk. The higher of broker-reported projected margin and the stressed calculation controls. Leverage is never used to relax a cash-loss cap.
 
-**Owner selection:** `M1 / M2 / M3 / modified: ____________________`
+**Owner selection:** `OPEN — M1 numeric confirmation requested`
 
 ## 4. Decision 3 — Emergency handling beyond quarantine
 
@@ -50,8 +57,8 @@ This decision concerns an unexpected position/order, an unprotected position, or
 
 Under E1 or E2, `UNKNOWN`, `KNOWN_EXTERNAL`, `CONFLICTING`, account/symbol mismatch, submission uncertainty, or ledger ambiguity remains quarantined until full reconciliation and audited human disposition. Emergency authority cannot create a new entry, widen a stop, increase volume, retry an uncertain close blindly, or re-enable execution.
 
-**Owner selection:** `E1 / E2 / modified: ____________________`  
-**Explicitly authorize automatic closure of unknown exposure?** `NO (recommended) / YES, only after a new reviewed policy: ________`
+**Owner selection:** `E1 — APPROVED FOR SPECIFICATION AND TESTING (D-0074)`  
+**Explicitly authorize automatic closure of unknown exposure?** `NO — APPROVED (D-0074)`
 
 ## 5. Decision 4 — Pause and resumption
 
@@ -74,7 +81,7 @@ Under E1 or E2, `UNKNOWN`, `KNOWN_EXTERNAL`, `CONFLICTING`, account/symbol misma
 
 Any resumption creates a new authorization epoch and requires a new proposal/intent. It cannot revive or submit a pre-pause approval. If any prerequisite is missing or stale, remain paused.
 
-**Owner selection:** `P1 / P2 / modified: ____________________`
+**Owner selection:** `P1 — APPROVED FOR SPECIFICATION AND TESTING (D-0074)`
 
 ## 6. Decision 5 — Operator alert expectations
 
@@ -96,18 +103,21 @@ Required alert content is minimized: UTC timestamp, environment, severity, typed
 
 Before any execution-capable stage, test channel delivery, retry/deduplication, acknowledgement, escalation, outage behavior, contact rotation, and the invariant that alert failure cannot enable or increase risk. Quiet hours never suppress `CRITICAL` alerts during an authorized execution window.
 
-**Owner selection:** `A1 / A2 / A3 / modified: ____________________`  
-**Primary off-host channel:** `____________________`  
-**Secondary off-host channel:** `____________________`  
-**Designated acknowledgement role/person:** `____________________`
+**Owner selection:** `A1 — APPROVED FOR SPECIFICATION AND TESTING (D-0074)`  
+**Primary off-host channel:** `EMAIL`  
+**Secondary off-host channel:** `TELEGRAM_PUSH`  
+**Designated acknowledgement role/person:** `OWNER_DESIGNATED_ACKNOWLEDGER`
 
 ## 7. Recommended conservative bundle
 
-For a first separately approved execution release, the internally consistent conservative bundle is:
+For a first separately approved execution release, the internally consistent conservative bundle remains:
 
 `V1 + M1 + E1 + P1 + A1`
 
 This means a 0.01-lot absolute cap, high current-and-stressed margin reserve, no automated broker action in emergencies, human-gated resumption, and dual-path critical alerting. The bundle intentionally prefers missed trades and operator intervention over automated recovery. It does not resolve the separate dependencies for costs/gap/slippage calibration, account-specific sessions, broker-request semantics, attribution, testing, or execution authorization.
+
+Current approved subset: `V1 + M_OPEN + E1 + P1 + A1`. It is not a complete
+bundle until the owner explicitly approves or modifies the margin rule.
 
 ## 8. Owner response block
 
@@ -143,4 +153,3 @@ This decision is for specification and testing only. It does not authorize demo/
 - `specifications/RISK_GOVERNOR_POLICY_A_SPEC.md` — fail-closed sizing, margin dependency, loss pauses, and unknown-exposure invariants.
 - `specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md` — unique ownership, quarantine, restart behavior, and separately audited recovery.
 - `PHASE_0_SPECIFICATION.md` — human kill switch, mandatory protection, incident logging, and staged evidence requirements.
-

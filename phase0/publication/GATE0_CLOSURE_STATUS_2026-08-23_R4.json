@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.4",
+  "recorded_date_utc": "2026-08-23",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "openai_model_selection": "COMPLETE_GPT_5_6_SOL",
+  "operational_policy": {
+    "scope": "SPECIFICATION_AND_TESTING_ONLY",
+    "volume": "V1_APPROVED_0_01_LOT_ABSOLUTE_CAP",
+    "margin": "OPEN_M1_NUMERIC_CONFIRMATION_PENDING",
+    "emergency": "E1_APPROVED_HUMAN_ONLY",
+    "automatic_unknown_exposure_closure": false,
+    "resumption": "P1_APPROVED_HUMAN_GATED",
+    "alerts": "A1_APPROVED_DUAL_PATH",
+    "primary_alert": "EMAIL",
+    "secondary_alert": "TELEGRAM_PUSH",
+    "acknowledgement_role": "OWNER_DESIGNATED_ACKNOWLEDGER",
+    "personal_identity_published": false
+  },
+  "remaining_gate_0_blockers": [
+    "M1 owner approval or modification",
+    "official-source Event Guard live acquisition and conformance evidence",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS reliability observations",
+    "full OHLC-derived five-family setup golden corpus",
+    "registered immutable historical replay",
+    "exact Analyst field register, timeout/freshness bounds and model revalidation policy"
+  ]
+}
