@@ -8,17 +8,16 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 Owner-approved direction and remaining actions:
 
 1. Event data: the free official-source design is the primary candidate and now
-   passes 43/43 offline tests. The 35-record private chain and all twenty-seven
-   304 cache identities are independently verified. BLS CPI/Employment, BEA PCE and
+   passes 43/43 offline tests. The 43-record private chain and all thirty-four
+   304 cache identities are independently verified. BLS CPI/Employment, BEA PCE,
    exact-time Fed statement/press-conference/minutes schedules are healthy and
-   covered across the frozen UTC horizon. No further BLS/BEA/Fed rerun is
-   requested now. DOL ETA's first-party schedule now supplies an explicit
+   covered across the frozen UTC horizon. DOL ETA's first-party schedule supplies an explicit
    Thursday 8:30 a.m. Eastern rule plus named federal-holiday exceptions; the
-   exact endpoint/parser passes offline DST, exception and fail-closed tests. The
-   first live DOL attempt failed before HTTP at certificate-chain construction;
-   no DOL bytes were admitted and the guard correctly remained fail-closed. R17
-   uses the hash-pinned Windows native trust engine without disabling any TLS
-   check. Pull R17 and rerun the private wrapper once to obtain live DOL evidence. Do not
+   corrected native-Windows TLS path captured and normalized the exact live page,
+   marks `DOL_UI` healthy and covers `US_JOBLESS_CLAIMS`. Reconciliation passes
+   without conflicts and the all-source normalized result is `PASS`. No further
+   initial-horizon rerun is requested. Next Event Guard work is controlled
+   revision/outage/holiday evidence and empirical shock/post-event calibration. Do not
    activate or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no source is admitted. The raw-OHLC suite now passes
    35/35 with one bounded lifecycle slice for every setup family, but exhaustive
