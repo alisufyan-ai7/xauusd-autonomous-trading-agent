@@ -5,9 +5,11 @@ from decimal import Decimal
 from pathlib import Path
 
 from phase0.validation.margin_evidence.margin_oracle import evaluate_m1_snapshot, incremental_margin
+from phase0.validation.margin_evidence.test_stress_artifact import fixture as stress_fixture, resign
 
 
 NOW=datetime(2026,8,23,12,0,tzinfo=timezone.utc)
+ROOT="a"*64
 
 
 def snapshot(**changes):
@@ -19,9 +21,23 @@ def snapshot(**changes):
 
 
 def stress(**changes):
-    row={"frozen":True,"current_entry_cost":"0","spread_stress":"1000",
-         "slippage_stress":"1000","gap_stress":"900","cost_stress":"100"}
-    row.update(changes); return row
+    artifact=stress_fixture()
+    values={"spread_stress":"1000","slippage_stress":"1000",
+            "gap_stress":"900","cost_stress":"100"}
+    values.update(changes)
+    for name,value in values.items():
+        artifact["components"][name]["selected_value_usd"]=value
+        artifact["components"][name]["empirical_value_usd"]=value
+    resign(artifact)
+    return artifact
+
+
+def evaluate(snap, artifact, **changes):
+    arguments={"now_utc":NOW,"expected_bundle_root_sha256":ROOT,
+               "expected_stress_artifact_sha256":artifact["artifact_sha256"],
+               "current_entry_cost":"0"}
+    arguments.update(changes)
+    return evaluate_m1_snapshot(snap,artifact,**arguments)
 
 
 class MarginEvidenceTests(unittest.TestCase):
@@ -29,30 +45,39 @@ class MarginEvidenceTests(unittest.TestCase):
         self.assertEqual(Decimal("2.000"),incremental_margin(snapshot(),volume=Decimal("0.01")))
 
     def test_m1_both_states_pass_only_as_spec_evidence(self):
-        result=evaluate_m1_snapshot(snapshot(),stress(),now_utc=NOW)
+        artifact=stress(); result=evaluate(snapshot(),artifact)
         self.assertEqual("PASS_SPEC_ONLY",result.status)
         self.assertEqual("M1_PASS_NOT_TRADE_AUTHORITY",result.reason)
 
     def test_exact_stressed_1000_percent_and_90_percent_boundary_passes(self):
         exact=snapshot(bid="400000",ask="400000")  # fixture increment = 200
-        result=evaluate_m1_snapshot(exact,stress(),now_utc=NOW)
+        artifact=stress(); result=evaluate(exact,artifact)
         self.assertEqual("PASS_SPEC_ONLY",result.status)
         self.assertEqual(Decimal("1000"),result.stressed_margin_level_percent)
         one_cent=stress(cost_stress="100.01")
-        self.assertEqual("M1_STRESSED_THRESHOLD_FAILED",evaluate_m1_snapshot(exact,one_cent,now_utc=NOW).reason)
+        self.assertEqual("M1_STRESSED_THRESHOLD_FAILED",evaluate(exact,one_cent).reason)
 
     def test_stressed_threshold_and_unfrozen_stress_fail(self):
-        self.assertEqual("M1_STRESSED_THRESHOLD_FAILED",evaluate_m1_snapshot(snapshot(),stress(cost_stress="6000"),now_utc=NOW).reason)
-        self.assertEqual("STRESS_SET_NOT_FROZEN",evaluate_m1_snapshot(snapshot(),stress(frozen=False),now_utc=NOW).reason)
+        stressed=stress(cost_stress="6000")
+        self.assertEqual("M1_STRESSED_THRESHOLD_FAILED",evaluate(snapshot(),stressed).reason)
+        artifact=stress(); artifact["status"]="CANDIDATE"; resign(artifact)
+        self.assertEqual("STRESS_ARTIFACT_NOT_ADMITTED_OR_BOUND",evaluate(snapshot(),artifact).reason)
+        artifact=stress()
+        self.assertEqual("STRESS_ARTIFACT_NOT_ADMITTED_OR_BOUND",
+                         evaluate(snapshot(),artifact,expected_stress_artifact_sha256="f"*64).reason)
 
     def test_stale_missing_and_ambiguous_conversion_fail_closed(self):
         stale=snapshot(observed_utc=(NOW-timedelta(seconds=31)).isoformat())
-        self.assertEqual("SNAPSHOT_STALE_OR_FUTURE",evaluate_m1_snapshot(stale,stress(),now_utc=NOW).reason)
-        self.assertEqual("MISSING_INVALID_OR_AMBIGUOUS_INPUT",evaluate_m1_snapshot(snapshot(ask=None),stress(),now_utc=NOW).reason)
-        self.assertEqual("MISSING_INVALID_OR_AMBIGUOUS_INPUT",evaluate_m1_snapshot(snapshot(currency_profit="EUR"),stress(),now_utc=NOW).reason)
+        artifact=stress()
+        self.assertEqual("SNAPSHOT_STALE_OR_FUTURE",evaluate(stale,artifact).reason)
+        self.assertEqual("MISSING_INVALID_OR_AMBIGUOUS_INPUT",evaluate(snapshot(ask=None),artifact).reason)
+        self.assertEqual("MISSING_INVALID_OR_AMBIGUOUS_INPUT",evaluate(snapshot(currency_profit="EUR"),artifact).reason)
+        self.assertEqual("MISSING_INVALID_OR_AMBIGUOUS_INPUT",
+                         evaluate(snapshot(),artifact,now_utc=NOW.replace(tzinfo=None)).reason)
 
     def test_disabled_guard_is_mandatory(self):
-        self.assertEqual("EXTERNAL_PYTHON_TRADING_NOT_DISABLED",evaluate_m1_snapshot(snapshot(tradeapi_disabled=False),stress(),now_utc=NOW).reason)
+        artifact=stress()
+        self.assertEqual("EXTERNAL_PYTHON_TRADING_NOT_DISABLED",evaluate(snapshot(tradeapi_disabled=False),artifact).reason)
 
     def test_oracle_has_no_mt5_network_order_or_message_capability(self):
         forbidden_imports={"MetaTrader5","requests","socket","smtplib","subprocess"}

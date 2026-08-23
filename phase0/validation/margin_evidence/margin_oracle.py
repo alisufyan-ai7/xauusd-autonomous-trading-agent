@@ -7,6 +7,8 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from typing import Any
 
+from phase0.validation.margin_evidence.stress_artifact import admit_stress_artifact
+
 
 D = Decimal
 MIN_LEVEL = D("1000")
@@ -61,10 +63,13 @@ def incremental_margin(snapshot: dict[str, Any], *, volume: Decimal) -> Decimal:
 
 
 def evaluate_m1_snapshot(
-    snapshot: dict[str, Any], stresses: dict[str, Any], *, now_utc: datetime,
-    volume: Decimal = D("0.01"), max_age_seconds: int = 30,
+    snapshot: dict[str, Any], stress_artifact: dict[str, Any], *, now_utc: datetime,
+    expected_bundle_root_sha256: str, expected_stress_artifact_sha256: str,
+    current_entry_cost: Any, volume: Decimal = D("0.01"), max_age_seconds: int = 30,
 ) -> Result:
     try:
+        if now_utc.tzinfo is None or now_utc.utcoffset() != timedelta(0):
+            raise ValueError("now_utc must have a zero UTC offset")
         if snapshot.get("tradeapi_disabled") is not True:
             return Result("FAIL_CLOSED", "EXTERNAL_PYTHON_TRADING_NOT_DISABLED")
         age = now_utc.astimezone(timezone.utc) - _utc(str(snapshot.get("observed_utc", "")))
@@ -73,14 +78,20 @@ def evaluate_m1_snapshot(
         equity = _decimal(snapshot.get("equity"), positive=True)
         used = _decimal(snapshot.get("margin"))
         increment = incremental_margin(snapshot, volume=volume)
-        current_cost = _decimal(stresses.get("current_entry_cost"))
-        spread = _decimal(stresses.get("spread_stress"))
-        slippage = _decimal(stresses.get("slippage_stress"))
-        gap = _decimal(stresses.get("gap_stress"))
-        cost = _decimal(stresses.get("cost_stress"))
-        if stresses.get("frozen") is not True:
-            return Result("FAIL_CLOSED", "STRESS_SET_NOT_FROZEN")
-    except (ValueError, TypeError):
+        current_cost = _decimal(current_entry_cost)
+        admission = admit_stress_artifact(
+            stress_artifact, expected_bundle_root_sha256=expected_bundle_root_sha256,
+            now_utc=now_utc,
+        )
+        if (admission.status != "ADMITTED_SPEC_ONLY"
+                or admission.artifact_sha256 != expected_stress_artifact_sha256):
+            return Result("FAIL_CLOSED", "STRESS_ARTIFACT_NOT_ADMITTED_OR_BOUND")
+        stresses = dict(admission.adverse_stresses)
+        spread = stresses["spread_stress"]
+        slippage = stresses["slippage_stress"]
+        gap = stresses["gap_stress"]
+        cost = stresses["cost_stress"]
+    except (AttributeError, KeyError, ValueError, TypeError):
         return Result("FAIL_CLOSED", "MISSING_INVALID_OR_AMBIGUOUS_INPUT")
 
     current_equity = equity - current_cost
@@ -98,4 +109,3 @@ def evaluate_m1_snapshot(
     if stressed_level < MIN_LEVEL or stressed_free < MIN_FREE * stressed_equity:
         return Result("REJECT", "M1_STRESSED_THRESHOLD_FAILED", current_level, stressed_level)
     return Result("PASS_SPEC_ONLY", "M1_PASS_NOT_TRADE_AUTHORITY", current_level, stressed_level)
-

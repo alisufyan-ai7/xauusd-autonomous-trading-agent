@@ -5,8 +5,9 @@ five-family minimized field register, strict output schema, freshness/timeouts,
 price reservation, production system prompt, chronological acceptance oracle
 and provider-change revalidation policy.
 
-The offline replay-sequence layer binds synthetic five-family chronological
-snapshots to a previously admitted replay-bundle root, requires expected positive
+The offline replay-sequence layer directly re-runs byte-level H4/H1/M15 bundle
+admission and binds synthetic five-family chronological snapshots to its
+separately expected root; a caller-supplied `ADMITTED` label is not accepted. It requires expected positive
 and fail-closed negative outcomes, carries consumed-snapshot state between cases,
 and proves duplicate analysis/snapshot identities cannot be reused.
 

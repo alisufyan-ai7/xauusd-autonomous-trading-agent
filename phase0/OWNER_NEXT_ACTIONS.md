@@ -17,12 +17,14 @@ Owner-approved direction and remaining actions:
    marks `DOL_UI` healthy and covers `US_JOBLESS_CLAIMS`. Reconciliation passes
    without conflicts and the all-source normalized result is `PASS`. No further
    initial-horizon rerun is requested. Controlled revision/outage/holiday logic
-   passes 10/10 and the independent shock scaffold passes 13/13, but genuine
+   passes 11/11 with acquisition-record chain binding and the independent shock
+   scaffold passes 13/13, but genuine
    source transitions and admitted empirical data remain open. Do not activate
    or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no real source is admitted. Setup features pass
    56/56 with ten exact 300-H4/500-H1/1,000-M15 synthetic histories and ninety
-   frozen lifecycle paths; multiframe replay admission passes 18/18. The
+   frozen lifecycle paths; multiframe replay admission passes 19/19 with the
+   exact full chronological split inventory and declared-gap enforcement. The
    synthetic full-count registry is complete within its stated scope, but a real
    corpus still needs verified provenance, automated-use, retention,
    derived-data, replay and audit rights plus frozen empirical distributions.
@@ -37,12 +39,14 @@ Owner-approved direction and remaining actions:
    A1 7/7 and combined reliability/private-probe 14/14. The R21 VPS packet
    passed 34/34 and completed the non-disruptive private margin, prepared-not-
    sent canary and healthy baseline captures. Only their sanitized hashes are
-   published. Frozen-stress M1 evaluation, rendered session boundaries, seven
+   published. M1 now directly re-admits and expected-hash-binds its frozen
+   stress artifact. Real frozen-stress evaluation, rendered session boundaries, seven
    remaining genuine VPS events and real dual-path delivery remain pending.
 4. Analyst contract: the production non-trading Sol prompt, exact field
    register, strict output/fact binding, freshness bounds and chronological
-   replay/state-change protections pass 27/27 offline, including a synthetic
-   five-family sequence. No API call was made. Chronological integration on an
+   replay/state-change protections pass 27/27 offline, including direct replay-
+   bundle re-admission before the synthetic five-family sequence. No API call
+   was made. Chronological integration on an
    admitted immutable corpus remains open.
 
 The OpenAI model-selection benchmark is complete under D-0073. GPT-5.6 Sol is
@@ -59,7 +63,7 @@ non-disruptive baseline is complete. Restart/network and real alert drills
 remain separate, explicitly approved actions; session boundaries will be
 scheduled only when their real observation windows occur.
 
-The frozen-receipt R26 final evidence matrix is now the authoritative checklist.
+The frozen-receipt R27 final evidence matrix is now the authoritative checklist.
 It derives five bounded items as complete and nine as pending. The exact six
 already admitted claim/path/hash/provenance tuples are frozen; status text or a
 new self-asserted receipt cannot promote a pending item. Every pending claim

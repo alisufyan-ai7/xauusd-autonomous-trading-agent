@@ -20,7 +20,8 @@ Admission requires:
 The multiframe bundle layer additionally requires exactly H4, H1 and M15 child
 artifacts, minimum admitted counts of 300/500/1,000 respectively, exact cadence,
 common provider/instrument semantics and documentary terms, unique child IDs,
-chronological preregistered split/embargo/holdout bounds, child roots and a
+the exact train/validation/embargo/holdout boundary inventory, positive declared
+purge/embargo durations, strict chronology and adequate gaps, child roots and a
 deterministic bundle root.
 
 Run from this directory:

@@ -29,15 +29,17 @@ class SafeFrame:
 
     observed_utc: datetime
     source: str
+    previous_record_sha256: str
     record_sha256: str
     source_healthy: bool
     events: tuple[Event, ...]
 
     def __post_init__(self) -> None:
-        if self.observed_utc.tzinfo is None:
-            raise ValueError("observed_utc must be timezone-aware")
-        if not SHA256.fullmatch(self.record_sha256):
-            raise ValueError("record_sha256 must be a lowercase SHA-256 digest")
+        if self.observed_utc.tzinfo != UTC:
+            raise ValueError("observed_utc must be UTC")
+        if (not SHA256.fullmatch(self.previous_record_sha256)
+                or not SHA256.fullmatch(self.record_sha256)):
+            raise ValueError("record hashes must be lowercase SHA-256 digests")
         if any(event.source != self.source for event in self.events):
             raise ValueError("frame contains an event from another source")
 
@@ -63,6 +65,7 @@ def evaluate_transition(previous: SafeFrame, current: SafeFrame) -> TransitionEv
     if current.observed_utc <= previous.observed_utc:
         raise ValueError("observations must be strictly chronological")
 
+    chain_continuous = current.previous_record_sha256 == previous.record_sha256
     healthy_revision, revisions = revision_delta(
         list(previous.events), list(current.events), current.observed_utc
     )
@@ -71,7 +74,9 @@ def evaluate_transition(previous: SafeFrame, current: SafeFrame) -> TransitionEv
     ))
     kinds = tuple(sorted(item.kind for item in revisions))
 
-    if not current.source_healthy:
+    if not chain_continuous:
+        status, reason = "LOCKED", "RECORD_CHAIN_DISCONTINUITY"
+    elif not current.source_healthy:
         status, reason = "LOCKED", "SOURCE_UNHEALTHY"
     elif not healthy_revision:
         status, reason = "LOCKED", "UNEXPLAINED_REVISION"
@@ -80,6 +85,7 @@ def evaluate_transition(previous: SafeFrame, current: SafeFrame) -> TransitionEv
 
     digest = _digest({
         "previous_record_sha256": previous.record_sha256,
+        "current_previous_record_sha256": current.previous_record_sha256,
         "current_record_sha256": current.record_sha256,
         "observed_utc": current.observed_utc.astimezone(UTC).isoformat(),
         "source": current.source,

@@ -11,7 +11,10 @@ states: margin level at least 1,000%, free margin at least 90% of projected
 equity, and 2.0x stressed incremental margin. The adverse spread, slippage, gap
 and cost inputs must come from a separately frozen calibration artifact.
 
-`stress_artifact.py` is the independent admission gate for that artifact. It
+`stress_artifact.py` is the independent admission gate for that artifact. The
+M1 evaluator invokes that gate directly and requires its calculated artifact
+hash to equal a separately expected hash; a caller-supplied frozen flag or
+unbound stress dictionary is never accepted. It
 requires pre-holdout freeze chronology, XAUUSD/0.01/USD scope, contract-spec and
 admitted replay-bundle roots, code/config/split hashes, empirical and selected
 positive spread/slippage/gap/cost stresses, conservative selection, and a

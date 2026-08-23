@@ -8,7 +8,7 @@ from pathlib import Path
 
 from admission import CSV_FIELDS, dataset_root, manifest_hash, sha256_bytes
 from multiframe_admission import (
-    REQUIRED, admit_multiframe_bundle, bundle_hash, bundle_root, split_hash,
+    REQUIRED, SCHEMA_VERSION, admit_multiframe_bundle, bundle_hash, bundle_root, split_hash,
 )
 
 
@@ -38,9 +38,15 @@ def fixture():
     terms = b"synthetic rights fixture only"
     split = {
         "train_start_utc": "2026-01-22T00:15:00Z",
-        "train_end_utc": "2026-01-27T00:00:00Z",
+        "train_end_utc": "2026-01-26T00:00:00Z",
+        "validation_start_utc": "2026-01-26T01:00:00Z",
+        "validation_end_utc": "2026-01-27T00:00:00Z",
+        "embargo_start_utc": "2026-01-27T01:00:00Z",
         "embargo_end_utc": "2026-01-28T00:00:00Z",
+        "holdout_start_utc": "2026-01-28T01:00:00Z",
         "holdout_end_utc": "2026-02-01T00:00:00Z",
+        "purge_seconds": 3600,
+        "embargo_seconds": 3600,
         "sealed": True,
     }
     split_digest = split_hash(split)
@@ -89,7 +95,7 @@ def fixture():
         declared[name] = {"dataset_id": manifest["dataset_id"],
                           "dataset_root_sha256": manifest["dataset_root_sha256"]}
     bundle = {
-        "schema_version": "replay-multiframe-bundle-1.0",
+        "schema_version": SCHEMA_VERSION,
         "bundle_id": "SYNTHETIC-BUNDLE", "frozen_at_utc": "2026-02-02T00:00:00Z",
         "timeframes": declared, "split": split, "split_map_sha256": split_digest,
     }
@@ -111,6 +117,8 @@ class MultiFrameAdmissionTests(unittest.TestCase):
         self.assertEqual(dict(result.child_rows), {"H4": 300, "H1": 500, "M15": 1000})
 
     def test_missing_or_extra_timeframe_fails_closed(self):
+        self.assertIn("BUNDLE_OR_CHILD_CONTAINER_INVALID",
+                      admit_multiframe_bundle(None, {}, {}).reason_codes)
         bundle, manifests, artifacts = fixture()
         del manifests["H4"]
         self.assertIn("CHILD_INVENTORY_INVALID",
@@ -160,6 +168,27 @@ class MultiFrameAdmissionTests(unittest.TestCase):
             manifest["manifest_sha256"] = manifest_hash(manifest)
         resign(bundle)
         self.assertIn("SPLIT_COVERAGE_INCOMPLETE",
+                      admit_multiframe_bundle(bundle, manifests, artifacts).reason_codes)
+
+    def test_split_requires_complete_inventory_and_declared_gaps(self):
+        bundle, manifests, artifacts = fixture()
+        del bundle["split"]["validation_start_utc"]
+        bundle["split_map_sha256"] = split_hash(bundle["split"])
+        for manifest in manifests.values():
+            manifest["registration"]["split_map_sha256"] = bundle["split_map_sha256"]
+            manifest["manifest_sha256"] = manifest_hash(manifest)
+        resign(bundle)
+        self.assertIn("SPLIT_MAP_INVALID",
+                      admit_multiframe_bundle(bundle, manifests, artifacts).reason_codes)
+        bundle, manifests, artifacts = fixture()
+        bundle["split"]["purge_seconds"] = 3601
+        bundle["split"]["embargo_seconds"] = 82801
+        bundle["split_map_sha256"] = split_hash(bundle["split"])
+        for manifest in manifests.values():
+            manifest["registration"]["split_map_sha256"] = bundle["split_map_sha256"]
+            manifest["manifest_sha256"] = manifest_hash(manifest)
+        resign(bundle)
+        self.assertIn("SPLIT_MAP_INVALID",
                       admit_multiframe_bundle(bundle, manifests, artifacts).reason_codes)
 
     def test_bundle_and_child_dataset_id_tamper_fail(self):

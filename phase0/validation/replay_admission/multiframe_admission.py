@@ -14,10 +14,13 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from admission import admit
+try:
+    from .admission import admit
+except ImportError:  # direct execution from this directory
+    from admission import admit
 
 
-SCHEMA_VERSION = "replay-multiframe-bundle-1.0"
+SCHEMA_VERSION = "replay-multiframe-bundle-1.1"
 REQUIRED = {"H4": (14_400, 300), "H1": (3_600, 500), "M15": (900, 1000)}
 
 
@@ -66,6 +69,9 @@ def admit_multiframe_bundle(
 ) -> BundleResult:
     reasons: list[str] = []
     row_counts: list[tuple[str, int]] = []
+    if (not isinstance(bundle, Mapping) or not isinstance(child_manifests, Mapping)
+            or not isinstance(child_artifacts, Mapping)):
+        return BundleResult("REJECTED", ("BUNDLE_OR_CHILD_CONTAINER_INVALID",), None, ())
     if bundle.get("schema_version") != SCHEMA_VERSION:
         reasons.append("BUNDLE_SCHEMA_INVALID")
     if bundle.get("bundle_manifest_sha256") != bundle_hash(bundle):
@@ -78,12 +84,24 @@ def admit_multiframe_bundle(
         reasons.append("CHILD_INVENTORY_INVALID")
 
     split = bundle.get("split")
-    split_valid = isinstance(split, dict) and split.get("sealed") is True
-    split_fields = ("train_start_utc", "train_end_utc", "embargo_end_utc", "holdout_end_utc")
+    split_fields = (
+        "train_start_utc", "train_end_utc", "validation_start_utc",
+        "validation_end_utc", "embargo_start_utc", "embargo_end_utc",
+        "holdout_start_utc", "holdout_end_utc",
+    )
+    split_inventory = set(split_fields) | {"purge_seconds", "embargo_seconds", "sealed"}
+    split_valid = (isinstance(split, dict) and set(split) == split_inventory
+                   and split.get("sealed") is True
+                   and type(split.get("purge_seconds")) is int and split["purge_seconds"] > 0
+                   and type(split.get("embargo_seconds")) is int and split["embargo_seconds"] > 0)
     try:
         times = [_utc(split[field]) for field in split_fields] if split_valid else []
-        if len(times) != 4 or not times[0] < times[1] < times[2] < times[3]:
+        if len(times) != 8 or not all(left < right for left, right in zip(times, times[1:])):
             raise ValueError("split order")
+        if (times[2] - times[1]).total_seconds() < split["purge_seconds"]:
+            raise ValueError("purge gap")
+        if (times[5] - times[4]).total_seconds() < split["embargo_seconds"]:
+            raise ValueError("embargo gap")
     except (KeyError, TypeError, ValueError):
         split_valid = False
         times = []
@@ -110,6 +128,9 @@ def admit_multiframe_bundle(
         provenance = manifest.get("provenance", {})
         rights = manifest.get("rights", {})
         registration = manifest.get("registration", {})
+        provenance = provenance if isinstance(provenance, Mapping) else {}
+        rights = rights if isinstance(rights, Mapping) else {}
+        registration = registration if isinstance(registration, Mapping) else {}
         providers.add(str(provenance.get("provider")))
         semantics.add(str(provenance.get("instrument_semantics")))
         terms.add(str(rights.get("terms_sha256")))
@@ -118,6 +139,7 @@ def admit_multiframe_bundle(
                 or registration.get("split_map_sha256") != bundle.get("split_map_sha256")):
             reasons.append("CHILD_BINDING_MISMATCH")
         descriptor = declared.get(name, {}) if isinstance(declared, dict) else {}
+        descriptor = descriptor if isinstance(descriptor, Mapping) else {}
         if (descriptor.get("dataset_id") != manifest.get("dataset_id")
                 or descriptor.get("dataset_root_sha256") != result.dataset_root_sha256):
             reasons.append("CHILD_ROOT_MISMATCH")
@@ -125,7 +147,7 @@ def admit_multiframe_bundle(
         try:
             child_start = min(_utc(item["start_utc"]) for item in files)
             child_end = max(_utc(item["end_utc"]) for item in files)
-            if split_valid and (child_start > times[0] or child_end < times[3]):
+            if split_valid and (child_start > times[0] or child_end < times[7]):
                 reasons.append("SPLIT_COVERAGE_INCOMPLETE")
         except (KeyError, TypeError, ValueError):
             reasons.append("SPLIT_COVERAGE_INCOMPLETE")

@@ -11,6 +11,8 @@ Run from this directory with Python 3.12:
 python -m unittest -v test_controlled_evidence.py
 ```
 
+Each transition requires exact UTC observation time and a continuous private
+acquisition-record hash link; independently asserted frame hashes fail closed.
 The oracle proves deterministic fail-closed behavior for an event added inside
 its pre-lock, a moved event retaining both old and new windows, unexplained
 future disappearance, a source outage despite cached events, incomplete

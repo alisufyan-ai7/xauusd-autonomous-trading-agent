@@ -13,7 +13,7 @@ from matrix_oracle import (
 
 
 ROOT = Path(__file__).resolve().parents[3]
-MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R26.json"
+MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R27.json"
 
 
 def artifact_hashes(payload):

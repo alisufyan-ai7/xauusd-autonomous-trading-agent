@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import sys
 import unittest
@@ -26,15 +26,17 @@ def event(source: str, source_id: str, taxonomy: str, when: str,
     return Event(source, source_id, taxonomy, at(when), "UTC", taxonomy, tier, status)
 
 
-def frame(observed: str, source: str, events=(), healthy=True, digest="a" * 64):
-    return SafeFrame(at(observed), source, digest, healthy, tuple(events))
+def frame(observed: str, source: str, events=(), healthy=True, digest="a" * 64,
+          previous="0" * 64):
+    return SafeFrame(at(observed), source, previous, digest, healthy, tuple(events))
 
 
 class ControlledEvidenceTests(unittest.TestCase):
     def test_event_added_inside_prelock_locks_immediately(self):
         before = frame("2026-09-10T12:05:00Z", "BLS_ICS")
         added = event("BLS_ICS", "cpi", "US_CPI", "2026-09-10T12:30:00Z")
-        after = frame("2026-09-10T12:06:00Z", "BLS_ICS", [added], digest="b" * 64)
+        after = frame("2026-09-10T12:06:00Z", "BLS_ICS", [added], digest="b" * 64,
+                      previous="a" * 64)
         result = evaluate_transition(before, after)
         self.assertEqual(("ADDED",), result.revision_kinds)
         self.assertEqual("PRE_LOCK", decision_state(after, at("2026-09-10T12:06:00Z")))
@@ -43,7 +45,8 @@ class ControlledEvidenceTests(unittest.TestCase):
         old = event("BLS_ICS", "cpi", "US_CPI", "2026-09-10T12:30:00Z")
         new = event("BLS_ICS", "cpi", "US_CPI", "2026-09-10T13:30:00Z")
         before = frame("2026-09-10T11:50:00Z", "BLS_ICS", [old])
-        after = frame("2026-09-10T12:05:00Z", "BLS_ICS", [new], digest="b" * 64)
+        after = frame("2026-09-10T12:05:00Z", "BLS_ICS", [new], digest="b" * 64,
+                      previous="a" * 64)
         result = evaluate_transition(before, after)
         self.assertIn("MOVED", result.revision_kinds)
         self.assertEqual(2, len(result.effective_events))
@@ -56,7 +59,8 @@ class ControlledEvidenceTests(unittest.TestCase):
         old = event("BEA_JSON", "pce", "US_PCE", "2026-09-25T12:30:00Z")
         result = evaluate_transition(
             frame("2026-09-01T10:00:00Z", "BEA_JSON", [old]),
-            frame("2026-09-01T11:00:00Z", "BEA_JSON", [], digest="b" * 64),
+            frame("2026-09-01T11:00:00Z", "BEA_JSON", [], digest="b" * 64,
+                  previous="a" * 64),
         )
         self.assertEqual("LOCKED", result.status)
         self.assertIn("UNEXPLAINED_DISAPPEARANCE", result.revision_kinds)
@@ -120,9 +124,21 @@ class ControlledEvidenceTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             frame("2026-08-23T12:00:00Z", "BLS_ICS", digest="account-123")
 
+    def test_frame_requires_utc_and_transition_requires_record_chain(self):
+        with self.assertRaises(ValueError):
+            SafeFrame(datetime(2026, 8, 23, 12, tzinfo=timezone(timedelta(hours=1))),
+                      "BLS_ICS", "0" * 64, "a" * 64, True, ())
+        prior = frame("2026-08-23T12:00:00Z", "DOL_UI")
+        unlinked = frame("2026-08-23T13:00:00Z", "DOL_UI", digest="b" * 64,
+                         previous="f" * 64)
+        result = evaluate_transition(prior, unlinked)
+        self.assertEqual(("LOCKED", "RECORD_CHAIN_DISCONTINUITY"),
+                         (result.status, result.reason))
+
     def test_transition_digest_is_deterministic(self):
         prior = frame("2026-08-23T12:00:00Z", "DOL_UI")
-        current = frame("2026-08-23T13:00:00Z", "DOL_UI", digest="b" * 64)
+        current = frame("2026-08-23T13:00:00Z", "DOL_UI", digest="b" * 64,
+                        previous="a" * 64)
         self.assertEqual(
             evaluate_transition(prior, current).digest_sha256,
             evaluate_transition(prior, current).digest_sha256,

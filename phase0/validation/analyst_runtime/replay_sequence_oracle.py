@@ -10,7 +10,9 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
+
+from phase0.validation.replay_admission.multiframe_admission import admit_multiframe_bundle
 
 from phase0.validation.analyst_runtime.runtime_contract_oracle import (
     evaluate_chronological_exchange,
@@ -34,13 +36,20 @@ class SequenceResult:
 
 
 def evaluate_registered_sequence(
-    *, bundle_admission_status: str, bundle_root_sha256: str,
+    *, bundle: Mapping[str, Any], child_manifests: Mapping[str, Mapping[str, Any]],
+    child_artifacts: Mapping[str, Mapping[str, bytes]], expected_bundle_root_sha256: str,
     exchanges: Sequence[dict[str, Any]],
 ) -> SequenceResult:
     reasons: list[str] = []
     case_results: list[tuple[str, bool, tuple[str, ...]]] = []
     accepted = rejected = local_no_calls = 0
-    if bundle_admission_status != "ADMITTED" or not SHA.fullmatch(str(bundle_root_sha256)):
+    try:
+        bundle_result = admit_multiframe_bundle(bundle, child_manifests, child_artifacts)
+    except (AttributeError, KeyError, TypeError, ValueError):
+        bundle_result = None
+    if (bundle_result is None or bundle_result.status != "ADMITTED"
+            or not SHA.fullmatch(str(expected_bundle_root_sha256))
+            or bundle_result.bundle_root_sha256 != expected_bundle_root_sha256):
         reasons.append("REPLAY_BUNDLE_NOT_ADMITTED")
     if not exchanges:
         reasons.append("SEQUENCE_EMPTY")
