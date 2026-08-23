@@ -7,12 +7,10 @@
 
 This revision publishes only sanitized technical records, source/test artifacts, broker technical metadata and evidence hashes explicitly approved by the owner.
 
-R21 makes the synthetic private-probe full-matrix clock deterministic after the
-Windows VPS correctly failed a fixture whose consecutive real timestamps were
-not strictly increasing. Production timestamp capture and fail-closed chronology
-remain unchanged. This revision also adds only sanitized status, action-packet,
-decision and digest records. The wrappers contain no private output and cause no
-restart, network fault, alert delivery, broker action or OpenAI call.
+R22 records only the R21 VPS test result and three sanitized baseline evidence
+hashes: private margin snapshot, prepared-not-sent alert canary and VPS baseline
+record. No private artifact content or path is published. The evidence wrappers
+caused no restart, network fault, alert delivery, broker action or OpenAI call.
 
 Excluded from this revision:
 

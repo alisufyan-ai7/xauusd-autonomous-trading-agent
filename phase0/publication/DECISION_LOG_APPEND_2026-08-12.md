@@ -1,6 +1,6 @@
 # Public Decision Log Addendum — 2026-08-12
 
-This publication-safe addendum preserves decisions D-0056 through D-0096 without republishing mixed confidential account/legal records.
+This publication-safe addendum preserves decisions D-0056 through D-0097 without republishing mixed confidential account/legal records.
 
 | ID | Status | Decision | Gate effect |
 |---|---|---|---|
@@ -45,3 +45,4 @@ This publication-safe addendum preserves decisions D-0056 through D-0096 without
 | D-0094 | Accepted controlled R19 publication boundary | Publish the sanitized R19 engineering/evidence revision after 226/226 controlled offline tests across fifteen suite groups. | Gate 0 remains incomplete. Publish only source, tests, reports, URLs and hashes; exclude raw/private evidence, exact account state, identities, credentials, screenshots, binaries and ZIP exports. External Python trading stays disabled and demo/live trading remains unauthorized. |
 | D-0095 | Accepted pre-operational Windows test portability correction | Replace four Linux-only `TemporaryDirectory(dir="/tmp")` fixtures with Python platform-native temporary directories and add an AST regression assertion. Publish R20 after 227/227 controlled tests across fifteen suite groups. | The R19 VPS failure was a test-path defect before private capture began, not a risk-control or broker failure. Gate 0 remains incomplete; no private evidence, restart, message, broker action, API call or trade occurred. |
 | D-0096 | Accepted deterministic synthetic-clock correction | Replace the R20 full-matrix test's consecutive real `datetime.now()` calls with an injected one-second step clock and include oracle reasons in assertion diagnostics. | The Windows VPS correctly failed closed when its clock returned equal timestamps during a fast synthetic loop. Production UTC capture and strict chronology are unchanged. The corrected subset passes 34/34 and all fifteen controlled groups pass 227/227; no private capture or trading action began. |
+| D-0097 | Accepted non-disruptive private baseline hash evidence | Accept the R21 VPS 34/34 result and publish only the private margin-snapshot hash, prepared-not-sent canary hash and healthy VPS `BASELINE` record hash. | The barrier was observed disabled and the terminal connected. Margin has no M1 verdict without frozen stress inputs; the canary proves no delivery. Raw artifacts, paths, exact account state and secrets remain private. No restart, message, broker action, API call or trade occurred. |

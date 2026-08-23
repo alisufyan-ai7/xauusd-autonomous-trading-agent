@@ -25,11 +25,12 @@ Owner-approved direction and remaining actions:
    but full 300-H4/500-H1/1,000-M15 histories and all lifecycle/cancellation
    permutations remain open. A real corpus still needs verified provenance,
    automated-use, retention, derived-data, replay and audit rights.
-3. VPS/session/margin/alerts: offline packages now pass session 7/7, M1 7/7,
-   A1 6/6 and combined reliability/private-probe 13/13. The current official
-   Exness instrument-hours and holiday URLs are frozen, but private rendered
-   schedule/boundary, controlled fault, frozen-stress M1 and real dual-path
-   delivery evidence remain pending.
+3. VPS/session/margin/alerts: offline packages pass session 7/7, M1 7/7,
+   A1 6/6 and combined reliability/private-probe 14/14. The R21 VPS packet
+   passed 34/34 and completed the non-disruptive private margin, prepared-not-
+   sent canary and healthy baseline captures. Only their sanitized hashes are
+   published. Frozen-stress M1 evaluation, rendered session boundaries, seven
+   remaining genuine VPS events and real dual-path delivery remain pending.
 4. Analyst contract: the production non-trading Sol prompt, exact field
    register, strict output/fact binding, freshness bounds and chronological
    replay/state-change protections pass 20/20 offline. No API call was made.
@@ -44,9 +45,9 @@ The operational-policy bundle `V1 + M1 + E1 + P1 + A1` is complete under
 D-0075 for specification/testing only. Do not reopen it without a concrete
 test defect or a new explicit owner decision.
 
-No additional owner policy choice or OpenAI run is requested. The next owner
-contact should be one exact private-VPS action packet, starting with
-non-disruptive captures. Restart/network and real alert drills remain separate,
-explicitly identified actions.
+No additional owner policy choice or OpenAI run is requested. The
+non-disruptive baseline is complete. Restart/network and real alert drills
+remain separate, explicitly approved actions; session boundaries will be
+scheduled only when their real observation windows occur.
 
 Continue to keep **Disable automated trading via external Python API** enabled. Do not authorize demo/live trading or unknown-exposure closure.
