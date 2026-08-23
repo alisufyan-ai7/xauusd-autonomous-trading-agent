@@ -91,7 +91,10 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual({"CONTENT_TYPE", "SCHEMA_DRIFT", "URL_NOT_ALLOWLISTED"}, set(reasons))
 
     def test_schema_fingerprints_are_derived_from_body_not_declared(self):
-        bea = json.dumps({"Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]}}).encode()
+        bea = json.dumps({
+            "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]},
+            "file_last_updated": "2026-07-13T08:00:42.402013",
+        }).encode()
         fed = b"<html>Federal Open Market Committee Upcoming Dates</html>"
         census = b"<html>Economic Indicators Release Time AM</html>"
         self.assertEqual(POLICIES["BEA_JSON"].schema_fingerprint,
@@ -101,6 +104,12 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual(POLICIES["CENSUS_WATCH"].schema_fingerprint,
                          observed_schema_fingerprint("CENSUS_WATCH", census))
         self.assertEqual("UNRECOGNIZED", observed_schema_fingerprint("BEA_JSON", b"{}"))
+        unexpected_scalar = json.dumps({
+            "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]},
+            "unexpected_metadata": "must not broaden admission",
+        }).encode()
+        self.assertEqual("UNRECOGNIZED",
+                         observed_schema_fingerprint("BEA_JSON", unexpected_scalar))
 
     def test_body_tamper_and_staleness_fail(self):
         record = self.record(retrieved_utc=self.now - timedelta(hours=27))

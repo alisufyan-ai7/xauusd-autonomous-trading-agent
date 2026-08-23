@@ -169,11 +169,19 @@ def observed_schema_fingerprint(source: str, body: bytes) -> str:
     if source == "BEA_JSON":
         try:
             value = json.loads(text)
-            valid = (type(value) is dict and bool(value)
+            release_items = (
+                {title: item for title, item in value.items() if title != "file_last_updated"}
+                if type(value) is dict else {}
+            )
+            metadata_valid = (
+                "file_last_updated" not in value
+                or type(value["file_last_updated"]) is str
+            ) if type(value) is dict else False
+            valid = (type(value) is dict and bool(release_items) and metadata_valid
                      and all(type(title) is str and type(item) is dict
                              and type(item.get("release_dates")) is list
                              and all(type(date) is str for date in item["release_dates"])
-                             for title, item in value.items()))
+                             for title, item in release_items.items()))
             return policy.schema_fingerprint if valid else "UNRECOGNIZED"
         except json.JSONDecodeError:
             return "UNRECOGNIZED"

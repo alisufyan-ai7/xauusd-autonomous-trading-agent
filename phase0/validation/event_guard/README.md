@@ -27,6 +27,9 @@ explicit fail-closed diagnostic rather than an unexplained timezone lookup.
 
 Schema fingerprints are derived from captured body content. The capture utility
 cannot label a body conforming merely by copying the expected registry value.
+The admitted BEA shape permits its documented response-root
+`file_last_updated` string in addition to non-empty release objects; no other
+scalar root field is admitted.
 
 ## Private VPS capture
 

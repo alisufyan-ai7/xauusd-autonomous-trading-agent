@@ -66,6 +66,7 @@ END:VCALENDAR
         raw = json.dumps({
             "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00+00:00"]},
             "Gross Domestic Product": {"release_dates": ["2026-08-26T12:30:00+00:00"]},
+            "file_last_updated": "2026-07-13T08:00:42.402013",
         })
         events = parse_bea_json(raw)
         self.assertEqual(1, len(events))
