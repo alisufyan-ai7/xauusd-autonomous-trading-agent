@@ -16,7 +16,7 @@ import sys
 
 from capture_official_sources import _latest_for, _load_records, _target_urls
 from event_guard_oracle import (
-    Event, parse_bea_json, parse_fed_monthly_html, parse_ics,
+    Event, parse_bea_json, parse_dol_ui_schedule_html, parse_fed_monthly_html, parse_ics,
     reconcile_authoritative,
 )
 from source_conformance import POLICIES, assess_snapshot, coverage_inventory
@@ -55,7 +55,7 @@ def normalize(output: Path, now: datetime) -> dict:
     events: list[Event] = []
     healthy_sources: set[str] = set()
 
-    for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "CENSUS_WATCH"):
+    for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "DOL_UI", "CENSUS_WATCH"):
         target_results: list[dict] = []
         source_events: list[Event] = []
         for url in _target_urls(source, now):
@@ -78,6 +78,8 @@ def normalize(output: Path, now: datetime) -> dict:
                     source_events.extend(parse_bea_json(text))
                 elif source == "FED_CALENDAR":
                     source_events.extend(parse_fed_monthly_html(text))
+                elif source == "DOL_UI":
+                    source_events.extend(parse_dol_ui_schedule_html(text, now))
                 target_results.append({
                     "url": url,
                     "status": "NORMALIZED",
@@ -94,10 +96,6 @@ def normalize(output: Path, now: datetime) -> dict:
             source_state = "SOURCE_UNHEALTHY"
         source_status[source] = {"status": source_state, "targets": target_results}
 
-    source_status["DOL_UI"] = {
-        "status": "BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE",
-        "targets": [],
-    }
     reconciliation_ok, conflicts = reconcile_authoritative(events)
     coverage_ok, coverage = coverage_inventory(now, events, healthy_sources)
     future_events = sorted(
@@ -106,7 +104,7 @@ def normalize(output: Path, now: datetime) -> dict:
     )
     all_candidate_sources_healthy = all(
         source_status[source]["status"] == "HEALTHY"
-        for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR")
+        for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "DOL_UI")
     )
     status = "PASS" if all_candidate_sources_healthy and reconciliation_ok and coverage_ok else "FAIL_CLOSED"
     return {

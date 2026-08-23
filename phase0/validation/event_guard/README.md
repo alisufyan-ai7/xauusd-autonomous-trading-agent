@@ -11,7 +11,7 @@ Run:
 python -m unittest -v test_event_guard.py test_source_conformance.py
 ```
 
-The 40 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
+The 42 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
 monitored Fed/Census/DOL schedule rows, frozen taxonomy filtering, overlapping
 FOMC intervals, exact boundaries, source conflicts, cancellation/tentative
 behavior, optional FRED date-only cross-checking, submission-latency crossing,
@@ -43,6 +43,14 @@ conferences and minutes. Four consecutive month pages are acquired to cover the
 frozen 75-day horizon; the generic landing page is explicitly rejected because
 its upcoming-date summary does not provide an authoritative event time.
 
+DOL jobless-claims locks use only ETA's Office of Unemployment Insurance
+schedule at `https://oui.doleta.gov/unemploy/claims_arch.asp`. Admission requires
+the explicit Thursday 8:30 a.m. Eastern weekly rule and the federal-holiday
+exception contract. Listed exception dates replace the Thursday in the same
+week; missing/malformed rules, duplicate exceptions, old DOL endpoints and
+historical-only pages fail closed. Eastern civil time is converted through the
+pinned IANA database so summer and winter UTC times differ correctly.
+
 ## Private VPS capture
 
 From this directory, with Python 3.12, use the fail-closed wrapper:
@@ -53,16 +61,15 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run_private_capture.ps
 
 The wrapper installs only the hash-pinned binary dependency, runs all offline
 tests, and starts capture only if both steps succeed. It then normalizes the
-locally hashed BLS, BEA and Fed bodies, verifies source freshness and forward
+locally hashed BLS, BEA, Fed and DOL bodies, verifies source freshness and forward
 coverage, and writes `normalized_event_guard.json` inside the private output
 directory. It rejects an output path inside the repository.
 
 The output directory contains raw official-source snapshots and a hash-chained
 JSONL acquisition manifest. It is private evidence: do not commit, email or
-publish it. The current all-source run is expected to return `FAIL_CLOSED`
-because DOL jobless claims has no admitted first-party forward schedule with
-holiday exceptions. A successful HTTP fetch of a historical DOL release page
-cannot clear that blocker.
+publish it. The all-source run returns `PASS` only when every lock-authoritative
+source is healthy, every frozen taxonomy has a forward event, and reconciliation
+has no conflict. A successful HTTP fetch alone cannot clear any source.
 
 A passing result validates the specified transformations and fail-closed
 semantics only. A capture result is observation evidence only. Neither result

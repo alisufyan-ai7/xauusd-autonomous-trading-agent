@@ -29,7 +29,7 @@ Write-Host "Private output must not be committed, emailed, or published: $privat
 & py -3.12 .\capture_official_sources.py --output $privateOutput
 $captureExit = $LASTEXITCODE
 if ($captureExit -ne 0) {
-    Write-Warning "Capture returned fail-closed status. Review its JSON; this is expected while DOL remains unresolved."
+    Write-Warning "Capture returned fail-closed status. Review its private JSON before continuing."
 }
 
 Write-Host "Gate 0 Event Guard: normalize captured schedules and prove horizon locally"

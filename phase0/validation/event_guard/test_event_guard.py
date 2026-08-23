@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 sys.path.insert(0, str(Path(__file__).parent))
 from event_guard_oracle import (
     Event, entry_allowed, fred_date_cross_check, guard_state, local_to_utc,
-    parse_bea_json, parse_fed_monthly_html, parse_ics, parse_official_rows,
+    parse_bea_json, parse_dol_ui_schedule_html, parse_fed_monthly_html, parse_ics, parse_official_rows,
     reconcile_authoritative,
 )
 
@@ -158,6 +158,25 @@ END:VCALENDAR
                          [item.taxonomy for item in events])
         self.assertEqual([at("2026-09-16T18:30:00Z"), at("2026-09-16T18:00:00Z")],
                          [item.scheduled_utc for item in events])
+
+    def test_dol_weekly_rule_expands_dst_and_holiday_exception(self):
+        html = """<html><h1>Office of Unemployment Insurance</h1>
+        <p>Publication Schedule: The UI Weekly Claims News Release is published each week on
+        Thursday morning at 8:30am EST. Exceptions to this schedule occur when a Thursday
+        falls on a Federal Holiday.</p><table><tr><th>Release Date</th><th>Release Time</th></tr>
+        <tr><td>Wednesday, November 25, 2026</td><td>8:30 AM EST</td></tr></table></html>"""
+        summer = parse_dol_ui_schedule_html(html, at("2026-08-23T12:00:00Z"), 14)
+        self.assertEqual(at("2026-08-27T12:30:00Z"), summer[0].scheduled_utc)
+        winter = parse_dol_ui_schedule_html(html, at("2026-11-20T12:00:00Z"), 21)
+        self.assertEqual(at("2026-11-25T13:30:00Z"), winter[0].scheduled_utc)
+        self.assertTrue(all(item.taxonomy == "US_JOBLESS_CLAIMS" for item in summer + winter))
+        self.assertNotIn(at("2026-11-26T13:30:00Z"), [item.scheduled_utc for item in winter])
+
+    def test_dol_rule_without_holiday_contract_fails_closed(self):
+        html = """<html><p>The UI Weekly Claims News Release is published each week on
+        Thursday morning at 8:30am EST.</p></html>"""
+        with self.assertRaisesRegex(ValueError, "holiday contract missing"):
+            parse_dol_ui_schedule_html(html, at("2026-08-23T12:00:00Z"))
 
     def test_exact_half_open_boundaries(self):
         event = Event("BLS_ICS", "cpi", "CPI", at("2026-07-14T12:30:00Z"), "UTC", "US_CPI", "TIER_1")

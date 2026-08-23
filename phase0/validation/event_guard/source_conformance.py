@@ -82,15 +82,14 @@ POLICIES = {
     "DOL_UI": SourcePolicy(
         source="DOL_UI",
         role="LOCK_AUTHORITATIVE",
-        urls=("https://www.dol.gov/newsroom/economicdata",),
-        url_prefixes=("https://www.dol.gov/newsroom/releases/eta",),
-        content_types=("text/html", "application/pdf"),
-        parser_version="dol-ui-schedule-v0",
-        schema_fingerprint="UNRESOLVED_FORWARD_SCHEDULE_WITH_EXCEPTIONS",
+        urls=("https://oui.doleta.gov/unemploy/claims_arch.asp",),
+        url_prefixes=(),
+        content_types=("text/html", "application/xhtml+xml"),
+        parser_version="dol-ui-schedule-v1",
+        schema_fingerprint="DOL/UI/publication-schedule/weekly/holiday-exceptions@v1",
         max_age=timedelta(hours=26),
         max_bytes=8_000_000,
         required_taxonomy_max_lag_days=(("US_JOBLESS_CLAIMS", 14),),
-        admission="BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE",
     ),
     "CENSUS_WATCH": SourcePolicy(
         source="CENSUS_WATCH",
@@ -202,9 +201,19 @@ def observed_schema_fingerprint(source: str, body: bytes) -> str:
         return policy.schema_fingerprint if all(any(token in lower for token in group)
                                                 for group in required_groups) else "UNRECOGNIZED"
     if source == "DOL_UI":
-        # An observed publication page can never establish the unresolved
-        # exception-aware forward-schedule contract.
-        return "UNRESOLVED_FORWARD_SCHEDULE_WITH_EXCEPTIONS"
+        normalized = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", lower))
+        required_groups = (
+            ("publication schedule",),
+            ("ui weekly claims news release",),
+            ("each week on thursday",),
+            ("8:30",),
+            ("exceptions to this schedule",),
+            ("federal holiday",),
+            ("release date",),
+            ("release time",),
+        )
+        return policy.schema_fingerprint if all(any(token in normalized for token in group)
+                                                for group in required_groups) else "UNRECOGNIZED"
     if source == "FRED_CROSSCHECK":
         try:
             value = json.loads(text)

@@ -281,6 +281,83 @@ def parse_fed_monthly_html(text: str) -> list[Event]:
     return parse_official_rows(rows, "FED_CALENDAR")
 
 
+def parse_dol_ui_schedule_html(text: str, now: datetime,
+                               horizon_days: int = 21) -> list[Event]:
+    """Expand ETA's explicit weekly rule and holiday exceptions into UTC events."""
+    if horizon_days < 14 or horizon_days > 92:
+        raise ValueError("DOL schedule horizon outside frozen bounds")
+    parser = _VisibleText()
+    parser.feed(text)
+    visible = " ".join(parser.tokens)
+    rule = re.search(
+        r"published each week on Thursday morning at\s*"
+        r"(\d{1,2}:\d{2}\s*[ap]\.?m\.?)\s*(EST|ET|EDT)\b",
+        visible,
+        re.I,
+    )
+    if rule is None or not re.search(
+        r"Exceptions to this schedule occur when a Thursday falls on a Federal Holiday",
+        visible,
+        re.I,
+    ):
+        raise ValueError("authoritative DOL weekly rule or holiday contract missing")
+    base_time = _twelve_hour_to_24(rule.group(1))
+    if base_time != "08:30":
+        raise ValueError("unexpected DOL weekly release time")
+
+    exception_pattern = re.compile(
+        r"(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday),\s*"
+        r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+"
+        r"(\d{1,2}),\s*(20\d{2}).{0,80}?"
+        r"(\d{1,2}:\d{2}\s*[ap]\.?m\.?)\s*(EST|ET|EDT)\b",
+        re.I,
+    )
+    exceptions: dict[tuple[int, int], tuple[datetime, str]] = {}
+    for match in exception_pattern.finditer(visible):
+        release_date = datetime.strptime(
+            f"{match.group(1)}, {match.group(2)} {match.group(3)}, {match.group(4)}",
+            "%A, %B %d, %Y",
+        )
+        if release_date.strftime("%A").lower() != match.group(1).lower():
+            raise ValueError("DOL holiday exception weekday/date mismatch")
+        week = release_date.date().isocalendar()[:2]
+        if week in exceptions:
+            raise ValueError("duplicate DOL holiday exception week")
+        exceptions[week] = (release_date, _twelve_hour_to_24(match.group(5)))
+
+    now_utc = now.astimezone(UTC)
+    eastern = verified_zone(EASTERN)
+    start = now_utc.astimezone(eastern).date()
+    end_utc = now_utc + timedelta(days=horizon_days)
+    rows: list[dict] = []
+    for offset in range(horizon_days + 2):
+        candidate = start + timedelta(days=offset)
+        if candidate.weekday() != 3:
+            continue
+        exception = exceptions.get(candidate.isocalendar()[:2])
+        if exception:
+            release_date, release_time = exception
+            local_date = release_date.date()
+        else:
+            local_date, release_time = candidate, base_time
+        hour, minute = (int(value) for value in release_time.split(":"))
+        scheduled = datetime(local_date.year, local_date.month, local_date.day,
+                             hour, minute, tzinfo=eastern).astimezone(UTC)
+        if scheduled < now_utc or scheduled > end_utc:
+            continue
+        rows.append({
+            "id": f"dol-ui-{local_date:%Y%m%d}",
+            "title": "Unemployment Insurance Weekly Claims",
+            "date": local_date.isoformat(),
+            "time": release_time,
+            "basis": "DOL_ETA_WEEKLY_RULE_WITH_HOLIDAY_EXCEPTIONS",
+            "exception": bool(exception),
+        })
+    if not rows:
+        raise ValueError("no future DOL weekly claims event inside frozen horizon")
+    return parse_official_rows(rows, "DOL_UI")
+
+
 def reconcile_authoritative(events: list[Event]) -> tuple[bool, list[str]]:
     """Fail closed when two authoritative snapshots disagree on the same event ID."""
     seen: dict[tuple[str, str], Event] = {}

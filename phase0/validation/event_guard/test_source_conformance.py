@@ -49,6 +49,7 @@ class SourceConformanceTests(unittest.TestCase):
     def test_frozen_registry_roles_and_official_https_hosts(self):
         self.assertEqual("WATCH_ONLY", POLICIES["CENSUS_WATCH"].role)
         self.assertEqual("DATE_CROSSCHECK_ONLY", POLICIES["FRED_CROSSCHECK"].role)
+        self.assertEqual("CANDIDATE", POLICIES["DOL_UI"].admission)
         self.assertTrue(all(url.startswith("https://") for policy in POLICIES.values()
                             for url in policy.urls + policy.url_prefixes))
         self.assertTrue(all(pattern.startswith("https://") for policy in POLICIES.values()
@@ -57,6 +58,7 @@ class SourceConformanceTests(unittest.TestCase):
     def test_capture_requests_are_get_only_and_fred_is_not_enabled(self):
         request = _request(POLICIES["BLS_ICS"].urls[0], None)
         self.assertEqual("GET", request.method)
+        self.assertEqual("GET", _request(POLICIES["DOL_UI"].urls[0], None).method)
         self.assertNotIn("FRED_CROSSCHECK", DEFAULT_SOURCES)
 
     def test_fed_targets_are_exact_month_pages_for_frozen_horizon(self):
@@ -113,12 +115,17 @@ class SourceConformanceTests(unittest.TestCase):
         fed = (b"<html>Calendar FOMC Meetings Time: Release Date(s): "
                b"FOMC Meeting</html>")
         census = b"<html>Economic Indicators Release Time AM</html>"
+        dol = (b"<html><h2>Publication Schedule</h2><p>UI Weekly Claims News Release "
+               b"each week <strong>on Thursday</strong> 8:30 Exceptions to this schedule "
+               b"Federal Holiday</p><th>Release Date</th><th>Release Time</th></html>")
         self.assertEqual(POLICIES["BEA_JSON"].schema_fingerprint,
                          observed_schema_fingerprint("BEA_JSON", bea))
         self.assertEqual(POLICIES["FED_CALENDAR"].schema_fingerprint,
                          observed_schema_fingerprint("FED_CALENDAR", fed))
         self.assertEqual(POLICIES["CENSUS_WATCH"].schema_fingerprint,
                          observed_schema_fingerprint("CENSUS_WATCH", census))
+        self.assertEqual(POLICIES["DOL_UI"].schema_fingerprint,
+                         observed_schema_fingerprint("DOL_UI", dol))
         self.assertEqual("UNRECOGNIZED", observed_schema_fingerprint("BEA_JSON", b"{}"))
         unexpected_scalar = json.dumps({
             "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]},
@@ -178,7 +185,7 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual((True, ()), verify_record_chain([first, second]))
         self.assertEqual((False, (0, 1)), verify_record_chain([second, first]))
 
-    def test_complete_inventory_still_fails_on_unresolved_dol(self):
+    def test_complete_inventory_covers_admitted_dol(self):
         events = [
             event("BLS_ICS", "jobs", "US_EMPLOYMENT", "2026-09-04T12:30:00Z"),
             event("BLS_ICS", "cpi", "US_CPI", "2026-09-10T12:30:00Z"),
@@ -191,11 +198,8 @@ class SourceConformanceTests(unittest.TestCase):
         healthy, inventory = coverage_inventory(
             self.now, events, {"BLS_ICS", "BEA_JSON", "FED_CALENDAR", "DOL_UI"}
         )
-        self.assertFalse(healthy)
-        self.assertEqual("BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE",
-                         inventory["DOL_UI:US_JOBLESS_CLAIMS"])
-        self.assertTrue(all(value == "COVERED" for key, value in inventory.items()
-                            if not key.startswith("DOL_UI:")))
+        self.assertTrue(healthy)
+        self.assertTrue(all(value == "COVERED" for value in inventory.values()), inventory)
 
     def test_watch_only_and_fred_never_satisfy_lock_coverage(self):
         fake = event("CENSUS_WATCH", "cpi", "US_CPI", "2026-09-10T12:30:00Z")
@@ -231,7 +235,7 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual(2, len(effective))
         self.assertEqual("PRE_LOCK", guard_state(now, effective, source_healthy=True, shock_locked=False))
 
-    def test_dol_candidate_cannot_be_marked_healthy_by_http_success(self):
+    def test_dol_historical_or_old_endpoint_cannot_satisfy_schedule(self):
         body = b"official historical release page"
         record = make_record(
             source="DOL_UI", url=POLICIES["DOL_UI"].urls[0], retrieved_utc=self.now,
@@ -239,9 +243,14 @@ class SourceConformanceTests(unittest.TestCase):
         )
         healthy, reasons = assess_snapshot(record, body, self.now)
         self.assertFalse(healthy)
-        self.assertIn("BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE", reasons)
+        self.assertIn("SCHEMA_DRIFT", reasons)
+        old = make_record(
+            source="DOL_UI", url="https://www.dol.gov/newsroom/economicdata",
+            retrieved_utc=self.now, http_status=200, content_type="text/html", body=body,
+        )
+        self.assertIn("URL_NOT_ALLOWLISTED", assess_snapshot(old, body, self.now)[1])
 
-    def test_private_normalization_proves_candidate_horizons_but_dol_stays_closed(self):
+    def test_private_normalization_proves_all_candidate_horizons(self):
         bls = b"""BEGIN:VCALENDAR
 BEGIN:VEVENT
 UID:jobs
@@ -266,6 +275,11 @@ END:VCALENDAR
             "november": b"<html><h1>Calendar November 2026</h1><h2>FOMC Meetings</h2><i>Time:</i><i>Release Date(s):</i><b>2:00 p.m.</b><span>FOMC Minutes</span><em>18</em></html>",
         }
         census = b"<html>Economic Indicators Release Time AM</html>"
+        dol = b"""<html><h1>Office of Unemployment Insurance</h1>
+        <p>Publication Schedule: The UI Weekly Claims News Release is published each week on
+        Thursday morning at 8:30am EST. Exceptions to this schedule occur when a Thursday
+        falls on a Federal Holiday.</p><table><tr><th>Release Date</th><th>Release Time</th></tr>
+        <tr><td>Wednesday, November 25, 2026</td><td>8:30 AM EST</td></tr></table></html>"""
         targets = [
             ("BLS_ICS", POLICIES["BLS_ICS"].urls[0], bls, "text/calendar"),
             ("BEA_JSON", POLICIES["BEA_JSON"].urls[0], bea, "application/json"),
@@ -274,6 +288,7 @@ END:VCALENDAR
             ("FED_CALENDAR", url, fed_pages[url.rsplit("-", 1)[1].split(".", 1)[0]], "text/html")
             for url in _target_urls("FED_CALENDAR", self.now)
         )
+        targets.append(("DOL_UI", POLICIES["DOL_UI"].urls[0], dol, "text/html"))
         targets.append(("CENSUS_WATCH", POLICIES["CENSUS_WATCH"].urls[0], census, "text/html"))
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory)
@@ -296,13 +311,10 @@ END:VCALENDAR
                 encoding="utf-8",
             )
             result = normalize(output, self.now)
-        self.assertEqual("FAIL_CLOSED", result["status"])
+        self.assertEqual("PASS", result["status"], result)
         self.assertTrue(all(result["source_status"][source]["status"] == "HEALTHY"
-                            for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR")), result)
-        self.assertEqual("BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE",
-                         result["coverage"]["DOL_UI:US_JOBLESS_CLAIMS"])
-        self.assertTrue(all(value == "COVERED" for key, value in result["coverage"].items()
-                            if not key.startswith("DOL_UI:")))
+                            for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "DOL_UI")), result)
+        self.assertTrue(all(value == "COVERED" for value in result["coverage"].values()))
 
 
 if __name__ == "__main__":
