@@ -11,8 +11,15 @@ states: margin level at least 1,000%, free margin at least 90% of projected
 equity, and 2.0x stressed incremental margin. The adverse spread, slippage, gap
 and cost inputs must come from a separately frozen calibration artifact.
 
+`stress_artifact.py` is the independent admission gate for that artifact. It
+requires pre-holdout freeze chronology, XAUUSD/0.01/USD scope, contract-spec and
+admitted replay-bundle roots, code/config/split hashes, empirical and selected
+positive spread/slippage/gap/cost stresses, conservative selection, and a
+self-consistent artifact hash. It contains no private account state and cannot
+produce an M1 verdict by itself.
+
 ```text
-py -3.12 -m unittest -v phase0.validation.margin_evidence.test_margin_evidence
+py -3.12 -m unittest -v phase0.validation.margin_evidence.test_margin_evidence phase0.validation.margin_evidence.test_stress_artifact
 ```
 
 Private snapshots may contain exact equity and margin and must remain outside

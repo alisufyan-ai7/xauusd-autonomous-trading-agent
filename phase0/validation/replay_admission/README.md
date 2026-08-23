@@ -17,14 +17,21 @@ Admission requires:
 - exact, evidence-hashed official session/holiday authorization for every
   non-cadence gap. Generic, unused, weakly sourced, or unexplained gaps reject.
 
+The multiframe bundle layer additionally requires exactly H4, H1 and M15 child
+artifacts, minimum admitted counts of 300/500/1,000 respectively, exact cadence,
+common provider/instrument semantics and documentary terms, unique child IDs,
+chronological preregistered split/embargo/holdout bounds, child roots and a
+deterministic bundle root.
+
 Run from this directory:
 
 ```powershell
-py -3.12 -m unittest -v test_admission.py
+py -3.12 -m unittest -v test_admission.py test_multiframe_admission.py
 ```
 
-The included fixture is deliberately synthetic and proves only the admission
-logic. It is not licensed market evidence and produces no performance result.
+The included fixtures are deliberately synthetic and prove only the child and
+multiframe admission logic. They are not licensed market evidence and produce
+no performance result.
 
 The exact remaining external blocker is a provider-authorized immutable XAUUSD
 bid/ask or tick history whose terms have been reviewed and recorded as permitting

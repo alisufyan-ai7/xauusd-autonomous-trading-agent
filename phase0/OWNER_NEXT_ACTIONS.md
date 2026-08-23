@@ -21,11 +21,12 @@ Owner-approved direction and remaining actions:
    source transitions and admitted empirical data remain open. Do not activate
    or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no real source is admitted. Setup features pass
-   45/45 with 35 registered raw-family cases and replay admission passes 10/10,
-   but full 300-H4/500-H1/1,000-M15 histories and all lifecycle/cancellation
-   permutations remain open. A real corpus still needs verified provenance,
-   automated-use, retention, derived-data, replay and audit rights.
-3. VPS/session/margin/alerts: offline packages pass session 7/7, M1 7/7,
+   56/56 with ten exact 300-H4/500-H1/1,000-M15 synthetic histories and ninety
+   frozen lifecycle paths; multiframe replay admission passes 18/18. The
+   synthetic full-count registry is complete within its stated scope, but a real
+   corpus still needs verified provenance, automated-use, retention,
+   derived-data, replay and audit rights plus frozen empirical distributions.
+3. VPS/session/margin/alerts: offline packages pass session 7/7, M1/stress 14/14,
    A1 6/6 and combined reliability/private-probe 14/14. The R21 VPS packet
    passed 34/34 and completed the non-disruptive private margin, prepared-not-
    sent canary and healthy baseline captures. Only their sanitized hashes are
@@ -33,8 +34,9 @@ Owner-approved direction and remaining actions:
    remaining genuine VPS events and real dual-path delivery remain pending.
 4. Analyst contract: the production non-trading Sol prompt, exact field
    register, strict output/fact binding, freshness bounds and chronological
-   replay/state-change protections pass 20/20 offline. No API call was made.
-   Chronological integration on an admitted immutable corpus remains open.
+   replay/state-change protections pass 27/27 offline, including a synthetic
+   five-family sequence. No API call was made. Chronological integration on an
+   admitted immutable corpus remains open.
 
 The OpenAI model-selection benchmark is complete under D-0073. GPT-5.6 Sol is
 the selected candidate for later non-trading integration testing. Do not spend

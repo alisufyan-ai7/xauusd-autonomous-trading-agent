@@ -7,10 +7,14 @@
 
 This revision publishes only sanitized technical records, source/test artifacts, broker technical metadata and evidence hashes explicitly approved by the owner.
 
-R22 records only the R21 VPS test result and three sanitized baseline evidence
-hashes: private margin snapshot, prepared-not-sent alert canary and VPS baseline
-record. No private artifact content or path is published. The evidence wrappers
-caused no restart, network fault, alert delivery, broker action or OpenAI call.
+R23 publishes only owner-independent offline engineering: synthetic full-count
+setup/lifecycle fixtures, multiframe replay admission, adverse-stress artifact
+admission, chronological non-trading Analyst replay validation, their tests and
+sanitized reports. It carries forward the R22 private baseline hash receipt
+without republishing private content or paths. No historical market dataset,
+private artifact, provider response, or model response is published. The work
+caused no restart, network fault, alert delivery, broker action, OpenAI call or
+charge.
 
 Excluded from this revision:
 
