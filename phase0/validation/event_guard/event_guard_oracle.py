@@ -18,6 +18,10 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 UTC = timezone.utc
 EASTERN = "America/New_York"
 WINDOWS = {"TIER_1": (30, 30), "TIER_2": (15, 15)}
+BLS_ZONE_ALIASES = {
+    "Eastern Standard Time": EASTERN,
+    "US Eastern Standard Time": EASTERN,
+}
 
 
 def verified_zone(zone: str) -> ZoneInfo:
@@ -25,10 +29,21 @@ def verified_zone(zone: str) -> ZoneInfo:
     try:
         return ZoneInfo(zone)
     except ZoneInfoNotFoundError as exc:
-        raise RuntimeError(
-            "IANA timezone data unavailable; install the hash-pinned Event Guard "
-            "Windows requirements before testing or capture"
-        ) from exc
+        try:
+            ZoneInfo(EASTERN)
+        except ZoneInfoNotFoundError:
+            raise RuntimeError(
+                "IANA timezone data unavailable; install the hash-pinned Event Guard "
+                "Windows requirements before testing or capture"
+            ) from exc
+        raise ValueError(f"unsupported or unverified timezone identifier: {zone}") from exc
+
+
+def admitted_source_zone(source: str, zone: str) -> str:
+    """Map only frozen, source-specific aliases to a verified IANA zone."""
+    if source == "BLS_ICS" and zone in BLS_ZONE_ALIASES:
+        return BLS_ZONE_ALIASES[zone]
+    return zone
 
 
 @dataclass(frozen=True)
@@ -136,9 +151,10 @@ def parse_ics(text: str, source: str, default_zone: str | None = None) -> list[E
             scheduled = datetime.strptime(raw, "%Y%m%dT%H%M%SZ").replace(tzinfo=UTC)
             source_zone = "UTC"
         else:
-            zone = zone_match.group(1) if zone_match else default_zone
-            if not zone:
+            source_zone = zone_match.group(1) if zone_match else default_zone
+            if not source_zone:
                 raise ValueError("verified IANA timezone required")
+            zone = admitted_source_zone(source, source_zone)
             scheduled = datetime.strptime(raw, "%Y%m%dT%H%M%S").replace(
                 tzinfo=verified_zone(zone)
             ).astimezone(UTC)

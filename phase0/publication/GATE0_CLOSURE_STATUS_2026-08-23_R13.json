@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.13",
+  "recorded_date_utc": "2026-08-23",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "operational_policy": "COMPLETE_V1_M1_E1_P1_A1_SPECIFICATION_AND_TESTING_ONLY",
+  "event_guard": {
+    "offline_tests": "PASS_39_OF_39",
+    "aggregate_controlled_offline_tests": "PASS_147_OF_147_ACROSS_NINE_SUITE_GROUPS",
+    "windows_timezone_dependency": "TZDATA_2026_3_HASH_PINNED_AND_GATED",
+    "r12_private_chain": "PASS_14_OF_14_RECORD_DIGESTS_AND_LINKS",
+    "r12_304_cache_identities": "PASS_6_OF_6",
+    "r12_private_chain_final_record_sha256": "9DD1D84819BFC002AF7BD10C3AD8B22D5273395EA70D495147C09E2E9F6A2E0B",
+    "r12_private_manifest_sha256": "45FC1AD18BB380537185E54705E6F88055012DDAD42BCF92C61BB4C5F5156135",
+    "r12_private_normalized_report_sha256": "3B0FB2FC1C13F6C7E5A4B542C70E0FDDA78A9841688974CBAAC5B0FBD44A41AC",
+    "bea_live_horizon": "PASS",
+    "fed_exact_time_live_horizon": "PASS_STATEMENT_PRESS_CONFERENCE_AND_MINUTES",
+    "bls_r12_live_normalization": "REJECTED_SOURCE_SCOPED_WINDOWS_TIMEZONE_ALIAS",
+    "bls_r13_correction": "IMPLEMENTED_TWO_SOURCE_SCOPED_ALIASES_LIVE_RERUN_PENDING",
+    "dol_jobless_claims": "FAIL_CLOSED_NO_ADMITTED_FORWARD_HOLIDAY_SCHEDULE"
+  },
+  "openai_analyst_runtime_tests": "PASS_14_OF_14_NO_LIVE_CALL_AUTHORIZED",
+  "raw_ohlc_setup_tests": "PASS_35_OF_35_EXHAUSTIVE_CORPUS_PENDING",
+  "remaining_gate_0_blockers": [
+    "BLS private live-normalization and forward-horizon rerun",
+    "DOL jobless-claims forward schedule or an explicit taxonomy change",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS reliability observations",
+    "account-specific margin and alert-channel delivery evidence",
+    "exhaustive raw-OHLC lifecycle and cross-timeframe golden corpus",
+    "licensed registered immutable historical replay",
+    "production Analyst prompt and chronological non-trading integration validation"
+  ]
+}

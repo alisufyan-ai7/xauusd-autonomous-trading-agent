@@ -63,6 +63,49 @@ END:VCALENDAR
         with self.assertRaises(ValueError):
             parse_ics(text, "BLS_ICS")
 
+    def test_bls_windows_eastern_aliases_are_dst_safe(self):
+        text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:winter
+SUMMARY:Employment Situation
+DTSTART;TZID=Eastern Standard Time:20260109T083000
+END:VEVENT
+BEGIN:VEVENT
+UID:summer
+SUMMARY:Consumer Price Index
+DTSTART;TZID=US Eastern Standard Time:20260709T083000
+END:VEVENT
+END:VCALENDAR
+"""
+        events = parse_ics(text, "BLS_ICS")
+        self.assertEqual([at("2026-01-09T13:30:00Z"), at("2026-07-09T12:30:00Z")],
+                         [item.scheduled_utc for item in events])
+        self.assertTrue(all(item.source_timezone == "America/New_York" for item in events))
+
+    def test_bls_timezone_alias_is_source_scoped(self):
+        text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:x
+SUMMARY:Employment Situation
+DTSTART;TZID=Eastern Standard Time:20260109T083000
+END:VEVENT
+END:VCALENDAR
+"""
+        with self.assertRaisesRegex(ValueError, "unsupported or unverified timezone"):
+            parse_ics(text, "UNAPPROVED_SOURCE")
+
+    def test_unknown_bls_timezone_is_rejected(self):
+        text = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:x
+SUMMARY:Consumer Price Index
+DTSTART;TZID=Unverified Eastern:20260709T083000
+END:VEVENT
+END:VCALENDAR
+"""
+        with self.assertRaisesRegex(ValueError, "unsupported or unverified timezone"):
+            parse_ics(text, "BLS_ICS")
+
     def test_bea_json_is_utc_and_only_frozen_pce_is_admitted(self):
         raw = json.dumps({
             "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00+00:00"]},

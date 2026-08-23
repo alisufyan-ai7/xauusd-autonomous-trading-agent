@@ -8,11 +8,12 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 Owner-approved direction and remaining actions:
 
 1. Event data: the free official-source design is the primary candidate and now
-   passes 36/36 offline tests. The seven-record private chain and BEA capture are
-   independently verified, but review correctly demoted the date-only Fed
-   landing page. Rerun `run_private_capture.ps1` against the same private
-   directory to capture four official exact-time Fed month pages and generate
-   the local normalized horizon report. Keep DOL
+   passes 39/39 offline tests. The 14-record private chain, all six 304 cache
+   identities, BEA horizon and four exact-time Fed month pages are independently
+   verified. The live BLS body exposed a source-specific Windows timezone-alias
+   defect; R13 fixes it without broadening any other source. Pull R13 and rerun
+   `run_private_capture.ps1` against the same private directory to prove BLS CPI
+   and Employment UTC horizons. Keep DOL
    jobless claims fail-closed until a first-party forward schedule with holiday
    exceptions is admitted; do not infer it from a Thursday recurrence. Do not
    activate or purchase any paid or auto-renewing provider trial.
