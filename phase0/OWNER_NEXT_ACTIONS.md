@@ -8,14 +8,17 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 Owner-approved direction and remaining actions:
 
 1. Event data: the free official-source design is the primary candidate and now
-   passes 42/42 offline tests. The 28-record private chain and all twenty 304
-   cache identities are independently verified. BLS CPI/Employment, BEA PCE and
+   passes 43/43 offline tests. The 35-record private chain and all twenty-seven
+   304 cache identities are independently verified. BLS CPI/Employment, BEA PCE and
    exact-time Fed statement/press-conference/minutes schedules are healthy and
    covered across the frozen UTC horizon. No further BLS/BEA/Fed rerun is
    requested now. DOL ETA's first-party schedule now supplies an explicit
    Thursday 8:30 a.m. Eastern rule plus named federal-holiday exceptions; the
-   exact endpoint/parser passes offline DST, exception and fail-closed tests.
-   Pull R16 and rerun the private wrapper once to obtain live DOL evidence. Do not
+   exact endpoint/parser passes offline DST, exception and fail-closed tests. The
+   first live DOL attempt failed before HTTP at certificate-chain construction;
+   no DOL bytes were admitted and the guard correctly remained fail-closed. R17
+   uses the hash-pinned Windows native trust engine without disabling any TLS
+   check. Pull R17 and rerun the private wrapper once to obtain live DOL evidence. Do not
    activate or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no source is admitted. The raw-OHLC suite now passes
    35/35 with one bounded lifecycle slice for every setup family, but exhaustive

@@ -69,7 +69,7 @@ class SourceConformanceTests(unittest.TestCase):
             "https://www.federalreserve.gov/newsevents/2026-november.htm",
         ), _target_urls("FED_CALENDAR", self.now))
 
-    def test_windows_timezone_dependency_is_exactly_pinned_and_hashed(self):
+    def test_windows_dependencies_are_exactly_pinned_and_hashed(self):
         requirements = (Path(__file__).parent / "requirements-win-py312.txt").read_text(
             encoding="utf-8"
         )
@@ -79,6 +79,22 @@ class SourceConformanceTests(unittest.TestCase):
             "--hash=sha256:dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931",
             requirements,
         )
+        self.assertIn("truststore==0.10.4", requirements)
+        self.assertIn(
+            "--hash=sha256:adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981",
+            requirements,
+        )
+
+    def test_capture_uses_native_verified_tls_without_bypass(self):
+        source = (Path(__file__).parent / "capture_official_sources.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)", source)
+        self.assertIn("context=tls_context", source)
+        self.assertIn("ssl.TLSVersion.TLSv1_2", source)
+        self.assertNotIn("CERT_NONE", source)
+        self.assertNotIn("_create_unverified_context", source)
+        self.assertNotIn("check_hostname = False", source)
 
     def test_windows_runner_gates_capture_on_install_and_tests(self):
         runner = (Path(__file__).parent / "run_private_capture.ps1").read_text(

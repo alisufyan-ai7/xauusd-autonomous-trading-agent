@@ -12,6 +12,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import ssl
 import sys
 import urllib.error
 import urllib.request
@@ -24,6 +25,20 @@ from source_conformance import (
 UTC = timezone.utc
 DEFAULT_SOURCES = ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "CENSUS_WATCH", "DOL_UI")
 FED_HORIZON_MONTHS = 4
+TLS_VERIFIER = "NATIVE_SYSTEM_TRUSTSTORE"
+
+
+def _verified_tls_context():
+    """Use the native OS trust engine; never fall back to an unverified context."""
+    try:
+        import truststore
+    except ImportError as exc:
+        raise RuntimeError(
+            "hash-pinned truststore dependency unavailable; capture is fail-closed"
+        ) from exc
+    context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2
+    return context
 
 
 def _load_records(path: Path) -> list[AcquisitionRecord]:
@@ -77,13 +92,15 @@ def _request(url: str, cached: AcquisitionRecord | None) -> urllib.request.Reque
 
 
 def _fetch(source: str, url: str, cached: AcquisitionRecord | None, previous_hash: str,
-           timeout_seconds: float) -> tuple[AcquisitionRecord, bytes]:
+           timeout_seconds: float, tls_context) -> tuple[AcquisitionRecord, bytes]:
     policy = POLICIES[source]
     if source == "FRED_CROSSCHECK":
         raise ValueError("FRED requires separate optional configuration and never controls locks")
     request = _request(url, cached)
     try:
-        response = urllib.request.urlopen(request, timeout=timeout_seconds)
+        response = urllib.request.urlopen(
+            request, timeout=timeout_seconds, context=tls_context
+        )
         status = response.status
         content_type = response.headers.get("Content-Type", "")
         body = response.read(policy.max_bytes + 1)
@@ -122,6 +139,7 @@ def capture(output: Path, sources: list[str], timeout_seconds: float) -> dict:
     output.mkdir(parents=True, exist_ok=True)
     manifest = output / "acquisition_records.jsonl"
     records = _load_records(manifest)
+    tls_context = _verified_tls_context()
     previous_hash = records[-1].record_sha256 if records else ZERO_HASH
     run: list[dict] = []
     capture_started = datetime.now(UTC)
@@ -133,7 +151,9 @@ def capture(output: Path, sources: list[str], timeout_seconds: float) -> dict:
     for source, url in targets:
         cached = _latest_for(records, source, url)
         try:
-            record, body = _fetch(source, url, cached, previous_hash, timeout_seconds)
+            record, body = _fetch(
+                source, url, cached, previous_hash, timeout_seconds, tls_context
+            )
             if record.http_status == 200:
                 body_dir = output / source
                 body_dir.mkdir(parents=True, exist_ok=True)
@@ -152,6 +172,7 @@ def capture(output: Path, sources: list[str], timeout_seconds: float) -> dict:
         "status": "PASS" if all(item["status"] == "CAPTURED" for item in run) else "FAIL_CLOSED",
         "captured_utc": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
         "sources": run,
+        "tls_verifier": TLS_VERIFIER,
         "claim_limit": "Read-only acquisition evidence only; not trading authorization.",
     }
 

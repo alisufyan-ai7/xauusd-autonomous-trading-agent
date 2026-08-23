@@ -11,7 +11,7 @@ Run:
 python -m unittest -v test_event_guard.py test_source_conformance.py
 ```
 
-The 42 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
+The 43 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
 monitored Fed/Census/DOL schedule rows, frozen taxonomy filtering, overlapping
 FOMC intervals, exact boundaries, source conflicts, cancellation/tentative
 behavior, optional FRED date-only cross-checking, submission-latency crossing,
@@ -20,9 +20,17 @@ allowlists, payload and record hashes, conditional-GET cache identity,
 append-only restart verification, forward-coverage limits, source roles and
 conservative moved-event windows.
 
+HTTPS capture uses the native operating-system trust engine through the
+hash-pinned `truststore` wheel. On Windows this delegates certificate-path
+construction to CryptoAPI, including retrieval of a missing intermediate and
+native revocation checks. `PROTOCOL_TLS_CLIENT`, hostname verification and a
+TLS 1.2 minimum remain mandatory. There is no unverified-context, `CERT_NONE`,
+hostname-disable or HTTP fallback path; any trust failure rejects the source.
+
 Windows does not normally ship the IANA timezone database used by
 `zoneinfo`. The package therefore pins the first-party `tzdata` fallback and
-its wheel hash in `requirements-win-py312.txt`. A missing database produces an
+its wheel hash in `requirements-win-py312.txt`; the Windows trust adapter is
+pinned there by its PyPI wheel hash as well. A missing dependency produces an
 explicit fail-closed diagnostic rather than an unexplained timezone lookup.
 The BLS calendar is documented as Eastern time but can carry Windows calendar
 timezone identifiers. Only the source-scoped `Eastern Standard Time`,
@@ -59,7 +67,7 @@ From this directory, with Python 3.12, use the fail-closed wrapper:
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run_private_capture.ps1 -Output C:\Gate0Private\EventGuard
 ```
 
-The wrapper installs only the hash-pinned binary dependency, runs all offline
+The wrapper installs only the hash-pinned binary dependencies, runs all offline
 tests, and starts capture only if both steps succeed. It then normalizes the
 locally hashed BLS, BEA, Fed and DOL bodies, verifies source freshness and forward
 coverage, and writes `normalized_event_guard.json` inside the private output

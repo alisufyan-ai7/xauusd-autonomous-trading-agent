@@ -12,7 +12,7 @@ if ($privateOutput.StartsWith($packageRoot, [System.StringComparison]::OrdinalIg
     throw "Private capture output must be outside the repository."
 }
 
-Write-Host "Gate 0 Event Guard: install hash-pinned Windows timezone data"
+Write-Host "Gate 0 Event Guard: install hash-pinned Windows trust and timezone dependencies"
 & py -3.12 -m pip install --disable-pip-version-check --require-hashes -r requirements-win-py312.txt
 if ($LASTEXITCODE -ne 0) {
     throw "Dependency installation failed; tests and capture were not run."
