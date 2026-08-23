@@ -1,0 +1,6 @@
+--only-binary=:all:
+
+# First-party CPython fallback for Windows systems without an IANA zone database.
+# Wheel SHA-256 published by PyPI for the 2026-07-10 release.
+tzdata==2026.3 \
+    --hash=sha256:dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931

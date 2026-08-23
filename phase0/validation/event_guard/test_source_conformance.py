@@ -54,6 +54,30 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual("GET", request.method)
         self.assertNotIn("FRED_CROSSCHECK", DEFAULT_SOURCES)
 
+    def test_windows_timezone_dependency_is_exactly_pinned_and_hashed(self):
+        requirements = (Path(__file__).parent / "requirements-win-py312.txt").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("--only-binary=:all:", requirements)
+        self.assertIn("tzdata==2026.3", requirements)
+        self.assertIn(
+            "--hash=sha256:dc096730c87af6cab1b171c9d532be840741ff5d459015e7f6947bd7d7e54931",
+            requirements,
+        )
+
+    def test_windows_runner_gates_capture_on_install_and_tests(self):
+        runner = (Path(__file__).parent / "run_private_capture.ps1").read_text(
+            encoding="utf-8"
+        )
+        install = runner.index("--require-hashes")
+        tests = runner.index("-m unittest")
+        capture = runner.index("capture_official_sources.py")
+        self.assertLess(install, tests)
+        self.assertLess(tests, capture)
+        self.assertIn("tests and capture were not run", runner)
+        self.assertIn("private capture was not run", runner)
+        self.assertIn("outside the repository", runner)
+
     def test_valid_200_snapshot(self):
         record = self.record()
         self.assertEqual((True, ()), assess_snapshot(record, self.body, self.now))

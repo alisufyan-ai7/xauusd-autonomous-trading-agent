@@ -1,6 +1,6 @@
 # Public Decision Log Addendum — 2026-08-12
 
-This publication-safe addendum preserves decisions D-0056 through D-0072 without republishing mixed confidential account/legal records.
+This publication-safe addendum preserves decisions D-0056 through D-0080 without republishing mixed confidential account/legal records.
 
 | ID | Status | Decision | Gate effect |
 |---|---|---|---|
@@ -28,3 +28,4 @@ This publication-safe addendum preserves decisions D-0056 through D-0072 without
 | D-0077 | Accepted implementation evidence and cost correction | Freeze the selected `gpt-5.6-sol` stateless/tool-free runtime profile, exact 65-field five-family register, strict output schema, deadlines and provider-change revalidation rules; 14/14 offline tests pass. Correct the stale benchmark price table and recompute the two preserved usage records to USD 0.478069 at the 2026-08-23 list-price basis. | No API call or spend occurred. Historical report hashes and Sol's 16/16 selection result are unchanged; provider billing remains authoritative. Production prompt/integration validation remains open and no trading is authorized. |
 | D-0078 | Accepted implementation evidence | Add bounded raw-bar-to-advisory-candidate lifecycle slices for TPB, BRT, FBR, RSR and MOC plus common-gate, reward/risk and MOC no-chase negatives. The raw-OHLC suite passes 35/35. | Frozen thresholds are unchanged. Exhaustive family predicates, lifecycle histories, distributions and licensed chronological replay remain open; no sizing, broker action or trading is authorized. |
 | D-0079 | Accepted pre-operational defect correction | Replace registry-copied Event Guard schema fingerprints with fingerprints derived from captured body structure and add explicit BEA/Fed/Census shape tests. The Event Guard suite passes 30/30. | No owner capture used the defective R2 path. Live acquisition remains pending and DOL remains fail-closed; no raw snapshot or trading authority is published. |
+| D-0080 | Accepted pre-operational Windows packaging correction | After the first R9 VPS test exposed missing IANA timezone data, pin the first-party `tzdata==2026.3` wheel by PyPI SHA-256 and require a Windows runner to install it with hashes, pass 32/32 offline tests, then capture only to a private path outside the repository. | The four reported timezone errors are environmental and capture did not start. The defect is corrected before live evidence collection; DOL and all other Gate 0 blockers remain fail-closed. No private output or trading authority is published. |

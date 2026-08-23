@@ -12,11 +12,22 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 import re
-from zoneinfo import ZoneInfo
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 UTC = timezone.utc
 EASTERN = "America/New_York"
 WINDOWS = {"TIER_1": (30, 30), "TIER_2": (15, 15)}
+
+
+def verified_zone(zone: str) -> ZoneInfo:
+    """Load an IANA zone or fail with a deterministic operator diagnostic."""
+    try:
+        return ZoneInfo(zone)
+    except ZoneInfoNotFoundError as exc:
+        raise RuntimeError(
+            "IANA timezone data unavailable; install the hash-pinned Event Guard "
+            "Windows requirements before testing or capture"
+        ) from exc
 
 
 @dataclass(frozen=True)
@@ -53,7 +64,7 @@ def local_to_utc(date_text: str, time_text: str, zone: str = EASTERN) -> datetim
     if not zone or "/" not in zone:
         raise ValueError("verified IANA timezone required")
     local = datetime.strptime(f"{date_text} {time_text}", "%Y-%m-%d %H:%M").replace(
-        tzinfo=ZoneInfo(zone)
+        tzinfo=verified_zone(zone)
     )
     return local.astimezone(UTC)
 
@@ -128,7 +139,7 @@ def parse_ics(text: str, source: str, default_zone: str | None = None) -> list[E
             if not zone:
                 raise ValueError("verified IANA timezone required")
             scheduled = datetime.strptime(raw, "%Y%m%dT%H%M%S").replace(
-                tzinfo=ZoneInfo(zone)
+                tzinfo=verified_zone(zone)
             ).astimezone(UTC)
             source_zone = zone
         status = item.get("STATUS", "CONFIRMED").upper()
@@ -196,7 +207,7 @@ def fred_date_cross_check(event: Event, fred_release_date: str | None) -> bool:
     """FRED can corroborate the date only; it is never used as the event clock."""
     if fred_release_date is None:
         return True
-    return event.scheduled_utc.astimezone(ZoneInfo(EASTERN)).date().isoformat() == fred_release_date
+    return event.scheduled_utc.astimezone(verified_zone(EASTERN)).date().isoformat() == fred_release_date
 
 
 def interval(event: Event) -> tuple[datetime, datetime]:
