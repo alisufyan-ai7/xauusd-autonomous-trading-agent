@@ -19,17 +19,19 @@ Independent checks confirmed:
 - 48 live rows covering 16 cases for each of the three frozen candidates;
 - two prohibited-data fixtures blocked locally at zero cost;
 - `store:false`, `tools:[]`, valid response hashes and complete usage/latency;
-- live row costs sum exactly to USD 0.1659360;
-- cumulative cost is USD 0.3238708, below the USD 8 ceiling;
+- the historical runner estimated this run at USD 0.1659360 and both runs at
+  USD 0.3238708 using a stale price table;
+- preserved usage counters recompute at current verified list prices to
+  USD 0.244910 for this run and USD 0.478069 cumulatively, below the USD 8 ceiling;
 - all 16 Sol rows have every component check set to `true`.
 
 ## Results
 
 | Candidate | Passed | Failed | Decision mismatches | Run cost | Median latency | p95 latency |
 |---|---:|---:|---:|---:|---:|---:|
-| GPT-5.6 Sol | 16/16 | 0 | 0 | USD 0.1059520 | 2945.0 ms | 5281.0 ms |
-| GPT-5.6 Terra | 11/16 | 5 | 0 | USD 0.0536080 | 1797.0 ms | 3047.0 ms |
-| GPT-5.6 Luna | 13/16 | 3 | 0 | USD 0.0063760 | 2265.5 ms | 16109.0 ms |
+| GPT-5.6 Sol | 16/16 | 0 | 0 | USD 0.146020 | 2945.0 ms | 5281.0 ms |
+| GPT-5.6 Terra | 11/16 | 5 | 0 | USD 0.067010 | 1797.0 ms | 3047.0 ms |
+| GPT-5.6 Luna | 13/16 | 3 | 0 | USD 0.031880 | 2265.5 ms | 16109.0 ms |
 
 The matrix-level status is `FAIL` because the harness requires every evaluated
 candidate to pass every case. That is appropriate for diagnostics but does not
@@ -50,7 +52,7 @@ and complete exact-output conformance on this frozen finite corpus. This is
 necessary evidence, not proof of universal safety or strategy quality.
 
 The official model page lists Structured Outputs support, Responses API
-support and USD 4.00 input / USD 20.00 output per million tokens for Sol. It
+support and USD 5.00 input / USD 30.00 output per million tokens for Sol. It
 does not currently expose a distinct dated Sol snapshot; the listed identifier
 is `gpt-5.6-sol`. Freeze that identifier and the exact prompt/schema/config, and
 require regression evaluation if OpenAI later exposes a new snapshot or changes
@@ -59,6 +61,8 @@ the serving version.
 Source: https://developers.openai.com/api/docs/models/gpt-5.6-sol
 
 No further API call is required or authorized by this completed benchmark.
+The cost-label correction changes no model-selection or safety result; provider
+billing remains authoritative.
 Gate 0 remains incomplete because the Event Guard conformance, market-data
 replay, full setup corpus, operational VPS/session evidence, exact Analyst field
 contract and owner operational-policy choices remain open. External Python

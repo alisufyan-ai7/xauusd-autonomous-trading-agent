@@ -24,9 +24,12 @@ later non-trading integration tests. Terra passed 11/16 and Luna 13/16; neither
 is selected. The matrix-level report is `FAIL` because it required every
 candidate to pass every check, not because Sol failed.
 
-The two runs cost USD 0.3238708 cumulatively. No further live benchmark call is
-authorized by the completed-run approval. Preserve both raw reports only in
-the owner's controlled evidence location; do not commit them.
+The runner originally estimated the two runs at USD 0.3238708 using a stale
+price table. Recomputing the preserved usage counters at the official list
+prices verified on 2026-08-23 produces USD 0.478069 cumulatively. See
+`COST_ACCOUNTING_CORRECTION_2026-08-23.md`. Provider billing is authoritative;
+no further live benchmark call is authorized. Preserve both raw reports only
+in the owner's controlled evidence location; do not commit them.
 
 Historical operator commands were:
 

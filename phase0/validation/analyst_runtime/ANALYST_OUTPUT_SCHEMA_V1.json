@@ -1,0 +1,72 @@
+{
+  "type": "json_schema",
+  "name": "xauusd_analyst_runtime_v1",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "schema_version": {"type":"string","enum":["analyst-runtime-1.0"]},
+      "analysis_id": {"type":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"},
+      "snapshot_id": {"type":"string","pattern":"^[0-9a-f]{64}$"},
+      "decision": {"type":"string","enum":["NO_TRADE","PROPOSE_TRADE"]},
+      "reason_codes": {
+        "type":"array","minItems":1,"maxItems":8,"uniqueItems":true,
+        "items":{"type":"string","enum":[
+          "VALID_SETUP","NO_VALID_SETUP","POOR_LOCATION","PRICE_EXTENDED",
+          "INSUFFICIENT_RR","CONFLICTING_TIMEFRAMES","UNCERTAIN_STRUCTURE",
+          "VOLATILITY_ABNORMAL","SPREAD_BLOCKED","EVENT_RISK","STALE_INPUT",
+          "RISK_STATE_BLOCKED","UNRESOLVED_BROKER_STATE","INSUFFICIENT_DATA",
+          "MODEL_UNCERTAIN","UNTRUSTED_TEXT_IGNORED"
+        ]}
+      },
+      "summary": {"type":"string","minLength":1,"maxLength":240},
+      "proposal": {
+        "oneOf": [
+          {
+            "type":"object","additionalProperties":false,
+            "properties":{
+              "kind":{"type":"string","enum":["NONE"]},
+              "recheck_condition":{"type":"string","enum":["NEW_COMPLETED_BAR","MATERIAL_STATE_CHANGE","AFTER_EVENT_LOCK","NONE"]}
+            },
+            "required":["kind","recheck_condition"]
+          },
+          {
+            "type":"object","additionalProperties":false,
+            "properties":{
+              "kind":{"type":"string","enum":["TRADE"]},
+              "setup_family":{"type":"string","enum":["TPB","BRT","FBR","RSR","MOC"]},
+              "direction":{"type":"string","enum":["BUY","SELL"]},
+              "entry_type":{"type":"string","enum":["MARKET_AFTER_CLOSE","LIMIT","STOP"]},
+              "entry":{
+                "oneOf":[
+                  {"type":"object","additionalProperties":false,"properties":{"kind":{"type":"string","enum":["SINGLE"]},"price":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"}},"required":["kind","price"]},
+                  {"type":"object","additionalProperties":false,"properties":{"kind":{"type":"string","enum":["RANGE"]},"near_price":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"},"far_price":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"}},"required":["kind","near_price","far_price"]}
+                ]
+              },
+              "invalidation_price":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"},
+              "stop_loss":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"},
+              "targets":{
+                "type":"array","minItems":2,"maxItems":2,
+                "items":{
+                  "type":"object","additionalProperties":false,
+                  "properties":{"role":{"type":"string","enum":["TP1","FINAL"]},"price":{"type":"string","pattern":"^(0|[1-9][0-9]*)(\\.[0-9]{1,5})?$"}},
+                  "required":["role","price"]
+                }
+              },
+              "expiry_time_utc":{"type":"string","pattern":"^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+              "cancellation_conditions":{
+                "type":"array","minItems":1,"maxItems":8,"uniqueItems":true,
+                "items":{"type":"string","enum":["COMMON_FILTER_FAILED","REGIME_LOST","STRUCTURE_INVALIDATED","PENDING_EXPIRED","EVENT_LOCK","PRICE_ALREADY_REACHED_TARGET","QUOTE_STALE","SPREAD_BLOCKED"]}
+              },
+              "confidence":{"type":"integer","minimum":0,"maximum":100},
+              "evidence_refs":{"type":"array","minItems":1,"maxItems":16,"uniqueItems":true,"items":{"type":"string","pattern":"^[A-Za-z0-9_-]{1,32}$"}}
+            },
+            "required":["kind","setup_family","direction","entry_type","entry","invalidation_price","stop_loss","targets","expiry_time_utc","cancellation_conditions","confidence","evidence_refs"]
+          }
+        ]
+      }
+    },
+    "required":["schema_version","analysis_id","snapshot_id","decision","reason_codes","summary","proposal"]
+  }
+}

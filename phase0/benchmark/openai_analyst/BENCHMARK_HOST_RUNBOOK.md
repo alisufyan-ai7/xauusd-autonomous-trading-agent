@@ -7,7 +7,8 @@
 
 **Completion:** The one approved v1.1 rerun completed on 2026-08-23. Do not
 rerun it under this authorization. Preserve this file as the exact historical
-procedure.
+procedure. Its cost values are stale runner estimates; see
+`COST_ACCOUNTING_CORRECTION_2026-08-23.md` for the usage-based correction.
 
 On the separately configured benchmark host, from this directory:
 
@@ -44,6 +45,8 @@ enable external Python trading.
 
 Observed result: report SHA-256
 `73ade0c581a52e64ebd60c66fd2307ca3650aba48df1d82fabeb4732c8e840bc`,
-run cost USD 0.1659360, cumulative benchmark cost USD 0.3238708. Sol passed
+historical runner-estimated cost USD 0.1659360 and cumulative estimate USD
+0.3238708. The corrected current-list estimates are USD 0.244910 and USD
+0.478069 respectively. Sol passed
 16/16 and was selected for later non-trading Analyst integration tests. The raw
 report is excluded from the repository.

@@ -20,11 +20,12 @@ Results:
 - every live-eligible request is `store:false`, `tools:[]`, strict-schema, low
   reasoning effort, and capped at 1,200 output tokens;
 - the owner reservation ceiling is USD 8 and there are no retries;
-- current standard price constants are Terra USD 2/12, Sol USD 4/20 and Luna
-  USD 0.20/1.20 per one million input/output tokens.
+- the then-frozen price constants were later found stale. They are corrected to
+  Terra USD 2.50/15, Sol USD 5/30 and Luna USD 1/6 per million input/output
+  tokens in `COST_ACCOUNTING_CORRECTION_2026-08-23.md`.
 
 The first live v1.0 run is independently recorded by SHA-256 and aggregate
 metrics in `FIRST_LIVE_BENCHMARK_EVALUATION_2026-08-22.md`. Its raw JSON is not
-published. Version 1.1 preserves that evidence, carries its USD 0.1579348 cost
-forward, and adds component diagnostics plus an explicit fail-closed injection
+published. Version 1.1 preserves that evidence, historically carries its USD
+0.1579348 runner estimate forward, and adds component diagnostics plus an explicit fail-closed injection
 rule. The credential remains only on the separate benchmark host.

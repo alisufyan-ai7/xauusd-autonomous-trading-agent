@@ -10,7 +10,10 @@ Owner-approved direction and remaining actions:
 1. Event data: the free official-source design is the primary candidate and now passes 29/29 offline tests. Run the read-only private capture to build BLS/BEA/Fed/Census live evidence. Keep DOL jobless claims fail-closed until a first-party forward schedule with holiday exceptions is admitted; do not infer it from a Thursday recurrence. Do not activate or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no source is admitted. The local official-source snapshot archive may support event-time replay prospectively; market-data replay still requires separately verified coverage, provenance and retention rights.
 3. VPS/session evidence: capture the remaining weekly/holiday session boundaries and controlled restart/reconnect/network/clock/build observations using read-only artifacts only.
-4. Analyst contract: freeze the exact per-family field register, timeout/freshness bounds and provider-change revalidation policy for the selected Sol candidate.
+4. Analyst contract: the exact five-family field register, strict output schema,
+   timeout/freshness bounds and provider-change revalidation policy are now
+   frozen and pass 14/14 offline tests. No owner action or API call is requested;
+   production-prompt and chronological non-trading validation remain engineering work.
 
 The OpenAI model-selection benchmark is complete under D-0073. GPT-5.6 Sol is
 the selected candidate for later non-trading integration testing. Do not spend

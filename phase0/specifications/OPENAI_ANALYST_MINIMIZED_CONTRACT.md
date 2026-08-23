@@ -1,6 +1,6 @@
 # Minimized OpenAI Analyst Input/Output Contract
 
-**Document status:** Safety boundary and structural contract frozen; model/privacy and setup-dependent parameters remain open  
+**Document status:** Safety boundary, selected Sol runtime, strict I/O schema and exact five-family field register frozen for specification/testing; integration evidence remains open  
 **Scope:** Advisory analysis contract only; no execution tools or trading implementation  
 **Authorization:** Gate 0 incomplete; external Python trading remains disabled
 
@@ -75,7 +75,13 @@ Canonicalization and hashing must use one frozen method. Unicode is normalized b
 
 Each approved timeframe may include: timeframe enum; last completed-bar time; locally classified trend/regime; normalized EMA ordering/slopes; ATR/volatility percentile; RSI/ADX or other frozen indicators; structural swing direction; distance to named local zones measured in ATR or basis points; and candle/confirmation facts expressed as objective booleans or bounded values. Forming-candle values must be explicitly identified and are prohibited unless the setup specification permits them.
 
-The final field register must bind each indicator to calculation version, source bars, completed/forming status, units, precision and valid range. A payload must carry only the timeframe/feature subset required by the nominated setup family; a global "send every available indicator" payload is non-conforming.
+The exact v1 field register is now frozen at
+`phase0/validation/analyst_runtime/ANALYST_FIELD_REGISTER_V1.json`. It contains
+24 common fields and a closed family-specific subset for TPB, BRT, FBR, RSR and
+MOC. Every field binds type, purpose, source class, unit, precision, age and
+hash-only retention. The payload is a flat exact-key object: a field from a
+different family, an extra field or a missing field makes the local result
+`LOCAL_NO_CALL`. It contains no free-text market/news field.
 
 ### 3.2 Location and structure
 
@@ -226,19 +232,45 @@ The external-AI/data-use ambiguity is owner-accepted residual risk only when the
 
 Before any live API use, freeze and hash the schema, prompt, model snapshot, feature contract, validation code/specification, corpus and expected results. The exact frozen candidate must achieve zero unsafe approvals on the finite safety corpus; any unsafe approval fails it. This is necessary evidence, not proof of universal safety. Also measure schema-valid rate, semantic-valid rate, refusal/error rate, disagreement, latency percentiles, tokens and cost.
 
-The advisory-only boundary, prohibited-data list, derived-feature minimization, strict discriminated union, structural encodings, ordered validation pipeline, normal `NO_TRADE` outcome, and deterministic-authority rules are frozen for specification/testing. No executable Analyst or broker integration is authorized by this draft.
+The advisory-only boundary, prohibited-data list, derived-feature minimization,
+strict discriminated union, structural encodings, ordered validation pipeline,
+normal `NO_TRADE` outcome, deterministic-authority rules, selected Sol request
+profile, exact five-family field register, output schema, deadlines and
+revalidation triggers are frozen for specification/testing. No executable
+Analyst or broker integration is authorized by this draft.
+
+### 11.1 Selected runtime profile
+
+The selected candidate is exact model ID `gpt-5.6-sol` over `POST /v1/responses`.
+The v1 request is stateless (`store:false`), tool-free (`tools:[]`), synchronous,
+single-attempt, low reasoning effort, strict Structured Output, maximum 1,200
+output tokens, `truncation:"disabled"` and standard `service_tier:"default"`.
+Conversation state, previous-response linkage, provider prompts, metadata and
+include expansions are prohibited.
+
+The connect timeout is 5 seconds and total response timeout 15 seconds. The
+snapshot may be at most 5 seconds old at send and 30 seconds old at acceptance;
+quote age is at most 2,000 ms and completed-M15 publication delay at most 30,000
+ms. There is no retry or fallback. Timeout, refusal, incomplete status,
+truncation, non-message/tool output, model-ID mismatch or deadline crossing is a
+local no-trade result.
+
+The official model catalog currently lists `gpt-5.6-sol` without a distinct
+dated Sol snapshot. Therefore any serving identifier change, dated snapshot,
+API/schema/Structured Output behavior change, price rule change, privacy/term
+change, latency failure, or artifact hash change requires the complete frozen
+regression before a new release. The exact controls are in
+`ANALYST_RUNTIME_PROFILE_V1.json`; the offline oracle passes 14/14 tests.
 
 The following are genuine dependencies and cannot be invented by an implementation:
 
 | Dependency | Decision/evidence class | Effect while open |
 |---|---|---|
-| Owner-approved OpenAI account/project, spend ceiling, retention/training/privacy settings, region and deletion behavior | owner decision | no external model call |
-| Exact field-level allow-list, purpose, units, precision, cardinality and retention register per setup family | engineering specification + data review | schema not finally hashable |
-| Pinned model snapshot and availability policy | research + owner/provider decision | candidate cannot be frozen/evaluated |
-| Frozen prompts and canonicalization method | engineering specification | hashes and repeatable evaluation unavailable |
+| OpenAI retention/training/privacy settings, region and deletion behavior for any future integration environment | owner/provider evidence | no external integration call |
+| Dated Sol snapshot availability | provider evidence | exact `gpt-5.6-sol` ID is frozen with mandatory change revalidation; no silent migration |
+| Production prompt content | engineering specification | the benchmark prompt is evidence, not yet the production prompt; no integration call |
 | Setup-family semantic constants and feature versions | engineering specification | proposals cannot pass semantic validation |
-| Request/response byte, depth, prose, timeout, freshness and retry bounds | benchmark evidence + engineering specification | runtime contract incomplete; fail closed |
 | Safety/quality corpus, chronological market corpus, expected labels and acceptance thresholds beyond zero unsafe approvals | research + owner acceptance decision | no analyst acceptance claim |
-| Fallback-model policy | owner/engineering decision | fallback prohibited |
+| Provider billing/dashboard reconciliation and production monthly budget | owner + measurement | no production cost approval |
 
 Zero unsafe approvals on the finite safety corpus remains mandatory and is already justified by the owner’s safety boundary. It is necessary evidence, never proof of universal safety. Model-quality/trading-performance thresholds must be precommitted before results are inspected.

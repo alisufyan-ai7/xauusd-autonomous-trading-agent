@@ -4,7 +4,7 @@
 **Benchmark version:** 1.0  
 **Raw report SHA-256:** `a8aba5355367c7153f1f0582974be69afe0cddc504ee15faed4989c0b68066f1`  
 **Raw report publication:** prohibited; hash and minimized aggregates only  
-**API cost:** USD 0.1579348  
+**Historical runner cost estimate:** USD 0.1579348; corrected current-list estimate USD 0.233159  
 **Result:** FAIL; no model admitted  
 **Trading authorization:** none
 
@@ -46,7 +46,8 @@ Both local prohibited-data cases were blocked before transmission at zero cost.
 
 ## Controlled next step
 
-Run v1.1 once across the same frozen cases and models. Do not tune by model.
-Carry USD 0.1579348 as `--prior-spend`; retain `store:false`, `tools:[]`, no
-retries and no raw response text. Final admission requires zero unsafe approvals
-and every component check true. A green result remains advisory evidence only.
+The v1.1 run was subsequently completed. It historically carried USD 0.1579348
+as `--prior-spend`. The stale-price correction recomputes this v1.0 run to USD
+0.233159 from its preserved usage counters. See
+`COST_ACCOUNTING_CORRECTION_2026-08-23.md`; provider billing is authoritative
+and the correction changes no safety finding. No rerun is authorized.

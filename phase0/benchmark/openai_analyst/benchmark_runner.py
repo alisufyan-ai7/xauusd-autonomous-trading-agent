@@ -9,10 +9,11 @@ ROOT = Path(__file__).parent
 MODELS = ("gpt-5.6-terra", "gpt-5.6-sol", "gpt-5.6-luna")
 SCHEMA_VERSION = "analyst-benchmark-1.1"
 PRICES = {
-    "gpt-5.6-terra": (2.00, 12.00),
-    "gpt-5.6-sol": (4.00, 20.00),
-    "gpt-5.6-luna": (0.20, 1.20),
+    "gpt-5.6-terra": (2.50, 15.00),
+    "gpt-5.6-sol": (5.00, 30.00),
+    "gpt-5.6-luna": (1.00, 6.00),
 }
+PRICE_BASIS_DATE = "2026-08-23"
 OWNER_BUDGET_CEILING_USD = 8.0
 MAX_OUTPUT_TOKENS = 1200
 FORBIDDEN = ("account_number", "account number", "exact_balance", "ticket_id", "password", "api_key", "server_id")
@@ -78,6 +79,7 @@ def reserve_cost(model, request):
 
 
 def actual_cost(model, response):
+    """List-price estimate from usage; the provider billing record is authoritative."""
     usage=response.get("usage",{}); inp,out=PRICES[model]
     return usage.get("input_tokens",0)*inp/1_000_000 + usage.get("output_tokens",0)*out/1_000_000
 
@@ -124,7 +126,7 @@ def main():
             response,latency=call(key,body); cost=actual_cost(model,response); spent+=cost
             parsed=json.loads(output_text(response)); observed=parsed.get("decision"); checks=output_checks(parsed,case,obj); passed=all(checks.values())
             rows.append({"case":case["id"],"model":model,"expected":case["expected"],"observed":observed,"pass":passed,"checks":checks,"latency_ms":latency,"usage":response.get("usage",{}),"cost_usd":round(cost,8),"response_sha256":hashlib.sha256(canonical(parsed).encode()).hexdigest()})
-    report={"schema_version":SCHEMA_VERSION,"status":"PASS" if all(r["pass"] for r in rows) else "FAIL","budget_usd":args.budget,"prior_spend_usd":round(args.prior_spend,8),"run_actual_cost_usd":round(spent-args.prior_spend,8),"cumulative_actual_cost_usd":round(spent,8),"store":False,"tools":[],"rows":rows}
+    report={"schema_version":SCHEMA_VERSION,"status":"PASS" if all(r["pass"] for r in rows) else "FAIL","budget_usd":args.budget,"prior_spend_usd":round(args.prior_spend,8),"run_actual_cost_usd":round(spent-args.prior_spend,8),"cumulative_actual_cost_usd":round(spent,8),"cost_semantics":"LIST_PRICE_ESTIMATE_PROVIDER_BILLING_AUTHORITATIVE","price_basis_date":PRICE_BASIS_DATE,"store":False,"tools":[],"rows":rows}
     args.output.write_text(json.dumps(report,indent=2,sort_keys=True)+"\n"); print(json.dumps({k:report[k] for k in ("status","budget_usd","prior_spend_usd","run_actual_cost_usd","cumulative_actual_cost_usd")},indent=2)); return 0 if report["status"]=="PASS" else 2
 
 
