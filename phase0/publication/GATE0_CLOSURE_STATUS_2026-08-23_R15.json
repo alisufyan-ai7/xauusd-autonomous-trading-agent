@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.15",
+  "recorded_date_utc": "2026-08-23",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "operational_policy": "COMPLETE_V1_M1_E1_P1_A1_SPECIFICATION_AND_TESTING_ONLY",
+  "event_guard": {
+    "offline_tests": "PASS_40_OF_40",
+    "aggregate_controlled_offline_tests": "PASS_148_OF_148_ACROSS_NINE_SUITE_GROUPS",
+    "r14_private_chain": "PASS_28_OF_28_RECORD_DIGESTS_AND_LINKS",
+    "r14_304_cache_identities": "PASS_20_OF_20",
+    "r14_private_chain_final_record_sha256": "3AA106D01115234AFE0615600CD0EA1F117908CAFC955C5840702569A9BBB08D",
+    "r14_private_manifest_sha256": "AF663A1517E0AB2A0526319731E8158D378D6419E57EBDD40D63F81FD4E02918",
+    "r14_private_normalized_report_sha256": "1ED1B089D56AA627FDBD14D97E9E60AFBA203455A1D5690A290AE549A0D98812",
+    "bls_live_horizon": "PASS_CPI_AND_EMPLOYMENT",
+    "bea_live_horizon": "PASS_PCE",
+    "fed_exact_time_live_horizon": "PASS_STATEMENT_PRESS_CONFERENCE_AND_MINUTES",
+    "reconciliation": "PASS_NO_CONFLICTS",
+    "census_role": "HEALTHY_WATCH_ONLY",
+    "dol_jobless_claims": "FAIL_CLOSED_NO_ADMITTED_FORWARD_HOLIDAY_SCHEDULE"
+  },
+  "openai_analyst_runtime_tests": "PASS_14_OF_14_NO_LIVE_CALL_AUTHORIZED",
+  "raw_ohlc_setup_tests": "PASS_35_OF_35_EXHAUSTIVE_CORPUS_PENDING",
+  "remaining_gate_0_blockers": [
+    "DOL jobless-claims forward schedule or an explicit taxonomy change",
+    "official-source revision, outage and holiday conformance evidence",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS reliability observations",
+    "account-specific margin and alert-channel delivery evidence",
+    "exhaustive raw-OHLC lifecycle and cross-timeframe golden corpus",
+    "licensed registered immutable historical replay",
+    "production Analyst prompt and chronological non-trading integration validation"
+  ]
+}
