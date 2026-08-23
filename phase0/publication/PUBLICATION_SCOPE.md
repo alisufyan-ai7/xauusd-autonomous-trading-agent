@@ -7,10 +7,11 @@
 
 This revision publishes only sanitized technical records, source/test artifacts, broker technical metadata and evidence hashes explicitly approved by the owner.
 
-R19 adds only offline validators, synthetic fixtures, capability-limited private
-capture wrappers, validation reports, official source URLs and a digest
-manifest. The wrappers contain no private output and cause no restart, network
-fault, alert delivery, broker action or OpenAI call.
+R20 corrects the R19 private-probe tests to use Python's platform-native
+temporary directory and adds a portability regression assertion. It also adds
+only sanitized status, action-packet, decision and digest records. The wrappers
+contain no private output and cause no restart, network fault, alert delivery,
+broker action or OpenAI call.
 
 Excluded from this revision:
 

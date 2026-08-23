@@ -44,7 +44,7 @@ class PrivateProbeTests(unittest.TestCase):
 
     def test_append_chain_and_full_matrix(self):
         probe=self._module()
-        with tempfile.TemporaryDirectory(dir="/tmp") as temp:
+        with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"private"; output.mkdir()
             clock=output/"clock.txt"; clock.write_text("Source: fixture\n",encoding="utf-8")
             events=["BASELINE","DISCONNECT","RECONNECT","PYTHON_RESTART","MT5_RESTART","WINDOWS_RESTART","CLOCK_CHECK","BUILD_CHECK"]
@@ -60,7 +60,7 @@ class PrivateProbeTests(unittest.TestCase):
 
     def test_chain_tamper_and_incomplete_matrix_fail_closed(self):
         probe=self._module()
-        with tempfile.TemporaryDirectory(dir="/tmp") as temp:
+        with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"private"
             probe.append_probe(FakeAPI,output,event="BASELINE",scenario_id="B",os_boot_utc="2025-08-23T00:00:00Z",mt5_start_utc="2025-08-23T01:00:00Z",w32tm_status_file=None,compatibility_sha256=None)
             records=[json.loads(line) for line in (output/"vps_probe_records.jsonl").read_text().splitlines()]
@@ -70,7 +70,7 @@ class PrivateProbeTests(unittest.TestCase):
 
     def test_duplicate_scenario_and_invalid_compatibility_digest_fail(self):
         probe=self._module()
-        with tempfile.TemporaryDirectory(dir="/tmp") as temp:
+        with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"private"
             probe.append_probe(FakeAPI,output,event="BASELINE",scenario_id="B",os_boot_utc="2025-08-23T00:00:00Z",mt5_start_utc="2025-08-23T01:00:00Z",w32tm_status_file=None,compatibility_sha256=None)
             probe.append_probe(FakeAPI,output,event="BASELINE",scenario_id="B",os_boot_utc="2025-08-23T00:00:00Z",mt5_start_utc="2025-08-23T01:00:00Z",w32tm_status_file=None,compatibility_sha256=None)
@@ -82,7 +82,7 @@ class PrivateProbeTests(unittest.TestCase):
 
     def test_barrier_unknown_and_nonbaseline_first_fail_closed(self):
         probe=self._module()
-        with tempfile.TemporaryDirectory(dir="/tmp") as temp:
+        with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"private"
             probe.append_probe(FakeAPI,output,event="RECONNECT",scenario_id="R",os_boot_utc="2025-08-23T00:00:00Z",mt5_start_utc="2025-08-23T01:00:00Z",w32tm_status_file=None,compatibility_sha256=None)
             records=[json.loads(line) for line in (output/"vps_probe_records.jsonl").read_text().splitlines()]
@@ -98,6 +98,16 @@ class PrivateProbeTests(unittest.TestCase):
         probe=self._module()
         with self.assertRaisesRegex(ValueError,"outside repository"):
             probe.private_target(Path(__file__).parent/"forbidden")
+
+    def test_temporary_directories_are_platform_native(self):
+        tree=ast.parse(Path(__file__).read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if not isinstance(node,ast.Call): continue
+            name=node.func.attr if isinstance(node.func,ast.Attribute) else node.func.id if isinstance(node.func,ast.Name) else ""
+            if name!="TemporaryDirectory": continue
+            hardcoded=[keyword.value.value for keyword in node.keywords
+                       if keyword.arg=="dir" and isinstance(keyword.value,ast.Constant)]
+            self.assertNotIn("/tmp",hardcoded)
 
     def test_adapter_and_probe_expose_no_order_or_process_control(self):
         directory=Path(__file__).resolve().parent

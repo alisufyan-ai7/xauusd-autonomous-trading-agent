@@ -1,7 +1,11 @@
 # VPS private-probe package validation — 2026-08-23
 
-Result: PASS, 13/13 tests: 7 existing reliability-oracle tests plus 6 new
+Result: PASS, 14/14 tests: 7 existing reliability-oracle tests plus 7
 private-probe tests. The existing corpus remains PASS for all 25 exact traces.
+
+R20 removes the Linux-only `/tmp` override from private-probe test fixtures and
+adds an AST regression check that rejects a hard-coded `/tmp` directory. Python
+now selects its platform-native temporary directory on Windows and Linux.
 
 Covered: append-only record hashing, HMAC-redacted identity, private-path
 enforcement, baseline/outage/reconnect/Python/MT5/Windows/clock/build event

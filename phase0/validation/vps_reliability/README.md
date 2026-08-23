@@ -23,6 +23,10 @@ the offline state oracle produces the frozen expected traces. It does not prove
 VPS uptime, broker connectivity, session coverage, restart success, a compatible
 MT5 build, or Gate 0 completion, and it does not authorize trading.
 
+All test-only temporary directories are platform-native. The regression suite
+rejects a Linux-only `/tmp` override so this package remains runnable on the
+Windows VPS.
+
 ## Private observation wrapper
 
 `run_private_probe.ps1` adds a capability-limited, append-only observation
