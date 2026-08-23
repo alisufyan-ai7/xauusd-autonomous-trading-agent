@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -7,7 +8,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from event_guard_oracle import Event, guard_state
 from source_conformance import (
     POLICIES, ZERO_HASH, assess_snapshot, conservative_revision_events,
-    coverage_inventory, make_record, revision_delta, verify_record_chain,
+    coverage_inventory, make_record, observed_schema_fingerprint, revision_delta,
+    verify_record_chain,
 )
 from capture_official_sources import DEFAULT_SOURCES, _request
 
@@ -25,7 +27,9 @@ def event(source, source_id, taxonomy, when, tier="TIER_1", status="SCHEDULED"):
 class SourceConformanceTests(unittest.TestCase):
     def setUp(self):
         self.now = at("2026-08-23T12:00:00Z")
-        self.body = b"BEGIN:VCALENDAR\nBEGIN:VEVENT\nEND:VEVENT\nEND:VCALENDAR\n"
+        self.body = (b"BEGIN:VCALENDAR\nBEGIN:VEVENT\nUID:test-1\n"
+                     b"SUMMARY:Consumer Price Index\nDTSTART:20260910T123000Z\n"
+                     b"END:VEVENT\nEND:VCALENDAR\n")
 
     def record(self, **overrides):
         values = dict(
@@ -55,14 +59,24 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual((True, ()), assess_snapshot(record, self.body, self.now))
 
     def test_wrong_host_content_type_and_schema_fail(self):
-        record = self.record(
-            url="https://example.invalid/bls.ics",
-            content_type="text/html",
-            schema_fingerprint="changed",
-        )
-        healthy, reasons = assess_snapshot(record, self.body, self.now)
+        body = b"<html>changed</html>"
+        record = self.record(url="https://example.invalid/bls.ics",
+                             content_type="text/html", body=body)
+        healthy, reasons = assess_snapshot(record, body, self.now)
         self.assertFalse(healthy)
         self.assertEqual({"CONTENT_TYPE", "SCHEMA_DRIFT", "URL_NOT_ALLOWLISTED"}, set(reasons))
+
+    def test_schema_fingerprints_are_derived_from_body_not_declared(self):
+        bea = json.dumps({"Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]}}).encode()
+        fed = b"<html>Federal Open Market Committee Upcoming Dates</html>"
+        census = b"<html>Economic Indicators Release Time AM</html>"
+        self.assertEqual(POLICIES["BEA_JSON"].schema_fingerprint,
+                         observed_schema_fingerprint("BEA_JSON", bea))
+        self.assertEqual(POLICIES["FED_CALENDAR"].schema_fingerprint,
+                         observed_schema_fingerprint("FED_CALENDAR", fed))
+        self.assertEqual(POLICIES["CENSUS_WATCH"].schema_fingerprint,
+                         observed_schema_fingerprint("CENSUS_WATCH", census))
+        self.assertEqual("UNRECOGNIZED", observed_schema_fingerprint("BEA_JSON", b"{}"))
 
     def test_body_tamper_and_staleness_fail(self):
         record = self.record(retrieved_utc=self.now - timedelta(hours=27))

@@ -156,10 +156,54 @@ def record_digest(record: AcquisitionRecord) -> str:
     return hashlib.sha256(_canonical(_record_payload(record)).encode("utf-8")).hexdigest()
 
 
+def observed_schema_fingerprint(source: str, body: bytes) -> str:
+    """Derive the admitted shape from body content; never trust caller metadata."""
+    policy = POLICIES[source]
+    if not body:
+        return "EMPTY"
+    text = body.decode("utf-8", errors="replace")
+    lower = text.lower()
+    if source == "BLS_ICS":
+        required = ("BEGIN:VCALENDAR", "BEGIN:VEVENT", "SUMMARY:", "DTSTART", "UID:")
+        return policy.schema_fingerprint if all(token in text for token in required) else "UNRECOGNIZED"
+    if source == "BEA_JSON":
+        try:
+            value = json.loads(text)
+            valid = (type(value) is dict and bool(value)
+                     and all(type(title) is str and type(item) is dict
+                             and type(item.get("release_dates")) is list
+                             and all(type(date) is str for date in item["release_dates"])
+                             for title, item in value.items()))
+            return policy.schema_fingerprint if valid else "UNRECOGNIZED"
+        except json.JSONDecodeError:
+            return "UNRECOGNIZED"
+    if source == "FED_CALENDAR":
+        required_groups = (
+            ("federal open market committee", "fomc"),
+            ("upcoming dates", "fomc meeting", "fomc minutes"),
+        )
+        return policy.schema_fingerprint if all(any(token in lower for token in group)
+                                                for group in required_groups) else "UNRECOGNIZED"
+    if source == "CENSUS_WATCH":
+        required_groups = (("economic indicators",), ("release",), ("time", "am", "pm"))
+        return policy.schema_fingerprint if all(any(token in lower for token in group)
+                                                for group in required_groups) else "UNRECOGNIZED"
+    if source == "DOL_UI":
+        # An observed publication page can never establish the unresolved
+        # exception-aware forward-schedule contract.
+        return "UNRESOLVED_FORWARD_SCHEDULE_WITH_EXCEPTIONS"
+    if source == "FRED_CROSSCHECK":
+        try:
+            value = json.loads(text)
+            return policy.schema_fingerprint if isinstance(value, dict) and "release_dates" in value else "UNRECOGNIZED"
+        except json.JSONDecodeError:
+            return "UNRECOGNIZED"
+    return "UNRECOGNIZED"
+
+
 def make_record(*, source: str, url: str, retrieved_utc: datetime, http_status: int,
                 content_type: str, body: bytes, parser_version: str | None = None,
-                schema_fingerprint: str | None = None, etag: str = "",
-                last_modified: str = "", previous_record_sha256: str = ZERO_HASH,
+                etag: str = "", last_modified: str = "", previous_record_sha256: str = ZERO_HASH,
                 cached_record: AcquisitionRecord | None = None) -> AcquisitionRecord:
     policy = POLICIES[source]
     if http_status == 304:
@@ -168,9 +212,11 @@ def make_record(*, source: str, url: str, retrieved_utc: datetime, http_status: 
         body_sha256 = cached_record.body_sha256
         byte_count = cached_record.byte_count
         content_type = content_type or cached_record.content_type
+        schema_fingerprint = cached_record.schema_fingerprint
     else:
         body_sha256 = hashlib.sha256(body).hexdigest()
         byte_count = len(body)
+        schema_fingerprint = observed_schema_fingerprint(source, body)
     draft = AcquisitionRecord(
         source=source,
         url=url,
@@ -180,7 +226,7 @@ def make_record(*, source: str, url: str, retrieved_utc: datetime, http_status: 
         body_sha256=body_sha256,
         byte_count=byte_count,
         parser_version=parser_version or policy.parser_version,
-        schema_fingerprint=schema_fingerprint or policy.schema_fingerprint,
+        schema_fingerprint=schema_fingerprint,
         etag=etag,
         last_modified=last_modified,
         cache_record_sha256=cached_record.record_sha256 if http_status == 304 else "",

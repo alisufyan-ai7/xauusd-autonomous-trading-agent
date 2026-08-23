@@ -11,7 +11,7 @@ Run:
 python -m unittest -v test_event_guard.py test_source_conformance.py
 ```
 
-The 29 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
+The 30 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
 monitored Fed/Census/DOL schedule rows, frozen taxonomy filtering, overlapping
 FOMC intervals, exact boundaries, source conflicts, cancellation/tentative
 behavior, optional FRED date-only cross-checking, submission-latency crossing,
@@ -19,6 +19,9 @@ post-event normalization, the independent shock lock, official URL/content-type
 allowlists, payload and record hashes, conditional-GET cache identity,
 append-only restart verification, forward-coverage limits, source roles and
 conservative moved-event windows.
+
+Schema fingerprints are derived from captured body content. The capture utility
+cannot label a body conforming merely by copying the expected registry value.
 
 ## Private VPS capture
 

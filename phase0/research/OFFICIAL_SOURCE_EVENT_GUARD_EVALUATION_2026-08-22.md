@@ -58,7 +58,7 @@ redistribute agency branding, bulk unrelated content, or third-party material.
 ## Registered conformance evidence
 
 The standard-library-only package under `phase0/validation/event_guard` passes
-29/29 tests: the original 14 Event Guard tests plus 15 acquisition/revision
+30/30 tests: the original 14 Event Guard tests plus 16 acquisition/revision
 conformance tests covering:
 
 - EST/EDT conversion and missing-zone rejection;
@@ -75,6 +75,8 @@ conformance tests covering:
 - bounded forward-coverage inventory and watch-only/cross-check isolation;
 - typed additions, movements and cancellations, old-window retention after a
   move, and unexplained future-event disappearance rejection.
+- source-specific schema fingerprints derived from captured body content rather
+  than copied from expected registry metadata.
 
 The accompanying read-only capture utility writes raw responses only to an
 operator-selected private directory. Raw snapshots are evidence and are never

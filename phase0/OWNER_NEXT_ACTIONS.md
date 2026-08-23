@@ -7,7 +7,12 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 
 Owner-approved direction and remaining actions:
 
-1. Event data: the free official-source design is the primary candidate and now passes 29/29 offline tests. Run the read-only private capture to build BLS/BEA/Fed/Census live evidence. Keep DOL jobless claims fail-closed until a first-party forward schedule with holiday exceptions is admitted; do not infer it from a Thursday recurrence. Do not activate or purchase any paid or auto-renewing provider trial.
+1. Event data: the free official-source design is the primary candidate and now
+   passes 30/30 offline tests, including body-derived schema checks. Run the
+   read-only private capture to build BLS/BEA/Fed/Census live evidence. Keep DOL
+   jobless claims fail-closed until a first-party forward schedule with holiday
+   exceptions is admitted; do not infer it from a Thursday recurrence. Do not
+   activate or purchase any paid or auto-renewing provider trial.
 2. Historical replay data: no source is admitted. The raw-OHLC suite now passes
    35/35 with one bounded lifecycle slice for every setup family, but exhaustive
    predicates and performance claims remain open. Market-data replay still
