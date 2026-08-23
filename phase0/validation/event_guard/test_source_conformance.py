@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta, timezone
+from dataclasses import asdict
 import json
 from pathlib import Path
 import sys
+import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -11,7 +13,8 @@ from source_conformance import (
     coverage_inventory, make_record, observed_schema_fingerprint, revision_delta,
     verify_record_chain,
 )
-from capture_official_sources import DEFAULT_SOURCES, _request
+from capture_official_sources import DEFAULT_SOURCES, _request, _target_urls
+from normalize_private_capture import normalize
 
 UTC = timezone.utc
 
@@ -48,11 +51,21 @@ class SourceConformanceTests(unittest.TestCase):
         self.assertEqual("DATE_CROSSCHECK_ONLY", POLICIES["FRED_CROSSCHECK"].role)
         self.assertTrue(all(url.startswith("https://") for policy in POLICIES.values()
                             for url in policy.urls + policy.url_prefixes))
+        self.assertTrue(all(pattern.startswith("https://") for policy in POLICIES.values()
+                            for pattern in policy.url_patterns))
 
     def test_capture_requests_are_get_only_and_fred_is_not_enabled(self):
         request = _request(POLICIES["BLS_ICS"].urls[0], None)
         self.assertEqual("GET", request.method)
         self.assertNotIn("FRED_CROSSCHECK", DEFAULT_SOURCES)
+
+    def test_fed_targets_are_exact_month_pages_for_frozen_horizon(self):
+        self.assertEqual((
+            "https://www.federalreserve.gov/newsevents/2026-august.htm",
+            "https://www.federalreserve.gov/newsevents/2026-september.htm",
+            "https://www.federalreserve.gov/newsevents/2026-october.htm",
+            "https://www.federalreserve.gov/newsevents/2026-november.htm",
+        ), _target_urls("FED_CALENDAR", self.now))
 
     def test_windows_timezone_dependency_is_exactly_pinned_and_hashed(self):
         requirements = (Path(__file__).parent / "requirements-win-py312.txt").read_text(
@@ -72,8 +85,10 @@ class SourceConformanceTests(unittest.TestCase):
         install = runner.index("--require-hashes")
         tests = runner.index("-m unittest")
         capture = runner.index("capture_official_sources.py")
+        normalize = runner.index("normalize_private_capture.py")
         self.assertLess(install, tests)
         self.assertLess(tests, capture)
+        self.assertLess(capture, normalize)
         self.assertIn("tests and capture were not run", runner)
         self.assertIn("private capture was not run", runner)
         self.assertIn("outside the repository", runner)
@@ -95,7 +110,8 @@ class SourceConformanceTests(unittest.TestCase):
             "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]},
             "file_last_updated": "2026-07-13T08:00:42.402013",
         }).encode()
-        fed = b"<html>Federal Open Market Committee Upcoming Dates</html>"
+        fed = (b"<html>Calendar FOMC Meetings Time: Release Date(s): "
+               b"FOMC Meeting</html>")
         census = b"<html>Economic Indicators Release Time AM</html>"
         self.assertEqual(POLICIES["BEA_JSON"].schema_fingerprint,
                          observed_schema_fingerprint("BEA_JSON", bea))
@@ -110,6 +126,21 @@ class SourceConformanceTests(unittest.TestCase):
         }).encode()
         self.assertEqual("UNRECOGNIZED",
                          observed_schema_fingerprint("BEA_JSON", unexpected_scalar))
+
+    def test_date_only_fed_landing_page_is_not_lock_authoritative(self):
+        body = b"<html>Federal Open Market Committee Upcoming Dates</html>"
+        record = make_record(
+            source="FED_CALENDAR",
+            url="https://www.federalreserve.gov/monetarypolicy.htm",
+            retrieved_utc=self.now,
+            http_status=200,
+            content_type="text/html",
+            body=body,
+        )
+        healthy, reasons = assess_snapshot(record, body, self.now)
+        self.assertFalse(healthy)
+        self.assertIn("URL_NOT_ALLOWLISTED", reasons)
+        self.assertIn("SCHEMA_DRIFT", reasons)
 
     def test_body_tamper_and_staleness_fail(self):
         record = self.record(retrieved_utc=self.now - timedelta(hours=27))
@@ -209,6 +240,69 @@ class SourceConformanceTests(unittest.TestCase):
         healthy, reasons = assess_snapshot(record, body, self.now)
         self.assertFalse(healthy)
         self.assertIn("BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE", reasons)
+
+    def test_private_normalization_proves_candidate_horizons_but_dol_stays_closed(self):
+        bls = b"""BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:jobs
+SUMMARY:Employment Situation
+DTSTART:20260904T123000Z
+END:VEVENT
+BEGIN:VEVENT
+UID:cpi
+SUMMARY:Consumer Price Index
+DTSTART:20260910T123000Z
+END:VEVENT
+END:VCALENDAR
+"""
+        bea = json.dumps({
+            "Personal Income and Outlays": {"release_dates": ["2026-08-26T12:30:00Z"]},
+            "file_last_updated": "2026-07-13T08:00:42.402013",
+        }).encode()
+        fed_pages = {
+            "august": b"<html><h1>Calendar August 2026</h1><h2>FOMC Meetings</h2><i>Time:</i><i>Release Date(s):</i><b>2:00 p.m.</b><span>FOMC Minutes</span><em>19</em></html>",
+            "september": b"<html><h1>Calendar September 2026</h1><h2>FOMC Meetings</h2><i>Time:</i><i>Release Date(s):</i><b>2:30 p.m.</b><span>FOMC Press Conference</span><em>16</em><b>2:00 p.m.</b><span>FOMC Meeting</span><em>16</em></html>",
+            "october": b"<html><h1>Calendar October 2026</h1><h2>FOMC Meetings</h2><i>Time:</i><i>Release Date(s):</i><b>2:00 p.m.</b><span>FOMC Minutes</span><em>7</em><b>2:30 p.m.</b><span>FOMC Press Conference</span><em>28</em><b>2:00 p.m.</b><span>FOMC Meeting</span><em>28</em></html>",
+            "november": b"<html><h1>Calendar November 2026</h1><h2>FOMC Meetings</h2><i>Time:</i><i>Release Date(s):</i><b>2:00 p.m.</b><span>FOMC Minutes</span><em>18</em></html>",
+        }
+        census = b"<html>Economic Indicators Release Time AM</html>"
+        targets = [
+            ("BLS_ICS", POLICIES["BLS_ICS"].urls[0], bls, "text/calendar"),
+            ("BEA_JSON", POLICIES["BEA_JSON"].urls[0], bea, "application/json"),
+        ]
+        targets.extend(
+            ("FED_CALENDAR", url, fed_pages[url.rsplit("-", 1)[1].split(".", 1)[0]], "text/html")
+            for url in _target_urls("FED_CALENDAR", self.now)
+        )
+        targets.append(("CENSUS_WATCH", POLICIES["CENSUS_WATCH"].urls[0], census, "text/html"))
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            records = []
+            previous = ZERO_HASH
+            for source, url, body, content_type in targets:
+                record = make_record(
+                    source=source, url=url, retrieved_utc=self.now,
+                    http_status=200, content_type=content_type, body=body,
+                    previous_record_sha256=previous,
+                )
+                body_dir = output / source
+                body_dir.mkdir(parents=True, exist_ok=True)
+                (body_dir / f"{record.body_sha256}.raw").write_bytes(body)
+                records.append(record)
+                previous = record.record_sha256
+            (output / "acquisition_records.jsonl").write_text(
+                "".join(json.dumps(asdict(record), sort_keys=True, separators=(",", ":")) + "\n"
+                        for record in records),
+                encoding="utf-8",
+            )
+            result = normalize(output, self.now)
+        self.assertEqual("FAIL_CLOSED", result["status"])
+        self.assertTrue(all(result["source_status"][source]["status"] == "HEALTHY"
+                            for source in ("BLS_ICS", "BEA_JSON", "FED_CALENDAR")), result)
+        self.assertEqual("BLOCKED_NO_AUTHORITATIVE_FORWARD_SCHEDULE",
+                         result["coverage"]["DOL_UI:US_JOBLESS_CLAIMS"])
+        self.assertTrue(all(value == "COVERED" for key, value in result["coverage"].items()
+                            if not key.startswith("DOL_UI:")))
 
 
 if __name__ == "__main__":

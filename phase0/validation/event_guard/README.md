@@ -11,7 +11,7 @@ Run:
 python -m unittest -v test_event_guard.py test_source_conformance.py
 ```
 
-The 32 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
+The 36 checks exercise UTC/DST normalization, BLS/BEA machine-readable shapes,
 monitored Fed/Census/DOL schedule rows, frozen taxonomy filtering, overlapping
 FOMC intervals, exact boundaries, source conflicts, cancellation/tentative
 behavior, optional FRED date-only cross-checking, submission-latency crossing,
@@ -31,6 +31,13 @@ The admitted BEA shape permits its documented response-root
 `file_last_updated` string in addition to non-empty release objects; no other
 scalar root field is admitted.
 
+Federal Reserve locks use the official month-calendar pages under
+`/newsevents/YYYY-month.htm`, not the general monetary-policy landing page. The
+month pages provide both `Time` and `Release Date(s)` for FOMC statements, press
+conferences and minutes. Four consecutive month pages are acquired to cover the
+frozen 75-day horizon; the generic landing page is explicitly rejected because
+its upcoming-date summary does not provide an authoritative event time.
+
 ## Private VPS capture
 
 From this directory, with Python 3.12, use the fail-closed wrapper:
@@ -40,8 +47,10 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\run_private_capture.ps
 ```
 
 The wrapper installs only the hash-pinned binary dependency, runs all offline
-tests, and starts capture only if both steps succeed. It rejects an output path
-inside the repository.
+tests, and starts capture only if both steps succeed. It then normalizes the
+locally hashed BLS, BEA and Fed bodies, verifies source freshness and forward
+coverage, and writes `normalized_event_guard.json` inside the private output
+directory. It rejects an output path inside the repository.
 
 The output directory contains raw official-source snapshots and a hash-chained
 JSONL acquisition manifest. It is private evidence: do not commit, email or

@@ -10,6 +10,7 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 import hashlib
 import json
+import re
 from urllib.parse import urlparse
 
 from event_guard_oracle import Event, interval
@@ -29,6 +30,7 @@ class SourcePolicy:
     schema_fingerprint: str
     max_age: timedelta
     max_bytes: int
+    url_patterns: tuple[str, ...] = ()
     required_taxonomy_max_lag_days: tuple[tuple[str, int], ...] = ()
     admission: str = "CANDIDATE"
 
@@ -61,16 +63,16 @@ POLICIES = {
     "FED_CALENDAR": SourcePolicy(
         source="FED_CALENDAR",
         role="LOCK_AUTHORITATIVE",
-        urls=("https://www.federalreserve.gov/monetarypolicy.htm",),
-        url_prefixes=(
-            "https://www.federalreserve.gov/newsevents/",
-            "https://www.federalreserve.gov/monetarypolicy/",
-        ),
+        urls=(),
+        url_prefixes=(),
         content_types=("text/html", "application/xhtml+xml"),
-        parser_version="fed-calendar-html-v1",
-        schema_fingerprint="FED/monthly-event/date/time/title@v1",
+        parser_version="fed-monthly-html-v2",
+        schema_fingerprint="FED/month-calendar/FOMC/time/release-date@v2",
         max_age=timedelta(hours=26),
         max_bytes=6_000_000,
+        url_patterns=(
+            r"https://www\.federalreserve\.gov/newsevents/20\d{2}-(?:january|february|march|april|may|june|july|august|september|october|november|december)\.htm",
+        ),
         required_taxonomy_max_lag_days=(
             ("FOMC_STATEMENT", 75),
             ("FOMC_PRESS_CONFERENCE", 75),
@@ -187,8 +189,11 @@ def observed_schema_fingerprint(source: str, body: bytes) -> str:
             return "UNRECOGNIZED"
     if source == "FED_CALENDAR":
         required_groups = (
-            ("federal open market committee", "fomc"),
-            ("upcoming dates", "fomc meeting", "fomc minutes"),
+            ("calendar",),
+            ("fomc meetings",),
+            ("time:",),
+            ("release date",),
+            ("fomc meeting", "fomc minutes", "fomc press conference"),
         )
         return policy.schema_fingerprint if all(any(token in lower for token in group)
                                                 for group in required_groups) else "UNRECOGNIZED"
@@ -247,7 +252,9 @@ def _url_allowed(policy: SourcePolicy, url: str) -> bool:
     parsed = urlparse(url)
     if parsed.scheme != "https" or parsed.username or parsed.password or parsed.fragment:
         return False
-    return url in policy.urls or any(url.startswith(prefix) for prefix in policy.url_prefixes)
+    return (url in policy.urls
+            or any(url.startswith(prefix) for prefix in policy.url_prefixes)
+            or any(re.fullmatch(pattern, url, re.I) for pattern in policy.url_patterns))
 
 
 def assess_snapshot(record: AcquisitionRecord, body: bytes, now: datetime,

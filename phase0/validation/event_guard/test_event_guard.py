@@ -7,7 +7,8 @@ from datetime import datetime, timedelta, timezone
 sys.path.insert(0, str(Path(__file__).parent))
 from event_guard_oracle import (
     Event, entry_allowed, fred_date_cross_check, guard_state, local_to_utc,
-    parse_bea_json, parse_ics, parse_official_rows, reconcile_authoritative,
+    parse_bea_json, parse_fed_monthly_html, parse_ics, parse_official_rows,
+    reconcile_authoritative,
 )
 
 UTC = timezone.utc
@@ -80,6 +81,19 @@ END:VCALENDAR
         self.assertEqual("PRE_LOCK", guard_state(at("2026-09-16T17:31:00Z"), events, source_healthy=True, shock_locked=False))
         self.assertEqual("POST_LOCK", guard_state(at("2026-09-16T18:45:00Z"), events, source_healthy=True, shock_locked=False))
         self.assertEqual("HEALTHY", guard_state(at("2026-09-16T19:00:00Z"), events, source_healthy=True, shock_locked=False))
+
+    def test_fed_month_calendar_extracts_authoritative_times(self):
+        html = """<html><title>Federal Reserve Board - Calendar: September 2026</title>
+        <h4>FOMC Meetings</h4><h6>Time:</h6><h6>Release Date(s):</h6>
+        <div>2:30 p.m.</div><a>FOMC Press Conference</a><div>16</div>
+        <div>2:00 p.m.</div><div>FOMC Meeting</div>
+        <div>Two-day meeting, September 15 - 16</div><div>Press Conference</div><div>16</div>
+        </html>"""
+        events = parse_fed_monthly_html(html)
+        self.assertEqual(["FOMC_PRESS_CONFERENCE", "FOMC_STATEMENT"],
+                         [item.taxonomy for item in events])
+        self.assertEqual([at("2026-09-16T18:30:00Z"), at("2026-09-16T18:00:00Z")],
+                         [item.scheduled_utc for item in events])
 
     def test_exact_half_open_boundaries(self):
         event = Event("BLS_ICS", "cpi", "CPI", at("2026-07-14T12:30:00Z"), "UTC", "US_CPI", "TIER_1")

@@ -8,12 +8,11 @@ The 24-hour diagnostic evidence is accepted and the implemented offline corpora 
 Owner-approved direction and remaining actions:
 
 1. Event data: the free official-source design is the primary candidate and now
-   passes 32/32 offline tests, including body-derived schema checks and the
-   hash-pinned Windows timezone dependency/runner. The first private capture
-   produced a verified BLS/Fed/Census record chain and exposed a narrowly fixed
-   BEA metadata-shape false positive. Rerun `run_private_capture.ps1` against the
-   same private directory to append the corrected BEA acquisition evidence.
-   Keep DOL
+   passes 36/36 offline tests. The seven-record private chain and BEA capture are
+   independently verified, but review correctly demoted the date-only Fed
+   landing page. Rerun `run_private_capture.ps1` against the same private
+   directory to capture four official exact-time Fed month pages and generate
+   the local normalized horizon report. Keep DOL
    jobless claims fail-closed until a first-party forward schedule with holiday
    exceptions is admitted; do not infer it from a Thursday recurrence. Do not
    activate or purchase any paid or auto-renewing provider trial.

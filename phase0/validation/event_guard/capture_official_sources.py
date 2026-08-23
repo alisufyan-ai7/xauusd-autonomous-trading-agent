@@ -23,6 +23,7 @@ from source_conformance import (
 
 UTC = timezone.utc
 DEFAULT_SOURCES = ("BLS_ICS", "BEA_JSON", "FED_CALENDAR", "CENSUS_WATCH", "DOL_UI")
+FED_HORIZON_MONTHS = 4
 
 
 def _load_records(path: Path) -> list[AcquisitionRecord]:
@@ -42,8 +43,25 @@ def _load_records(path: Path) -> list[AcquisitionRecord]:
     return records
 
 
-def _latest_for(records: list[AcquisitionRecord], source: str) -> AcquisitionRecord | None:
-    return next((record for record in reversed(records) if record.source == source), None)
+def _latest_for(records: list[AcquisitionRecord], source: str,
+                url: str) -> AcquisitionRecord | None:
+    return next((record for record in reversed(records)
+                 if record.source == source and record.url == url), None)
+
+
+def _target_urls(source: str, now: datetime) -> tuple[str, ...]:
+    if source != "FED_CALENDAR":
+        return POLICIES[source].urls
+    urls: list[str] = []
+    for offset in range(FED_HORIZON_MONTHS):
+        absolute_month = now.year * 12 + now.month - 1 + offset
+        year, zero_based_month = divmod(absolute_month, 12)
+        month = zero_based_month + 1
+        month_name = datetime(year, month, 1).strftime("%B").lower()
+        urls.append(
+            f"https://www.federalreserve.gov/newsevents/{year:04d}-{month_name}.htm"
+        )
+    return tuple(urls)
 
 
 def _request(url: str, cached: AcquisitionRecord | None) -> urllib.request.Request:
@@ -58,12 +76,11 @@ def _request(url: str, cached: AcquisitionRecord | None) -> urllib.request.Reque
     return urllib.request.Request(url, headers=headers, method="GET")
 
 
-def _fetch(source: str, cached: AcquisitionRecord | None, previous_hash: str,
+def _fetch(source: str, url: str, cached: AcquisitionRecord | None, previous_hash: str,
            timeout_seconds: float) -> tuple[AcquisitionRecord, bytes]:
     policy = POLICIES[source]
     if source == "FRED_CROSSCHECK":
         raise ValueError("FRED requires separate optional configuration and never controls locks")
-    url = policy.urls[0]
     request = _request(url, cached)
     try:
         response = urllib.request.urlopen(request, timeout=timeout_seconds)
@@ -107,12 +124,16 @@ def capture(output: Path, sources: list[str], timeout_seconds: float) -> dict:
     records = _load_records(manifest)
     previous_hash = records[-1].record_sha256 if records else ZERO_HASH
     run: list[dict] = []
+    capture_started = datetime.now(UTC)
+    targets: list[tuple[str, str]] = []
     for source in sources:
         if source not in DEFAULT_SOURCES:
             raise ValueError(f"source is not enabled for capture: {source}")
-        cached = _latest_for(records, source)
+        targets.extend((source, url) for url in _target_urls(source, capture_started))
+    for source, url in targets:
+        cached = _latest_for(records, source, url)
         try:
-            record, body = _fetch(source, cached, previous_hash, timeout_seconds)
+            record, body = _fetch(source, url, cached, previous_hash, timeout_seconds)
             if record.http_status == 200:
                 body_dir = output / source
                 body_dir.mkdir(parents=True, exist_ok=True)
@@ -123,10 +144,10 @@ def capture(output: Path, sources: list[str], timeout_seconds: float) -> dict:
                 handle.write(json.dumps(asdict(record), sort_keys=True, separators=(",", ":")) + "\n")
             records.append(record)
             previous_hash = record.record_sha256
-            run.append({"source": source, "status": "CAPTURED", "http_status": record.http_status,
+            run.append({"source": source, "url": url, "status": "CAPTURED", "http_status": record.http_status,
                         "record_sha256": record.record_sha256})
         except Exception as exc:  # evidence runner records and continues across independent sources
-            run.append({"source": source, "status": "REJECTED", "reason": str(exc)})
+            run.append({"source": source, "url": url, "status": "REJECTED", "reason": str(exc)})
     return {
         "status": "PASS" if all(item["status"] == "CAPTURED" for item in run) else "FAIL_CLOSED",
         "captured_utc": datetime.now(UTC).isoformat().replace("+00:00", "Z"),

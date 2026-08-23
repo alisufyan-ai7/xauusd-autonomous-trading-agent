@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 import hashlib
+from html.parser import HTMLParser
 import json
 import re
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -84,7 +85,7 @@ def classify(title: str) -> tuple[str, str] | None:
         (("employment situation",), ("US_EMPLOYMENT", "TIER_1")),
         (("consumer price index", "cpi"), ("US_CPI", "TIER_1")),
         (("personal income and outlays",), ("US_PCE", "TIER_1")),
-        (("fomc statement", "federal open market committee statement"), ("FOMC_STATEMENT", "TIER_1")),
+        (("fomc statement", "federal open market committee statement", "fomc meeting"), ("FOMC_STATEMENT", "TIER_1")),
         (("fomc press conference",), ("FOMC_PRESS_CONFERENCE", "TIER_1")),
         (("fomc minutes",), ("FOMC_MINUTES", "TIER_1")),
         (("initial claims", "jobless claims", "unemployment insurance weekly claims"), ("US_JOBLESS_CLAIMS", "TIER_2")),
@@ -188,6 +189,79 @@ def parse_official_rows(rows: list[dict], source: str, zone: str = EASTERN) -> l
         events.append(Event(source, source_id, row["title"], scheduled, zone, taxonomy, tier,
                             status, payload_hash(row)))
     return events
+
+
+class _VisibleText(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.tokens: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        value = re.sub(r"\s+", " ", data).strip()
+        if value:
+            self.tokens.append(value)
+
+
+def _twelve_hour_to_24(value: str) -> str:
+    match = re.fullmatch(r"(\d{1,2}):(\d{2})\s*([ap])\.?m\.?", value.strip(), re.I)
+    if not match:
+        raise ValueError("verified Fed event time missing")
+    hour, minute, meridiem = int(match.group(1)), int(match.group(2)), match.group(3).lower()
+    if hour < 1 or hour > 12 or minute > 59:
+        raise ValueError("invalid Fed event time")
+    if meridiem == "p" and hour != 12:
+        hour += 12
+    if meridiem == "a" and hour == 12:
+        hour = 0
+    return f"{hour:02d}:{minute:02d}"
+
+
+def parse_fed_monthly_html(text: str) -> list[Event]:
+    """Parse exact-time FOMC rows from one official Fed month calendar."""
+    parser = _VisibleText()
+    parser.feed(text)
+    tokens = parser.tokens
+    page_text = " ".join(tokens[:80])
+    month_match = re.search(
+        r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b",
+        page_text,
+        re.I,
+    )
+    if not month_match:
+        raise ValueError("Fed calendar month/year missing")
+    month = datetime.strptime(month_match.group(1), "%B").month
+    year = int(month_match.group(2))
+    admitted_titles = {"FOMC Meeting", "FOMC Press Conference", "FOMC Minutes"}
+    rows: list[dict] = []
+    for index, token in enumerate(tokens):
+        if token not in admitted_titles:
+            continue
+        time_token = next(
+            (candidate for candidate in reversed(tokens[max(0, index - 6):index])
+             if re.fullmatch(r"\d{1,2}:\d{2}\s*[ap]\.?m\.?", candidate, re.I)),
+            None,
+        )
+        day_token = next(
+            (candidate for candidate in tokens[index + 1:index + 12]
+             if re.fullmatch(r"\d{1,2}", candidate)),
+            None,
+        )
+        if time_token is None or day_token is None:
+            raise ValueError(f"exact Fed time/date missing for {token}")
+        day = int(day_token)
+        scheduled_date = datetime(year, month, day).date().isoformat()
+        taxonomy = classify(token)
+        if taxonomy is None:
+            raise ValueError(f"unclassified protected Fed row: {token}")
+        rows.append({
+            "id": f"fed-{year:04d}{month:02d}{day:02d}-{taxonomy[0].lower()}",
+            "title": token,
+            "date": scheduled_date,
+            "time": _twelve_hour_to_24(time_token),
+        })
+    if not rows:
+        raise ValueError("no protected FOMC rows in Fed month calendar")
+    return parse_official_rows(rows, "FED_CALENDAR")
 
 
 def reconcile_authoritative(events: list[Event]) -> tuple[bool, list[str]]:

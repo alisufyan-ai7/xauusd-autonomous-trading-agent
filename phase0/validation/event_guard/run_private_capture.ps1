@@ -31,4 +31,14 @@ $captureExit = $LASTEXITCODE
 if ($captureExit -ne 0) {
     Write-Warning "Capture returned fail-closed status. Review its JSON; this is expected while DOL remains unresolved."
 }
-exit $captureExit
+
+Write-Host "Gate 0 Event Guard: normalize captured schedules and prove horizon locally"
+& py -3.12 .\normalize_private_capture.py --output $privateOutput
+$normalizationExit = $LASTEXITCODE
+if ($normalizationExit -ne 0) {
+    Write-Warning "Normalization returned fail-closed status. Review the private normalized report."
+}
+if ($captureExit -ne 0) {
+    exit $captureExit
+}
+exit $normalizationExit
