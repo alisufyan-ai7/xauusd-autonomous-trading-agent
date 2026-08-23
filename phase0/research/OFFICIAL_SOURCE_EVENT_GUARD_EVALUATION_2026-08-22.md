@@ -21,8 +21,8 @@ material capability gap that the official sources cannot safely close.
 
 | Source | Intended coverage | Interface and time semantics | Rights/retention posture | Admission result |
 |---|---|---|---|---|
-| BLS | Employment Situation/NFP, CPI | First-party `bls.ics`; BLS says the tentative calendar updates weekly and is supplemented as needed | BLS states its published material is public domain; retain source attribution and local payload hashes | **Candidate pass**, subject to observed revision/freshness SLA |
-| BEA | PCE / Personal Income and Outlays | First-party iCalendar and JSON; published timestamps are explicit UTC | BEA states site information is public domain unless noted; retain attribution and local payload hashes | **Candidate pass**, subject to duplicate/revision monitoring |
+| BLS | Employment Situation/NFP, CPI | First-party `https://www.bls.gov/schedule/news_release/bls.ics`; BLS says the tentative calendar updates weekly and is supplemented as needed | BLS states its published material is public domain; retain source attribution and local payload hashes | **Candidate pass**, subject to observed revision/freshness SLA |
+| BEA | PCE / Personal Income and Outlays | First-party `https://apps.bea.gov/API/signup/release_dates.json` with the BEA ICS as corroboration; published timestamps are explicit UTC | BEA states site information is public domain unless noted; retain attribution and local payload hashes | **Candidate pass**, subject to duplicate/revision monitoring |
 | Federal Reserve Board | FOMC statement, press conference, minutes, preclassified material communications | FOMC annual calendar plus monthly event pages; monthly pages supply exact event times; calendar/RSS changes require monitored snapshots | First-party public schedule; do not ingest third-party linked content; retain only schedule metadata and hashes | **Conditional**: HTML parser and late-added communication coverage require live tests |
 | U.S. Census Bureau | Optional watch-only retail/housing/durables releases; can support later taxonomy promotion | Official economic-indicator list view; release times require explicit Eastern-time verification per release family and DST conversion | Public schedule/citation posture is usable; API terms do not automatically apply to the HTML calendar | **Conditional**: page is not a dedicated schedule API and frozen taxonomy currently excludes its releases |
 | DOL ETA | Weekly initial/jobless claims (frozen Tier 2) | Official weekly claims publication is normally 08:30 Eastern; exception/holiday weeks must be captured from a first-party schedule or conservative fail-closed recurrence | First-party public release; local metadata/hash archive only | **Required gap closure** if jobless claims stays in taxonomy |
@@ -57,8 +57,9 @@ redistribute agency branding, bulk unrelated content, or third-party material.
 
 ## Registered conformance evidence
 
-The standard-library-only oracle under `phase0/validation/event_guard` passes
-14/14 tests covering:
+The standard-library-only package under `phase0/validation/event_guard` passes
+29/29 tests: the original 14 Event Guard tests plus 15 acquisition/revision
+conformance tests covering:
 
 - EST/EDT conversion and missing-zone rejection;
 - BLS-style iCalendar unfolding/filtering and BEA UTC JSON;
@@ -68,6 +69,18 @@ The standard-library-only oracle under `phase0/validation/event_guard` passes
 - submission latency crossing into pre-lock;
 - independent shock lock and post-event normalization;
 - the requirement for a DOL source for weekly claims.
+- frozen official HTTPS endpoints, roles and GET-only construction;
+- HTTP/content/schema/freshness/body-hash rejection and 304 cache identity;
+- append-only record-chain restart verification and tamper detection;
+- bounded forward-coverage inventory and watch-only/cross-check isolation;
+- typed additions, movements and cancellations, old-window retention after a
+  move, and unexplained future-event disappearance rejection.
+
+The accompanying read-only capture utility writes raw responses only to an
+operator-selected private directory. Raw snapshots are evidence and are never
+part of the sanitized repository. DOL remains hard-coded as blocked even if its
+historical releases page returns HTTP 200; a page showing past weekly releases
+does not prove future holiday exceptions.
 
 ## Material gaps and promotion rule
 
