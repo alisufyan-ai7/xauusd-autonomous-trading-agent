@@ -26,6 +26,12 @@ Owner-approved direction and remaining actions:
    synthetic full-count registry is complete within its stated scope, but a real
    corpus still needs verified provenance, automated-use, retention,
    derived-data, replay and audit rights plus frozen empirical distributions.
+   R24 reviewed public materials without acquiring data: Dukascopy is the first
+   technical clarification target but its general terms conflict with database
+   and derivative use; HistData lacks an explicit complete rights grant; OANDA
+   is conditional/likely paid with termination-retention constraints; and Exness
+   history remains only an account-semantics cross-check. Acquisition/split
+   procedure passes 9/9 and empirical calibration procedure passes 8/8.
 3. VPS/session/margin/alerts: offline packages pass session 7/7, M1/stress 14/14,
    A1 6/6 and combined reliability/private-probe 14/14. The R21 VPS packet
    passed 34/34 and completed the non-disruptive private margin, prepared-not-
@@ -51,5 +57,10 @@ No additional owner policy choice or OpenAI run is requested. The
 non-disruptive baseline is complete. Restart/network and real alert drills
 remain separate, explicitly approved actions; session boundaries will be
 scheduled only when their real observation windows occur.
+
+The R24 final evidence matrix is now the authoritative checklist. It records
+five bounded items as complete and nine as pending; every pending item must pass
+with admitted evidence before Gate 0 can close. No outreach is being requested
+or sent now.
 
 Continue to keep **Disable automated trading via external Python API** enabled. Do not authorize demo/live trading or unknown-exposure closure.
