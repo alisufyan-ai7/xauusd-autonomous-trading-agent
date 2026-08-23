@@ -11,7 +11,8 @@ from runtime_contract_oracle import (
     OUTPUT_FORMAT, PROFILE, REGISTER, artifact_fingerprints, build_request,
     derive_snapshot_id, expected_fields, reserve_standard_cost,
     revalidation_required, strict_object_tree, validate_payload,
-    validate_response_envelope,
+    validate_response_body, validate_response_envelope,
+    evaluate_chronological_exchange,
 )
 
 UTC = timezone.utc
@@ -90,6 +91,57 @@ def common(family, direction="BUY", regime="UP_TREND"):
     return value
 
 
+def provider_response(body):
+    return {
+        "status": "completed",
+        "model": "gpt-5.6-sol",
+        "incomplete_details": None,
+        "output": [{"type": "message", "content": [
+            {"type": "output_text", "text": json.dumps(body, separators=(",", ":"))}
+        ]}],
+    }
+
+
+def no_trade_body(payload):
+    return {
+        "schema_version": "analyst-runtime-1.0",
+        "analysis_id": payload["analysis_id"],
+        "snapshot_id": payload["snapshot_id"],
+        "decision": "NO_TRADE",
+        "reason_codes": ["MODEL_UNCERTAIN"],
+        "summary": "No advisory setup accepted.",
+        "proposal": {"kind": "NONE", "recheck_condition": "NEW_COMPLETED_BAR"},
+    }
+
+
+def trade_body(payload):
+    return {
+        "schema_version": "analyst-runtime-1.0",
+        "analysis_id": payload["analysis_id"],
+        "snapshot_id": payload["snapshot_id"],
+        "decision": "PROPOSE_TRADE",
+        "reason_codes": ["VALID_SETUP"],
+        "summary": "Synthetic candidate passes the bounded advisory check.",
+        "proposal": {
+            "kind": "TRADE",
+            "setup_family": payload["candidate_setup_family"],
+            "direction": payload["direction"],
+            "entry_type": "LIMIT",
+            "entry": {"kind": "SINGLE", "price": payload["zone_near_price"]},
+            "invalidation_price": payload["rejection_extreme_price"],
+            "stop_loss": payload["zone_far_price"],
+            "targets": [
+                {"role": "TP1", "price": payload["first_target_price"]},
+                {"role": "FINAL", "price": payload["final_target_price"]},
+            ],
+            "expiry_time_utc": "2026-08-23T13:00:00Z",
+            "cancellation_conditions": ["COMMON_FILTER_FAILED", "EVENT_LOCK"],
+            "confidence": 70,
+            "evidence_refs": payload["evidence_ids"],
+        },
+    }
+
+
 class AnalystRuntimeContractTests(unittest.TestCase):
     def test_profile_is_exact_sol_stateless_tool_free_and_single_attempt(self):
         request = PROFILE["request"]
@@ -102,9 +154,10 @@ class AnalystRuntimeContractTests(unittest.TestCase):
 
     def test_current_sol_price_and_long_context_control_are_frozen(self):
         price = PROFILE["pricing_control"]
-        self.assertEqual("5.00", price["standard_input_usd_per_million_tokens"])
-        self.assertEqual("30.00", price["standard_output_usd_per_million_tokens"])
-        self.assertEqual(Decimal("0.041"), reserve_standard_cost(1000))
+        self.assertEqual("4.00", price["standard_input_usd_per_million_tokens"])
+        self.assertEqual("20.00", price["standard_output_usd_per_million_tokens"])
+        self.assertEqual("2026-11-21", price["mandatory_revalidation_no_later_than_utc_date"])
+        self.assertEqual(Decimal("0.028"), reserve_standard_cost(1000))
         self.assertGreater(reserve_standard_cost(272001), reserve_standard_cost(272000))
 
     def test_all_five_family_registers_are_closed_and_defined(self):
@@ -122,7 +175,7 @@ class AnalystRuntimeContractTests(unittest.TestCase):
 
     def test_extra_missing_and_cross_family_fields_reject(self):
         payload = common("TPB")
-        payload["account_number"] = "123"
+        payload["account_number"] = "SYNTHETIC_FORBIDDEN_FIELD"
         payload.pop("zone_far_price")
         healthy, reasons = validate_payload(payload, NOW)
         self.assertFalse(healthy)
@@ -189,7 +242,8 @@ class AnalystRuntimeContractTests(unittest.TestCase):
 
     def test_response_must_complete_on_exact_model_without_tools_or_refusal(self):
         good = {"status":"completed","model":"gpt-5.6-sol","incomplete_details":None,
-                "output":[{"type":"message","content":[{"type":"output_text","text":"{}"}]}]}
+                "output":[{"type":"reasoning","summary":[]},
+                          {"type":"message","content":[{"type":"output_text","text":"{}"}]}]}
         self.assertEqual((True, ()), validate_response_envelope(good))
         bad = deepcopy(good)
         bad["model"] = "gpt-5.6-terra"
@@ -197,7 +251,83 @@ class AnalystRuntimeContractTests(unittest.TestCase):
                          {"type":"message","content":[{"type":"refusal","refusal":"no"}]}]
         healthy, reasons = validate_response_envelope(bad)
         self.assertFalse(healthy)
-        self.assertEqual({"MODEL_MISMATCH","TOOL_OR_UNKNOWN_OUTPUT_ITEM","REFUSAL"}, set(reasons))
+        self.assertEqual({"MODEL_MISMATCH","TOOL_OR_UNKNOWN_OUTPUT_ITEM","REFUSAL",
+                          "OUTPUT_TEXT_CARDINALITY"}, set(reasons))
+
+    def test_strict_no_trade_and_trade_bodies_bind_to_snapshot(self):
+        payload = common("TPB")
+        self.assertEqual((True, ()), validate_response_body(provider_response(no_trade_body(payload)), payload))
+        self.assertEqual((True, ()), validate_response_body(provider_response(trade_body(payload)), payload))
+
+    def test_duplicate_json_wrong_ids_and_extra_fields_fail_closed(self):
+        payload = common("TPB")
+        duplicate = provider_response(no_trade_body(payload))
+        duplicate["output"][0]["content"][0]["text"] = '{"schema_version":"analyst-runtime-1.0","schema_version":"analyst-runtime-1.0"}'
+        self.assertEqual((False, ("OUTPUT_JSON_INVALID",)), validate_response_body(duplicate, payload))
+        body = no_trade_body(payload)
+        body["analysis_id"] = "223e4567-e89b-42d3-a456-426614174000"
+        body["unexpected"] = True
+        healthy, reasons = validate_response_body(provider_response(body), payload)
+        self.assertFalse(healthy)
+        self.assertIn("OUTPUT_FIELDS", reasons)
+
+    def test_invented_price_evidence_and_target_order_are_rejected(self):
+        payload = common("TPB")
+        body = trade_body(payload)
+        body["proposal"]["entry"]["price"] = "9999.000"
+        body["proposal"]["evidence_refs"] = ["invented-evidence"]
+        body["proposal"]["targets"].reverse()
+        healthy, reasons = validate_response_body(provider_response(body), payload)
+        self.assertFalse(healthy)
+        self.assertEqual({"INVENTED_ENTRY_PRICE", "EVIDENCE_BINDING", "TARGET_BINDING"}, set(reasons))
+
+    def test_proposal_never_authorizes_trading_and_state_change_rejects(self):
+        payload = common("TPB")
+        response = provider_response(trade_body(payload))
+        result = evaluate_chronological_exchange(
+            payload, response, NOW, NOW + timedelta(seconds=2), "state-a", "state-a", set()
+        )
+        self.assertTrue(result["advisory_accepted"])
+        self.assertIs(result["trading_authorized"], False)
+        changed = evaluate_chronological_exchange(
+            payload, response, NOW, NOW + timedelta(seconds=2), "state-a", "state-b", set()
+        )
+        self.assertFalse(changed["advisory_accepted"])
+        self.assertIn("LOCAL_STATE_CHANGED", changed["reason_codes"])
+        self.assertIs(changed["trading_authorized"], False)
+
+    def test_late_replayed_and_clock_reversed_responses_reject(self):
+        payload = common("TPB")
+        response = provider_response(no_trade_body(payload))
+        consumed = set()
+        first = evaluate_chronological_exchange(
+            payload, response, NOW, NOW + timedelta(seconds=1), "state", "state", consumed
+        )
+        self.assertTrue(first["advisory_accepted"])
+        replay = evaluate_chronological_exchange(
+            payload, response, NOW, NOW + timedelta(seconds=2), "state", "state", consumed
+        )
+        self.assertIn("SNAPSHOT_REPLAY", replay["reason_codes"])
+        late = evaluate_chronological_exchange(
+            payload, response, NOW, NOW + timedelta(seconds=31), "state", "state", set()
+        )
+        self.assertIn("RESPONSE_STALE", late["reason_codes"])
+        reversed_clock = evaluate_chronological_exchange(
+            payload, response, NOW, NOW - timedelta(seconds=1), "state", "state", set()
+        )
+        self.assertIn("CLOCK_REVERSED", reversed_clock["reason_codes"])
+        self.assertIs(reversed_clock["trading_authorized"], False)
+
+    def test_production_prompt_is_frozen_non_trading_and_corpus_is_complete(self):
+        root = Path(__file__).parent
+        prompt = (root / "PRODUCTION_ANALYST_SYSTEM_PROMPT_V1.txt").read_text(encoding="utf-8")
+        self.assertIn("never authorize, size, route, modify, cancel, or execute", prompt)
+        self.assertIn("Default to NO_TRADE", prompt)
+        self.assertIn("never constitutes permission to trade", prompt)
+        corpus = json.loads((root / "CHRONOLOGICAL_VALIDATION_CORPUS_V1.json").read_text(encoding="utf-8"))
+        self.assertEqual(10, len(corpus["cases"]))
+        self.assertEqual(len(corpus["cases"]), len({case["case_id"] for case in corpus["cases"]}))
+        self.assertEqual("NO_CASE_CAN_SET_TRADING_AUTHORIZED_TRUE", corpus["invariant"])
 
     def test_artifact_change_requires_revalidation(self):
         baseline = artifact_fingerprints("fixed prompt")

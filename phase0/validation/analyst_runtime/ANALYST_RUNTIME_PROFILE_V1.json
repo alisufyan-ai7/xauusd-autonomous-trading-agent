@@ -23,6 +23,7 @@
     "total_response_timeout_seconds": 15,
     "max_snapshot_age_seconds_at_send": 5,
     "max_snapshot_age_seconds_at_accept": 30,
+    "max_proposal_lifetime_seconds": 14400,
     "max_quote_age_milliseconds_at_snapshot": 2000,
     "max_completed_m15_delay_milliseconds": 30000
   },
@@ -37,8 +38,10 @@
   },
   "pricing_control": {
     "verified_utc_date": "2026-08-23",
-    "standard_input_usd_per_million_tokens": "5.00",
-    "standard_output_usd_per_million_tokens": "30.00",
+    "standard_input_usd_per_million_tokens": "4.00",
+    "standard_output_usd_per_million_tokens": "20.00",
+    "published_price_window_end_utc_date": "2026-11-21",
+    "mandatory_revalidation_no_later_than_utc_date": "2026-11-21",
     "long_context_threshold_input_tokens": 272000,
     "long_context_input_multiplier": "2.0",
     "long_context_output_multiplier": "1.5",
@@ -50,6 +53,7 @@
     "OPENAI_RESPONSES_REQUEST_OR_OUTPUT_SCHEMA_CHANGED",
     "STRUCTURED_OUTPUTS_BEHAVIOR_CHANGED",
     "PRICE_OR_LONG_CONTEXT_RULE_CHANGED",
+    "PUBLISHED_PRICE_WINDOW_EXPIRED",
     "PROMPT_SCHEMA_FIELD_REGISTER_OR_VALIDATOR_CHANGED",
     "PROVIDER_RETENTION_PRIVACY_REGION_OR_SUBPROCESSOR_TERM_CHANGED",
     "ANY_UNSAFE_APPROVAL_OR_COMPONENT_REGRESSION",

@@ -22,3 +22,34 @@ values are not a production-policy decision. A passing suite proves only that
 the offline state oracle produces the frozen expected traces. It does not prove
 VPS uptime, broker connectivity, session coverage, restart success, a compatible
 MT5 build, or Gate 0 completion, and it does not authorize trading.
+
+## Private observation wrapper
+
+`run_private_probe.ps1` adds a capability-limited, append-only observation
+wrapper. It captures a redacted terminal/account identity token, terminal
+connection/build state, tick age, MT5 process start time, Windows boot time and a hash of Windows Time
+status. The wrapper never causes a restart, outage, reconnect or build change;
+those controlled conditions must be performed separately and only when
+authorized. It exposes no order, position, history, symbol-selection, login or
+process-control API.
+
+The eight-event closure matrix is `BASELINE`, observed `DISCONNECT`, healthy
+`RECONNECT`, `PYTHON_RESTART`, `MT5_RESTART`, `WINDOWS_RESTART`, `CLOCK_CHECK`
+and `BUILD_CHECK`. A changed build additionally requires a SHA-256-bound
+compatibility artifact. Missing events, identity drift, an unchanged Windows
+boot timestamp, missing clock evidence, unhealthy reconnect, chain tamper or an
+enabled external Python trading API fail closed.
+
+Private output must be outside the repository, for example:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File .\run_private_probe.ps1 `
+  -Output C:\Gate0Private\VpsFaultMatrix `
+  -Event BASELINE `
+  -ScenarioId VPS-BASELINE-1
+```
+
+Run each event only in its genuine observed state. Never label a normal sample
+as a fault. Keep `PRIVATE_HMAC_KEY.bin`, Windows Time output and
+`vps_probe_records.jsonl` private.

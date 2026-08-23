@@ -7,7 +7,7 @@ payload before a separately authorized caller could transmit anything.
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 import hashlib
 import json
@@ -184,15 +184,223 @@ def validate_response_envelope(response: dict) -> tuple[bool, tuple[str, ...]]:
     if type(output) is not list:
         reasons.append("OUTPUT_NOT_ARRAY")
     else:
+        message_count = 0
+        output_text_count = 0
         for item in output:
+            if type(item) is not dict:
+                reasons.append("INVALID_OUTPUT_ITEM")
+                continue
+            if item.get("type") == "reasoning":
+                continue
             if item.get("type") != "message":
                 reasons.append("TOOL_OR_UNKNOWN_OUTPUT_ITEM")
-            for content in item.get("content", []):
+                continue
+            message_count += 1
+            content_items = item.get("content", [])
+            if type(content_items) is not list:
+                reasons.append("CONTENT_NOT_ARRAY")
+                continue
+            for content in content_items:
+                if type(content) is not dict:
+                    reasons.append("INVALID_CONTENT_ITEM")
+                    continue
                 if content.get("type") == "refusal":
                     reasons.append("REFUSAL")
-                elif content.get("type") != "output_text":
+                elif content.get("type") == "output_text":
+                    output_text_count += 1
+                    if type(content.get("text")) is not str:
+                        reasons.append("OUTPUT_TEXT_NOT_STRING")
+                else:
                     reasons.append("UNKNOWN_CONTENT_ITEM")
+        if message_count != 1:
+            reasons.append("MESSAGE_CARDINALITY")
+        if output_text_count != 1:
+            reasons.append("OUTPUT_TEXT_CARDINALITY")
     return not reasons, tuple(sorted(set(reasons)))
+
+
+def _reject_duplicate_pairs(pairs):
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("duplicate JSON key")
+        value[key] = item
+    return value
+
+
+def _output_text(response: dict) -> str:
+    texts = [
+        content["text"]
+        for item in response.get("output", []) if type(item) is dict
+        for content in item.get("content", []) if type(content) is dict
+        if content.get("type") == "output_text" and type(content.get("text")) is str
+    ]
+    if len(texts) != 1:
+        raise ValueError("exactly one output_text required")
+    return texts[0]
+
+
+def _exact_keys(value, required: set[str]) -> bool:
+    return type(value) is dict and set(value) == required
+
+
+def _json_depth(value) -> int:
+    if type(value) is dict:
+        return 1 + max((_json_depth(item) for item in value.values()), default=0)
+    if type(value) is list:
+        return 1 + max((_json_depth(item) for item in value), default=0)
+    return 0
+
+
+def validate_response_body(response: dict, payload: dict) -> tuple[bool, tuple[str, ...]]:
+    """Validate strict output semantics after the provider envelope is accepted."""
+    reasons: list[str] = []
+    envelope_ok, envelope_reasons = validate_response_envelope(response)
+    reasons.extend(envelope_reasons)
+    if not envelope_ok:
+        return False, tuple(sorted(set(reasons)))
+    try:
+        text = _output_text(response)
+        if len(text.encode("utf-8")) > PROFILE["response_bounds"]["max_body_bytes"]:
+            return False, ("OUTPUT_BODY_TOO_LARGE",)
+        body = json.loads(text, object_pairs_hook=_reject_duplicate_pairs)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return False, ("OUTPUT_JSON_INVALID",)
+    if _json_depth(body) > PROFILE["response_bounds"]["max_json_depth"]:
+        reasons.append("OUTPUT_JSON_TOO_DEEP")
+    top = {"schema_version", "analysis_id", "snapshot_id", "decision", "reason_codes", "summary", "proposal"}
+    if not _exact_keys(body, top):
+        reasons.append("OUTPUT_FIELDS")
+        return False, tuple(sorted(set(reasons)))
+    if body.get("schema_version") != "analyst-runtime-1.0":
+        reasons.append("OUTPUT_SCHEMA_VERSION")
+    if body.get("analysis_id") != payload.get("analysis_id"):
+        reasons.append("ANALYSIS_ID_MISMATCH")
+    if body.get("snapshot_id") != payload.get("snapshot_id"):
+        reasons.append("SNAPSHOT_ID_MISMATCH")
+    decision = body.get("decision")
+    if decision not in {"NO_TRADE", "PROPOSE_TRADE"}:
+        reasons.append("DECISION_INVALID")
+    allowed_reasons = set(OUTPUT_FORMAT["schema"]["properties"]["reason_codes"]["items"]["enum"])
+    reason_codes = body.get("reason_codes")
+    if (type(reason_codes) is not list or not 1 <= len(reason_codes) <= 8
+            or len(set(reason_codes)) != len(reason_codes)
+            or any(type(code) is not str or code not in allowed_reasons for code in reason_codes)):
+        reasons.append("REASON_CODES_INVALID")
+    summary = body.get("summary")
+    if type(summary) is not str or not 1 <= len(summary) <= PROFILE["response_bounds"]["max_summary_characters"]:
+        reasons.append("SUMMARY_INVALID")
+    proposal = body.get("proposal")
+    if decision == "NO_TRADE":
+        if not _exact_keys(proposal, {"kind", "recheck_condition"}):
+            reasons.append("NO_TRADE_PROPOSAL_FIELDS")
+        elif (proposal.get("kind") != "NONE"
+              or proposal.get("recheck_condition") not in {"NEW_COMPLETED_BAR", "MATERIAL_STATE_CHANGE", "AFTER_EVENT_LOCK", "NONE"}):
+            reasons.append("NO_TRADE_PROPOSAL_INVALID")
+        if type(reason_codes) is list and "VALID_SETUP" in reason_codes:
+            reasons.append("NO_TRADE_REASON_CONFLICT")
+    elif decision == "PROPOSE_TRADE":
+        trade_fields = {
+            "kind", "setup_family", "direction", "entry_type", "entry",
+            "invalidation_price", "stop_loss", "targets", "expiry_time_utc",
+            "cancellation_conditions", "confidence", "evidence_refs",
+        }
+        if not _exact_keys(proposal, trade_fields):
+            reasons.append("TRADE_PROPOSAL_FIELDS")
+        else:
+            if proposal.get("kind") != "TRADE":
+                reasons.append("TRADE_PROPOSAL_KIND")
+            if proposal.get("setup_family") != payload.get("candidate_setup_family"):
+                reasons.append("PROPOSAL_FAMILY_MISMATCH")
+            if proposal.get("direction") != payload.get("direction"):
+                reasons.append("PROPOSAL_DIRECTION_MISMATCH")
+            if proposal.get("entry_type") not in {"MARKET_AFTER_CLOSE", "LIMIT", "STOP"}:
+                reasons.append("ENTRY_TYPE_INVALID")
+            allowed_prices = {
+                value for field, value in payload.items()
+                if field.endswith("_price") and type(value) is str
+            }
+            entry = proposal.get("entry")
+            if type(entry) is not dict or entry.get("kind") not in {"SINGLE", "RANGE"}:
+                reasons.append("ENTRY_INVALID")
+            elif entry["kind"] == "SINGLE":
+                if not _exact_keys(entry, {"kind", "price"}) or entry.get("price") not in allowed_prices:
+                    reasons.append("INVENTED_ENTRY_PRICE")
+            elif (not _exact_keys(entry, {"kind", "near_price", "far_price"})
+                  or entry.get("near_price") not in allowed_prices
+                  or entry.get("far_price") not in allowed_prices):
+                reasons.append("INVENTED_ENTRY_PRICE")
+            if proposal.get("invalidation_price") not in allowed_prices or proposal.get("stop_loss") not in allowed_prices:
+                reasons.append("INVENTED_RISK_PRICE")
+            targets = proposal.get("targets")
+            expected_targets = [
+                {"role": "TP1", "price": payload.get("first_target_price")},
+                {"role": "FINAL", "price": payload.get("final_target_price")},
+            ]
+            if targets != expected_targets:
+                reasons.append("TARGET_BINDING")
+            try:
+                expiry = _utc(proposal.get("expiry_time_utc"))
+                snapshot_time = _utc(payload["snapshot_time_utc"])
+                if not snapshot_time < expiry <= snapshot_time + PROFILE["deadlines"]["max_proposal_lifetime_seconds"] * timedelta(seconds=1):
+                    reasons.append("EXPIRY_INVALID")
+            except (KeyError, TypeError, ValueError):
+                reasons.append("EXPIRY_INVALID")
+            conditions = proposal.get("cancellation_conditions")
+            allowed_conditions = set(OUTPUT_FORMAT["schema"]["properties"]["proposal"]["oneOf"][1]["properties"]["cancellation_conditions"]["items"]["enum"])
+            if (type(conditions) is not list or not 1 <= len(conditions) <= 8
+                    or len(set(conditions)) != len(conditions)
+                    or any(item not in allowed_conditions for item in conditions)):
+                reasons.append("CANCELLATION_CONDITIONS_INVALID")
+            confidence = proposal.get("confidence")
+            if type(confidence) is not int or not 0 <= confidence <= 100:
+                reasons.append("CONFIDENCE_INVALID")
+            refs = proposal.get("evidence_refs")
+            if (type(refs) is not list or not 1 <= len(refs) <= 16
+                    or len(set(refs)) != len(refs)
+                    or not set(refs).issubset(set(payload.get("evidence_ids", [])))):
+                reasons.append("EVIDENCE_BINDING")
+        if type(reason_codes) is list and "VALID_SETUP" not in reason_codes:
+            reasons.append("PROPOSAL_REASON_CONFLICT")
+    return not reasons, tuple(sorted(set(reasons)))
+
+
+def evaluate_chronological_exchange(
+    payload: dict,
+    response: dict,
+    request_time: datetime,
+    accept_time: datetime,
+    state_fingerprint_at_send: str,
+    state_fingerprint_at_accept: str,
+    consumed_snapshot_ids: set[str],
+) -> dict:
+    """Offline, fail-closed acceptance oracle; never grants trading authority."""
+    reasons: list[str] = []
+    healthy, payload_reasons = validate_payload(payload, request_time)
+    reasons.extend(payload_reasons)
+    if accept_time < request_time:
+        reasons.append("CLOCK_REVERSED")
+    try:
+        age = accept_time.astimezone(UTC) - _utc(payload["snapshot_time_utc"])
+        if age.total_seconds() < 0 or age.total_seconds() > PROFILE["deadlines"]["max_snapshot_age_seconds_at_accept"]:
+            reasons.append("RESPONSE_STALE")
+    except (KeyError, TypeError, ValueError):
+        reasons.append("RESPONSE_STALE")
+    if state_fingerprint_at_send != state_fingerprint_at_accept:
+        reasons.append("LOCAL_STATE_CHANGED")
+    snapshot_id = payload.get("snapshot_id")
+    if snapshot_id in consumed_snapshot_ids:
+        reasons.append("SNAPSHOT_REPLAY")
+    body_ok, body_reasons = validate_response_body(response, payload)
+    reasons.extend(body_reasons)
+    accepted = healthy and body_ok and not reasons
+    if accepted:
+        consumed_snapshot_ids.add(snapshot_id)
+    return {
+        "advisory_accepted": accepted,
+        "reason_codes": tuple(sorted(set(reasons))),
+        "trading_authorized": False,
+    }
 
 
 def reserve_standard_cost(input_token_upper_bound: int) -> Decimal:
