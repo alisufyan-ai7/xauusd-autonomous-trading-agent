@@ -1,14 +1,14 @@
 # Owner Open-Policy Decision Packet — Gate 0
 
-**Status:** PARTIALLY APPROVED under D-0074; margin option remains open  
+**Status:** FULL BUNDLE APPROVED under D-0074/D-0075 for specification/testing  
 **Scope:** Strategy volume cap, margin reserve, emergency handling, pause/resumption, and operator alerts  
 **Trading authorization:** NONE; external Python trading must remain disabled
 
 **Recorded owner selection (2026-08-23):** `V1 + E1 + P1 + A1` for
 specification and testing only; automatic closure of unknown exposure `NO`;
 primary alert `EMAIL`; secondary alert `TELEGRAM_PUSH`; acknowledgement role
-`OWNER_DESIGNATED_ACKNOWLEDGER`. `M1` is not approved pending confirmation of
-its exact numeric thresholds. The personal identity-to-role mapping is retained
+`OWNER_DESIGNATED_ACKNOWLEDGER`. M1 was subsequently approved under D-0075 with
+the exact thresholds in section 3. The personal identity-to-role mapping is retained
 outside the sanitized repository record.
 
 ## 1. How to decide
@@ -43,7 +43,7 @@ Both the current-state test and the stressed-state test must pass. `Projected ma
 
 For every option: missing/stale margin inputs, a failed `order_calc_margin`, currency ambiguity, non-finite values, account-fingerprint change, or an unfrozen equity shock makes the result `UNKNOWN` and rejects new risk. The higher of broker-reported projected margin and the stressed calculation controls. Leverage is never used to relax a cash-loss cap.
 
-**Owner selection:** `OPEN — M1 numeric confirmation requested`
+**Owner selection:** `M1 — APPROVED FOR SPECIFICATION AND TESTING (D-0075)`
 
 ## 4. Decision 3 — Emergency handling beyond quarantine
 
@@ -116,8 +116,9 @@ For a first separately approved execution release, the internally consistent con
 
 This means a 0.01-lot absolute cap, high current-and-stressed margin reserve, no automated broker action in emergencies, human-gated resumption, and dual-path critical alerting. The bundle intentionally prefers missed trades and operator intervention over automated recovery. It does not resolve the separate dependencies for costs/gap/slippage calibration, account-specific sessions, broker-request semantics, attribution, testing, or execution authorization.
 
-Current approved subset: `V1 + M_OPEN + E1 + P1 + A1`. It is not a complete
-bundle until the owner explicitly approves or modifies the margin rule.
+Approved bundle: `V1 + M1 + E1 + P1 + A1` for specification and testing only.
+It authorizes no implementation, broker request, demo/live trading, automatic
+unknown-exposure closure, or external-Python enablement.
 
 ## 8. Owner response block
 

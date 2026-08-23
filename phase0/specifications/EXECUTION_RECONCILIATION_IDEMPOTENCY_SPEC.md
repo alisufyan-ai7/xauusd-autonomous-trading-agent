@@ -1,8 +1,8 @@
 # Execution, Reconciliation, and Idempotency State-Machine Specification
 
-**Status:** Phase 0 deterministic baseline frozen; broker-specific mappings remain validation dependencies  
-**Version:** 1.0.1  
-**Date:** 2026-08-12  
+**Status:** Phase 0 deterministic baseline plus E1/P1/A1 overlay frozen; broker-specific mappings remain validation dependencies  
+**Version:** 1.0.2  
+**Date:** 2026-08-23  
 **Authorization boundary:** External Python trading remains disabled. This document specifies later behavior only; it authorizes no `order_send`, order modification/cancellation, position close, demo trading, or live trading.
 
 ## 1. Safety invariants
@@ -143,6 +143,28 @@ After ledger integrity and broker reconciliation succeed, the persisted-state ou
 
 Any ledger/hash/schema corruption overrides this table and produces `INCIDENT`. Any account/symbol/ownership/lease/broker mismatch overrides a non-incident outcome and produces `QUARANTINED`. No restart outcome grants broker-call authority; `APPROVED` must pass a new `APPROVED -> READY` preflight after a separately authorized later gate.
 
+### 7.1 Owner-approved E1/P1/A1 overlay
+
+Under E1, unexpected, conflicting, unknown, unprotected or policy-breaching
+exposure blocks new risk, preserves evidence, triggers `CRITICAL` alerting and
+continues read-only reconciliation. The system emits no cancel, modify or close
+request. Automatic closure of unknown exposure is prohibited; only a human may
+decide a broker action after independently verifying identity and state.
+
+Under P1, no risk or safety pause clears automatically. A designated human may
+create a new authorization epoch only after the trigger-specific minimum hold,
+complete reconciliation, required diagnostics, alert acknowledgement and a
+fresh preflight all pass. The old proposal/intent remains terminal and cannot
+be revived by acknowledgement, restart, deployment or time boundary.
+
+Under A1, every alert is appended locally. `CRITICAL` alerts additionally use
+`EMAIL` and `TELEGRAM_PUSH`, repeat every five minutes until acknowledged, and
+require acknowledgement within 15 minutes during an execution window.
+Warnings require acknowledgement within four hours; informational events enter
+a daily digest. The sanitized acknowledgement role is
+`OWNER_DESIGNATED_ACKNOWLEDGER`. Channel or acknowledgement failure preserves
+the fail-closed state and can never restore or increase risk authority.
+
 ## 8. Frozen preimplementation test vectors
 
 The later deterministic harness must prove, without a broker call:
@@ -170,6 +192,10 @@ Additional mandatory vectors:
 18. restart from every persisted state has one deterministic fail-closed outcome;
 19. clock rollback preserves sequence ordering and blocks freshness-dependent action;
 20. exit volume exceeding reconciled remaining volume is rejected before any call.
+21. E1 emergency handling produces zero cancel/modify/close requests and never automatically closes unknown exposure;
+22. P1 rejects resumption when any hold, reconciliation, diagnostic, acknowledgement, preflight, new-epoch or old-intent-terminal condition is absent;
+23. A1 emits both configured off-host routes, repeats at five-minute boundaries and treats minute 15 as the critical acknowledgement deadline;
+24. either alert-channel failure or missing/late acknowledgement cannot enable execution or increase risk.
 
 Acceptance for specification freeze: all transitions have total deterministic handling; forbidden transitions are machine-enumerable; every uncertain state prohibits new risk; golden, property, mutation, crash-point, and concurrency tests are specified with expected outcomes. Broker-specific behavior remains for later demo gate and is not inferred.
 
@@ -178,7 +204,8 @@ Acceptance for specification freeze: all transitions have total deterministic ha
 - Exact MT5 retcode-to-event table and account-specific partial-fill behavior.
 - Bounded reconciliation intervals/timeouts derived from measured VPS/broker latency.
 - Exact magic/comment encoding limits and collision strategy on the target account.
-- Owner decision for emergency handling beyond quarantine/alert; automatic closure is not approved.
-- Retention, operator acknowledgement, incident severity, and manual recovery/runbook rules.
+- Account-specific broker observation and human emergency runbook evidence under E1; no automatic closure is approved.
+- Alert-channel delivery, retry/deduplication, outage, acknowledgement and escalation evidence under A1.
+- Retention details and pseudonymous acknowledgement-to-person mapping outside source control.
 
 These dependencies may narrow supported behavior or keep execution disabled. They may not weaken single-attempt fencing, uncertainty quarantine, unique attribution, broker-authoritative reconciliation, or the prohibition on unapproved risk increase.

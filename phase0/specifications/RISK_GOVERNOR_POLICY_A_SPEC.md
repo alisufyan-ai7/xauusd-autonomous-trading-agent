@@ -1,8 +1,8 @@
 # Deterministic Risk Governor Mathematics — Policy A
 
-**Document status:** Policy constants and core mathematics frozen; enumerated dependencies remain open  
+**Document status:** Policy constants, V1/M1 controls and core mathematics frozen; enumerated evidence dependencies remain open  
 **Scope:** Mathematics and test vectors only; no order submission or trading implementation  
-**Policy authority:** D-0045 / owner-approved Policy A  
+**Policy authority:** D-0045 and D-0075 / owner-approved Policy A plus V1/M1  
 **Authorization:** Gate 0 incomplete; external Python trading remains disabled
 
 ## 1. Safety invariants
@@ -30,6 +30,15 @@
 Controlled runtime inputs include current balance `B(t)`, current equity `E(t)`, verified cash-flow ledger, strategy inception baseline, daily/weekly boundary snapshots, owned open positions, owned pending orders, current symbol specifications, prices, spread, costs, and conservative slippage/gap allowances. Time boundaries use one frozen project timezone (recommended UTC); changing it requires a controlled specification decision.
 
 The seven Policy A constants above are owner-approved and normative. They may not be changed by configuration, a model response, or an implementation default. Runtime inputs and their provenance are not policy constants. Until each open methodology in section 12 is frozen, a value dependent on that methodology is `UNKNOWN` and new risk is rejected; an implementation must not substitute zero.
+
+Owner-approved operational risk constants under D-0075 are:
+
+| Symbol | Definition | Value |
+|---|---|---:|
+| `V_cap` | absolute strategy volume cap | `0.01 lot` |
+| `ML_min` | minimum projected margin level, current and stressed | `1,000%` |
+| `FM_min` | minimum projected free margin / projected equity, current and stressed | `90%` |
+| `k_margin` | incremental-margin stress multiplier | `2.0x` |
 
 ## 3. Per-trade risk cap
 
@@ -63,7 +72,7 @@ Deterministic volume:
 
 If the set is empty, return `REJECT_RISK_BELOW_MIN_VOLUME`. Model-proposed volume is ignored as authority; at most it may be logged as non-authoritative input.
 
-`strategy_volume_cap` is not established by Policy A and may not default to broker maximum. Until it is frozen, it is an open dependency and no sized approval may be emitted. Grid enumeration starts at broker `volume_min`, advances by exact `volume_step`, and never rounds upward. The selected result must be re-priced and re-tested after normalization rather than inferred solely by division.
+Under V1, `strategy_volume_cap = min(0.01 lot, account_validated_cap)` and never defaults to broker maximum. Grid enumeration starts at the current broker `volume_min`, advances by exact `volume_step`, and never rounds upward. If the broker minimum exceeds the cap, 0.01 lot is invalid, or no grid volume passes every other limit, reject. The selected result must be re-priced and re-tested after normalization rather than inferred solely by division.
 
 An order without a valid protective stop, or whose stop cannot be accepted under current stop/freeze rules, is rejected. No martingale, grid/recovery expansion, failed-trade averaging, or confidence override is permitted.
 
@@ -80,6 +89,32 @@ Admission requires:
 `L_concurrent_before + L_plan(candidate) <= C`
 
 Confirmed stop movement may reduce `L_commit_i`; unconfirmed requested modifications do not. Profits on other positions do not offset planned loss. Unknown/unowned exposure prevents calculation and produces `QUARANTINE_UNKNOWN_EXPOSURE`.
+
+### 5.1 M1 projected margin reserve
+
+Let `E_cur` be projected equity after the candidate under the current
+calculation, `U_before` the reconciled used margin before the candidate, and
+`DeltaM` the broker-calculated incremental margin for the candidate. Define:
+
+- `U_cur = U_before + DeltaM`
+- `F_cur = E_cur - U_cur`
+- `E_stress = E_cur - (S_spread + S_slippage + S_gap + S_cost)`
+- `U_stress = U_before + 2.0 * DeltaM`
+- `F_stress = E_stress - U_stress`
+
+For each state `x` in `{cur, stress}`, require both
+`E_x / U_x * 100 >= 1000%` when `U_x > 0`, and
+`F_x >= 0.90 * E_x`. When `U_x = 0`, the margin-level ratio is not a blocker,
+but the free-margin rule still applies. Non-positive projected equity; negative
+margin/stress; missing, stale, non-finite, currency-ambiguous or
+fingerprint-inconsistent inputs; or a failed broker margin calculation produce
+`UNKNOWN` and reject new risk.
+
+The larger conservative used-margin result and the smaller conservative
+free-margin result control if broker and local projections differ. M1 is a
+necessary gate only. It cannot relax or override per-trade, concurrent, daily,
+weekly, drawdown, pause, ownership, volume, session, event, cost or execution
+limits, and an M1 pass never authorizes a trade.
 
 ## 6. Cash-flow-normalized adjusted strategy equity
 
@@ -143,7 +178,7 @@ When `Q_streak >= 3.00`, enter `PAUSED_FULL_RISK_EQUIVALENTS`. No new risk is al
 
 ## 9. Decision order and result
 
-The Governor evaluates: authorization/kill switch → ownership/reconciliation → freshness → session/news/spread state → proposal semantics → symbol/order constraints → per-trade sizing → concurrent risk → daily loss → weekly loss → drawdown → loss-equivalent pause → margin/execution preconditions. All must pass the same immutable snapshot. Any state change before submission requires re-evaluation.
+The Governor evaluates: authorization/kill switch → ownership/reconciliation → freshness → session/news/spread state → proposal semantics → symbol/order constraints → V1/per-trade sizing → concurrent risk → daily loss → weekly loss → drawdown → loss-equivalent pause → M1 margin reserve → execution preconditions. All must pass the same immutable snapshot. Any state change before submission requires re-evaluation.
 
 The output is a typed decision (`APPROVE_SIZED_PROPOSAL`, `REJECT`, or `QUARANTINE`) with reason codes, input snapshot hash, policy version, formula version, computed values and audit timestamp. Approval is not an order and cannot directly call MT5.
 
@@ -220,7 +255,7 @@ Unless specified, USD values are exact, state is fresh/reconciled, no news/sessi
 
 ## 12. Freeze boundary and remaining dependencies
 
-The owner-approved constants, applicable-capital formula, adjusted-equity method, drawdown method, prospective-limit inequalities, no-double-counting rule, and fail-closed invariants in this document are frozen for Phase 0 specification/testing. They do not authorize implementation or trading.
+The owner-approved constants, V1/M1 thresholds, applicable-capital formula, adjusted-equity method, drawdown method, prospective-limit inequalities, no-double-counting rule, and fail-closed invariants in this document are frozen for Phase 0 specification/testing. They do not authorize implementation or trading.
 
 The following are genuine dependencies and are **not** silently frozen here:
 
@@ -228,10 +263,8 @@ The following are genuine dependencies and are **not** silently frozen here:
 |---|---|---|
 | Exact trading-day and trading-week boundaries/timezone | engineering specification | daily/weekly state cannot be production-authoritative |
 | Commission, swap, slippage and gap-buffer formula/data source | research + engineering specification | no `L_plan` approval |
-| Strategy volume cap independent of broker maximum | owner decision or controlled risk specification | no sized approval |
 | Exact multi-leg, partial-close and broker-adjustment P/L attribution | engineering specification | ambiguous instance completion blocks risk |
-| Pause-resumption authority and procedure | owner decision | pause cannot resume automatically |
-| Margin reserve and stress rule | owner decision + diagnostic evidence | no final margin pass |
+| Account-specific margin calculation and adverse-stress evidence | diagnostic + research | M1 inputs remain `UNKNOWN`; no final margin pass |
 | Account/symbol calculation evidence, including asymmetric tick value | diagnostic | no account-specific sizing approval |
 | Canonical reason-code/state enums shared with execution spec | engineering specification | interface not finally hashable |
 

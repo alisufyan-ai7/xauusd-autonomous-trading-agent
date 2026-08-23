@@ -1,7 +1,7 @@
 # Operational Policy Selection — Partial Gate 0 Freeze
 
 **Decision:** D-0074  
-**Status:** V1/E1/P1/A1 accepted for specification and testing; margin open  
+**Status:** V1/M1/E1/P1/A1 accepted for specification and testing  
 **Authorization:** no demo/live trading; external Python trading disabled
 
 ## Accepted controls
@@ -40,9 +40,9 @@ digest. The sanitized acknowledgement role is
 `OWNER_DESIGNATED_ACKNOWLEDGER`; personal routing data stays outside source
 control. Channel failure must never restore or increase risk authority.
 
-## Open margin decision
+## M1 — margin reserve and stress
 
-M1 is not accepted yet. Its proposed deterministic rule is:
+M1 is accepted under D-0075. Its deterministic rule is:
 
 1. Projected margin level must be at least `1000%` and projected free margin
    must be at least `90%` of projected equity, under both current and stressed
@@ -52,7 +52,8 @@ M1 is not accepted yet. Its proposed deterministic rule is:
 
 The broker calculation and current verified account/symbol fingerprint remain
 mandatory. Missing, stale, non-finite or ambiguous inputs produce `UNKNOWN` and
-reject new risk. M1 becomes normative only after explicit owner approval.
+reject new risk. M1 is subordinate to every other Risk Governor limit;
+satisfying it alone never authorizes a proposal or trade.
 
 ## Claim limit
 
