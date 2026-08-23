@@ -7,6 +7,12 @@ R20 removes the Linux-only `/tmp` override from private-probe test fixtures and
 adds an AST regression check that rejects a hard-coded `/tmp` directory. Python
 now selects its platform-native temporary directory on Windows and Linux.
 
+R21 removes the remaining wall-clock-resolution dependency from the synthetic
+full-matrix test. Its fixture clock advances deterministically by one second,
+while the production capture still uses the real UTC clock and the oracle still
+requires strictly increasing observation times. The fail-closed chronology
+rule is unchanged.
+
 Covered: append-only record hashing, HMAC-redacted identity, private-path
 enforcement, baseline/outage/reconnect/Python/MT5/Windows/clock/build event
 inventory, Windows boot change, Windows Time status hash, healthy reconnect,

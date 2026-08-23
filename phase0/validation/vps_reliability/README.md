@@ -27,6 +27,10 @@ All test-only temporary directories are platform-native. The regression suite
 rejects a Linux-only `/tmp` override so this package remains runnable on the
 Windows VPS.
 
+The synthetic full-matrix fixture uses a deterministic step clock so its result
+does not depend on host wall-clock resolution. Production observations retain
+real UTC timestamps and strict-increase validation.
+
 ## Private observation wrapper
 
 `run_private_probe.ps1` adds a capability-limited, append-only observation

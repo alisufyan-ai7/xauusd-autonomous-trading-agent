@@ -2,7 +2,9 @@ import ast
 import json
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from unittest.mock import patch
 
 from phase0.validation.vps_reliability.private_probe_oracle import verify_private_matrix
 
@@ -44,19 +46,28 @@ class PrivateProbeTests(unittest.TestCase):
 
     def test_append_chain_and_full_matrix(self):
         probe=self._module()
+        class StepClock:
+            current=datetime.now(timezone.utc)+timedelta(seconds=1)
+            @classmethod
+            def now(cls,tz=None):
+                value=cls.current
+                cls.current+=timedelta(seconds=1)
+                return value if tz is None else value.astimezone(tz)
         with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"private"; output.mkdir()
             clock=output/"clock.txt"; clock.write_text("Source: fixture\n",encoding="utf-8")
             events=["BASELINE","DISCONNECT","RECONNECT","PYTHON_RESTART","MT5_RESTART","WINDOWS_RESTART","CLOCK_CHECK","BUILD_CHECK"]
             current_boot="2025-08-23T00:00:00Z"; current_mt5="2025-08-23T01:00:00Z"
-            for index,event in enumerate(events):
-                FakeAPI.connected=event!="DISCONNECT"
-                if event=="MT5_RESTART": current_mt5="2025-08-23T02:00:00Z"
-                if event=="WINDOWS_RESTART": current_boot="2026-01-24T00:00:00Z"; current_mt5="2026-01-24T00:05:00Z"
-                probe.append_probe(FakeAPI,output,event=event,scenario_id=f"S-{index}",os_boot_utc=current_boot,mt5_start_utc=current_mt5,
-                                   w32tm_status_file=clock if event=="CLOCK_CHECK" else None,compatibility_sha256=None)
+            with patch.object(probe,"datetime",StepClock):
+                for index,event in enumerate(events):
+                    FakeAPI.connected=event!="DISCONNECT"
+                    if event=="MT5_RESTART": current_mt5="2025-08-23T02:00:00Z"
+                    if event=="WINDOWS_RESTART": current_boot="2026-01-24T00:00:00Z"; current_mt5="2026-01-24T00:05:00Z"
+                    probe.append_probe(FakeAPI,output,event=event,scenario_id=f"S-{index}",os_boot_utc=current_boot,mt5_start_utc=current_mt5,
+                                       w32tm_status_file=clock if event=="CLOCK_CHECK" else None,compatibility_sha256=None)
             records=[json.loads(line) for line in (output/"vps_probe_records.jsonl").read_text().splitlines()]
-            self.assertEqual("PASS",verify_private_matrix(records)["status"])
+            result=verify_private_matrix(records)
+            self.assertEqual("PASS",result["status"],result["reasons"])
 
     def test_chain_tamper_and_incomplete_matrix_fail_closed(self):
         probe=self._module()
