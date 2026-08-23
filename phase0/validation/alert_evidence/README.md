@@ -8,7 +8,9 @@ Later, an operator-approved delivery drill must send the same canary through
 email and Telegram push, preserve hashed transport receipts, and record the
 designated acknowledgement within 15 minutes. The offline verifier rejects a
 missing path, mismatched canary, duplicate channel, invalid chronology, late
-delivery or late acknowledgement. It never restores risk authority.
+delivery or late acknowledgement. It also requires a SHA-256-bound record from
+the append-only local audit chain; off-host delivery alone cannot satisfy A1.
+It never restores risk authority.
 
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass `

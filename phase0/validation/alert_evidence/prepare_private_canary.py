@@ -36,6 +36,7 @@ def main() -> int:
                    "claim_limit":"Offline canary preparation only; nothing was sent."}
         template={"schema":"a1-private-delivery-evidence-1.0","created_utc":created,
                   "canary_sha256":digest,"designated_ack_role":"OWNER_DESIGNEE",
+                  "local_audit_record_sha256":None,"local_audit_chain_valid":False,
                   "receipts":[],"acknowledged_utc":None,"ack_canary_sha256":digest}
         (output/"PRIVATE_CANARY.json").write_text(json.dumps(challenge,indent=2,sort_keys=True)+"\n",encoding="utf-8")
         (output/"PRIVATE_RECEIPT_TEMPLATE.json").write_text(json.dumps(template,indent=2,sort_keys=True)+"\n",encoding="utf-8")
@@ -46,4 +47,3 @@ def main() -> int:
 
 
 if __name__=="__main__": raise SystemExit(main())
-

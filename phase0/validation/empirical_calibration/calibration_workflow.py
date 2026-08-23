@@ -49,8 +49,8 @@ class Observation:
             raise ValueError("invalid partition")
         if self.session not in SESSIONS or self.event_phase not in PHASES:
             raise ValueError("invalid stratum")
-        if self.event_phase == "POST_EVENT" and not self.event_id:
-            raise ValueError("post-event row requires event_id")
+        if self.event_phase in {"EVENT", "POST_EVENT"} and not self.event_id:
+            raise ValueError("event and post-event rows require event_id")
         numeric = (
             self.spread_points, self.spread_baseline_points,
             self.adverse_latency_move_points, self.gap_points,
@@ -137,17 +137,32 @@ def _quantile(values: list[float], probability: float) -> float:
 def _complete_recoveries(
     rows: tuple[Observation, ...], *, ratio_limit: float, consecutive: int,
     max_gap_seconds: int,
-) -> list[int]:
+) -> tuple[list[int], list[str]]:
+    markers: dict[str, list[datetime]] = {}
     by_event: dict[str, list[Observation]] = {}
     for row in rows:
+        if row.event_phase == "EVENT" and row.event_id:
+            markers.setdefault(row.event_id, []).append(row.observed_utc)
         if row.event_phase == "POST_EVENT" and row.event_id:
             by_event.setdefault(row.event_id, []).append(row)
     durations: list[int] = []
-    for event_rows in by_event.values():
+    reasons: list[str] = []
+    for event_id, event_rows in by_event.items():
         event_rows.sort(key=lambda item: item.observed_utc)
-        start = event_rows[0].observed_utc
+        event_markers = markers.get(event_id, [])
+        if len(event_markers) != 1:
+            reasons.append("EVENT_MARKER_MISSING_OR_DUPLICATE")
+            continue
+        start = event_markers[0]
+        first_gap = (event_rows[0].observed_utc - start).total_seconds()
+        if first_gap <= 0:
+            reasons.append("POST_EVENT_NOT_AFTER_EVENT")
+            continue
+        if first_gap > max_gap_seconds:
+            reasons.append("POST_EVENT_INITIAL_GAP")
+            continue
         streak = 0
-        previous: datetime | None = None
+        previous: datetime | None = start
         for row in event_rows:
             if previous is not None \
                     and (row.observed_utc - previous).total_seconds() > max_gap_seconds:
@@ -163,7 +178,7 @@ def _complete_recoveries(
             if streak >= consecutive:
                 durations.append(int((row.observed_utc - start).total_seconds()))
                 break
-    return durations
+    return durations, reasons
 
 
 def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowResult:
@@ -206,11 +221,12 @@ def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowR
     post_rows = tuple(row for row in training if row.event_phase == "POST_EVENT")
     if len(post_rows) < plan.minimum_post_event_rows:
         reasons.append("POST_EVENT_SAMPLE_INSUFFICIENT")
-    recoveries = _complete_recoveries(
-        post_rows, ratio_limit=plan.normalization_ratio_limit,
+    recoveries, recovery_reasons = _complete_recoveries(
+        training, ratio_limit=plan.normalization_ratio_limit,
         consecutive=plan.consecutive_normal_rows,
         max_gap_seconds=plan.max_post_event_gap_seconds,
     )
+    reasons.extend(recovery_reasons)
     if len(recoveries) < plan.minimum_complete_events:
         reasons.append("COMPLETE_EVENT_RECOVERY_INSUFFICIENT")
     if reasons:

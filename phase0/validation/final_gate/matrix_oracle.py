@@ -45,6 +45,38 @@ CLAIM_PROVENANCE = {
     "ANALYST_OFFLINE_CONTRACT": "SANITIZED_REPORT",
     "LIVE_CHRONOLOGICAL_ANALYST": "SANITIZED_HASH_RECEIPT",
 }
+FROZEN_ADMITTED_RECEIPTS = {
+    "READ_ONLY_BASELINE_REAL": (
+        "phase0/evidence/VPS_DIAGNOSTIC_EVIDENCE_VALIDATION_2026-08-12.md",
+        "8ca4608069f933d3b5c8dadff0a6a2665540f3ed384298aa4fbab99bd6f38478",
+        "SANITIZED_HASH_RECEIPT",
+    ),
+    "POLICY_SPEC_AND_OFFLINE": (
+        "phase0/validation/operational_policy/VALIDATION_REPORT_2026-08-23.md",
+        "69d39b9f81e65dec404a9863e3c3feb587a9f67012d94d127b7bf099d8345370",
+        "SANITIZED_REPORT",
+    ),
+    "OFFICIAL_EVENT_GUARD_REAL": (
+        "phase0/publication/GATE0_CLOSURE_STATUS_2026-08-23_R18.json",
+        "536d16ad570ce33f55a017e47d62985c99fe22a5d9fa26d125a3511c5772cf65",
+        "SANITIZED_REPORT",
+    ),
+    "EXHAUSTIVE_SETUP_CORPUS": (
+        "phase0/validation/setup_features/VALIDATION_REPORT_2026-08-23_R4.md",
+        "cfc779a0ecf81e87c21cd1201dffdebca5ad4276c1b9c5af8c8a05c54b1b2714",
+        "SANITIZED_REPORT",
+    ),
+    "LIVE_MODEL_BENCHMARK": (
+        "phase0/benchmark/openai_analyst/SECOND_LIVE_BENCHMARK_EVALUATION_2026-08-23.md",
+        "4e092b22ac12787f632001f8a8eb17c0e5a9321e657c77b953a32b2e683169a2",
+        "SANITIZED_HASH_RECEIPT",
+    ),
+    "ANALYST_OFFLINE_CONTRACT": (
+        "phase0/validation/analyst_runtime/VALIDATION_REPORT_2026-08-23_R2.md",
+        "5e49d6be163f62777edfd09e52a977b25f09d8c93cd981459df33a839f507234",
+        "SANITIZED_REPORT",
+    ),
+}
 REQUIRED_IDS = set(REQUIRED_CLAIMS)
 HEX = re.compile(r"^[0-9a-f]{64}$")
 SAFE_PATH = re.compile(r"^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$")
@@ -91,6 +123,9 @@ def _receipt_reasons(
         reasons.append(f"{item_id}_ARTIFACT_HASH_MISMATCH")
     if receipt.get("evidence_status") != "ADMITTED":
         reasons.append(f"{item_id}_EVIDENCE_NOT_ADMITTED")
+    if isinstance(claim, str) and (path, digest, receipt.get("provenance")) \
+            != FROZEN_ADMITTED_RECEIPTS.get(claim):
+        reasons.append(f"{item_id}_RECEIPT_NOT_IN_FROZEN_REGISTRY")
     if not _utc(receipt.get("observed_utc")):
         reasons.append(f"{item_id}_OBSERVED_TIME_INVALID")
     if receipt.get("private_source") is True \
@@ -109,7 +144,7 @@ def evaluate_matrix(
     payload: Mapping[str, Any], artifact_hashes: Mapping[str, str],
 ) -> MatrixResult:
     reasons: list[str] = []
-    if payload.get("schema_version") != "gate0-final-evidence-matrix-1.1":
+    if payload.get("schema_version") != "gate0-final-evidence-matrix-1.2":
         reasons.append("SCHEMA_INVALID")
     if payload.get("trading_authorized") is not False:
         reasons.append("TRADING_AUTHORIZATION_INVALID")

@@ -139,39 +139,74 @@ def scheduled_open(payload: dict[str, Any], observed_utc: str) -> bool:
     return False
 
 
-def verify_observations(payload: dict[str, Any], observations: list[dict[str, Any]]) -> dict[str, Any]:
+def verify_observations(
+    payload: dict[str, Any], observations: list[dict[str, Any]], *,
+    expected_boundary_ids: tuple[str, ...],
+) -> dict[str, Any]:
     if not observations:
         return {"status": "FAIL_CLOSED", "reasons": ["NO_BOUNDARY_OBSERVATIONS"]}
     reasons: list[str] = []
+    if (not expected_boundary_ids or any(not isinstance(item, str) or not item
+                                         for item in expected_boundary_ids)
+            or len(expected_boundary_ids) != len(set(expected_boundary_ids))):
+        reasons.append("EXPECTED_BOUNDARY_INVENTORY_INVALID")
+    expected = set(expected_boundary_ids)
     phases: dict[str, set[str]] = {}
     prior = "0" * 64
-    for row in observations:
+    previous_observed: datetime | None = None
+    identity_token: str | None = None
+    for index, row in enumerate(observations):
+        if not isinstance(row, dict):
+            reasons.append("OBSERVATION_SCHEMA_INVALID")
+            continue
         encoded = json.dumps({k: v for k, v in row.items() if k != "record_sha256"}, sort_keys=True, separators=(",", ":")).encode()
         actual = hashlib.sha256(encoded).hexdigest()
         if row.get("prior_record_sha256") != prior or row.get("record_sha256") != actual:
             reasons.append("HASH_CHAIN_INVALID")
             break
         prior = actual
+        if (row.get("schema") != "xauusd-private-boundary-observation-1.0"
+                or row.get("sequence") != index):
+            reasons.append("OBSERVATION_SCHEMA_INVALID")
         boundary_id = row.get("boundary_id")
         phase = row.get("phase")
         if not isinstance(boundary_id, str) or phase not in {"BEFORE", "INSIDE", "AFTER"}:
             reasons.append("BOUNDARY_LABEL_INVALID")
             continue
         phases.setdefault(boundary_id, set()).add(phase)
+        token = row.get("identity_token")
+        if not SHA256.fullmatch(str(token or "")):
+            reasons.append("IDENTITY_TOKEN_INVALID")
+        elif identity_token is None:
+            identity_token = token
+        elif token != identity_token:
+            reasons.append("IDENTITY_DRIFT")
         if row.get("tradeapi_disabled") is not True:
             reasons.append("EXTERNAL_PYTHON_TRADING_NOT_DISABLED")
         if row.get("connected") is not True:
             reasons.append("TERMINAL_DISCONNECTED")
+        try:
+            observed = _utc(row["observed_utc"])
+        except (KeyError, TypeError, ValueError):
+            reasons.append("OBSERVATION_TIME_INVALID")
+            continue
+        if previous_observed is not None and observed <= previous_observed:
+            reasons.append("OBSERVATION_TIME_NOT_STRICTLY_INCREASING")
+        previous_observed = observed
         expected_open = scheduled_open(payload, row["observed_utc"])
+        if expected_open != (phase in {"BEFORE", "AFTER"}):
+            reasons.append("BOUNDARY_PHASE_TIME_MISMATCH")
         fresh_tick = row.get("connected") is True and isinstance(row.get("tick_age_seconds"), (int, float)) and -2 <= row["tick_age_seconds"] <= 30
         if expected_open != fresh_tick:
             reasons.append("SCHEDULE_TICK_DISCREPANCY")
     if any(value != {"BEFORE", "INSIDE", "AFTER"} for value in phases.values()):
         reasons.append("BOUNDARY_PHASE_INCOMPLETE")
+    if set(phases) != expected:
+        reasons.append("EXPECTED_BOUNDARY_INVENTORY_INCOMPLETE")
     return {
         "status": "PASS" if not reasons else "FAIL_CLOSED",
         "reasons": sorted(set(reasons)),
-        "boundaries_complete": len(phases),
+        "boundaries_complete": len(phases) if set(phases) == expected else 0,
         "final_record_sha256": prior,
         "claim_limit": "Point-in-time session evidence only; not trading authorization.",
     }

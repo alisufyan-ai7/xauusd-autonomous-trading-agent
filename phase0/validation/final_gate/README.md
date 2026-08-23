@@ -5,6 +5,10 @@ only when every frozen claim has exactly one admitted, typed receipt whose
 SHA-256 matches a supplied sanitized repository artifact. Editing status text
 alone cannot promote an item. Requirements, provenance, safe relative paths,
 private hash-only publication, timestamps and safety guards are all checked.
+R26 additionally freezes the exact six already admitted receipt tuples. A new
+well-formed receipt cannot promote a pending claim until its claim-specific
+evidence has been independently reviewed and added by a later controlled
+Decision Log revision.
 
 ```text
 python -m unittest -v test_matrix_oracle.py

@@ -46,7 +46,7 @@ def capture(api: Any, output: Path, boundary_id: str, phase: str) -> dict[str,An
     if not key_path.exists(): key_path.write_bytes(secrets.token_bytes(32))
     key=key_path.read_bytes()
     if len(key)!=32: raise ValueError("private key invalid")
-    path=output/"session_boundary_records.jsonl"; _,prior=chain_tail(path)
+    path=output/"session_boundary_records.jsonl"; sequence,prior=chain_tail(path)
     if not api.initialize(): raise ValueError(f"MT5 attach failed: {api.last_error()}")
     try:
         terminal=plain(api.terminal_info()); account=plain(api.account_info())
@@ -59,7 +59,8 @@ def capture(api: Any, output: Path, boundary_id: str, phase: str) -> dict[str,An
         raise ValueError("required read-only snapshot missing")
     tick_age=observed.timestamp()-tick.get("time_msc",0)/1000 if tick.get("time_msc") else None
     identity=hmac.new(key,f"{account.get('login')}|{account.get('server')}|XAUUSD".encode(),hashlib.sha256).hexdigest()
-    row={"schema":"xauusd-private-boundary-observation-1.0","boundary_id":boundary_id,"phase":phase,
+    row={"schema":"xauusd-private-boundary-observation-1.0","sequence":sequence,
+         "boundary_id":boundary_id,"phase":phase,
          "observed_utc":observed.isoformat().replace("+00:00","Z"),"connected":terminal.get("connected"),
          "tradeapi_disabled":True,"tick_age_seconds":round(tick_age,3) if tick_age is not None else None,
          "identity_token":identity,"terminal_build":terminal.get("build"),"symbol_trade_mode":symbol.get("trade_mode"),
@@ -79,4 +80,3 @@ def main() -> int:
 
 
 if __name__=="__main__": raise SystemExit(main())
-

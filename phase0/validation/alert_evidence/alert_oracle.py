@@ -32,6 +32,9 @@ def verify_delivery(bundle: dict[str, Any]) -> dict[str, Any]:
         digest = bundle["canary_sha256"]
         if not SHA256.fullmatch(digest):
             raise ValueError
+        if (not SHA256.fullmatch(str(bundle.get("local_audit_record_sha256", "")))
+                or bundle.get("local_audit_chain_valid") is not True):
+            reasons.append("LOCAL_AUDIT_EVIDENCE_INVALID")
         if bundle.get("designated_ack_role") != "OWNER_DESIGNEE":
             reasons.append("ACK_ROLE_INVALID")
         receipts = bundle.get("receipts")
@@ -44,6 +47,9 @@ def verify_delivery(bundle: dict[str, Any]) -> dict[str, Any]:
     attempts_seen: set[tuple[str,int]] = set()
     delivered: list[datetime] = []
     for receipt in receipts:
+        if not isinstance(receipt, dict):
+            reasons.append("RECEIPT_SCHEMA_INVALID")
+            continue
         channel = receipt.get("channel")
         attempt = receipt.get("attempt_minute")
         if channel not in CHANNELS or attempt not in {0,5,10,15} or (channel,attempt) in attempts_seen:

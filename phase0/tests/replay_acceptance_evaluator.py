@@ -7,6 +7,7 @@ not calculate strategy performance, open a holdout, connect to MT5, or trade.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 from typing import Any
 
 
@@ -52,15 +53,39 @@ def evaluate(record: dict[str, Any]) -> Evaluation:
         "double_cost_expectancy_r",
     )
     for name in required_metrics:
-        if name not in metrics or metrics[name] is None:
+        value = metrics.get(name)
+        if name not in metrics or value is None:
             insufficient.append(f"metric:{name}")
+        elif isinstance(value, bool) or not isinstance(value, (int, float)) \
+                or not math.isfinite(value):
+            failures.append(f"metric:{name}_invalid")
+
+    bounded = (
+        "dsr_probability", "pbo", "best_month_positive_profit_share",
+        "best_session_positive_profit_share", "nonnegative_fold_fraction",
+    )
+    for name in bounded:
+        value = metrics.get(name)
+        if (isinstance(value, (int, float)) and not isinstance(value, bool)
+                and math.isfinite(value) and not 0 <= value <= 1):
+            failures.append(f"metric:{name}_outside_0_1")
+    drawdown = metrics.get("max_drawdown_usd")
+    if (isinstance(drawdown, (int, float)) and not isinstance(drawdown, bool)
+            and math.isfinite(drawdown) and drawdown < 0):
+        failures.append("metric:max_drawdown_usd_negative")
+    mean_r, ci_lower = metrics.get("oos_mean_r"), metrics.get("ci95_lower_r")
+    if (all(isinstance(value, (int, float)) and not isinstance(value, bool)
+            and math.isfinite(value) for value in (mean_r, ci_lower))
+            and ci_lower > mean_r):
+        failures.append("metric:ci95_lower_above_mean")
 
     evidence = record.get("evidence", {})
     for name in ("sample_size_justified", "coverage_sufficient", "selection_adjustment_applicable"):
         if evidence.get(name) is not True:
             insufficient.append(f"evidence:{name}")
 
-    if not insufficient:
+    metric_invalid = any(reason.startswith("metric:") for reason in failures)
+    if not insufficient and not metric_invalid:
         if metrics["oos_mean_r"] <= 0:
             failures.append("economic:oos_mean_r_not_positive")
         if metrics["ci95_lower_r"] <= -0.05:
@@ -91,4 +116,3 @@ def evaluate(record: dict[str, Any]) -> Evaluation:
     else:
         verdict = "ACCEPT"
     return Evaluation(verdict, tuple(failures), tuple(insufficient))
-

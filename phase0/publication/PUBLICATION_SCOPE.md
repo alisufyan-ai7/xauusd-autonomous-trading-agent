@@ -7,14 +7,14 @@
 
 This revision publishes only sanitized technical records, source/test artifacts, broker technical metadata and evidence hashes explicitly approved by the owner.
 
-R25 publishes only owner-independent offline hardening: receipt-bound Gate 0
-status derivation, stricter acquisition rights/split/path admission,
-post-event-observation continuity, and explicit expected transition/session
-inventory checks. It carries forward R24 without republishing private content
-or paths. No historical market dataset, provider correspondence, private
-artifact or model response is published. The work caused no download, trial,
-purchase, outreach, restart, network fault, alert delivery, broker action,
-OpenAI call or charge.
+R26 publishes only owner-independent defect corrections: a frozen admitted-
+receipt registry; event-time-anchored post-event normalization; complete
+session-boundary inventory/chronology binding; append-only local A1 audit
+evidence; and finite, coherent replay metrics. It carries forward R25 without
+republishing private content or paths. No historical market dataset, provider
+correspondence, private artifact or model response is published. The work
+caused no download, trial, purchase, outreach, restart, network fault, alert
+delivery, broker action, OpenAI call or charge.
 
 Excluded from this revision:
 

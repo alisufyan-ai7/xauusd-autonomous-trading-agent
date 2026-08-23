@@ -29,6 +29,11 @@ def make_rows():
             ))
             index += 1
     for event in range(2):
+        rows.append(Observation(
+            start + timedelta(minutes=index), "TRAIN", "LONDON_NY", "EVENT",
+            f"event-{event}", 30, 10, 1, 1, 6, 2, 9, 3, 150, 80, .5,
+        ))
+        index += 1
         for sample, ratio in enumerate((3.0, 1.4, 1.3, 1.2)):
             rows.append(Observation(
                 start + timedelta(minutes=index), "TRAIN", "LONDON_NY", "POST_EVENT",
@@ -49,7 +54,7 @@ def make_plan(rows):
     return CalibrationPlan(
         bundle_root_sha256=H, derived_dataset_sha256=rows_hash(rows),
         rights_status="ADMITTED", frozen_utc=datetime(2024, 12, 1, tzinfo=UTC),
-        train_end_utc=datetime(2025, 1, 1, 0, 27, tzinfo=UTC),
+        train_end_utc=datetime(2025, 1, 1, 0, 29, tzinfo=UTC),
         holdout_status="SEALED_UNVIEWED", minimum_rows_per_session=5,
         minimum_post_event_rows=8, minimum_complete_events=2,
         quantile_probability=.99, normalization_ratio_limit=1.5,
@@ -69,6 +74,7 @@ class CalibrationWorkflowTests(unittest.TestCase):
         self.assertEqual(2, result.complete_post_events)
         self.assertEqual("NON_TRADING_ADVERSE_LATENCY_PROXY",
                          result.candidate.slippage_basis)
+        self.assertEqual(240, result.candidate.post_event_normalization_seconds)
         values = {key: value for key, value in result.candidate.__dict__.items()
                   if key != "artifact_sha256"}
         self.assertEqual(artifact_hash(values), result.candidate.artifact_sha256)
@@ -106,7 +112,8 @@ class CalibrationWorkflowTests(unittest.TestCase):
     def test_post_event_recovery_must_be_contiguously_observed(self):
         altered = []
         for row in self.rows:
-            if row.event_id == "event-1" and row.observed_utc.minute >= 25:
+            if row.event_id == "event-1" and row.event_phase == "POST_EVENT" \
+                    and row.observed_utc.minute >= 28:
                 altered.append(replace(row, observed_utc=row.observed_utc + timedelta(minutes=5)))
             else:
                 altered.append(row)
@@ -115,6 +122,25 @@ class CalibrationWorkflowTests(unittest.TestCase):
                        train_end_utc=datetime(2025, 1, 1, 0, 40, tzinfo=UTC))
         self.assertIn("COMPLETE_EVENT_RECOVERY_INSUFFICIENT",
                       calibrate(plan, altered).reason_codes)
+
+    def test_recovery_is_anchored_to_one_event_marker(self):
+        missing = tuple(row for row in self.rows
+                        if not (row.event_id == "event-1" and row.event_phase == "EVENT"))
+        plan = replace(self.plan, derived_dataset_sha256=rows_hash(missing))
+        reasons = calibrate(plan, missing).reason_codes
+        self.assertIn("EVENT_MARKER_MISSING_OR_DUPLICATE", reasons)
+
+        delayed = tuple(replace(row, observed_utc=row.observed_utc + timedelta(minutes=5))
+                        if row.event_id == "event-1" and row.event_phase == "POST_EVENT"
+                        else row for row in self.rows)
+        delayed = tuple(sorted(delayed, key=lambda row: row.observed_utc))
+        plan = replace(self.plan, derived_dataset_sha256=rows_hash(delayed),
+                       train_end_utc=datetime(2025, 1, 1, 0, 40, tzinfo=UTC))
+        self.assertIn("POST_EVENT_INITIAL_GAP", calibrate(plan, delayed).reason_codes)
+
+    def test_event_rows_require_stable_event_id(self):
+        with self.assertRaisesRegex(ValueError, "require event_id"):
+            replace(self.rows[20], event_id=None)
 
     def test_validation_must_follow_frozen_training_cutoff(self):
         altered = tuple(replace(row, observed_utc=row.observed_utc - timedelta(minutes=20))

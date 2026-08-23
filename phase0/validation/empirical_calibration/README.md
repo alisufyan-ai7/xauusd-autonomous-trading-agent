@@ -11,7 +11,9 @@ training-only candidates for:
 
 R25 requires validation observations to follow the frozen training cutoff and
 rejects a claimed consecutive normalization run if its post-event observation
-stream contains a gap larger than the prospectively frozen maximum.
+stream contains a gap larger than the prospectively frozen maximum. R26 binds
+each recovery to exactly one event-time marker, measures duration from that
+marker, and rejects a missing/duplicate marker or an unobserved initial gap.
 
 Run from this directory:
 

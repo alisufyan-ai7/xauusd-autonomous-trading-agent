@@ -9,6 +9,7 @@ def bundle():
     digest=canary_digest("fixture")
     return {"schema":"a1-private-delivery-evidence-1.0","created_utc":"2026-08-23T12:00:00Z",
             "canary_sha256":digest,"designated_ack_role":"OWNER_DESIGNEE",
+            "local_audit_record_sha256":"c"*64,"local_audit_chain_valid":True,
             "receipts":[
                 {"channel":"EMAIL","attempt_minute":0,"canary_sha256":digest,"transport_receipt_sha256":"a"*64,"sent_utc":"2026-08-23T12:00:10Z","received_utc":"2026-08-23T12:00:20Z"},
                 {"channel":"TELEGRAM_PUSH","attempt_minute":0,"canary_sha256":digest,"transport_receipt_sha256":"b"*64,"sent_utc":"2026-08-23T12:00:10Z","received_utc":"2026-08-23T12:00:15Z"}],
@@ -33,6 +34,12 @@ class AlertEvidenceTests(unittest.TestCase):
     def test_digest_and_receipt_binding_are_mandatory(self):
         row=bundle(); row["receipts"][0]["canary_sha256"]="0"*64
         self.assertIn("RECEIPT_BINDING_INVALID",verify_delivery(row)["reasons"])
+
+    def test_local_append_only_audit_evidence_is_mandatory(self):
+        row=bundle(); row["local_audit_chain_valid"]=False
+        self.assertIn("LOCAL_AUDIT_EVIDENCE_INVALID",verify_delivery(row)["reasons"])
+        row=bundle(); row["receipts"].append("malformed")
+        self.assertIn("RECEIPT_SCHEMA_INVALID",verify_delivery(row)["reasons"])
 
     def test_five_minute_repeats_are_required_until_ack(self):
         row=bundle(); row["acknowledged_utc"]="2026-08-23T12:12:00Z"

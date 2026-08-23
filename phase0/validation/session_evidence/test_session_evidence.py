@@ -29,8 +29,8 @@ def schedule():
 def chain(rows):
     prior = "0"*64
     result=[]
-    for supplied in rows:
-        row={**supplied,"prior_record_sha256":prior}
+    for index,supplied in enumerate(rows):
+        row={**supplied,"sequence":index,"prior_record_sha256":prior}
         digest=hashlib.sha256(json.dumps(row,sort_keys=True,separators=(",",":")).encode()).hexdigest()
         row["record_sha256"]=digest
         result.append(row); prior=digest
@@ -58,19 +58,49 @@ class SessionEvidenceTests(unittest.TestCase):
         self.assertTrue(scheduled_open(row,"2026-12-25T15:00:00Z"))
 
     def test_complete_boundary_chain_passes(self):
-        base={"boundary_id":"B1","tradeapi_disabled":True,"connected":True,"tick_age_seconds":1}
+        base={"schema":"xauusd-private-boundary-observation-1.0","boundary_id":"B1",
+              "identity_token":"c"*64,"tradeapi_disabled":True,"connected":True}
         rows=chain([
-            {**base,"phase":"BEFORE","observed_utc":"2026-08-24T02:30:00Z"},
-            {**base,"phase":"INSIDE","observed_utc":"2026-08-24T03:30:00Z"},
-            {**base,"phase":"AFTER","observed_utc":"2026-08-24T04:30:00Z"},
+            {**base,"phase":"BEFORE","observed_utc":"2026-08-24T03:58:00Z","tick_age_seconds":1},
+            {**base,"phase":"INSIDE","observed_utc":"2026-08-24T04:00:00Z","tick_age_seconds":31},
+            {**base,"phase":"AFTER","observed_utc":"2026-08-24T04:02:00Z","tick_age_seconds":1},
         ])
-        self.assertEqual("PASS", verify_observations(schedule(),rows)["status"])
+        self.assertEqual("PASS", verify_observations(
+            schedule(), rows, expected_boundary_ids=("B1",),
+        )["status"])
 
     def test_mismatch_and_tamper_fail_closed(self):
-        rows=chain([{"boundary_id":"B1","phase":"BEFORE","observed_utc":"2026-08-22T02:30:00Z","tradeapi_disabled":True,"connected":True,"tick_age_seconds":1}])
-        self.assertIn("SCHEDULE_TICK_DISCREPANCY",verify_observations(schedule(),rows)["reasons"])
+        rows=chain([{"schema":"xauusd-private-boundary-observation-1.0",
+                    "boundary_id":"B1","phase":"BEFORE","observed_utc":"2026-08-22T02:30:00Z",
+                    "identity_token":"c"*64,"tradeapi_disabled":True,"connected":True,
+                    "tick_age_seconds":1}])
+        result=verify_observations(schedule(),rows,expected_boundary_ids=("B1",))
+        self.assertIn("SCHEDULE_TICK_DISCREPANCY",result["reasons"])
         rows[0]["connected"]=False
-        self.assertIn("HASH_CHAIN_INVALID",verify_observations(schedule(),rows)["reasons"])
+        self.assertIn("HASH_CHAIN_INVALID",verify_observations(
+            schedule(),rows,expected_boundary_ids=("B1",),
+        )["reasons"])
+
+    def test_expected_boundary_inventory_and_chronology_are_bound(self):
+        base={"schema":"xauusd-private-boundary-observation-1.0","boundary_id":"B1",
+              "identity_token":"c"*64,"tradeapi_disabled":True,"connected":True}
+        rows=chain([
+            {**base,"phase":"BEFORE","observed_utc":"2026-08-24T03:58:00Z","tick_age_seconds":1},
+            {**base,"phase":"INSIDE","observed_utc":"2026-08-24T04:00:00Z","tick_age_seconds":31},
+            {**base,"phase":"AFTER","observed_utc":"2026-08-24T04:02:00Z","tick_age_seconds":1},
+        ])
+        reasons=verify_observations(
+            schedule(),rows,expected_boundary_ids=("B1","B2"),
+        )["reasons"]
+        self.assertIn("EXPECTED_BOUNDARY_INVENTORY_INCOMPLETE",reasons)
+        rows[2]["observed_utc"]="2026-08-24T03:59:00Z"
+        rows=chain([{k:v for k,v in row.items()
+                    if k not in {"sequence","prior_record_sha256","record_sha256"}}
+                    for row in rows])
+        reasons=verify_observations(
+            schedule(),rows,expected_boundary_ids=("B1",),
+        )["reasons"]
+        self.assertIn("OBSERVATION_TIME_NOT_STRICTLY_INCREASING",reasons)
 
     def test_capture_adapter_has_no_order_login_selection_or_process_capability(self):
         directory=__import__("pathlib").Path(__file__).resolve().parent

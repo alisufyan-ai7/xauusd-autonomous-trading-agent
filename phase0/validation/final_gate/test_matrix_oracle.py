@@ -7,11 +7,13 @@ import json
 from pathlib import Path
 import unittest
 
-from matrix_oracle import CLAIM_PROVENANCE, REQUIRED_CLAIMS, evaluate_matrix
+from matrix_oracle import (
+    CLAIM_PROVENANCE, FROZEN_ADMITTED_RECEIPTS, REQUIRED_CLAIMS, evaluate_matrix,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
-MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R25.json"
+MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R26.json"
 
 
 def artifact_hashes(payload):
@@ -63,7 +65,7 @@ class FinalGateMatrixTests(unittest.TestCase):
         self.assertTrue(any(reason.endswith("STATUS_DERIVATION_MISMATCH")
                             for reason in result.reasons))
 
-    def test_all_pass_requires_every_typed_receipt_and_matching_artifact(self):
+    def test_self_asserted_pending_receipts_cannot_promote_gate(self):
         payload = copy.deepcopy(self.payload)
         hashes = {}
         for row in payload["items"]:
@@ -74,7 +76,20 @@ class FinalGateMatrixTests(unittest.TestCase):
                 hashes[item["artifact_path"]] = item["artifact_sha256"]
             row["status"] = "PASS"
         payload["gate_0_verdict"] = "PASS"
-        self.assertEqual("PASS", evaluate_matrix(payload, hashes).verdict)
+        result = evaluate_matrix(payload, hashes)
+        self.assertEqual("FAIL_CLOSED", result.verdict)
+        self.assertTrue(any(reason.endswith("RECEIPT_NOT_IN_FROZEN_REGISTRY")
+                            for reason in result.reasons))
+
+    def test_published_pass_receipts_are_exactly_the_frozen_registry(self):
+        observed = {
+            receipt["claim_type"]: (
+                receipt["artifact_path"], receipt["artifact_sha256"],
+                receipt["provenance"],
+            )
+            for row in self.payload["items"] for receipt in row["receipts"]
+        }
+        self.assertEqual(FROZEN_ADMITTED_RECEIPTS, observed)
 
     def test_missing_or_modified_artifact_fails_closed(self):
         payload = copy.deepcopy(self.payload)

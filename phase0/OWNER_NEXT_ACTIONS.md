@@ -31,10 +31,10 @@ Owner-approved direction and remaining actions:
    and derivative use; HistData lacks an explicit complete rights grant; OANDA
    is conditional/likely paid with termination-retention constraints; and Exness
    history remains only an account-semantics cross-check. The hardened
-   acquisition/split procedure passes 12/12 and empirical calibration procedure
-   passes 10/10.
-3. VPS/session/margin/alerts: offline packages pass session 7/7, M1/stress 14/14,
-   A1 6/6 and combined reliability/private-probe 14/14. The R21 VPS packet
+   acquisition/split procedure passes 12/12 and R26 empirical calibration
+   passes 12/12 with event-time anchoring.
+3. VPS/session/margin/alerts: offline packages pass session 8/8, M1/stress 14/14,
+   A1 7/7 and combined reliability/private-probe 14/14. The R21 VPS packet
    passed 34/34 and completed the non-disruptive private margin, prepared-not-
    sent canary and healthy baseline captures. Only their sanitized hashes are
    published. Frozen-stress M1 evaluation, rendered session boundaries, seven
@@ -59,10 +59,11 @@ non-disruptive baseline is complete. Restart/network and real alert drills
 remain separate, explicitly approved actions; session boundaries will be
 scheduled only when their real observation windows occur.
 
-The receipt-bound R25 final evidence matrix is now the authoritative checklist.
-It derives five bounded items as complete and nine as pending from typed,
-artifact-hash-matched receipts; status text alone cannot promote an item. Every
-pending claim must receive admitted evidence before Gate 0 can close. No
-outreach is being requested or sent now.
+The frozen-receipt R26 final evidence matrix is now the authoritative checklist.
+It derives five bounded items as complete and nine as pending. The exact six
+already admitted claim/path/hash/provenance tuples are frozen; status text or a
+new self-asserted receipt cannot promote a pending item. Every pending claim
+must receive independently reviewed evidence and a later controlled registry
+revision before Gate 0 can close. No outreach is being requested or sent now.
 
 Continue to keep **Disable automated trading via external Python API** enabled. Do not authorize demo/live trading or unknown-exposure closure.

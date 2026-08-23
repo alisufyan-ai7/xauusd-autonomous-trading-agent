@@ -28,4 +28,7 @@ It attaches to the already-open terminal and appends one HMAC-redacted sample;
 it cannot issue orders, select a symbol, log in or cause a session transition.
 Run it only at a predeclared `BEFORE`, `INSIDE` or `AFTER` checkpoint. A complete
 claim requires all three phases for each boundary and independent authoritative
-schedule corroboration. External Python trading must remain disabled.
+schedule corroboration. The verifier also requires the complete predeclared
+boundary-ID inventory, strict UTC chronology, stable redacted identity and
+sequence/hash-chain continuity; one conveniently complete boundary cannot stand
+in for omitted expected boundaries. External Python trading must remain disabled.
