@@ -1,9 +1,13 @@
-# Approved OpenAI benchmark host runbook
+# Completed OpenAI benchmark host runbook
 
 **Budget ceiling:** USD 8 (project alert USD 4)  
 **Models:** GPT-5.6 Terra primary, Sol challenger, Luna cost baseline  
 **Storage/tools:** `store:false`; `tools:[]`; no retries  
 **Trading authorization:** none
+
+**Completion:** The one approved v1.1 rerun completed on 2026-08-23. Do not
+rerun it under this authorization. Preserve this file as the exact historical
+procedure.
 
 On the separately configured benchmark host, from this directory:
 
@@ -37,3 +41,9 @@ If the command stops for budget reservation, network error, refusal, invalid
 schema, missing usage, or any failed case, preserve the partial console output
 without rerunning automatically. A pass is advisory evidence only and cannot
 enable external Python trading.
+
+Observed result: report SHA-256
+`73ade0c581a52e64ebd60c66fd2307ca3650aba48df1d82fabeb4732c8e840bc`,
+run cost USD 0.1659360, cumulative benchmark cost USD 0.3238708. Sol passed
+16/16 and was selected for later non-trading Analyst integration tests. The raw
+report is excluded from the repository.

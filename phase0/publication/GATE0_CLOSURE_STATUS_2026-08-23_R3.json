@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.3",
+  "recorded_date_utc": "2026-08-23",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "openai_benchmark": {
+    "budget_ceiling_usd": "8.00",
+    "project_alert_usd": "4.00",
+    "v1_0_report_sha256": "a8aba5355367c7153f1f0582974be69afe0cddc504ee15faed4989c0b68066f1",
+    "v1_1_report_sha256": "73ade0c581a52e64ebd60c66fd2307ca3650aba48df1d82fabeb4732c8e840bc",
+    "v1_1_live_calls": 48,
+    "v1_1_local_blocks": 2,
+    "v1_1_run_cost_usd": "0.16593600",
+    "cumulative_actual_cost_usd": "0.32387080",
+    "matrix_status": "FAIL_NOT_ALL_COMPARISON_CANDIDATES_PASSED",
+    "selected_candidate": "gpt-5.6-sol",
+    "sol": "PASS_16_OF_16_ALL_COMPONENT_CHECKS_TRUE",
+    "terra": "NOT_SELECTED_PASS_11_OF_16",
+    "luna": "NOT_SELECTED_PASS_13_OF_16; V1_0_UNSAFE_EVENT_LOCK_PROPOSAL_REMAINS_DISQUALIFYING",
+    "comparative_model_selection": "COMPLETE",
+    "additional_benchmark_calls_authorized": false,
+    "store": false,
+    "tools": [],
+    "raw_reports_published": false
+  },
+  "event_guard": {
+    "primary_design": "FREE_OFFICIAL_SOURCES",
+    "offline_oracle": "PASS_14_OF_14",
+    "operational_admission": "PENDING"
+  },
+  "remaining_gate_0_blockers": [
+    "official-source Event Guard live acquisition and conformance evidence",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS reliability observations",
+    "full OHLC-derived five-family setup golden corpus",
+    "registered immutable historical replay",
+    "exact Analyst field register, timeout/freshness bounds and model revalidation policy",
+    "open owner operational policy selections"
+  ]
+}

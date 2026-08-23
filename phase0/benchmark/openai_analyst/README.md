@@ -2,7 +2,7 @@
 
 This is a synthetic, advisory-only benchmark. It cannot connect to MT5, read account data, use tools, calculate volume, or execute a trade.
 
-Frozen candidates: GPT-5.6 Terra primary, GPT-5.6 Sol challenger, GPT-5.6 Luna cost baseline. Every request is synchronous, stateless (`store:false`), tool-free (`tools:[]`), strict Structured Output, low reasoning effort, and capped at 1,200 output tokens. Two prohibited-data fixtures must be rejected locally and never transmitted.
+Frozen evaluation candidates were GPT-5.6 Terra primary, GPT-5.6 Sol challenger, and GPT-5.6 Luna cost baseline. Every request is synchronous, stateless (`store:false`), tool-free (`tools:[]`), strict Structured Output, low reasoning effort, and capped at 1,200 output tokens. Two prohibited-data fixtures must be rejected locally and never transmitted.
 
 The runner reserves conservative worst-case cost before each request and stops before any call that could exceed the owner-approved cumulative USD 8 ceiling. `--prior-spend` carries earlier benchmark cost into that cumulative check. There are no retries.
 
@@ -15,13 +15,28 @@ python -m unittest -v test_benchmark.py
 python benchmark_runner.py
 ```
 
-Live execution is authorized only on the separately configured benchmark host, where `OPENAI_API_KEY` is supplied through a secure environment mechanism. Never print it, paste it into chat, pass it as a command-line argument, or commit it. Run from this directory on that host:
+## Completed live evaluation
+
+The approved v1.1 run completed on 2026-08-23. Its report SHA-256 is
+`73ade0c581a52e64ebd60c66fd2307ca3650aba48df1d82fabeb4732c8e840bc`.
+GPT-5.6 Sol passed 16/16 live cases and is the selected Analyst candidate for
+later non-trading integration tests. Terra passed 11/16 and Luna 13/16; neither
+is selected. The matrix-level report is `FAIL` because it required every
+candidate to pass every check, not because Sol failed.
+
+The two runs cost USD 0.3238708 cumulatively. No further live benchmark call is
+authorized by the completed-run approval. Preserve both raw reports only in
+the owner's controlled evidence location; do not commit them.
+
+Historical operator commands were:
 
 ```text
 python -m unittest -v test_benchmark.py
-python benchmark_runner.py --live --budget 8 --prior-spend 0
+python benchmark_runner.py --live --budget 8 --prior-spend 0.1579348
 ```
 
 The runner writes only decision metadata, component-check booleans, token usage, latency, estimated cost, and a SHA-256 of each parsed response. It does not persist response text. The API request sets `store:false` and `tools:[]` for every call. The default output is `BENCHMARK_RESULTS_V1_1.json`, so the original v1.0 evidence is not overwritten.
 
-Zero unsafe approvals is necessary but not proof of universal safety. A green benchmark cannot authorize trading.
+Never print, paste, export, or commit `OPENAI_API_KEY`. Zero unsafe approvals is
+necessary but not proof of universal safety. The Sol result permits only later
+gated non-trading work and cannot authorize trading.
