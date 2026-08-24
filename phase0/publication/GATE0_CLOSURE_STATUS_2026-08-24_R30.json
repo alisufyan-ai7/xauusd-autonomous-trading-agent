@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.30",
+  "recorded_date_utc": "2026-08-24",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "6_PASS_8_PENDING",
+  "new_requirements_added": false,
+  "architecture_redesigned": false,
+  "scope_expanded": false,
+  "r4_window": {
+    "start_utc": "2026-08-25T00:00:00Z",
+    "end_utc": "2026-09-23T23:45:00Z",
+    "preserved_unopened": true,
+    "earliest_evaluation_date_utc": "2026-09-24"
+  },
+  "earliest_gate_0_pass": {
+    "not_before_utc": "2026-09-24",
+    "fixed_completion_date_available": false,
+    "reason": "G0-12 needs a new untouched replay holdout after G0-05, and G0-04 remains event-dependent"
+  },
+  "pending_items": [
+    {"id":"G0-04","earliest":"EVENT_DEPENDENT","before_2026_09_23":"CONDITIONAL_NOT_SCHEDULABLE"},
+    {"id":"G0-05","earliest":"2026-09-24","before_2026_09_23":"NO"},
+    {"id":"G0-06","earliest":"2026-09-08_CONDITIONAL","before_2026_09_23":"YES_CONDITIONAL"},
+    {"id":"G0-07","earliest":"FIRST_APPROVED_MAINTENANCE_WINDOW","before_2026_09_23":"YES_WITH_APPROVAL"},
+    {"id":"G0-08","earliest":"2026-09-24_AFTER_G0_05_PASS","before_2026_09_23":"NO"},
+    {"id":"G0-09","earliest":"FIRST_APPROVED_DELIVERY_WINDOW","before_2026_09_23":"YES_WITH_APPROVAL"},
+    {"id":"G0-12","earliest":"AFTER_2026-09-24_AND_NEW_UNTOUCHED_HOLDOUT","before_2026_09_23":"NO"},
+    {"id":"G0-14","earliest":"AFTER_G0_12_PASS_AND_SEPARATE_OPENAI_APPROVAL","before_2026_09_23":"NO"}
+  ],
+  "post_gate_sequence": [
+    "GATE_0_PASS",
+    "SEPARATELY_AUTHORIZED_CONTROLLED_DEMO_TRADING",
+    "DEMO_ACCEPTANCE",
+    "SEPARATELY_AUTHORIZED_TINY_LIVE_VALIDATION",
+    "CONTROLLED_SCALING"
+  ],
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Timeline and dependency consolidation only; no evidence item is promoted and no external action is authorized."
+}
