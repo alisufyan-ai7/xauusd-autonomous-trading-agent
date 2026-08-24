@@ -6,11 +6,16 @@
 
 ## Current owner action
 
-G0-07 and G0-09 are owner-approved and their bounded R31 packets are ready.
-Operational execution still requires two verified inputs that are not stored in
-the repository: the out-of-band VPS control path plus accepted private baseline
-location for G0-07, and the exact primary email plus exact Telegram target for
-G0-09. Neither item is PASS until genuine evidence verifies.
+G0-07 and G0-09 remain owner-approved under the bounded R31 packets. The owner
+confirmed the accepted private baseline and independent ForexVPS VNC path. The
+ForexVPS portal held the Codex cloud browser at security verification, so no
+fault began. Run G0-07 only through the owner's verified VNC console or another
+explicitly connected control path.
+
+The connected owner Gmail account is verified and label `XAUUSD Gate 0 Alerts`
+was created. The exact Telegram destination is not recorded; do not guess or
+send either canary channel until the owner supplies the exact Telegram
+username/chat/channel. Neither item is PASS until genuine evidence verifies.
 
 Dukascopy rights and immutable H4/H1/M15 data admission are closed under
 D-0105/D-0106. The original provider email may later supplement the
@@ -33,5 +38,5 @@ The following remain separately controlled:
 No demo/live trading or unknown-exposure closure is authorized.
 
 The authoritative eight-item timing/dependency table is
-`GATE_0_CLOSURE_TIMELINE_R31.md`. The earliest possible Gate 0 PASS is after
+`GATE_0_CLOSURE_TIMELINE_R32.md`. The earliest possible Gate 0 PASS is after
 2026-09-23, and the actual date remains dependent on G0-04 and G0-12 evidence.

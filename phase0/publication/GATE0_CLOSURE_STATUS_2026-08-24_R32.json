@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.32",
+  "recorded_utc": "2026-08-24T13:51:40Z",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "6_PASS_8_PENDING",
+  "controlled_tests": "R31_PASS_338_OF_338_UNCHANGED",
+  "G0-07": {
+    "owner_approval": "CONFIRMED",
+    "accepted_private_baseline": "OWNER_CONFIRMED_AVAILABLE",
+    "out_of_band_vnc": "OWNER_CONFIRMED_AVAILABLE",
+    "codex_execution": "NOT_STARTED_CLOUD_PORTAL_SECURITY_VERIFICATION_BLOCK",
+    "fault_or_restart_performed": false,
+    "broker_mutation_performed": false
+  },
+  "G0-09": {
+    "primary_email": "CONNECTED_OWNER_GMAIL_ACCOUNT_VERIFIED",
+    "gmail_label": "XAUUSD Gate 0 Alerts",
+    "gmail_label_status": "CREATED",
+    "telegram_destination": "UNRESOLVED_DO_NOT_GUESS",
+    "canary_started": false,
+    "email_sent": false,
+    "telegram_sent": false
+  },
+  "approved_window_end_utc": "2026-08-24T15:00:00Z",
+  "r4_window_preserved_unopened": true,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Execution preflight only. Neither G0-07 nor G0-09 is promoted."
+}
