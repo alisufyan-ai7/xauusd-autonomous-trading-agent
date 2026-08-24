@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from phase0.validation.vps_reliability.private_probe_oracle import verify_private_matrix
+from phase0.validation.vps_reliability.verify_private_matrix import verify_output
 
 
 class Rec:
@@ -78,6 +79,21 @@ class PrivateProbeTests(unittest.TestCase):
             self.assertIn("REQUIRED_SCENARIOS_INCOMPLETE",verify_private_matrix(records)["reasons"])
             records[0]["terminal_build"]=9999
             self.assertIn("HASH_CHAIN_INVALID",verify_private_matrix(records)["reasons"])
+
+    def test_public_safe_verifier_reads_private_chain(self):
+        probe=self._module()
+        with tempfile.TemporaryDirectory() as temp:
+            output=Path(temp)/"private"
+            probe.append_probe(FakeAPI,output,event="BASELINE",scenario_id="B",
+                               os_boot_utc="2025-08-23T00:00:00Z",
+                               mt5_start_utc="2025-08-23T01:00:00Z",
+                               w32tm_status_file=None,compatibility_sha256=None)
+            result=verify_output(output)
+            self.assertEqual("FAIL_CLOSED",result["status"])
+            self.assertIn("REQUIRED_SCENARIOS_INCOMPLETE",result["reasons"])
+            prefix=verify_output(output,allow_incomplete=True)
+            self.assertEqual("PASS_PREFIX",prefix["status"])
+            self.assertIn("DISCONNECT",prefix["missing_events"])
 
     def test_duplicate_scenario_and_invalid_compatibility_digest_fail(self):
         probe=self._module()

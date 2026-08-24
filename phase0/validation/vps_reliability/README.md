@@ -1,5 +1,10 @@
 # Gate 0 VPS reliability fault oracle
 
+The approved R31 packet adds a separate read-only exposure preflight because
+this observer intentionally cannot query positions or pending orders. That
+bounded helper must report zero for both before disruption and after final
+recovery. It cannot mutate or close exposure.
+
 This directory converts the restart/reconnect/network/clock/build failure matrix
 into a deterministic, standard-library-only offline oracle. It contains no MT5
 adapter, network client, process-control code, credential input, or trading

@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.31",
+  "recorded_date_utc": "2026-08-24",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "6_PASS_8_PENDING",
+  "controlled_tests": {
+    "prior_r30": "PASS_328_OF_328",
+    "r31_focused_packet_suites": "PASS_31_OF_31",
+    "new_regressions": 10,
+    "aggregate": "PASS_338_OF_338",
+    "suite_groups": 23
+  },
+  "approved_not_executed": {
+    "G0-07": {
+      "approval": "RECEIVED",
+      "packet": "OWNER_VPS_FAULT_DRILL_PACKET_R31.md",
+      "execution": "PENDING_VERIFIED_OUT_OF_BAND_VPS_CONTROL_AND_BASELINE_PATH",
+      "open_exposure_rule": "ZERO_POSITIONS_AND_ZERO_PENDING_ORDERS_PRE_AND_POST",
+      "broker_mutation_authorized": false
+    },
+    "G0-09": {
+      "approval": "RECEIVED",
+      "packet": "OWNER_ALERT_DELIVERY_DRILL_PACKET_R31.md",
+      "execution": "PENDING_VERIFIED_EMAIL_AND_TELEGRAM_TARGETS",
+      "message_class": "SANITIZED_TEST_CANARY_ONLY",
+      "trading_or_broker_action_authorized": false
+    }
+  },
+  "r4_window": {
+    "start_utc": "2026-08-25T00:00:00Z",
+    "end_utc": "2026-09-23T23:45:00Z",
+    "preserved_unopened": true,
+    "earliest_evaluation_date_utc": "2026-09-24"
+  },
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Packet readiness and offline controls only; G0-07 and G0-09 remain pending until genuine private evidence passes."
+}

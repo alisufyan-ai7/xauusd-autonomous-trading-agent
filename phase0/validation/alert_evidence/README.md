@@ -12,6 +12,11 @@ delivery or late acknowledgement. It also requires a SHA-256-bound record from
 the append-only local audit chain; off-host delivery alone cannot satisfy A1.
 It never restores risk authority.
 
+After a separately approved real drill, private_delivery_evidence.py hashes
+operator-preserved transport and acknowledgement evidence, appends a private
+SHA-256 audit chain, and runs the frozen verifier. It still has no delivery,
+credential, broker, network or process-control capability.
+
 ```powershell
 powershell.exe -NoProfile -ExecutionPolicy Bypass `
   -File .\run_prepare_private_canary.ps1 `
