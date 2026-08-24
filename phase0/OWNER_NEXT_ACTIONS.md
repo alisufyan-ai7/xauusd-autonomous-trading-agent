@@ -14,8 +14,9 @@ owner-attested rights record but is not required.
 
 Three chronological calibration trials rejected the absolute-tail spread, gap
 and round-trip-cost model. No unsafe constants were frozen; registered replay
-and Sol chronology were not run. New untouched data and a prospectively
-registered regime-adaptive calibration are required before those items resume.
+and Sol chronology were not run. The replacement R4 adaptive protocol is now
+prospectively frozen. Its untouched evaluation window runs from 2026-08-25
+through 2026-09-23 and must not be opened early. No owner action is required.
 
 The following remain separately controlled and require owner action only when
 their real observation window or packet is ready:
