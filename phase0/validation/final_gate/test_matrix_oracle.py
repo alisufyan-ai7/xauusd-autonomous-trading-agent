@@ -13,7 +13,7 @@ from matrix_oracle import (
 
 
 ROOT = Path(__file__).resolve().parents[3]
-MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R27.json"
+MATRIX = ROOT / "phase0" / "GATE_0_FINAL_EVIDENCE_MATRIX_R28.json"
 
 
 def artifact_hashes(payload):
@@ -50,10 +50,10 @@ class FinalGateMatrixTests(unittest.TestCase):
         self.payload = json.loads(MATRIX.read_text(encoding="utf-8"))
         self.hashes = artifact_hashes(self.payload)
 
-    def test_published_matrix_is_receipt_bound_five_pass_nine_pending(self):
+    def test_published_matrix_is_receipt_bound_six_pass_eight_pending(self):
         result = evaluate_matrix(self.payload, self.hashes)
         self.assertEqual("INCOMPLETE", result.verdict)
-        self.assertEqual((5, 9, 0), (result.passed, result.pending, result.failed))
+        self.assertEqual((6, 8, 0), (result.passed, result.pending, result.failed))
 
     def test_declared_all_pass_without_receipts_fails_closed(self):
         payload = copy.deepcopy(self.payload)

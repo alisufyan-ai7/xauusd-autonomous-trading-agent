@@ -1,0 +1,240 @@
+{
+  "schema_version": "gate0-final-evidence-matrix-1.3",
+  "recorded_date_utc": "2026-08-24",
+  "gate_0_verdict": "INCOMPLETE",
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "pass_rule": "PASS is derived only when every frozen required claim has one admitted typed receipt whose SHA-256 matches a sanitized repository artifact.",
+  "items": [
+    {
+      "id": "G0-01",
+      "area": "Read-only baseline and package safety",
+      "status": "PASS",
+      "evidence": "Accepted v0.2.2 24-hour diagnostic, source guard and hash-chain evidence",
+      "remaining": "NONE_WITHIN_GATE0_SCOPE",
+      "owner_action": "NONE",
+      "required_claims": ["READ_ONLY_BASELINE_REAL"],
+      "receipts": [{
+        "claim_type": "READ_ONLY_BASELINE_REAL",
+        "artifact_path": "phase0/evidence/VPS_DIAGNOSTIC_EVIDENCE_VALIDATION_2026-08-12.md",
+        "artifact_sha256": "8ca4608069f933d3b5c8dadff0a6a2665540f3ed384298aa4fbab99bd6f38478",
+        "evidence_status": "ADMITTED",
+        "observed_utc": "2026-08-12T20:21:10Z",
+        "provenance": "SANITIZED_HASH_RECEIPT",
+        "private_source": true,
+        "published_hash_only": true,
+        "trading_authorized": false,
+        "external_python_trading_disabled": true,
+        "claim_limit": "One read-only 24-hour baseline only; no trading or broader reliability claim."
+      }]
+    },
+    {
+      "id": "G0-02",
+      "area": "Risk and operational policy specification",
+      "status": "PASS",
+      "evidence": "V1+M1+E1+P1+A1 frozen for specification/testing; operational oracle PASS_15_OF_15",
+      "remaining": "OPERATIONAL_EVIDENCE_TRACKED_SEPARATELY",
+      "owner_action": "NONE",
+      "required_claims": ["POLICY_SPEC_AND_OFFLINE"],
+      "receipts": [{
+        "claim_type": "POLICY_SPEC_AND_OFFLINE",
+        "artifact_path": "phase0/validation/operational_policy/VALIDATION_REPORT_2026-08-23.md",
+        "artifact_sha256": "69d39b9f81e65dec404a9863e3c3feb587a9f67012d94d127b7bf099d8345370",
+        "evidence_status": "ADMITTED",
+        "observed_utc": "2026-08-23T00:00:00Z",
+        "provenance": "SANITIZED_REPORT",
+        "private_source": false,
+        "published_hash_only": false,
+        "trading_authorized": false,
+        "external_python_trading_disabled": true,
+        "claim_limit": "Specification and offline-test evidence only."
+      }]
+    },
+    {
+      "id": "G0-03",
+      "area": "Scheduled-event protection",
+      "status": "PASS",
+      "evidence": "Official-source Event Guard R18 live horizon plus PASS_43_OF_43 regression",
+      "remaining": "NONE_FOR_INITIAL_HORIZON",
+      "owner_action": "NONE",
+      "required_claims": ["OFFICIAL_EVENT_GUARD_REAL"],
+      "receipts": [{
+        "claim_type": "OFFICIAL_EVENT_GUARD_REAL",
+        "artifact_path": "phase0/publication/GATE0_CLOSURE_STATUS_2026-08-23_R18.json",
+        "artifact_sha256": "536d16ad570ce33f55a017e47d62985c99fe22a5d9fa26d125a3511c5772cf65",
+        "evidence_status": "ADMITTED",
+        "observed_utc": "2026-08-23T00:00:00Z",
+        "provenance": "SANITIZED_REPORT",
+        "private_source": true,
+        "published_hash_only": true,
+        "trading_authorized": false,
+        "external_python_trading_disabled": true,
+        "claim_limit": "Initial official-source horizon only; natural transitions remain separate."
+      }]
+    },
+    {
+      "id": "G0-04",
+      "area": "Event Guard revision, outage recovery and holiday transitions",
+      "status": "PENDING",
+      "evidence": "Controlled oracle PASS_11_OF_11 with record-chain binding; R25 read-only schedule PASS_11_OF_11",
+      "remaining": "REAL_TIMESTAMPED_NATURAL_TRANSITIONS_AND_RECOVERY",
+      "owner_action": "VPS_CAPTURE_LATER; NO_DELIBERATE_DISCONNECT_WITHOUT_APPROVAL",
+      "required_claims": ["NATURAL_EVENT_TRANSITIONS_REAL"],
+      "receipts": []
+    },
+    {
+      "id": "G0-05",
+      "area": "Independent shock and post-event normalization",
+      "status": "PENDING",
+      "evidence": "Licensed empirical R1 validation, R2 holdout and fresh-extension R3 holdout executed; every trial preserved and rejected fail-closed",
+      "remaining": "PROSPECTIVELY_REGISTERED_REGIME_ADAPTIVE_COST_MODEL_AND_NEW_UNTOUCHED_DATA",
+      "owner_action": "NONE_NOW",
+      "required_claims": ["LICENSED_EMPIRICAL_CALIBRATION"],
+      "receipts": []
+    },
+    {
+      "id": "G0-06",
+      "area": "Authoritative XAUUSD weekly and holiday sessions",
+      "status": "PENDING",
+      "evidence": "Session verifier PASS_8_OF_8; official URLs allow-listed; R25 schedule prepared",
+      "remaining": "FRESH_RENDERED_ACCOUNT_SPECIFICATION_AND_REAL_BEFORE_INSIDE_AFTER_BOUNDARIES",
+      "owner_action": "NON_DISRUPTIVE_VPS_CAPTURE_LATER",
+      "required_claims": ["ACCOUNT_SESSION_BOUNDARIES_REAL"],
+      "receipts": []
+    },
+    {
+      "id": "G0-07",
+      "area": "VPS restart, reconnect and fault behavior",
+      "status": "PENDING",
+      "evidence": "Reliability/private-probe PASS_14_OF_14; healthy private baseline hash accepted",
+      "remaining": "SEVEN_GENUINE_CONTROLLED_EVENTS",
+      "owner_action": "SEPARATE_EXPLICIT_APPROVAL_REQUIRED_BEFORE_RESTART_OR_DISCONNECT",
+      "required_claims": ["CONTROLLED_VPS_FAULTS_REAL"],
+      "receipts": []
+    },
+    {
+      "id": "G0-08",
+      "area": "Account-specific M1 evidence",
+      "status": "PENDING",
+      "evidence": "M1 and stress admission PASS_14_OF_14; private point snapshot hash accepted",
+      "remaining": "REAL_FROZEN_STRESS_ARTIFACT_AND_FRESH_ACCOUNT_EVALUATION",
+      "owner_action": "PRIVATE_VPS_CAPTURE_LATER",
+      "required_claims": ["ACCOUNT_MARGIN_STRESS_REAL"],
+      "receipts": []
+    },
+    {
+      "id": "G0-09",
+      "area": "A1 dual-path critical alerts",
+      "status": "PENDING",
+      "evidence": "Verifier PASS_7_OF_7; prepared-not-sent canary hash accepted",
+      "remaining": "REAL_EMAIL_TELEGRAM_DELIVERY_REPEAT_AND_ACKNOWLEDGEMENT",
+      "owner_action": "SEPARATE_EXPLICIT_APPROVAL_REQUIRED_BEFORE_DELIVERY",
+      "required_claims": ["DUAL_ALERT_DELIVERY_REAL"],
+      "receipts": []
+    },
+    {
+      "id": "G0-10",
+      "area": "Objective setup and lifecycle corpus",
+      "status": "PASS",
+      "evidence": "Setup feature PASS_56_OF_56 with ten full-count histories and ninety frozen lifecycle paths; execution PASS_21_OF_21",
+      "remaining": "REAL_REPLAY_VALIDATION_TRACKED_SEPARATELY",
+      "owner_action": "NONE",
+      "required_claims": ["EXHAUSTIVE_SETUP_CORPUS"],
+      "receipts": [{
+        "claim_type": "EXHAUSTIVE_SETUP_CORPUS",
+        "artifact_path": "phase0/validation/setup_features/VALIDATION_REPORT_2026-08-23_R4.md",
+        "artifact_sha256": "cfc779a0ecf81e87c21cd1201dffdebca5ad4276c1b9c5af8c8a05c54b1b2714",
+        "evidence_status": "ADMITTED",
+        "observed_utc": "2026-08-23T00:00:00Z",
+        "provenance": "SANITIZED_REPORT",
+        "private_source": false,
+        "published_hash_only": false,
+        "trading_authorized": false,
+        "external_python_trading_disabled": true,
+        "claim_limit": "Frozen synthetic corpus only; real replay is separate."
+      }]
+    },
+    {
+      "id": "G0-11",
+      "area": "Licensed immutable historical replay corpus",
+      "status": "PASS",
+      "evidence": "Owner-attested written Dukascopy permission; 4,854 official GET response files; admitted 10,619-H4/39,269-H1/157,019-M15 immutable bundle",
+      "remaining": "NONE_WITHIN_GATE0_DATA_ADMISSION_SCOPE",
+      "owner_action": "NONE",
+      "required_claims": ["LICENSED_IMMUTABLE_REPLAY_DATA"],
+      "receipts": [{
+        "claim_type": "LICENSED_IMMUTABLE_REPLAY_DATA",
+        "artifact_path": "phase0/validation/replay_acquisition/DUKASCOPY_DATASET_ADMISSION_REPORT_2026-08-24_R3.json",
+        "artifact_sha256": "5408257cc6fa152ddfb8cc2e4f73646858aa14432fbd18ad13db6eba86569c2d",
+        "evidence_status": "ADMITTED",
+        "observed_utc": "2026-08-24T10:20:00Z",
+        "provenance": "SANITIZED_HASH_RECEIPT",
+        "private_source": true,
+        "published_hash_only": true,
+        "trading_authorized": false,
+        "external_python_trading_disabled": true,
+        "claim_limit": "Personal non-commercial internal historical-data and replay evidence only; no redistribution."
+      }]
+    },
+    {
+      "id": "G0-12",
+      "area": "Registered chronological replay results",
+      "status": "PENDING",
+      "evidence": "Admitted real bundle; registered replay preflight failed closed before performance because R3 empirical cost holdout rejected",
+      "remaining": "VALIDATED_COST_STRESS_THEN_PREREGISTERED_CAUSAL_REPLAY_ROBUSTNESS_AND_NEW_UNTOUCHED_HOLDOUT",
+      "owner_action": "NONE_NOW",
+      "required_claims": ["REGISTERED_CHRONOLOGICAL_REPLAY"],
+      "receipts": []
+    },
+    {
+      "id": "G0-13",
+      "area": "Analyst contract and model selection",
+      "status": "PASS",
+      "evidence": "Sol selected by live benchmark; offline runtime and synthetic chronology PASS_27_OF_27",
+      "remaining": "ACTUAL_RESPONSE_VALIDATION_TRACKED_SEPARATELY",
+      "owner_action": "NONE",
+      "required_claims": ["LIVE_MODEL_BENCHMARK", "ANALYST_OFFLINE_CONTRACT"],
+      "receipts": [
+        {
+          "claim_type": "LIVE_MODEL_BENCHMARK",
+          "artifact_path": "phase0/benchmark/openai_analyst/SECOND_LIVE_BENCHMARK_EVALUATION_2026-08-23.md",
+          "artifact_sha256": "4e092b22ac12787f632001f8a8eb17c0e5a9321e657c77b953a32b2e683169a2",
+          "evidence_status": "ADMITTED",
+          "observed_utc": "2026-08-23T00:00:00Z",
+          "provenance": "SANITIZED_HASH_RECEIPT",
+          "private_source": true,
+          "published_hash_only": true,
+          "trading_authorized": false,
+          "external_python_trading_disabled": true,
+          "claim_limit": "Frozen finite benchmark only; no universal safety claim."
+        },
+        {
+          "claim_type": "ANALYST_OFFLINE_CONTRACT",
+          "artifact_path": "phase0/validation/analyst_runtime/VALIDATION_REPORT_2026-08-23_R2.md",
+          "artifact_sha256": "5e49d6be163f62777edfd09e52a977b25f09d8c93cd981459df33a839f507234",
+          "evidence_status": "ADMITTED",
+          "observed_utc": "2026-08-23T00:00:00Z",
+          "provenance": "SANITIZED_REPORT",
+          "private_source": false,
+          "published_hash_only": false,
+          "trading_authorized": false,
+          "external_python_trading_disabled": true,
+          "claim_limit": "Offline contract and synthetic chronology only."
+        }
+      ]
+    },
+    {
+      "id": "G0-14",
+      "area": "Production Analyst chronological non-trading validation",
+      "status": "PENDING",
+      "evidence": "Strict local acceptance boundary and direct bundle re-admission remain ready; R28 made no call because registered replay prerequisite failed",
+      "remaining": "ACTUAL_STORE_FALSE_TOOL_FREE_SOL_RESPONSES_AFTER_ADMITTED_REGISTERED_REPLAY",
+      "owner_action": "NONE_UNTIL_REPLAY_PREREQUISITE_PASSES",
+      "required_claims": ["LIVE_CHRONOLOGICAL_ANALYST"],
+      "receipts": []
+    }
+  ],
+  "owner_actions_requested_now": [],
+  "claim_limit": "R28 frozen-receipt Gate 0 checklist; 6 PASS / 8 PENDING, no item authorizes trading."
+}
+

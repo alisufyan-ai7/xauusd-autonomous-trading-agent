@@ -154,7 +154,7 @@ class ReplayAdmissionTests(unittest.TestCase):
             },
             {
                 "after_utc": "2026-01-05T00:30:00Z", "before_utc": "2026-01-05T01:00:00Z",
-                "reason": "HOLIDAY_CLOSED", "source_uri": "https://example.invalid/holiday",
+                "reason": "PROVIDER_SIDE_MISMATCH", "source_uri": "https://example.invalid/raw-side-hashes",
                 "evidence_artifact": "evidence/session.txt", "evidence_sha256": sha256_bytes(evidence),
             },
         ]

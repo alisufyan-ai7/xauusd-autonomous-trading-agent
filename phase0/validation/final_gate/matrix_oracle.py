@@ -66,6 +66,11 @@ FROZEN_ADMITTED_RECEIPTS = {
         "cfc779a0ecf81e87c21cd1201dffdebca5ad4276c1b9c5af8c8a05c54b1b2714",
         "SANITIZED_REPORT",
     ),
+    "LICENSED_IMMUTABLE_REPLAY_DATA": (
+        "phase0/validation/replay_acquisition/DUKASCOPY_DATASET_ADMISSION_REPORT_2026-08-24_R3.json",
+        "5408257cc6fa152ddfb8cc2e4f73646858aa14432fbd18ad13db6eba86569c2d",
+        "SANITIZED_HASH_RECEIPT",
+    ),
     "LIVE_MODEL_BENCHMARK": (
         "phase0/benchmark/openai_analyst/SECOND_LIVE_BENCHMARK_EVALUATION_2026-08-23.md",
         "4e092b22ac12787f632001f8a8eb17c0e5a9321e657c77b953a32b2e683169a2",
@@ -144,7 +149,7 @@ def evaluate_matrix(
     payload: Mapping[str, Any], artifact_hashes: Mapping[str, str],
 ) -> MatrixResult:
     reasons: list[str] = []
-    if payload.get("schema_version") != "gate0-final-evidence-matrix-1.2":
+    if payload.get("schema_version") != "gate0-final-evidence-matrix-1.3":
         reasons.append("SCHEMA_INVALID")
     if payload.get("trading_authorized") is not False:
         reasons.append("TRADING_AUTHORIZATION_INVALID")

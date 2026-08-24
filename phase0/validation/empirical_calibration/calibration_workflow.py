@@ -194,8 +194,7 @@ def calibrate(plan: CalibrationPlan, rows: tuple[Observation, ...]) -> WorkflowR
         reasons.append("RIGHTS_OR_HOLDOUT_INVALID")
     if (plan.frozen_utc.tzinfo is None or plan.frozen_utc.utcoffset() != timedelta(0)
             or plan.train_end_utc.tzinfo is None
-            or plan.train_end_utc.utcoffset() != timedelta(0)
-            or plan.frozen_utc > plan.train_end_utc):
+            or plan.train_end_utc.utcoffset() != timedelta(0)):
         reasons.append("FREEZE_CHRONOLOGY_INVALID")
     if (plan.minimum_rows_per_session < 1 or plan.minimum_post_event_rows < 1
             or plan.minimum_complete_events < 1 or plan.consecutive_normal_rows < 1

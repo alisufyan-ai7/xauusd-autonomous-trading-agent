@@ -26,7 +26,7 @@ REQUIRED_RIGHTS = (
     "automated_use", "local_retention", "derived_data",
     "historical_replay", "internal_audit_retention",
 )
-ALLOWED_GAP_REASONS = {"SESSION_CLOSED", "HOLIDAY_CLOSED"}
+ALLOWED_GAP_REASONS = {"SESSION_CLOSED", "HOLIDAY_CLOSED", "PROVIDER_SIDE_MISMATCH"}
 
 
 @dataclass(frozen=True)

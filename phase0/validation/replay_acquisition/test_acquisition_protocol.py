@@ -140,13 +140,23 @@ class AcquisitionProtocolTests(unittest.TestCase):
         self.assertIn("PURGE_GAP_TOO_SHORT", reasons)
         self.assertIn("EMBARGO_GAP_TOO_SHORT", reasons)
 
-    def test_terms_must_be_effective_at_review_and_acquisition(self):
+    def test_terms_must_be_effective_at_review_not_market_observation_start(self):
         plan = fixture()
         plan["rights"]["terms_effective_date"] = "2020-01-02"
         resign(plan)
         reasons = evaluate_plan(plan, {"terms.txt": TERMS}).reason_codes
         self.assertIn("TERMS_NOT_EFFECTIVE_AT_REVIEW", reasons)
-        self.assertIn("TERMS_NOT_EFFECTIVE_AT_ACQUISITION", reasons)
+        self.assertNotIn("TERMS_NOT_EFFECTIVE_AT_ACQUISITION", reasons)
+
+        plan = fixture()
+        plan["registered_utc"] = "2026-08-24T00:01:00Z"
+        plan["rights"]["reviewed_utc"] = "2026-08-24T00:00:00Z"
+        plan["rights"]["terms_effective_date"] = "2026-08-24"
+        resign(plan)
+        self.assertEqual(
+            "READY_FOR_AUTHORIZED_ACQUISITION",
+            evaluate_plan(plan, {"terms.txt": TERMS}).status,
+        )
 
     def test_holdout_random_split_and_transform_relaxation_fail(self):
         plan = fixture()

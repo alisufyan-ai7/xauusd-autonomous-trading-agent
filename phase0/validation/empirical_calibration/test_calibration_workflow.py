@@ -79,6 +79,10 @@ class CalibrationWorkflowTests(unittest.TestCase):
                   if key != "artifact_sha256"}
         self.assertEqual(artifact_hash(values), result.candidate.artifact_sha256)
 
+    def test_registration_after_historical_cutoff_does_not_retroactively_fail(self):
+        plan = replace(self.plan, frozen_utc=datetime(2026, 8, 24, tzinfo=UTC))
+        self.assertEqual("CANDIDATE_ONLY", calibrate(plan, self.rows).status)
+
     def test_holdout_exposure_fails_closed(self):
         altered = self.rows + (replace(
             self.rows[-1], observed_utc=self.rows[-1].observed_utc + timedelta(minutes=1),
@@ -153,7 +157,7 @@ class CalibrationWorkflowTests(unittest.TestCase):
     def test_freeze_cutoff_rights_and_policy_fail_closed(self):
         bad = replace(
             self.plan, rights_status="UNKNOWN", holdout_status="OPEN",
-            frozen_utc=datetime(2026, 1, 1, tzinfo=UTC), quantile_probability=1,
+            frozen_utc=datetime(2026, 1, 1), quantile_probability=1,
         )
         reasons = calibrate(bad, self.rows).reason_codes
         self.assertIn("RIGHTS_OR_HOLDOUT_INVALID", reasons)

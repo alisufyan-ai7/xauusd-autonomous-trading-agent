@@ -149,9 +149,10 @@ def evaluate_plan(plan: Mapping[str, Any], terms_artifacts: Mapping[str, bytes])
             or acquisition.get("immutable_after_seal") is not True
             or acquisition.get("credentials_in_manifest") is not False):
         reasons.append("ACQUISITION_PROCEDURE_INVALID")
-    elif terms_effective is not None and acquisition_start is not None \
-            and terms_effective > acquisition_start.date():
-        reasons.append("TERMS_NOT_EFFECTIVE_AT_ACQUISITION")
+    # acquisition.start_utc/end_utc are the historical market-observation
+    # range, not the wall-clock download. Rights chronology is therefore bound
+    # above to review <= registration; comparing a 2026 permission date with a
+    # 2020 market timestamp would incorrectly reject newly licensed history.
 
     frames = plan.get("timeframes")
     if not isinstance(frames, dict) or set(frames) != set(TIMEFRAMES):

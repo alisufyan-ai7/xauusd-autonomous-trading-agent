@@ -1,0 +1,36 @@
+{
+  "schema_version": "dukascopy-calibration-sanitized-1.0",
+  "status": "FAIL_CLOSED",
+  "bundle_root_sha256": "138749c9c4c89104a115a25ba4854f61dd4baef04694075602e09494b889ea97",
+  "trials": [
+    {
+      "id": "R1_TRAIN_TO_VALIDATION",
+      "development_rows": 94430,
+      "validation_rows": 23361,
+      "candidate_sha256": "c4f54c54a79034481e24b3024347c4631229e97ac9a9e361a10accb6963e4437",
+      "status": "REJECTED",
+      "failed_metrics": ["return_bps", "range_bps"]
+    },
+    {
+      "id": "R2_FRESH_HOLDOUT",
+      "holdout_rows": 34717,
+      "complete_events": 1407,
+      "status": "REJECTED",
+      "failed_metrics": ["spread_points", "slippage_proxy_points", "gap_points", "round_trip_cost_usd", "return_bps", "range_bps"]
+    },
+    {
+      "id": "R3_FRESH_EXTENSION_HOLDOUT",
+      "holdout_rows": 3113,
+      "complete_events": 127,
+      "status": "REJECTED",
+      "report_sha256": "2d6ee07f8d43f736e73a661106ca2493c4c8aec6c6b01390b4afcec104735783",
+      "failed_metrics": ["spread_points", "gap_points", "round_trip_cost_usd"]
+    }
+  ],
+  "finding": "Absolute spread, gap and cost tails are nonstationary across the chronological partitions; frozen replay constants are not admitted.",
+  "slippage_basis": "NON_TRADING_ADVERSE_LATENCY_PROXY",
+  "execution_slippage_claimed": false,
+  "holdout_result_preserved": true,
+  "external_python_trading": "DISABLED",
+  "trading_authorized": false
+}
