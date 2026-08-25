@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.33",
+  "recorded_utc": "2026-08-25T09:57:44Z",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "6_PASS_8_PENDING",
+  "controlled_tests": "R31_PASS_338_OF_338_UNCHANGED",
+  "G0-07": {
+    "approval": "ACTIVE_FOR_FROZEN_PACKET",
+    "execution_route": "OWNER_VERIFIED_VNC_OR_OTHER_EXPLICITLY_CONNECTED_CONTROL",
+    "execution_started": false
+  },
+  "G0-09": {
+    "primary_email_identity": "OWNER_CONFIRMED_AND_CONNECTED",
+    "telegram_identity": "OWNER_CONFIRMED_EXACT",
+    "gmail_label": "XAUUSD Gate 0 Alerts",
+    "gmail_sender_available": true,
+    "telegram_sender_available_in_current_workspace": false,
+    "dual_path_preflight": "FAIL_CLOSED_NO_SIMULTANEOUS_TELEGRAM_TRANSPORT",
+    "canary_started": false,
+    "email_sent": false,
+    "telegram_sent": false
+  },
+  "r4_window_preserved_unopened": true,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Recipient resolution and transport preflight only; identifiers are not republished and G0-09 remains pending."
+}
