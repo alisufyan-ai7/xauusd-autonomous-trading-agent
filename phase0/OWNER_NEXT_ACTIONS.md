@@ -6,9 +6,9 @@
 
 ## Current owner actions
 
-G0-07: the first attempt failed closed before its first matrix event. Approve
-one corrected retry before using `OWNER_G0_07_RETRY_PACKET_R35.md`; do not rerun
-the R34 command until that approval is explicit.
+G0-07: R34 and the single authorized corrected R35 retry both failed closed
+before their first post-baseline matrix event. Do not run a third retry. No
+owner action is requested while the technical evidence is reviewed.
 
 G0-09: create the dedicated bot and Gmail app password, then use the masked
 setup and one-command canary in `OWNER_G0_09_SENDER_PACKET_R34.md`. Never put
@@ -36,5 +36,5 @@ The following remain separately controlled:
 No demo/live trading or unknown-exposure closure is authorized.
 
 The authoritative eight-item timing/dependency table is
-`GATE_0_CLOSURE_TIMELINE_R35.md`. The earliest possible Gate 0 PASS is after
+`GATE_0_CLOSURE_TIMELINE_R36.md`. The earliest possible Gate 0 PASS is after
 2026-09-23, and the actual date remains dependent on G0-04 and G0-12 evidence.
