@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from phase0.validation.exposure_preflight.exposure_preflight import capture
+from phase0.validation.exposure_preflight.exposure_preflight import capture, verify_reconciliation
 
 
 class Rec:
@@ -69,6 +69,19 @@ class ExposurePreflightTests(unittest.TestCase):
         rows = [json.loads(line) for line in
                 (output / "exposure_preflight_records.jsonl").read_text().splitlines()]
         self.assertEqual(rows[0]["record_sha256"], rows[1]["prior_record_sha256"])
+        reconciled = verify_reconciliation(output)
+        self.assertEqual("PASS_RECONCILED", reconciled["status"])
+        self.assertEqual(rows[0]["record_sha256"], reconciled["pre_record_sha256"])
+        self.assertEqual(rows[1]["record_sha256"], reconciled["post_record_sha256"])
+
+    def test_reconciliation_requires_exact_safe_pre_post_pair(self):
+        _, output = self._capture()
+        self.assertIn("EXACT_PRE_POST_PAIR_REQUIRED", verify_reconciliation(output)["reasons"])
+        capture(FakeAPI, output, "POST_RECOVERY")
+        capture(FakeAPI, output, "POST_RECOVERY")
+        result = verify_reconciliation(output)
+        self.assertEqual("FAIL_CLOSED", result["status"])
+        self.assertIn("EXACT_PRE_POST_PAIR_REQUIRED", result["reasons"])
 
     def test_positions_or_orders_fail_closed(self):
         FakeAPI.positions = (object(),)

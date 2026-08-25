@@ -120,17 +120,55 @@ def capture(api: Any, output: Path, phase: str) -> dict[str, Any]:
     }
 
 
+def verify_reconciliation(output: Path) -> dict[str, Any]:
+    """Verify the exact pre/post zero-exposure chain used by the R31 drill."""
+    output = private_target(output)
+    chain = output / "exposure_preflight_records.jsonl"
+    if not chain.is_file():
+        raise ValueError("exposure preflight chain missing")
+    sequence, final_hash = _validate_chain(chain)
+    rows = [json.loads(line) for line in chain.read_text(encoding="utf-8").splitlines()]
+    reasons: list[str] = []
+    if sequence != 2 or len(rows) != 2:
+        reasons.append("EXACT_PRE_POST_PAIR_REQUIRED")
+    expected = ("PRE_DRILL", "POST_RECOVERY")
+    for index, phase in enumerate(expected):
+        if index >= len(rows):
+            break
+        row = rows[index]
+        if row.get("phase") != phase:
+            reasons.append("PHASE_SEQUENCE_INVALID")
+        if (row.get("status") != "PASS_NO_OPEN_EXPOSURE"
+                or row.get("connected") is not True
+                or row.get("tradeapi_disabled") is not True
+                or row.get("positions_count") != 0
+                or row.get("pending_orders_count") != 0
+                or row.get("reasons") != []):
+            reasons.append(f"{phase}_NOT_ZERO_SAFE")
+    return {
+        "status": "PASS_RECONCILED" if not reasons else "FAIL_CLOSED",
+        "reasons": sorted(set(reasons)),
+        "pre_record_sha256": rows[0].get("record_sha256") if rows else None,
+        "post_record_sha256": rows[1].get("record_sha256") if len(rows) > 1 else None,
+        "final_record_sha256": final_hash,
+        "risk_authority_restored": False,
+    }
+
+
 def main() -> int:
     from readonly_mt5 import ReadOnlyExposureMT5
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--phase", choices=sorted(PHASES), required=True)
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--phase", choices=sorted(PHASES))
+    group.add_argument("--verify-reconciliation", action="store_true")
     args = parser.parse_args()
     try:
-        result = capture(ReadOnlyExposureMT5, args.output, args.phase)
+        result = (verify_reconciliation(args.output) if args.verify_reconciliation
+                  else capture(ReadOnlyExposureMT5, args.output, args.phase))
         print(json.dumps(result, sort_keys=True))
-        return 0 if result["status"] == "PASS_NO_OPEN_EXPOSURE" else 2
+        return 0 if result["status"] in {"PASS_NO_OPEN_EXPOSURE", "PASS_RECONCILED"} else 2
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"FAIL CLOSED: {exc}", file=sys.stderr)
         return 2

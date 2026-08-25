@@ -6,9 +6,10 @@ bounded helper must report zero for both before disruption and after final
 recovery. It cannot mutate or close exposure.
 
 This directory converts the restart/reconnect/network/clock/build failure matrix
-into a deterministic, standard-library-only offline oracle. It contains no MT5
-adapter, network client, process-control code, credential input, or trading
-operation.
+into a deterministic, standard-library-only offline oracle. The oracle itself
+contains no MT5 adapter, network client, process-control code, credential input,
+or trading operation. Separately, the owner-approved R31 action packet has a
+bounded Windows orchestration wrapper described below.
 
 The corpus covers 25 scenarios: clean startup, external-Python protection,
 package/static verification, durable-write failure, attach/disconnect/reconnect,
@@ -66,3 +67,34 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 Run each event only in its genuine observed state. Never label a normal sample
 as a fault. Keep `PRIVATE_HMAC_KEY.bin`, Windows Time output and
 `vps_probe_records.jsonl` private.
+
+## One-command R31 orchestration
+
+`run_g0_07_fault_drill.ps1` automates only the seven frozen post-baseline R31
+events. It requires an elevated interactive PowerShell console and the accepted
+baseline at `C:\Gate0Private\VpsFaultMatrix-R19`. It performs the pre/post
+read-only zero-exposure checks, asserts the external-Python-disabled barrier,
+verifies the immutable prefix after every capture, polls bounded recovery, and
+emits a publication-safe final summary while leaving all raw evidence private.
+
+The network outage is limited to the single unambiguous active IPv4 default
+route. A SYSTEM scheduled-task watchdog restores that adapter after three
+minutes if the interactive process cannot do so first. The Windows restart uses
+a highest-privilege interactive-logon scheduled task to resume the same script
+without storing credentials. The task verifies that the repository revision is
+unchanged and that the Windows boot timestamp changed before it captures the
+restart event. Keep the VNC console available as the out-of-band recovery path.
+
+From an elevated PowerShell console at the repository root, the single command
+is:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\phase0\validation\vps_reliability\run_g0_07_fault_drill.ps1
+```
+
+The wrapper can stop/restart only the single observed `terminal64` process,
+disable/re-enable only the selected network adapter, and restart Windows once
+at the registered point. It contains no broker order, login, symbol-selection,
+position-closing, pending-order, credential, messaging, or trading capability.
+Any ambiguity or failed recovery exits with code 2 and preserves a private
+`FAIL_CLOSED` checkpoint. Do not manually relabel or edit the private chains.
