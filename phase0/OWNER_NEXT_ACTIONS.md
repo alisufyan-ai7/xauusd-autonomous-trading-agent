@@ -1,6 +1,6 @@
 # Owner Next Actions — Gate 0 Closure
 
-**Gate 0:** `INCOMPLETE` — 6 `PASS` / 8 `PENDING`  
+**Gate 0:** `INCOMPLETE` — 7 `PASS` / 7 `PENDING`  
 **Trading authorization:** none  
 **External Python trading:** keep disabled
 
@@ -10,11 +10,10 @@ G0-07: R34 and the single authorized corrected R35 retry both failed closed
 before their first post-baseline matrix event. Do not run a third retry. No
 owner action is requested while the technical evidence is reviewed.
 
-G0-09: two masked setup attempts failed closed at Telegram `getMe` before any
-binding or delivery. Do not retry the R34 setup until the R37 secret-safe
-diagnostic correction is published. Then run the same setup command once and
-return only its bounded cause code or `CONFIGURED_NOT_SENT`. Never put either
-secret in chat or GitHub.
+G0-09 is closed at `PASS_SPEC_ONLY`. The frozen email-primary and
+Telegram-secondary canary, bounded exact-digest acknowledgement and private
+audit chain passed. Do not repeat the Gate 0 canary. No risk or trading
+authority was restored.
 
 Dukascopy rights and immutable H4/H1/M15 data admission are closed under
 D-0105/D-0106. The original provider email may later supplement the
@@ -36,6 +35,6 @@ The following remain separately controlled:
 
 No demo/live trading or unknown-exposure closure is authorized.
 
-The authoritative eight-item timing/dependency table is
-`GATE_0_CLOSURE_TIMELINE_R37.md`. The earliest possible Gate 0 PASS is after
+The authoritative seven-item timing/dependency table is
+`GATE_0_CLOSURE_TIMELINE_R38.md`. The earliest possible Gate 0 PASS is after
 2026-09-23, and the actual date remains dependent on G0-04 and G0-12 evidence.

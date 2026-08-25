@@ -71,6 +71,11 @@ FROZEN_ADMITTED_RECEIPTS = {
         "5408257cc6fa152ddfb8cc2e4f73646858aa14432fbd18ad13db6eba86569c2d",
         "SANITIZED_HASH_RECEIPT",
     ),
+    "DUAL_ALERT_DELIVERY_REAL": (
+        "phase0/evidence/G0_09_PASS_SPEC_ONLY_2026-08-25.json",
+        "dd9b0734fc52939dd281cba714b7327081f2ef36bbd1744acb92fc4cc70816d6",
+        "SANITIZED_HASH_RECEIPT",
+    ),
     "LIVE_MODEL_BENCHMARK": (
         "phase0/benchmark/openai_analyst/SECOND_LIVE_BENCHMARK_EVALUATION_2026-08-23.md",
         "4e092b22ac12787f632001f8a8eb17c0e5a9321e657c77b953a32b2e683169a2",

@@ -50,10 +50,10 @@ class FinalGateMatrixTests(unittest.TestCase):
         self.payload = json.loads(MATRIX.read_text(encoding="utf-8"))
         self.hashes = artifact_hashes(self.payload)
 
-    def test_published_matrix_is_receipt_bound_six_pass_eight_pending(self):
+    def test_published_matrix_is_receipt_bound_seven_pass_seven_pending(self):
         result = evaluate_matrix(self.payload, self.hashes)
         self.assertEqual("INCOMPLETE", result.verdict)
-        self.assertEqual((6, 8, 0), (result.passed, result.pending, result.failed))
+        self.assertEqual((7, 7, 0), (result.passed, result.pending, result.failed))
 
     def test_declared_all_pass_without_receipts_fails_closed(self):
         payload = copy.deepcopy(self.payload)
