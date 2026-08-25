@@ -29,6 +29,12 @@ the owner-only ACL at `C:\Gate0Private\AlertSender-R34`. They can be decrypted
 only under the same Windows user profile on the same VPS. Setup prints
 `CONFIGURED_NOT_SENT`; it never sends a canary.
 
+If Telegram setup fails, R37 prints only one bounded cause such as
+`TOKEN_REJECTED_HTTP_401`, `TLS_CERTIFICATE_VERIFICATION_FAILED`,
+`DNS_RESOLUTION_FAILED`, `NETWORK_TIMEOUT`, `CONNECTION_REFUSED` or
+`NETWORK_OR_PROXY_FAILURE`. Exception details, token values and token-bearing
+URLs are never rendered. A failed setup does not bind a chat or send a canary.
+
 ## Approved one-command canary
 
 Only while the owner can return the exact acknowledgement within fifteen

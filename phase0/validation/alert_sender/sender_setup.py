@@ -6,10 +6,12 @@ import argparse
 import imaplib
 import json
 import secrets
+import socket
 import smtplib
 import ssl
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -19,6 +21,36 @@ TELEGRAM_ROOT = "https://api.telegram.org"
 SMTP_HOST = "smtp.gmail.com"
 IMAP_HOST = "imap.gmail.com"
 LABEL = "XAUUSD Gate 0 Alerts"
+
+
+def _telegram_failure_code(exc: BaseException) -> str:
+    """Return a bounded transport code without rendering a token-bearing URL."""
+    if isinstance(exc, urllib.error.HTTPError):
+        if exc.code in {401, 404}:
+            return f"TOKEN_REJECTED_HTTP_{exc.code}"
+        return f"HTTP_{exc.code}"
+    if isinstance(exc, json.JSONDecodeError):
+        return "INVALID_JSON_RESPONSE"
+    if isinstance(exc, urllib.error.URLError):
+        reason = exc.reason
+        if isinstance(reason, ssl.SSLCertVerificationError):
+            return "TLS_CERTIFICATE_VERIFICATION_FAILED"
+        if isinstance(reason, ssl.SSLError):
+            return "TLS_HANDSHAKE_FAILED"
+        if isinstance(reason, (TimeoutError, socket.timeout)):
+            return "NETWORK_TIMEOUT"
+        if isinstance(reason, socket.gaierror):
+            return "DNS_RESOLUTION_FAILED"
+        if isinstance(reason, ConnectionRefusedError):
+            return "CONNECTION_REFUSED"
+        return "NETWORK_OR_PROXY_FAILURE"
+    if isinstance(exc, ssl.SSLCertVerificationError):
+        return "TLS_CERTIFICATE_VERIFICATION_FAILED"
+    if isinstance(exc, ssl.SSLError):
+        return "TLS_HANDSHAKE_FAILED"
+    if isinstance(exc, (TimeoutError, socket.timeout)):
+        return "NETWORK_TIMEOUT"
+    return "UNEXPECTED_TRANSPORT_FAILURE"
 
 
 def private_target(path: Path) -> Path:
@@ -39,9 +71,12 @@ def _telegram(token: str, method: str, payload: dict[str, Any] | None = None,
         with opener(request, timeout=35) as response:
             result = json.loads(response.read())
     except Exception as exc:  # never expose the token-bearing request URL
-        raise ValueError(f"Telegram {method} failed") from exc
+        code = _telegram_failure_code(exc)
+        raise ValueError(f"Telegram {method} failed closed: {code}") from None
     if result.get("ok") is not True:
-        raise ValueError(f"Telegram {method} rejected the request")
+        error_code = result.get("error_code")
+        safe_code = f"API_REJECTED_{error_code}" if isinstance(error_code, int) else "API_REJECTED"
+        raise ValueError(f"Telegram {method} failed closed: {safe_code}")
     return result["result"]
 
 

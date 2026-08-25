@@ -1,15 +1,20 @@
 import ast
 import json
+import ssl
 import tempfile
 import threading
+import traceback
 import unittest
+import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from phase0.validation.alert_sender.dual_channel_canary import (
     SUBJECT, canary_body, execute,
 )
-from phase0.validation.alert_sender.sender_setup import bind_telegram, private_target
+from phase0.validation.alert_sender.sender_setup import (
+    _telegram, bind_telegram, private_target,
+)
 
 
 class Clock:
@@ -118,6 +123,38 @@ class AlertSenderTests(unittest.TestCase):
             return {"id": 1, "username": "fixture_bot"} if method == "getMe" else {"url": "https://invalid"}
         with self.assertRaisesRegex(ValueError, "webhook"):
             bind_telegram("fixture", "owner", "nonce", telegram=telegram)
+
+    def test_telegram_http_rejection_is_classified_without_token_or_url(self):
+        secret = "fixture-secret-token"
+        def opener(request, timeout):
+            raise urllib.error.HTTPError(request.full_url, 401, "Unauthorized", None, None)
+        with self.assertRaisesRegex(ValueError, "TOKEN_REJECTED_HTTP_401") as raised:
+            _telegram(secret, "getMe", opener=opener)
+        rendered = str(raised.exception)
+        self.assertNotIn(secret, rendered)
+        self.assertNotIn("api.telegram.org", rendered)
+        formatted = "".join(traceback.format_exception(raised.exception))
+        self.assertNotIn(secret, formatted)
+        self.assertNotIn("api.telegram.org", formatted)
+
+    def test_telegram_tls_failure_is_classified_without_exception_detail(self):
+        def opener(_request, timeout):
+            certificate_error = ssl.SSLCertVerificationError("private fixture detail")
+            raise urllib.error.URLError(certificate_error)
+        with self.assertRaisesRegex(ValueError, "TLS_CERTIFICATE_VERIFICATION_FAILED") as raised:
+            _telegram("fixture-secret", "getMe", opener=opener)
+        self.assertNotIn("private fixture detail", str(raised.exception))
+
+    def test_telegram_api_rejection_exposes_only_numeric_error_code(self):
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *_args): return False
+            def read(self):
+                return json.dumps({"ok": False, "error_code": 401,
+                                   "description": "private fixture detail"}).encode()
+        with self.assertRaisesRegex(ValueError, "API_REJECTED_401") as raised:
+            _telegram("fixture-secret", "getMe", opener=lambda *_args, **_kwargs: Response())
+        self.assertNotIn("private fixture detail", str(raised.exception))
 
     def test_messages_are_sanitized_and_bound_to_digest(self):
         digest = "a" * 64
