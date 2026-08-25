@@ -1,0 +1,18 @@
+{
+  "schema": "gate0-g007-public-fail-closed-evidence-1.0",
+  "recorded_utc": "2026-08-25T20:33:06Z",
+  "source": "OWNER_SUPPLIED_VPS_CONSOLE_TRANSCRIPT",
+  "source_transcript_sha256": "6e5b26ac5fe4f91db7e7a03a0e77e89cc68379bb6802530c65f72921e5452cd6",
+  "attempt_revision": "68e01a8585301742a1e7ea066629458c788df8d0",
+  "offline_vps_controls": "PASS_29_OF_29",
+  "pre_drill_zero_exposure_check": "PASS_INFERRED_FROM_WRAPPER_CONTROL_FLOW",
+  "failure": "DISCONNECTED_STATE_NOT_OBSERVED_WITHIN_60_SECONDS",
+  "disconnect_record_appended": false,
+  "frozen_matrix_events_after_attempt": "BASELINE_ONLY",
+  "network_restore_path": "SUCCESS_INFERRED_FROM_WRAPPER_CONTROL_FLOW_AND_RETURNED_PROMPT",
+  "later_fault_events_started": false,
+  "gate_effect": "G0-07_REMAINS_PENDING",
+  "external_python_trading_required_state": "DISABLED",
+  "trading_authorized": false,
+  "claim_limit": "Sanitized control-flow result only; raw private transcript, paths and records are not published."
+}

@@ -189,6 +189,10 @@ function Get-NetworkInterfaceIndex {
   $routes = @(Get-NetRoute -AddressFamily IPv4 -DestinationPrefix "0.0.0.0/0" -ErrorAction Stop |
     Where-Object { $_.State -eq "Alive" })
   if (-not $routes) { throw "FAIL CLOSED: no active IPv4 default route was found." }
+  $routeInterfaces = @($routes | Select-Object -ExpandProperty InterfaceIndex -Unique)
+  if ($routeInterfaces.Count -ne 1) {
+    throw "FAIL CLOSED: more than one active IPv4 default-route adapter exists; the bounded path is ambiguous."
+  }
   $ranked = foreach ($route in $routes) {
     $interface = Get-NetIPInterface -AddressFamily IPv4 -InterfaceIndex $route.InterfaceIndex -ErrorAction Stop
     [pscustomobject]@{
@@ -214,7 +218,7 @@ function Register-NetworkWatchdog {
   $encoded = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($command))
   $action = New-ScheduledTaskAction -Execute "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" `
     -Argument "-NoProfile -NonInteractive -EncodedCommand $encoded"
-  $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(3)
+  $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(4)
   $principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
   Register-ScheduledTask -TaskName $NetworkWatchdogTaskName -Action $action -Trigger $trigger `
     -Principal $principal -Description "Bounded G0-07 R31 network recovery watchdog" | Out-Null
@@ -277,16 +281,23 @@ function Complete-Drill {
     (Join-Path $PSScriptRoot "verify_private_matrix.py"), "--output", $Private
   )
   if ($matrix.status -ne "PASS") { throw "FAIL CLOSED: final private matrix did not pass." }
+  $checkpoint = Read-Checkpoint
+  if ($null -eq $checkpoint -or
+      -not ($checkpoint.PSObject.Properties.Name -contains "pre_exposure_record_sha256")) {
+    throw "FAIL CLOSED: bound pre-drill exposure hash is missing."
+  }
+  $preHash = $checkpoint.pre_exposure_record_sha256
   $post = Capture-Exposure -Phase "POST_RECOVERY"
   $reconciliation = Invoke-PythonJson -Arguments @(
     (Join-Path $Repo "phase0\validation\exposure_preflight\exposure_preflight.py"),
-    "--output", $Private, "--verify-reconciliation"
+    "--output", $Private, "--verify-reconciliation",
+    "--pre-sha256", $preHash, "--post-sha256", $post.record_sha256
   )
   if ($reconciliation.status -ne "PASS_RECONCILED" -or
+      $reconciliation.pre_record_sha256 -ne $preHash -or
       $reconciliation.post_record_sha256 -ne $post.record_sha256) {
     throw "FAIL CLOSED: pre/post exposure reconciliation failed."
   }
-  $preHash = $reconciliation.pre_record_sha256
   $safe = [ordered]@{
     schema = "gate0-vps-fault-publication-safe-summary-1.0"
     status = "PASS"
@@ -368,7 +379,14 @@ try {
     Register-NetworkWatchdog -InterfaceIndex $interfaceIndex
     try {
       Get-NetAdapter -InterfaceIndex $interfaceIndex -ErrorAction Stop | Disable-NetAdapter -Confirm:$false
-      $null = Wait-ReadOnlyState -Expected "DISCONNECTED" -TimeoutSeconds 60
+      $adapterDeadline = (Get-Date).AddSeconds(20)
+      do {
+        $adapterState = (Get-NetAdapter -InterfaceIndex $interfaceIndex -ErrorAction Stop).Status
+        if ($adapterState -eq "Disabled") { break }
+        Start-Sleep -Seconds 1
+      } while ((Get-Date) -lt $adapterDeadline)
+      if ($adapterState -ne "Disabled") { throw "FAIL CLOSED: selected adapter did not enter Disabled state." }
+      $null = Wait-ReadOnlyState -Expected "DISCONNECTED" -TimeoutSeconds 150
       $null = Capture-Event -Event "DISCONNECT"
     } finally {
       Restore-NetworkAndRemoveWatchdog -InterfaceIndex $interfaceIndex

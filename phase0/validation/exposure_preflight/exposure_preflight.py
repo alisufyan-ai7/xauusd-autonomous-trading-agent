@@ -6,12 +6,14 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 PHASES = {"PRE_DRILL", "POST_RECOVERY"}
+SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def private_target(path: Path) -> Path:
@@ -120,7 +122,20 @@ def capture(api: Any, output: Path, phase: str) -> dict[str, Any]:
     }
 
 
-def verify_reconciliation(output: Path) -> dict[str, Any]:
+def _safe_zero_row(row: dict[str, Any], phase: str) -> bool:
+    return (
+        row.get("phase") == phase
+        and row.get("status") == "PASS_NO_OPEN_EXPOSURE"
+        and row.get("connected") is True
+        and row.get("tradeapi_disabled") is True
+        and row.get("positions_count") == 0
+        and row.get("pending_orders_count") == 0
+        and row.get("reasons") == []
+    )
+
+
+def verify_reconciliation(output: Path, *, pre_sha256: str | None = None,
+                          post_sha256: str | None = None) -> dict[str, Any]:
     """Verify the exact pre/post zero-exposure chain used by the R31 drill."""
     output = private_target(output)
     chain = output / "exposure_preflight_records.jsonl"
@@ -129,27 +144,40 @@ def verify_reconciliation(output: Path) -> dict[str, Any]:
     sequence, final_hash = _validate_chain(chain)
     rows = [json.loads(line) for line in chain.read_text(encoding="utf-8").splitlines()]
     reasons: list[str] = []
-    if sequence != 2 or len(rows) != 2:
-        reasons.append("EXACT_PRE_POST_PAIR_REQUIRED")
-    expected = ("PRE_DRILL", "POST_RECOVERY")
-    for index, phase in enumerate(expected):
-        if index >= len(rows):
-            break
-        row = rows[index]
-        if row.get("phase") != phase:
-            reasons.append("PHASE_SEQUENCE_INVALID")
-        if (row.get("status") != "PASS_NO_OPEN_EXPOSURE"
-                or row.get("connected") is not True
-                or row.get("tradeapi_disabled") is not True
-                or row.get("positions_count") != 0
-                or row.get("pending_orders_count") != 0
-                or row.get("reasons") != []):
+    if (pre_sha256 is None) != (post_sha256 is None):
+        reasons.append("BOUND_PAIR_DIGESTS_INCOMPLETE")
+    if pre_sha256 is None:
+        if sequence != 2 or len(rows) != 2:
+            reasons.append("EXACT_PRE_POST_PAIR_REQUIRED")
+        selected = rows[:2]
+    else:
+        if not SHA256.fullmatch(pre_sha256) or not SHA256.fullmatch(str(post_sha256)):
+            reasons.append("BOUND_PAIR_DIGEST_INVALID")
+            selected = []
+        else:
+            pre_matches = [(index, row) for index, row in enumerate(rows)
+                           if row.get("record_sha256") == pre_sha256]
+            post_matches = [(index, row) for index, row in enumerate(rows)
+                            if row.get("record_sha256") == post_sha256]
+            if len(pre_matches) != 1 or len(post_matches) != 1:
+                reasons.append("BOUND_PAIR_NOT_UNIQUE")
+                selected = []
+            else:
+                pre_index, pre_row = pre_matches[0]
+                post_index, post_row = post_matches[0]
+                if post_index != pre_index + 1 or post_index != len(rows) - 1:
+                    reasons.append("BOUND_PAIR_NOT_LATEST_CONTIGUOUS")
+                selected = [pre_row, post_row]
+    for index, phase in enumerate(("PRE_DRILL", "POST_RECOVERY")):
+        if index >= len(selected):
+            continue
+        if not _safe_zero_row(selected[index], phase):
             reasons.append(f"{phase}_NOT_ZERO_SAFE")
     return {
         "status": "PASS_RECONCILED" if not reasons else "FAIL_CLOSED",
         "reasons": sorted(set(reasons)),
-        "pre_record_sha256": rows[0].get("record_sha256") if rows else None,
-        "post_record_sha256": rows[1].get("record_sha256") if len(rows) > 1 else None,
+        "pre_record_sha256": selected[0].get("record_sha256") if selected else None,
+        "post_record_sha256": selected[1].get("record_sha256") if len(selected) > 1 else None,
         "final_record_sha256": final_hash,
         "risk_authority_restored": False,
     }
@@ -163,9 +191,13 @@ def main() -> int:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--phase", choices=sorted(PHASES))
     group.add_argument("--verify-reconciliation", action="store_true")
+    parser.add_argument("--pre-sha256")
+    parser.add_argument("--post-sha256")
     args = parser.parse_args()
     try:
-        result = (verify_reconciliation(args.output) if args.verify_reconciliation
+        result = (verify_reconciliation(
+            args.output, pre_sha256=args.pre_sha256, post_sha256=args.post_sha256
+        ) if args.verify_reconciliation
                   else capture(ReadOnlyExposureMT5, args.output, args.phase))
         print(json.dumps(result, sort_keys=True))
         return 0 if result["status"] in {"PASS_NO_OPEN_EXPOSURE", "PASS_RECONCILED"} else 2

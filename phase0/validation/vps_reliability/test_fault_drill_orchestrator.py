@@ -112,6 +112,8 @@ class FaultDrillOrchestratorTests(unittest.TestCase):
             "Capture-Exposure -Phase \"PRE_DRILL\"",
             "Capture-Exposure -Phase \"POST_RECOVERY\"",
             "--verify-reconciliation",
+            "--pre-sha256",
+            "--post-sha256",
             "Assert-ExactPrefix",
             "tradeapi_disabled",
             "Wait-ReadOnlyState",
@@ -122,6 +124,9 @@ class FaultDrillOrchestratorTests(unittest.TestCase):
             "final_matrix_record_sha256",
             "git pull --ff-only origin main",
             "CloseMainWindow",
+            "TimeoutSeconds 150",
+            "AddMinutes(4)",
+            "more than one active IPv4 default-route adapter",
         ):
             self.assertIn(required, text)
 

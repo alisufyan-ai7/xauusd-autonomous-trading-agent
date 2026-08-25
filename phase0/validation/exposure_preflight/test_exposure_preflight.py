@@ -83,6 +83,22 @@ class ExposurePreflightTests(unittest.TestCase):
         self.assertEqual("FAIL_CLOSED", result["status"])
         self.assertIn("EXACT_PRE_POST_PAIR_REQUIRED", result["reasons"])
 
+    def test_reconciliation_binds_latest_retry_pair_without_deleting_history(self):
+        old_pre, output = self._capture()
+        current_pre = capture(FakeAPI, output, "PRE_DRILL")
+        current_post = capture(FakeAPI, output, "POST_RECOVERY")
+        result = verify_reconciliation(
+            output, pre_sha256=current_pre["record_sha256"],
+            post_sha256=current_post["record_sha256"],
+        )
+        self.assertEqual("PASS_RECONCILED", result["status"], result["reasons"])
+        self.assertNotEqual(old_pre["record_sha256"], result["pre_record_sha256"])
+        stale = verify_reconciliation(
+            output, pre_sha256=old_pre["record_sha256"],
+            post_sha256=current_post["record_sha256"],
+        )
+        self.assertIn("BOUND_PAIR_NOT_LATEST_CONTIGUOUS", stale["reasons"])
+
     def test_positions_or_orders_fail_closed(self):
         FakeAPI.positions = (object(),)
         self.assertIn("OPEN_POSITIONS_PRESENT", self._capture()[0]["reasons"])

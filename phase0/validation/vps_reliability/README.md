@@ -78,8 +78,10 @@ verifies the immutable prefix after every capture, polls bounded recovery, and
 emits a publication-safe final summary while leaving all raw evidence private.
 
 The network outage is limited to the single unambiguous active IPv4 default
-route. A SYSTEM scheduled-task watchdog restores that adapter after three
-minutes if the interactive process cannot do so first. The Windows restart uses
+route. The adapter must enter `Disabled` and MT5 has at most 150 seconds to
+expose the genuine disconnected state. A SYSTEM scheduled-task watchdog
+restores that adapter after four minutes if the interactive process cannot do
+so first. The Windows restart uses
 a highest-privilege interactive-logon scheduled task to resume the same script
 without storing credentials. The task verifies that the repository revision is
 unchanged and that the Windows boot timestamp changed before it captures the
@@ -98,3 +100,6 @@ at the registered point. It contains no broker order, login, symbol-selection,
 position-closing, pending-order, credential, messaging, or trading capability.
 Any ambiguity or failed recovery exits with code 2 and preserves a private
 `FAIL_CLOSED` checkpoint. Do not manually relabel or edit the private chains.
+If an earlier attempt stopped before the first matrix event, a corrected retry
+appends a new PRE_DRILL record and binds only that latest contiguous PRE/POST
+pair; immutable earlier records are never removed or rewritten.
