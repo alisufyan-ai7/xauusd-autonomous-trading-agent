@@ -1,8 +1,8 @@
 # Master roadmap to production
 
-**Roadmap version:** R39  
+**Roadmap version:** R40  
 **Recorded:** 2026-08-26  
-**Authoritative source revision:** private `main` at `22f4a0ec166aa12e504db28be0d03415e44a390a` (R38)  
+**Authoritative source revision:** private `main` at `0c2cc1e632cbbb1a15d4232cdd2f28676e75aafa` (R39)  
 **Current gate:** Gate 0 — `INCOMPLETE`, 7 PASS / 7 PENDING  
 **Current operating mode:** closure only; external Python trading disabled; no demo/live trading authorized
 
@@ -186,7 +186,20 @@ If Gate 0 passed on the theoretical earliest date of 2026-09-24, the optimistic 
 | G0-12 | `EVIDENCE`; requires G0-05 PASS and new untouched holdout | After 2026-09-24 | Keep replay engine/report preparation separate from the unopened holdout. |
 | G0-14 | `OWNER_APPROVAL`, `EVIDENCE`; requires G0-12 PASS | Same/next UTC day after approval and G0-12 PASS | Offline request/response validation only; stop and ask before any Sol action. |
 
-## 6. Change control
+## 6. Preparation control plane
+
+R40 adds machine-readable preparation records to reduce Gate 1–4 startup delay. They remain subordinate to this roadmap and to their referenced frozen contracts.
+
+| Artifact | Purpose | Current authority |
+|---|---|---|
+| `phase0/roadmap/GATE_1_4_PARALLEL_PREPARATION_REGISTER_R40.json` | Parallel task/dependency register with every premature implementation or external action explicitly blocked | Preparation scheduling only; no gate credit |
+| `phase0/roadmap/GATE_1_3_REQUIREMENT_TEST_TRACEABILITY_R40.json` | Requirement-to-existing-oracle and future product/adversarial/replay test mapping | Traceability only; existing oracles are not product evidence |
+| `phase0/roadmap/GATE_1_RELEASE_MANIFEST_SCHEMA_R40.json` | Frozen release-identity fields and execution-off defaults | Planning schema only; no release exists |
+| `phase0/roadmap/GATE_4_SHADOW_RECORD_SCHEMAS_R40.json` | Shadow decision, incident and acceptance record shapes | Planning schema only; Gate 4 has not started |
+
+The preparation register is the task-level execution view. This master remains the only forward-looking gate/schedule authority.
+
+## 7. Change control
 
 - Update this roadmap after an admitted gate result, a critical-path dependency change, or a material evidence-backed defect.
 - Do not turn planning estimates into gate criteria without an accepted Decision Log entry.

@@ -1,0 +1,172 @@
+{
+  "schema_version": "gate4-shadow-record-planning-1.0",
+  "recorded_date_utc": "2026-08-26",
+  "status": "PREPARATION_ONLY",
+  "gate4_started": false,
+  "execution_capability_allowed": false,
+  "external_python_trading": "DISABLED",
+  "schemas": {
+    "shadow_decision": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:xauusd-agent:shadow-decision:1.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "decision_id",
+        "decision_time_utc",
+        "release_manifest_sha256",
+        "account_symbol_fingerprint_sha256",
+        "snapshot_roots",
+        "session_event_shock_state_sha256",
+        "feature_root_sha256",
+        "setup_result",
+        "reason_codes",
+        "governor_trace_sha256",
+        "execution_enabled",
+        "broker_action_count",
+        "audit_prev_sha256",
+        "record_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "shadow-decision-1.0"},
+        "decision_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "decision_time_utc": {"type": "string", "format": "date-time"},
+        "release_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "account_symbol_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "snapshot_roots": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["H4", "H1", "M15", "quote"],
+          "properties": {
+            "H4": {"$ref": "#/$defs/sha256"},
+            "H1": {"$ref": "#/$defs/sha256"},
+            "M15": {"$ref": "#/$defs/sha256"},
+            "quote": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "session_event_shock_state_sha256": {"$ref": "#/$defs/sha256"},
+        "feature_root_sha256": {"$ref": "#/$defs/sha256"},
+        "setup_result": {"enum": ["NO_TRADE", "REJECT", "CANDIDATE", "QUARANTINE"]},
+        "reason_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "analyst_request_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "analyst_response_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "governor_trace_sha256": {"$ref": "#/$defs/sha256"},
+        "hypothetical_intent_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "execution_enabled": {"const": false},
+        "broker_action_count": {"const": 0},
+        "audit_prev_sha256": {"$ref": "#/$defs/sha256"},
+        "record_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "$defs": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "shadow_incident": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:xauusd-agent:shadow-incident:1.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "incident_id",
+        "opened_utc",
+        "severity",
+        "release_manifest_sha256",
+        "affected_decision_roots",
+        "trigger_reason_codes",
+        "containment_state",
+        "broker_action_count",
+        "evidence_root_sha256",
+        "status",
+        "record_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "shadow-incident-1.0"},
+        "incident_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "opened_utc": {"type": "string", "format": "date-time"},
+        "closed_utc": {"oneOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+        "severity": {"enum": ["CRITICAL", "HIGH", "MEDIUM", "INFORMATIONAL"]},
+        "release_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "affected_decision_roots": {"type": "array", "items": {"$ref": "#/$defs/sha256"}, "uniqueItems": true},
+        "trigger_reason_codes": {"type": "array", "minItems": 1, "items": {"type": "string"}, "uniqueItems": true},
+        "containment_state": {"enum": ["QUARANTINED", "ANALYSIS_STOPPED", "AFFECTED_DECISIONS_REJECTED", "OBSERVED_ONLY"]},
+        "broker_action_count": {"const": 0},
+        "evidence_root_sha256": {"$ref": "#/$defs/sha256"},
+        "root_cause_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "repair_release_manifest_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "regression_report_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "recovery_reconciliation_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "status": {"enum": ["OPEN", "CONTAINED", "RESOLVED"]},
+        "record_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "$defs": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "shadow_acceptance": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:xauusd-agent:shadow-acceptance:1.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "registration_sha256",
+        "release_manifest_sha256",
+        "observation_start_utc",
+        "observation_end_utc",
+        "full_market_month_complete",
+        "required_event_coverage_complete",
+        "expected_decisions",
+        "observed_decisions",
+        "unexplained_missing_decisions",
+        "feature_reconciliation_result",
+        "open_incidents",
+        "critical_incidents",
+        "execution_capability_present",
+        "broker_action_count",
+        "audit_chain_result",
+        "verdict",
+        "trading_authorized",
+        "record_sha256"
+      ],
+      "properties": {
+        "schema_version": {"const": "shadow-acceptance-1.0"},
+        "registration_sha256": {"$ref": "#/$defs/sha256"},
+        "release_manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "observation_start_utc": {"type": "string", "format": "date-time"},
+        "observation_end_utc": {"type": "string", "format": "date-time"},
+        "full_market_month_complete": {"type": "boolean"},
+        "required_event_coverage_complete": {"type": "boolean"},
+        "expected_decisions": {"type": "integer", "minimum": 0},
+        "observed_decisions": {"type": "integer", "minimum": 0},
+        "unexplained_missing_decisions": {"type": "integer", "minimum": 0},
+        "no_trade_count": {"type": "integer", "minimum": 0},
+        "reject_count": {"type": "integer", "minimum": 0},
+        "candidate_count": {"type": "integer", "minimum": 0},
+        "quarantine_count": {"type": "integer", "minimum": 0},
+        "feature_reconciliation_result": {"enum": ["PASS", "FAIL"]},
+        "open_incidents": {"type": "integer", "minimum": 0},
+        "critical_incidents": {"type": "integer", "minimum": 0},
+        "execution_capability_present": {"const": false},
+        "broker_action_count": {"const": 0},
+        "audit_chain_result": {"enum": ["PASS", "FAIL"]},
+        "monitoring_report_sha256": {"$ref": "#/$defs/sha256"},
+        "incident_register_root_sha256": {"$ref": "#/$defs/sha256"},
+        "decision_register_root_sha256": {"$ref": "#/$defs/sha256"},
+        "verdict": {"enum": ["PASS", "FAIL", "INCOMPLETE"]},
+        "trading_authorized": {"const": false},
+        "record_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "$defs": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    }
+  },
+  "acceptance_logic": [
+    "PASS requires the full market month and required event coverage to be complete.",
+    "PASS requires zero unexplained missing decisions, feature reconciliation PASS, zero open incidents, zero critical incidents, no execution capability, zero broker actions and audit-chain PASS.",
+    "Elapsed time alone cannot produce PASS."
+  ],
+  "claim_limit": "Schema preparation only. Gate 4 has not started; no live observation, external action or trading authority."
+}

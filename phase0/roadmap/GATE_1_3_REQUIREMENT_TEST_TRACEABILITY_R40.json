@@ -1,0 +1,123 @@
+{
+  "schema_version": "gate1-3-requirement-test-traceability-1.0",
+  "recorded_date_utc": "2026-08-26",
+  "authoritative_parent_commit": "0c2cc1e632cbbb1a15d4232cdd2f28676e75aafa",
+  "status": "PREPARATION_ONLY",
+  "production_implementation_authorized": false,
+  "gate_credit": false,
+  "entries": [
+    {
+      "id": "TRACE-001",
+      "requirement": "Exact conservative risk mathematics and fail-closed invalid input",
+      "authority": ["phase0/specifications/RISK_GOVERNOR_POLICY_A_SPEC.md"],
+      "existing_oracles": ["phase0.tests.test_risk_analyst_corpora", "phase0.validation.operational_policy.test_operational_policy", "phase0.validation.margin_evidence.test_margin_evidence", "phase0.validation.margin_evidence.test_stress_artifact"],
+      "gate1_product_targets": ["G1-RISK-GOLDEN", "G1-RISK-BOUNDARY", "G1-RISK-MONOTONICITY", "G1-RISK-DIFFERENTIAL"],
+      "gate2_adversarial_targets": ["G2-RISK-ROUNDING-MUTATION", "G2-RISK-UNKNOWN-STATE", "G2-RISK-BROKER-NORMALIZATION"]
+    },
+    {
+      "id": "TRACE-002",
+      "requirement": "Completed-bar causal feature calculation and five objective setup families",
+      "authority": ["phase0/specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md"],
+      "existing_oracles": ["phase0.validation.setup_features.test_feature_oracle", "phase0.validation.setup_features.test_family_golden", "phase0.validation.setup_features.test_registered_family_corpus", "phase0.validation.setup_features.test_exhaustive_lifecycle_corpus"],
+      "gate1_product_targets": ["G1-FEATURE-DIFFERENTIAL", "G1-SETUP-DIFFERENTIAL", "G1-MIRROR-PROPERTY", "G1-FORMING-BAR-INVARIANCE"],
+      "gate2_adversarial_targets": ["G2-DATA-GAP", "G2-DATA-LOOKAHEAD", "G2-SETUP-BOUNDARY-MUTATION"]
+    },
+    {
+      "id": "TRACE-003",
+      "requirement": "Deterministic proposal selection and terminal setup lifecycle",
+      "authority": ["phase0/specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md", "phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md"],
+      "existing_oracles": ["phase0.validation.setup_execution.test_corpora"],
+      "gate1_product_targets": ["G1-SELECTOR-PRECEDENCE", "G1-LIFECYCLE-TERMINAL-LATCH", "G1-SETUP-ID-STABILITY"],
+      "gate2_adversarial_targets": ["G2-SETUP-DUPLICATE", "G2-SETUP-OUT-OF-ORDER", "G2-SETUP-REACTIVATION"]
+    },
+    {
+      "id": "TRACE-004",
+      "requirement": "Strict minimized non-authoritative Analyst boundary",
+      "authority": ["phase0/specifications/OPENAI_ANALYST_MINIMIZED_CONTRACT.md", "phase0/validation/analyst_runtime/ANALYST_OUTPUT_SCHEMA_V1.json", "phase0/validation/analyst_runtime/ANALYST_RUNTIME_PROFILE_V1.json"],
+      "existing_oracles": ["phase0.tests.test_risk_analyst_corpora", "phase0.validation.analyst_runtime.test_runtime_contract", "phase0.validation.analyst_runtime.test_replay_sequence_oracle"],
+      "gate1_product_targets": ["G1-ANALYST-PAYLOAD-GOLDEN", "G1-ANALYST-STRICT-RESPONSE", "G1-ANALYST-CAPABILITY-DENIAL", "G1-ANALYST-NULL-TRANSPORT"],
+      "gate2_adversarial_targets": ["G2-ANALYST-MALFORMED", "G2-ANALYST-REFUSAL-TOOL", "G2-ANALYST-LATE-REPLAY", "G2-ANALYST-STATE-CHANGE"]
+    },
+    {
+      "id": "TRACE-005",
+      "requirement": "Persisted lifecycle, single writer, one risk-increasing attempt and broker-authoritative reconciliation",
+      "authority": ["phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md"],
+      "existing_oracles": ["phase0.validation.setup_execution.test_corpora", "phase0.validation.exposure_preflight.test_exposure_preflight"],
+      "gate1_product_targets": ["G1-JOURNAL-REPLAY", "G1-CAS-SINGLE-WRITER", "G1-OUTBOX-ONE-ATTEMPT", "G1-RECONCILIATION-FAKE-BROKER"],
+      "gate2_adversarial_targets": ["G2-STORE-CRASH-POINTS", "G2-CAS-RACE", "G2-TIMEOUT-AFTER-FILL", "G2-PARTIAL-VOLUME-CONSERVATION"]
+    },
+    {
+      "id": "TRACE-006",
+      "requirement": "Unknown exposure, identity drift and uncertain state quarantine",
+      "authority": ["phase0/PHASE_0_SPECIFICATION.md", "phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md"],
+      "existing_oracles": ["phase0.validation.exposure_preflight.test_exposure_preflight", "phase0.validation.vps_reliability.test_reliability_oracle", "phase0.validation.vps_reliability.test_private_probe"],
+      "gate1_product_targets": ["G1-IDENTITY-SEAL", "G1-UNKNOWN-EXPOSURE", "G1-STARTUP-RECONCILIATION"],
+      "gate2_adversarial_targets": ["G2-ACCOUNT-SYMBOL-DRIFT", "G2-BUILD-CONFIG-DRIFT", "G2-UNKNOWN-OWNERSHIP"]
+    },
+    {
+      "id": "TRACE-007",
+      "requirement": "Official-source Event Guard, session/holiday and shock fail-closed gates",
+      "authority": ["phase0/specifications/NEWS_EVENT_PROTECTION_SPEC.md", "phase0/specifications/XAUUSD_SESSIONS_VPS_READONLY_DIAGNOSTIC_PLAN.md"],
+      "existing_oracles": ["phase0.validation.event_guard.test_event_guard", "phase0.validation.event_guard.test_source_conformance", "phase0.validation.event_guard.controlled_evidence.test_controlled_evidence", "phase0.validation.session_evidence.test_session_evidence", "phase0.validation.shock_calibration.test_shock_calibration"],
+      "gate1_product_targets": ["G1-GUARD-DIFFERENTIAL", "G1-SESSION-DIFFERENTIAL", "G1-SHOCK-DIFFERENTIAL"],
+      "gate2_adversarial_targets": ["G2-GUARD-OUTAGE-REVISION", "G2-GUARD-INCOMPLETE-RECOVERY", "G2-SESSION-HOLIDAY-BOUNDARY", "G2-SHOCK-RETRIP"]
+    },
+    {
+      "id": "TRACE-008",
+      "requirement": "Immutable authorized historical data, exact chronology and protected splits",
+      "authority": ["phase0/specifications/REPLAY_BACKTEST_METHODOLOGY_AND_ACCEPTANCE.md", "phase0/validation/replay_admission/README.md"],
+      "existing_oracles": ["phase0.validation.replay_acquisition.test_acquire_dukascopy", "phase0.validation.replay_acquisition.test_acquisition_protocol", "phase0.validation.replay_admission.test_admission", "phase0.validation.replay_admission.test_multiframe_admission"],
+      "gate1_product_targets": ["G1-DATA-PORT-ADMISSION", "G1-BUNDLE-HASH-BINDING", "G1-SPLIT-ENFORCEMENT"],
+      "gate2_adversarial_targets": ["G2-DATA-BYTE-MUTATION", "G2-DATA-RIGHTS-GAP", "G2-DATA-SPLIT-LEAKAGE"]
+    },
+    {
+      "id": "TRACE-009",
+      "requirement": "Prospectively calibrated cost/shock artifacts without look-ahead",
+      "authority": ["phase0/validation/empirical_calibration/ADAPTIVE_CALIBRATION_REGISTRATION_2026-08-24_R4.json"],
+      "existing_oracles": ["phase0.validation.empirical_calibration.test_calibration_workflow", "phase0.validation.empirical_calibration.test_adaptive_calibration_protocol"],
+      "gate1_product_targets": ["G1-COST-ARTIFACT-ADMISSION", "G1-COST-IDENTITY-BINDING"],
+      "gate2_adversarial_targets": ["G2-COST-TAIL-SHIFT", "G2-COST-MISSING-SESSION", "G2-COST-SAME-DAY-LOOKAHEAD"]
+    },
+    {
+      "id": "TRACE-010",
+      "requirement": "Registered replay statistics, robustness and policy acceptance",
+      "authority": ["phase0/specifications/REPLAY_BACKTEST_METHODOLOGY_AND_ACCEPTANCE.md"],
+      "existing_oracles": ["phase0.tests.test_replay_acceptance"],
+      "gate1_product_targets": ["G1-REPLAY-METRICS-EVALUATOR", "G1-STATISTICS-GOLDEN"],
+      "gate2_adversarial_targets": ["G2-REPLAY-NONFINITE", "G2-REPLAY-INCOHERENT-METRICS", "G2-REPLAY-TRIAL-OMISSION"],
+      "gate3_evidence_targets": ["G3-CAUSAL-REPLAY", "G3-LEAKAGE-AUDIT", "G3-OOS-STATISTICS", "G3-ROBUSTNESS", "G3-REPLAY-LIVE-FEATURE-RECONCILIATION"]
+    },
+    {
+      "id": "TRACE-011",
+      "requirement": "Human-only emergency, human-gated resumption and dual-path alerts",
+      "authority": ["phase0/specifications/OPERATIONAL_POLICY_SELECTION_2026-08-23.md"],
+      "existing_oracles": ["phase0.validation.operational_policy.test_operational_policy", "phase0.validation.alert_evidence.test_alert_evidence", "phase0.validation.alert_evidence.test_private_delivery_evidence", "phase0.validation.alert_sender.test_alert_sender"],
+      "gate1_product_targets": ["G1-KILL-LATCH", "G1-AUTHORIZATION-EPOCH", "G1-ALERT-PORT-NULL"],
+      "gate2_adversarial_targets": ["G2-KILL-DURING-UNCERTAINTY", "G2-RESUME-WITHOUT-HUMAN", "G2-ALERT-FAILURE"]
+    },
+    {
+      "id": "TRACE-012",
+      "requirement": "Execution disabled after install/config/account/version/build/health change",
+      "authority": ["phase0/PHASE_0_SPECIFICATION.md"],
+      "existing_oracles": ["phase0.validation.vps_reliability.test_reliability_oracle", "phase0.validation.vps_reliability.test_fault_drill_orchestrator"],
+      "gate1_product_targets": ["G1-EXECUTION-OFF-INSTALL", "G1-EXECUTION-OFF-CHANGE", "G1-EXECUTION-OFF-HEALTH"],
+      "gate2_adversarial_targets": ["G2-EXECUTION-BARRIER-MUTATION", "G2-RESTART-LOOP-QUARANTINE"]
+    },
+    {
+      "id": "TRACE-013",
+      "requirement": "Immutable audit, evidence admission and readiness cannot be self-declared",
+      "authority": ["phase0/PHASE_0_EVIDENCE_MODEL.json", "phase0/GATE_0_FINAL_EVIDENCE_MATRIX_R28.json"],
+      "existing_oracles": ["phase0.validation.final_gate.test_matrix_oracle", "phase0.validation.vps_reliability.test_private_probe", "phase0.validation.alert_evidence.test_private_delivery_evidence"],
+      "gate1_product_targets": ["G1-AUDIT-HASH-CHAIN", "G1-AUDIT-RESTORE", "G1-RELEASE-RECEIPT-BINDING"],
+      "gate2_adversarial_targets": ["G2-AUDIT-TAMPER", "G2-REPORT-MISSING-DUPLICATE", "G2-PRIVATE-PATH-REJECTION"]
+    }
+  ],
+  "acceptance_boundary": {
+    "existing_oracle_pass_is_gate1_pass": false,
+    "gate1_requires_product_cross_oracle_results": true,
+    "gate2_requires_actual_gate1_artifact": true,
+    "gate3_requires_unopened_registered_holdout": true,
+    "all_exclusions_must_be_justified": true
+  },
+  "claim_limit": "Traceability preparation only. Test target identifiers reserve no implementation, gate credit or trading authority."
+}
