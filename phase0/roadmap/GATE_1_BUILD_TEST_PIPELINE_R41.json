@@ -1,0 +1,190 @@
+{
+  "schema_version": "gate1-build-test-pipeline-1.0",
+  "recorded_date_utc": "2026-08-26",
+  "authoritative_parent_commit": "7a7a30699d4cc3195165e14eed57771be2d32ce7",
+  "status": "PREPARATION_ONLY",
+  "production_implementation_authorized": false,
+  "external_python_trading": "DISABLED",
+  "existing_authoritative_commands": [
+    {
+      "id": "RECORDS",
+      "working_directory": ".",
+      "command": "python -m json.tool phase0/PHASE_0_EVIDENCE_MODEL.json >/dev/null && python scripts/validate_records.py && python tools/readonly-evidence-collector/verify_readonly.py",
+      "claim": "Record continuity and read-only collector policy only"
+    },
+    {
+      "id": "RISK_ANALYST",
+      "working_directory": ".",
+      "command": "python -m unittest -v phase0.tests.test_risk_analyst_corpora",
+      "claim": "Frozen RG/AI vector transcription only"
+    },
+    {
+      "id": "REPLAY_ACCEPTANCE",
+      "working_directory": "phase0/tests",
+      "command": "python -m unittest -v test_replay_acceptance.py",
+      "claim": "Precomputed metric acceptance evaluator only"
+    },
+    {
+      "id": "SETUP_EXECUTION",
+      "working_directory": "phase0/validation/setup_execution",
+      "command": "python -m unittest -v test_corpora.py",
+      "claim": "Broker-free setup/state oracle only"
+    },
+    {
+      "id": "SETUP_FEATURES",
+      "working_directory": "phase0/validation/setup_features",
+      "command": "python -m unittest -v test_feature_oracle.py test_family_golden.py test_registered_family_corpus.py test_exhaustive_lifecycle_corpus.py",
+      "claim": "Synthetic raw-feature/lifecycle oracle only"
+    },
+    {
+      "id": "OPERATIONAL_POLICY",
+      "working_directory": ".",
+      "command": "python -m unittest -v phase0.validation.operational_policy.test_operational_policy",
+      "claim": "V1/M1/E1/P1/A1 specification evidence only"
+    },
+    {
+      "id": "ANALYST_RUNTIME",
+      "working_directory": ".",
+      "command": "python -m unittest -v phase0.validation.analyst_runtime.test_runtime_contract phase0.validation.analyst_runtime.test_replay_sequence_oracle",
+      "claim": "Offline strict Analyst contract only; no API action"
+    },
+    {
+      "id": "EVENT_GUARD",
+      "working_directory": "phase0/validation/event_guard",
+      "command": "python -m unittest -v test_event_guard.py test_source_conformance.py",
+      "claim": "Offline official-source parsing/guard behavior only"
+    },
+    {
+      "id": "EVENT_TRANSITIONS",
+      "working_directory": "phase0/validation/event_guard/controlled_evidence",
+      "command": "python -m unittest -v test_controlled_evidence.py",
+      "claim": "Controlled transition oracle only; no real outage"
+    },
+    {
+      "id": "DATA_ACQUISITION",
+      "working_directory": "phase0/validation/replay_acquisition",
+      "command": "python -m unittest -v test_acquire_dukascopy.py test_acquisition_protocol.py",
+      "claim": "Acquisition logic only; no provider action"
+    },
+    {
+      "id": "REPLAY_ADMISSION",
+      "working_directory": "phase0/validation/replay_admission",
+      "command": "python -m unittest -v test_admission.py test_multiframe_admission.py",
+      "claim": "Immutable admission logic only; no holdout opening"
+    },
+    {
+      "id": "SHOCK_CALIBRATION",
+      "working_directory": "phase0/validation/shock_calibration",
+      "command": "python -m unittest -v test_shock_calibration.py",
+      "claim": "Offline shock oracle only"
+    },
+    {
+      "id": "EMPIRICAL_CALIBRATION",
+      "working_directory": "phase0/validation/empirical_calibration",
+      "command": "python -m unittest -v test_calibration_workflow.py test_adaptive_calibration_protocol.py",
+      "claim": "Offline calibration protocol only; R4 remains unopened"
+    },
+    {
+      "id": "SESSION_EVIDENCE",
+      "working_directory": "phase0/validation/session_evidence",
+      "command": "python -m unittest -v test_session_evidence.py",
+      "claim": "Offline session evidence logic only; no broker mutation"
+    },
+    {
+      "id": "MARGIN_EVIDENCE",
+      "working_directory": "phase0/validation/margin_evidence",
+      "command": "python -m unittest -v test_margin_evidence.py test_stress_artifact.py",
+      "claim": "Offline/read-only margin evidence logic only"
+    },
+    {
+      "id": "ALERT_EVIDENCE",
+      "working_directory": ".",
+      "command": "python -m unittest -v phase0.validation.alert_evidence.test_alert_evidence phase0.validation.alert_evidence.test_private_delivery_evidence phase0.validation.alert_sender.test_alert_sender",
+      "claim": "Offline alert/evidence logic only; no real delivery"
+    },
+    {
+      "id": "RELIABILITY_FINAL_GATE",
+      "working_directory": ".",
+      "command": "python -m unittest -v phase0.validation.vps_reliability.test_reliability_oracle phase0.validation.vps_reliability.test_private_probe phase0.validation.vps_reliability.test_fault_drill_orchestrator phase0.validation.exposure_preflight.test_exposure_preflight phase0.validation.final_gate.test_matrix_oracle",
+      "claim": "Offline reliability/evidence admission only; excludes the real G0-07 drill"
+    }
+  ],
+  "future_gate1_pipeline": [
+    {
+      "order": 1,
+      "id": "G1-CI-01",
+      "name": "Record and static capability checks",
+      "status": "READY_DOCUMENTATION_ONLY",
+      "prerequisites": ["GATE_0_PASS", "PHASE_1_IMPLEMENTATION_AUTHORITY"],
+      "outputs": ["record_validation_report_sha256", "capability_scan_report_sha256"]
+    },
+    {
+      "order": 2,
+      "id": "G1-CI-02",
+      "name": "Existing oracle regression",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-01"],
+      "outputs": ["oracle_registry_report_sha256"]
+    },
+    {
+      "order": 3,
+      "id": "G1-CI-03",
+      "name": "Product unit and differential tests",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["GATE_1_PRODUCT_ARTIFACT", "G1-CI-02"],
+      "outputs": ["unit_report_sha256", "differential_report_sha256", "coverage_report_sha256"]
+    },
+    {
+      "order": 4,
+      "id": "G1-CI-04",
+      "name": "Product integration, restart and reconciliation tests with fakes",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-03"],
+      "outputs": ["integration_report_sha256", "restart_reconciliation_report_sha256"]
+    },
+    {
+      "order": 5,
+      "id": "G1-CI-05",
+      "name": "Property and critical mutation runs",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-04"],
+      "outputs": ["property_report_sha256", "mutation_report_sha256"]
+    },
+    {
+      "order": 6,
+      "id": "G1-CI-06",
+      "name": "Linux and Windows Python 3.12 parity",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-05"],
+      "outputs": ["cross_platform_report_sha256"]
+    },
+    {
+      "order": 7,
+      "id": "G1-CI-07",
+      "name": "Build once and seal release manifest",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-06"],
+      "outputs": ["artifact_sha256", "release_manifest_sha256"]
+    },
+    {
+      "order": 8,
+      "id": "G1-CI-08",
+      "name": "Execution-off deployment and rollback verification",
+      "status": "BLOCKED_UNTIL_GATE_0_PASS",
+      "prerequisites": ["G1-CI-07"],
+      "outputs": ["deployment_off_report_sha256", "rollback_report_sha256"]
+    }
+  ],
+  "hard_guards": {
+    "existing_oracle_pass_is_gate1_pass": false,
+    "product_artifact_required": true,
+    "critical_mutation_survivors_allowed": 0,
+    "failed_tests_allowed": 0,
+    "execution_enabled_default": false,
+    "broker_connection_required": false,
+    "openai_call_required": false,
+    "real_fault_required": false,
+    "trading_authorized": false
+  },
+  "claim_limit": "Build/test orchestration preparation only. Commands retain their existing claim limits and no future pipeline stage has executed."
+}

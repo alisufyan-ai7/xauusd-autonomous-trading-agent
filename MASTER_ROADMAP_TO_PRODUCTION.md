@@ -1,8 +1,8 @@
 # Master roadmap to production
 
-**Roadmap version:** R40  
+**Roadmap version:** R41  
 **Recorded:** 2026-08-26  
-**Authoritative source revision:** private `main` at `0c2cc1e632cbbb1a15d4232cdd2f28676e75aafa` (R39)  
+**Authoritative source revision:** private `main` at `7a7a30699d4cc3195165e14eed57771be2d32ce7` (R40)  
 **Current gate:** Gate 0 — `INCOMPLETE`, 7 PASS / 7 PENDING  
 **Current operating mode:** closure only; external Python trading disabled; no demo/live trading authorized
 
@@ -196,6 +196,10 @@ R40 adds machine-readable preparation records to reduce Gate 1–4 startup delay
 | `phase0/roadmap/GATE_1_3_REQUIREMENT_TEST_TRACEABILITY_R40.json` | Requirement-to-existing-oracle and future product/adversarial/replay test mapping | Traceability only; existing oracles are not product evidence |
 | `phase0/roadmap/GATE_1_RELEASE_MANIFEST_SCHEMA_R40.json` | Frozen release-identity fields and execution-off defaults | Planning schema only; no release exists |
 | `phase0/roadmap/GATE_4_SHADOW_RECORD_SCHEMAS_R40.json` | Shadow decision, incident and acceptance record shapes | Planning schema only; Gate 4 has not started |
+| `phase0/roadmap/GATE_1_BUILD_TEST_PIPELINE_R41.json` | Existing oracle commands and the future product CI/release ordering | Orchestration preparation only; no product stage executed |
+| `phase0/roadmap/GATE_2_FAULT_SCENARIO_SCHEMA_R41.json` | Per-scenario simulated fault evidence contract | Planning schema only; no real fault or Gate 2 evidence |
+| `phase0/roadmap/GATE_3_TRIAL_REGISTRY_SCHEMA_R41.json` | Append-only all-trial and holdout-opening bindings | Planning schema only; no trial/holdout opened |
+| `phase0/roadmap/GATE_4_OBSERVATION_REGISTRATION_SCHEMA_R41.json` | Pre-start duration/coverage/tolerance/incident identity bindings | Planning schema only; Gate 4 has not started |
 
 The preparation register is the task-level execution view. This master remains the only forward-looking gate/schedule authority.
 
