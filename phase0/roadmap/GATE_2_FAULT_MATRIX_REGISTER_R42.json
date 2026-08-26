@@ -1,0 +1,38 @@
+{
+  "schema_version": "gate2-fault-matrix-register-1.0",
+  "recorded_date_utc": "2026-08-26",
+  "authoritative_parent_commit": "5cf293dd83e4c3db999e521029cd3a8139baf289",
+  "status": "PREPARATION_ONLY",
+  "scenario_schema": "phase0/roadmap/GATE_2_FAULT_SCENARIO_SCHEMA_R41.json",
+  "frozen_packet": "phase0/roadmap/GATE_2_ADVERSARIAL_VALIDATION_PACKET.md",
+  "gate1_artifact_bound": false,
+  "matrix_executed": false,
+  "external_fault_performed": false,
+  "G0-07_reopened": false,
+  "scenarios": [
+    {"id":"G2-STATE-REGISTERED","family":"G2-STATE","injected_condition":"Unlisted, duplicate, omitted, out-of-order or conflicting lifecycle event","expected_terminal":"REJECT_OR_QUARANTINE_LATCHED","risk_increasing_actions_expected":0,"harness":"event_stream_mutator_product_journal","executed":false},
+    {"id":"G2-SUBMIT-REGISTERED","family":"G2-SUBMIT","injected_condition":"Timeout before/after fake fill, delayed/duplicate acknowledgement, late fill after cancel or partial fill","expected_terminal":"SUBMISSION_UNCERTAIN_THEN_RECONCILE_WITHOUT_DUPLICATE","risk_increasing_actions_expected":0,"harness":"stateful_fake_mt5_protocol_scheduler","executed":false},
+    {"id":"G2-STORE-REGISTERED","family":"G2-STORE","injected_condition":"Transaction/CAS/lease/outbox failure, disk full/read-only, torn/corrupt record or crash at a durable boundary","expected_terminal":"STARTUP_QUARANTINE_OR_EXACT_REPLAY_NO_SECOND_ATTEMPT","risk_increasing_actions_expected":0,"harness":"crash_point_store_and_local_restart_simulator","executed":false},
+    {"id":"G2-IDENTITY-REGISTERED","family":"G2-IDENTITY","injected_condition":"Account/symbol/build/config/version drift or multiple writers/terminals","expected_terminal":"EXECUTION_OFF_QUARANTINE_REAUTHORIZATION_REQUIRED","risk_increasing_actions_expected":0,"harness":"sealed_config_identity_mutator","executed":false},
+    {"id":"G2-TIME-REGISTERED","family":"G2-TIME","injected_condition":"Stale/future tick, UTC/monotonic discontinuity or boundary ambiguity","expected_terminal":"LOCK_OR_REJECT_NO_FAVORABLE_SYNTHESIS","risk_increasing_actions_expected":0,"harness":"injected_wall_monotonic_clock","executed":false},
+    {"id":"G2-DATA-REGISTERED","family":"G2-DATA","injected_condition":"Gap, malformed OHLC, forming bar, missing rights/hash, altered split or stale quote","expected_terminal":"DATA_INVALID_OR_REJECT_NO_BROKER_OUTPUT","risk_increasing_actions_expected":0,"harness":"corpus_provenance_and_hash_mutator","executed":false},
+    {"id":"G2-RISK-REGISTERED","family":"G2-RISK","injected_condition":"Threshold flip, broker normalization, missing cost/margin/cash flow or unknown exposure","expected_terminal":"CONSERVATIVE_REJECT_OR_QUARANTINE","risk_increasing_actions_expected":0,"harness":"decimal_grid_and_ledger_boundary_generator","executed":false},
+    {"id":"G2-GUARD-REGISTERED","family":"G2-GUARD","injected_condition":"Calendar outage/conflict/revision, session/holiday boundary or shock/normalization interruption","expected_terminal":"LOCK_UNTIL_EXACT_HEALTHY_RECOVERY","risk_increasing_actions_expected":0,"harness":"offline_protocol_fixtures","executed":false},
+    {"id":"G2-ANALYST-REGISTERED","family":"G2-ANALYST","injected_condition":"Refusal, timeout, truncation, tool content, extra keys, wrong echo, invented values, stale state","expected_terminal":"REJECT_AND_AUDIT_NO_AUTHORITY_OR_BROKER_OUTPUT","risk_increasing_actions_expected":0,"harness":"fake_responses_protocol_fixture","executed":false},
+    {"id":"G2-SERVICE-REGISTERED","family":"G2-SERVICE","injected_condition":"Simulated process death, stale heartbeat, bounded-restart exhaustion, dependency unavailable or alert failure","expected_terminal":"EXECUTION_OFF_BOUNDED_RETRY_THEN_QUARANTINE","risk_increasing_actions_expected":0,"harness":"local_service_supervisor_simulator","executed":false},
+    {"id":"G2-EVIDENCE-REGISTERED","family":"G2-EVIDENCE","injected_condition":"Log/hash/manifest mutation, secret-shaped content, repository-private path or missing report","expected_terminal":"ACCEPTANCE_AND_PUBLICATION_FAIL_CLOSED","risk_increasing_actions_expected":0,"harness":"artifact_mutation_and_redaction_verifier","executed":false}
+  ],
+  "execution_constraints": {
+    "offline_simulation_only": true,
+    "real_vps_fault": false,
+    "network_disruption": false,
+    "provider_call": false,
+    "openai_call": false,
+    "real_alert": false,
+    "broker_connection": false,
+    "broker_mutation": false,
+    "trading_authorized": false,
+    "external_python_trading_required_state": "DISABLED"
+  },
+  "claim_limit": "The eleven frozen scenario families are registered for later binding to a Gate 1 artifact. No scenario ran and no Gate 2 evidence or gate credit exists."
+}

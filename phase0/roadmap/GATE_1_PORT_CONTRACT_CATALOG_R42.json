@@ -1,0 +1,122 @@
+{
+  "schema_version": "gate1-port-contract-catalog-1.0",
+  "recorded_date_utc": "2026-08-26",
+  "authoritative_parent_commit": "5cf293dd83e4c3db999e521029cd3a8139baf289",
+  "status": "PREPARATION_ONLY",
+  "catalog_role": "Non-normative logical index of already-frozen boundaries; exact fields and behavior remain controlled by each cited authority.",
+  "production_implementation_authorized": false,
+  "gate_credit": false,
+  "contracts": [
+    {
+      "id": "G1-PORT-FOUNDATION",
+      "logical_boundary": "foundation_value_time_identity",
+      "authority": ["phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md", "phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md"],
+      "inputs": ["exact account-currency values", "broker integer units", "UTC and monotonic time", "typed state/reason values"],
+      "outputs": ["canonical values", "length-prefixed serialization", "SHA-256 identities", "immutable snapshots/events"],
+      "fail_closed_on": ["float or non-finite value", "non-canonical encoding", "ambiguous time or identity"],
+      "allowed_capability": "pure deterministic transformation",
+      "forbidden_capabilities": ["network", "process control", "credential access", "broker mutation"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-MARKET-DATA",
+      "logical_boundary": "immutable_market_data_input",
+      "authority": ["phase0/specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md", "phase0/roadmap/GATE_3_REGISTERED_REPLAY_PACKET.md"],
+      "inputs": ["authorized H4/H1/M15 completed bars", "read-only quotes", "provenance", "freshness", "content hashes"],
+      "outputs": ["admitted immutable market snapshot", "typed rejection"],
+      "fail_closed_on": ["forming bar", "stale or missing input", "gap/coherence failure", "rights/provenance/hash mismatch"],
+      "allowed_capability": "read and validate supplied data",
+      "forbidden_capabilities": ["provider contact", "unregistered holdout read", "broker mutation"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-IDENTITY",
+      "logical_boundary": "account_symbol_build_configuration_fingerprint",
+      "authority": ["phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md", "phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md"],
+      "inputs": ["read-only account/symbol observations", "terminal build", "application/configuration identities"],
+      "outputs": ["sealed fingerprint", "typed drift or unknown state"],
+      "fail_closed_on": ["allow-list mismatch", "identity drift", "unknown observation", "multiple writers"],
+      "allowed_capability": "read-only observation and comparison",
+      "forbidden_capabilities": ["login mutation", "account mutation", "order capability"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-CALENDAR-GUARDS",
+      "logical_boundary": "session_holiday_event_shock_state",
+      "authority": ["phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md", "phase0/roadmap/GATE_4_SHADOW_OPERATIONS_PACKET.md"],
+      "inputs": ["hash-bound source observations", "receipt time", "market-session state", "shock/cost state"],
+      "outputs": ["typed health/transition/lock state", "reason codes"],
+      "fail_closed_on": ["outage", "conflict", "revision ambiguity", "UNKNOWN", "incomplete recovery"],
+      "allowed_capability": "deterministic gate evaluation over supplied fixtures or approved read-only inputs",
+      "forbidden_capabilities": ["provider outreach", "real outage induction", "automatic lock clearance from UNKNOWN"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-FEATURE-SETUP",
+      "logical_boundary": "completed_bar_features_setups_lifecycle",
+      "authority": ["phase0/specifications/SETUP_FAMILIES_OBJECTIVE_SPECIFICATION.md", "phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md"],
+      "inputs": ["admitted completed-bar snapshot", "guard state", "frozen parameters"],
+      "outputs": ["deterministic feature values", "TPB/BRT/FBR/RSR/MOC result", "setup identity and lifecycle state"],
+      "fail_closed_on": ["forming-bar access", "invalid feature input", "predicate ambiguity", "terminal-state reactivation"],
+      "allowed_capability": "pure deterministic evaluation",
+      "forbidden_capabilities": ["network", "order intent submission", "replay-only formula fork"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-ANALYST",
+      "logical_boundary": "minimized_non_authoritative_analyst",
+      "authority": ["phase0/specifications/OPENAI_ANALYST_MINIMIZED_CONTRACT.md", "phase0/validation/analyst_runtime/ANALYST_OUTPUT_SCHEMA_V1.json", "phase0/validation/analyst_runtime/ANALYST_RUNTIME_PROFILE_V1.json"],
+      "inputs": ["minimized hash-bound request envelope", "deadline", "state identity"],
+      "outputs": ["strict-schema validated assessment", "typed rejection"],
+      "fail_closed_on": ["extra key", "wrong echo", "invented fact", "late/stale response", "tool/refusal content", "state change"],
+      "allowed_capability": "null/fake transport in Gate 1",
+      "forbidden_capabilities": ["OpenAI call", "tool use", "risk authority", "execution authority", "credential path"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-RISK",
+      "logical_boundary": "risk_governor_normalized_ledger",
+      "authority": ["phase0/specifications/RISK_GOVERNOR_POLICY_A_SPEC.md", "phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md"],
+      "inputs": ["validated setup", "exact account/exposure/cost/margin state", "Policy A state", "protective-stop geometry"],
+      "outputs": ["conservative normalized risk decision", "typed reject/quarantine", "governor trace"],
+      "fail_closed_on": ["non-finite or missing state", "unsupported stop", "unknown exposure", "risk-increasing normalization"],
+      "allowed_capability": "deterministic risk decision only",
+      "forbidden_capabilities": ["broker call", "risk expansion", "martingale", "averaging", "model override"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-DURABILITY",
+      "logical_boundary": "journal_lease_outbox",
+      "authority": ["phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md", "phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md"],
+      "inputs": ["typed lifecycle events", "expected revision", "single-writer lease", "canonical payload"],
+      "outputs": ["append-only durable record", "hash-chain head", "CAS result", "one-attempt fence state"],
+      "fail_closed_on": ["CAS conflict", "lease ambiguity", "torn/corrupt record", "durability uncertainty", "duplicate claim"],
+      "allowed_capability": "local fake/disposable persistence in Gate 1",
+      "forbidden_capabilities": ["history rewrite", "unfenced risk-increasing attempt", "broker mutation"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-BROKER-OBSERVATION",
+      "logical_boundary": "authoritative_broker_observation_and_reconciliation",
+      "authority": ["phase0/specifications/EXECUTION_RECONCILIATION_IDEMPOTENCY_SPEC.md", "phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md"],
+      "inputs": ["fake/read-only broker observations", "journal state", "ownership and volume state"],
+      "outputs": ["reconciled state", "SUBMISSION_UNCERTAIN or quarantine", "typed event mapping"],
+      "fail_closed_on": ["unknown exposure", "ownership ambiguity", "volume mismatch", "uncertain submission", "event precedence conflict"],
+      "allowed_capability": "fake broker and read-only contract validation",
+      "forbidden_capabilities": ["live adapter binding", "order submit/modify/cancel/close"],
+      "production_implementation_present": false
+    },
+    {
+      "id": "G1-PORT-COMPOSITION",
+      "logical_boundary": "composition_audit_health_alert_release",
+      "authority": ["phase0/roadmap/GATE_1_IMPLEMENTATION_READINESS_PACKET.md", "phase0/roadmap/GATE_4_SHADOW_OPERATIONS_PACKET.md"],
+      "inputs": ["validated component states", "execution-off configuration", "release identity"],
+      "outputs": ["null execution result", "append-only audit/health records", "bounded supervisor state", "release evidence"],
+      "fail_closed_on": ["capability drift", "health failure", "identity mismatch", "audit corruption", "restart exhaustion"],
+      "allowed_capability": "offline composition with null execution sink",
+      "forbidden_capabilities": ["order-capable adapter", "real alert", "external connection", "deployment with execution enabled"],
+      "production_implementation_present": false
+    }
+  ],
+  "claim_limit": "Logical preparation catalog only. It introduces no new port signature, implementation, external action, broker capability, gate evidence or trading authority."
+}

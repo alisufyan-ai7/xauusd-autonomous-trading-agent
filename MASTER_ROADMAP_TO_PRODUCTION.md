@@ -1,8 +1,8 @@
 # Master roadmap to production
 
-**Roadmap version:** R41  
+**Roadmap version:** R42  
 **Recorded:** 2026-08-26  
-**Authoritative source revision:** private `main` at `7a7a30699d4cc3195165e14eed57771be2d32ce7` (R40)  
+**Authoritative source revision:** private `main` at `5cf293dd83e4c3db999e521029cd3a8139baf289` (R41)  
 **Current gate:** Gate 0 — `INCOMPLETE`, 7 PASS / 7 PENDING  
 **Current operating mode:** closure only; external Python trading disabled; no demo/live trading authorized
 
@@ -200,6 +200,10 @@ R40 adds machine-readable preparation records to reduce Gate 1–4 startup delay
 | `phase0/roadmap/GATE_2_FAULT_SCENARIO_SCHEMA_R41.json` | Per-scenario simulated fault evidence contract | Planning schema only; no real fault or Gate 2 evidence |
 | `phase0/roadmap/GATE_3_TRIAL_REGISTRY_SCHEMA_R41.json` | Append-only all-trial and holdout-opening bindings | Planning schema only; no trial/holdout opened |
 | `phase0/roadmap/GATE_4_OBSERVATION_REGISTRATION_SCHEMA_R41.json` | Pre-start duration/coverage/tolerance/incident identity bindings | Planning schema only; Gate 4 has not started |
+| `phase0/roadmap/GATE_1_PORT_CONTRACT_CATALOG_R42.json` | Logical catalog of existing frozen component boundaries and denied capabilities | Index only; no new signature or implementation |
+| `phase0/roadmap/GATE_2_FAULT_MATRIX_REGISTER_R42.json` | Eleven frozen simulated-fault families prepared for later artifact binding | Register only; no scenario executed |
+| `phase0/roadmap/GATE_3_ACCEPTANCE_REPORT_SCHEMA_R42.json` | Frozen replay acceptance fields and procedure in machine-readable form | Schema only; no trial or holdout opened |
+| `phase0/roadmap/GATE_4_MONITORING_REGISTER_R42.json` | Pre-start monitoring inventory with thresholds deferred to hash-bound Gate 1–3 outputs | Inventory only; Gate 4 has not started |
 
 The preparation register is the task-level execution view. This master remains the only forward-looking gate/schedule authority.
 
