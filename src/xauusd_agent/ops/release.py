@@ -158,12 +158,12 @@ def assemble_release(
         "release_id": release_id,
         "source_revision": source_revision,
     }
-    (release_root / "candidate-metadata.json").write_text(
-        json.dumps(metadata, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    (release_root / "candidate-metadata.json").write_bytes(
+        (json.dumps(metadata, indent=2, sort_keys=True) + "\n").encode("utf-8")
     )
     manifest = build_manifest(release_root, release_id=release_id, created_at=created_at)
     manifest_path = release_root / "release-manifest.json"
-    manifest_path.write_text(manifest.to_json(), encoding="utf-8")
+    manifest_path.write_bytes(manifest.to_json().encode("utf-8"))
     package_sha256 = hashlib.sha256(package_target.read_bytes()).hexdigest()
     manifest_sha256 = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
     return ReleaseSeal(

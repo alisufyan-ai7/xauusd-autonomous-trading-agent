@@ -177,10 +177,13 @@ def test_missing_setup_identity_quarantines_even_after_setup_verdict() -> None:
 
 
 def test_cycle_input_requires_identity_and_exact_decision_clock() -> None:
-    with pytest.raises(ValueError, match="decision_id is required"):
+    with pytest.raises(ValueError) as missing_identity:
         replace(_inputs(), decision_id="")
-    with pytest.raises(ValueError, match="decision time must equal observed_at"):
+    assert str(missing_identity.value) == "decision_id is required"
+    with pytest.raises(ValueError) as clock_mismatch:
         replace(_inputs(), observed_at=NOW.replace(minute=1))
+    assert str(clock_mismatch.value) == "market decision time must equal observed_at"
     indeterminate = NOW.replace(tzinfo=_IndeterminateTimezone())
-    with pytest.raises(ValueError, match="observed_at must be timezone-aware"):
+    with pytest.raises(ValueError) as invalid_clock:
         replace(_inputs(), observed_at=indeterminate)
+    assert str(invalid_clock.value) == "observed_at must be timezone-aware"

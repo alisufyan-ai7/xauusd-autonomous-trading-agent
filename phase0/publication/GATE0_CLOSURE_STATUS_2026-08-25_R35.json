@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.35",
+  "recorded_utc": "2026-08-25T20:33:06Z",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "6_PASS_8_PENDING",
+  "controlled_tests": "PASS_358_OF_358_ACROSS_25_GROUPS",
+  "G0-07": {
+    "r34_attempt": "FAIL_CLOSED_BEFORE_FIRST_EVENT_APPEND",
+    "failure": "DISCONNECTED_STATE_NOT_OBSERVED_WITHIN_60_SECONDS",
+    "adapter_restore": "SUCCESS_INFERRED_FROM_CONTROL_FLOW_AND_RETURNED_PROMPT",
+    "r35_correction": "VERIFIED_NOT_EXECUTED",
+    "corrected_retry_requires_owner_approval": true
+  },
+  "G0-09": {
+    "recipient_identities": "OWNER_CONFIRMED_PRIVATE_NOT_REPUBLISHED",
+    "sender_setup": "VERIFIED_NOT_CONFIGURED",
+    "one_command_canary": "VERIFIED_NOT_EXECUTED"
+  },
+  "r4_window_preserved_unopened": true,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Fail-closed evidence and bounded retry correction only; G0-07 and G0-09 remain pending."
+}

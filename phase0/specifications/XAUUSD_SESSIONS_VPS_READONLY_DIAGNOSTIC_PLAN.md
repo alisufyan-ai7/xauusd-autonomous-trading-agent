@@ -103,4 +103,3 @@ The account/VPS evidence phase passes only after an operator-approved run produc
 - Multiple-terminal discovery and path redaction need objective verification in the new collector.
 - MT5 auto-update control/rollback and Windows patch policy need operational decisions.
 - Any future real account needs a new fingerprinted probe before use.
-

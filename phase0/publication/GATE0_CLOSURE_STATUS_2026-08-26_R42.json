@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.42",
+  "recorded_utc": "2026-08-26T19:10:10Z",
+  "authoritative_parent_commit": "5cf293dd83e4c3db999e521029cd3a8139baf289",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "7_PASS_7_PENDING",
+  "pending_items": ["G0-04", "G0-05", "G0-06", "G0-07", "G0-08", "G0-12", "G0-14"],
+  "master_roadmap": {
+    "path": "MASTER_ROADMAP_TO_PRODUCTION.md",
+    "version": "R42",
+    "authority": "SINGLE_FORWARD_LOOKING_GATE_0_THROUGH_GATE_7_ROADMAP"
+  },
+  "prepared_contract_instantiation": {
+    "status": "PREPARED_NOT_PUBLISHED",
+    "gate1_port_catalog": "phase0/roadmap/GATE_1_PORT_CONTRACT_CATALOG_R42.json",
+    "gate2_fault_matrix_register": "phase0/roadmap/GATE_2_FAULT_MATRIX_REGISTER_R42.json",
+    "gate3_acceptance_report_schema": "phase0/roadmap/GATE_3_ACCEPTANCE_REPORT_SCHEMA_R42.json",
+    "gate4_monitoring_register": "phase0/roadmap/GATE_4_MONITORING_REGISTER_R42.json",
+    "new_interface_signatures": 0,
+    "new_gate_requirements": 0,
+    "threshold_values_selected": 0,
+    "gate_credit": false
+  },
+  "production_implementation_authorized": false,
+  "r4_window_preserved_unopened": true,
+  "r4_evaluation_earliest_utc": "2026-09-24T00:00:00Z",
+  "G0-07": {"status":"PENDING","third_drill_authorized":false,"touched_in_r42":false},
+  "gate_2_fault_run_performed": false,
+  "gate_3_trial_or_holdout_opened": false,
+  "gate_4_started": false,
+  "external_actions_performed": [],
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "Prepared contract instantiation only. No gate promotion, implementation, external action, fault, replay trial, shadow observation or trading authority."
+}

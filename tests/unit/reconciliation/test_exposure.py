@@ -75,7 +75,7 @@ def test_null_execution_record_enforces_absent_capability_and_zero_actions() -> 
     )
     assert record.execution_capability == "ABSENT"
     assert record.broker_action_count == 0
-    with pytest.raises(ValueError, match="must be absent"):
+    with pytest.raises(ValueError) as capability_error:
         NullExecutionRecord(
             decision_id="d2",
             decided_at_utc="2026-10-05T00:00:01Z",
@@ -84,6 +84,10 @@ def test_null_execution_record_enforces_absent_capability_and_zero_actions() -> 
             risk_reason_codes=("TEST",),
             execution_capability="PRESENT",
         )
+    assert (
+        str(capability_error.value)
+        == "production-candidate execution capability must be absent"
+    )
 
 
 @pytest.mark.parametrize(
@@ -93,7 +97,7 @@ def test_null_execution_record_enforces_absent_capability_and_zero_actions() -> 
 def test_null_execution_record_requires_both_identity_fields(
     decision_id: str, decided_at_utc: str
 ) -> None:
-    with pytest.raises(ValueError, match="identity and UTC time are required"):
+    with pytest.raises(ValueError) as identity_error:
         NullExecutionRecord(
             decision_id=decision_id,
             decided_at_utc=decided_at_utc,
@@ -101,6 +105,7 @@ def test_null_execution_record_requires_both_identity_fields(
             risk_disposition=RiskDisposition.REJECT,
             risk_reason_codes=("TEST",),
         )
+    assert str(identity_error.value) == "decision identity and UTC time are required"
 
 
 def test_exposure_ledger_is_deterministic_append_only_and_hash_chained() -> None:

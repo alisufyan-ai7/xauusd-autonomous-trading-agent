@@ -138,4 +138,3 @@ python -m unittest -v phase0.validation.operational_policy.test_operational_poli
 ## 9. Gate 1 acceptance packet
 
 Required outputs are the byte-exact release artifact, manifest/SBOM, requirement-test matrix, full cross-platform test report, golden/differential report, property report, mutation report, coverage/exclusion report, execution-off deployment result and rollback result. Gate 1 cannot pass from the existing 358-test specification baseline alone.
-

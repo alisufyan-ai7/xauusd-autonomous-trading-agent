@@ -1,0 +1,48 @@
+{
+  "allowed_mt5_attributes": [
+    "account_info",
+    "initialize",
+    "last_error",
+    "shutdown",
+    "symbol_info",
+    "symbol_info_tick",
+    "terminal_info",
+    "version"
+  ],
+  "forbidden_calls": [
+    "__import__",
+    "compile",
+    "eval",
+    "exec",
+    "getattr",
+    "history_deals_get",
+    "history_orders_get",
+    "login",
+    "market_book_add",
+    "market_book_release",
+    "order_check",
+    "order_send",
+    "orders_get",
+    "positions_get",
+    "setattr",
+    "symbol_select"
+  ],
+  "sources": [
+    {
+      "file": "diagnostic.py",
+      "findings": [],
+      "sha256": "0a763bd579ac64d9068b2e6830a99d2aa3e7ac7b3fe54a239b1a7130395e90ef"
+    },
+    {
+      "file": "readonly_mt5.py",
+      "findings": [],
+      "sha256": "705d0836b993e0d09d4323e9aad716b5df01c700f23ad4f92262bc69788793ae"
+    }
+  ],
+  "status": "PASS",
+  "tests": {
+    "exit_code": 0,
+    "stderr": "test_guard_aborts_before_account_read (test_diagnostic.Tests.test_guard_aborts_before_account_read) ... ok\ntest_powershell_sidecar_uses_explicit_path_and_value (test_diagnostic.Tests.test_powershell_sidecar_uses_explicit_path_and_value) ... ok\ntest_short_run_hash_chain_and_redaction (test_diagnostic.Tests.test_short_run_hash_chain_and_redaction) ... ok\n\n----------------------------------------------------------------------\nRan 3 tests in 1.009s\n\nOK\n",
+    "stdout": ""
+  }
+}

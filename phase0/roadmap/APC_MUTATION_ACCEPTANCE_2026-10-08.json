@@ -1,0 +1,393 @@
+{
+  "schema_version": "apc-mutation-acceptance-1.0",
+  "recorded_date_local": "2026-10-08",
+  "timezone": "Asia/Karachi",
+  "scope": [
+    "config",
+    "runtime",
+    "release_sealing",
+    "null_execution",
+    "risk_governor",
+    "startup_integrity"
+  ],
+  "original_run": {
+    "executed": 731,
+    "killed": 547,
+    "survived": 184,
+    "classification_complete": true,
+    "remediated_or_eliminated_count": 155,
+    "remediated_or_eliminated": [
+      "xauusd_agent.config.xǁRuntimeConfigǁ__post_init____mutmut_14",
+      "xauusd_agent.config.xǁRuntimeConfigǁ__post_init____mutmut_21",
+      "xauusd_agent.config.xǁRuntimeConfigǁ__post_init____mutmut_28",
+      "xauusd_agent.config.xǁRuntimeConfigǁ__post_init____mutmut_6",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_1",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_105",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_106",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_13",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_17",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_18",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_2",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_22",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_23",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_24",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_25",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_37",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_51",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_52",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_53",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_54",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_56",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_58",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_64",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_65",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_67",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_68",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_69",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_70",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_73",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_8",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_86",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_88",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_90",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_95",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_96",
+      "xauusd_agent.ops.release.x_assemble_release__mutmut_97",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_10",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_19",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_29",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_30",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_32",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_37",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_38",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_39",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_4",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_40",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_41",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_42",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_5",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_8",
+      "xauusd_agent.ops.release.x_build_manifest__mutmut_9",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_10",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_13",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_15",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_19",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_20",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_23",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_27",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_30",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_31",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_32",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_33",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_37",
+      "xauusd_agent.ops.release.x_scan_capabilities__mutmut_6",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_10",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_3",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_4",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_6",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_7",
+      "xauusd_agent.ops.release.xǁReleaseManifestǁto_json__mutmut_9",
+      "xauusd_agent.reconciliation.null_execution.xǁNullExecutionRecordǁ__post_init____mutmut_13",
+      "xauusd_agent.reconciliation.null_execution.xǁNullExecutionRecordǁ__post_init____mutmut_5",
+      "xauusd_agent.risk.policy_a.x__invalid_decimal__mutmut_2",
+      "xauusd_agent.risk.policy_a.x__quarantine__mutmut_1",
+      "xauusd_agent.risk.policy_a.x__quarantine__mutmut_10",
+      "xauusd_agent.risk.policy_a.x__quarantine__mutmut_4",
+      "xauusd_agent.risk.policy_a.x__quarantine__mutmut_9",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_103",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_104",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_105",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_106",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_107",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_110",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_111",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_112",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_12",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_122",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_125",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_130",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_131",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_134",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_14",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_140",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_141",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_159",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_168",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_170",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_171",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_172",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_173",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_174",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_175",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_177",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_178",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_179",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_180",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_181",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_182",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_183",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_184",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_186",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_187",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_188",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_189",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_190",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_191",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_192",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_193",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_194",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_196",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_197",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_198",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_199",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_2",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_203",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_208",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_211",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_212",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_213",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_215",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_216",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_222",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_223",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_225",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_226",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_228",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_229",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_23",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_24",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_28",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_4",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_6",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_8",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_97",
+      "xauusd_agent.runtime.xǁShadowCycleInputǁ__post_init____mutmut_13",
+      "xauusd_agent.runtime.xǁShadowCycleInputǁ__post_init____mutmut_3",
+      "xauusd_agent.runtime.xǁShadowCycleInputǁ__post_init____mutmut_9",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_36",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_39",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_44",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_48",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_49",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_58",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_6",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_60"
+    ],
+    "mechanically_equivalent_noncritical_count": 29,
+    "mechanically_equivalent_noncritical": [
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_11",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_13",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_15",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_153",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_158",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_162",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_167",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_3",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_5",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_55",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_60",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_65",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_7",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_70",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_75",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_80",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_85",
+      "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_9",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_16",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_17",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_21",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_22",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_27",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_28",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_34",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_35",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_4",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_5",
+      "xauusd_agent.storage.integrity.x_verify_startup__mutmut_56"
+    ]
+  },
+  "final_source_run": {
+    "executed": 657,
+    "killed": 623,
+    "survived_equivalent_noncritical": 34,
+    "survived_critical": 0,
+    "classification": [
+      {
+        "mutant": "xauusd_agent.ops.release.x_assemble_release__mutmut_26",
+        "classification": "ORDERED_LITERAL_EQUIVALENT",
+        "mechanical_justification": "The closed metadata literal insertion order already equals sorted key order; serialized bytes are identical."
+      },
+      {
+        "mutant": "xauusd_agent.ops.release.x_assemble_release__mutmut_29",
+        "classification": "ORDERED_LITERAL_EQUIVALENT",
+        "mechanical_justification": "The closed metadata literal insertion order already equals sorted key order; serialized bytes are identical."
+      },
+      {
+        "mutant": "xauusd_agent.ops.release.x_assemble_release__mutmut_31",
+        "classification": "ORDERED_LITERAL_EQUIVALENT",
+        "mechanical_justification": "The closed metadata literal insertion order already equals sorted key order; serialized bytes are identical."
+      },
+      {
+        "mutant": "xauusd_agent.ops.release.x_assemble_release__mutmut_34",
+        "classification": "UTF8_CODEC_ALIAS_EQUIVALENT",
+        "mechanical_justification": "Python resolves UTF-8 and utf-8 to the same codec and produces identical bytes."
+      },
+      {
+        "mutant": "xauusd_agent.ops.release.x_assemble_release__mutmut_49",
+        "classification": "UTF8_CODEC_ALIAS_EQUIVALENT",
+        "mechanical_justification": "Python resolves UTF-8 and utf-8 to the same codec and produces identical bytes."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_11",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_13",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_15",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_153",
+        "classification": "VALIDATED_INVARIANT_EQUIVALENT",
+        "mechanical_justification": "Earlier fail-closed validation proves margin_used >= 0 and incremental_margin > 0, so both current and stressed denominators are strictly positive."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_158",
+        "classification": "VALIDATED_INVARIANT_EQUIVALENT",
+        "mechanical_justification": "Earlier fail-closed validation proves margin_used >= 0 and incremental_margin > 0, so both current and stressed denominators are strictly positive."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_162",
+        "classification": "VALIDATED_INVARIANT_EQUIVALENT",
+        "mechanical_justification": "Earlier fail-closed validation proves margin_used >= 0 and incremental_margin > 0, so both current and stressed denominators are strictly positive."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_167",
+        "classification": "VALIDATED_INVARIANT_EQUIVALENT",
+        "mechanical_justification": "Earlier fail-closed validation proves margin_used >= 0 and incremental_margin > 0, so both current and stressed denominators are strictly positive."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_3",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_5",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_55",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_60",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_65",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_7",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_70",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_75",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_80",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_85",
+        "classification": "TYPING_CAST_RUNTIME_EQUIVALENT",
+        "mechanical_justification": "typing.cast returns its value unchanged at runtime; only the static type argument changed."
+      },
+      {
+        "mutant": "xauusd_agent.risk.policy_a.x_evaluate_policy_a__mutmut_9",
+        "classification": "REASON_KEY_NORMALIZATION_EQUIVALENT",
+        "mechanical_justification": "The mutated scalar key is immediately normalized with upper(); the emitted reason code is byte-identical."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_16",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_17",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_21",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_22",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_27",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_28",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_34",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_35",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_4",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_5",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      },
+      {
+        "mutant": "xauusd_agent.storage.integrity.x_verify_startup__mutmut_56",
+        "classification": "SQLITE_CASE_EQUIVALENT",
+        "mechanical_justification": "SQLite keywords, PRAGMAs, table names and column names are ASCII case-insensitive; valid/corrupt result sets are unchanged."
+      }
+    ]
+  },
+  "acceptance": {
+    "critical_survivors_allowed": 0,
+    "critical_survivors_observed": 0,
+    "status": "PASS"
+  },
+  "claim_limit": "Mutation acceptance applies to the configured safety-critical source scope; it does not authorize execution, deployment, publication, broker action or trading."
+}

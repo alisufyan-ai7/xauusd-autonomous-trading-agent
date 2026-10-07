@@ -24,4 +24,3 @@ The frozen event set, zero-exposure requirements, external-Python-disabled
 barrier, no-broker-mutation rule, prefix verification, recovery oracles and
 final reconciliation are unchanged. Any second failure stops closed and is not
 automatically retried.
-

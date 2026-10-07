@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.1",
+  "recorded_date_utc": "2026-08-22",
+  "project": "XAU/USD Autonomous Trading Agent",
+  "phase": "Phase 0",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "openai_benchmark": {
+    "budget_ceiling_usd": "8.00",
+    "project_alert_usd": "4.00",
+    "primary": "gpt-5.6-terra",
+    "challenger": "gpt-5.6-sol",
+    "cost_baseline": "gpt-5.6-luna",
+    "store": false,
+    "tools": [],
+    "local_dry_status": "PASS_4_OF_4_TESTS",
+    "live_status": "PENDING_SEPARATE_BENCHMARK_HOST_OUTPUT",
+    "live_cost_incurred_usd": null,
+    "outbound_data": "SYNTHETIC_MINIMIZED_DERIVED_ANALYTICAL_FEATURES_ONLY"
+  },
+  "event_guard": {
+    "primary_design": "FREE_OFFICIAL_SOURCES",
+    "sources": ["BLS", "BEA", "FEDERAL_RESERVE_BOARD", "US_CENSUS_BUREAU"],
+    "required_if_jobless_claims_retained": "US_DEPARTMENT_OF_LABOR_ETA",
+    "optional_cross_check": "FRED_DATE_ONLY",
+    "paid_aggregator": "DEFERRED_UNLESS_MATERIAL_GAP_IS_PROVEN",
+    "purchase_authorized": false,
+    "charging_or_auto_renewing_trial_authorized": false,
+    "offline_oracle": "PASS_14_OF_14_TESTS",
+    "operational_admission": "PENDING_LIVE_ACQUISITION_REVISION_HORIZON_HOLIDAY_OUTAGE_AND_SCHEMA_DRIFT_EVIDENCE",
+    "shock_breaker": "INDEPENDENT_AND_FAIL_CLOSED; EMPIRICAL_THRESHOLDS_PENDING"
+  },
+  "remaining_gate_0_blockers": [
+    "live bounded Terra/Sol/Luna benchmark report from the configured host",
+    "official-source Event Guard live acquisition and conformance evidence",
+    "DOL authoritative schedule treatment or explicit removal of Tier-2 jobless claims",
+    "empirical shock and post-event normalization calibration",
+    "authoritative weekly and holiday XAUUSD sessions",
+    "controlled VPS restart/reconnect/network/clock/build reliability observations",
+    "full OHLC-derived five-family setup golden corpus",
+    "registered immutable historical replay",
+    "strategy volume cap and stressed margin reserve",
+    "pause-resumption and emergency/incident runbooks"
+  ]
+}

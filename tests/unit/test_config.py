@@ -19,7 +19,11 @@ def test_execution_barrier_is_immutable(tmp_path: Path) -> None:
     [
         ("symbol", "EURUSD", "production candidate is bound to XAUUSD"),
         ("broker_sink", "MT5", "only the NULL broker sink is admitted"),
-        ("analyst_transport", "OPENAI", "requires separate APC-SOL-SHADOW approval"),
+        (
+            "analyst_transport",
+            "OPENAI",
+            "Sol transport requires separate APC-SOL-SHADOW approval",
+        ),
         (
             "external_python_real_money_trading",
             "ENABLED",
@@ -31,5 +35,6 @@ def test_unsafe_configuration_is_rejected(
     tmp_path: Path, field: str, value: str, message: str
 ) -> None:
     values = {"state_directory": tmp_path.resolve(), field: value}
-    with pytest.raises(ConfigurationError, match=message):
+    with pytest.raises(ConfigurationError) as exc_info:
         RuntimeConfig(**values)  # type: ignore[arg-type]
+    assert str(exc_info.value) == message

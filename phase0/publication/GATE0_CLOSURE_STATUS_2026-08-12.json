@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "recorded_date_utc": "2026-08-12",
+  "project": "XAU/USD Autonomous Trading Agent",
+  "phase": "Phase 0",
+  "gate_0_status": "INCOMPLETE",
+  "production_implementation_authorized": false,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "broker_technical_profile": {
+    "contracting_entity": "Exness (SC) Ltd",
+    "account_environment": "DEMO",
+    "platform": "MT5",
+    "account_type_label": "PRO",
+    "account_currency": "USD",
+    "account_serving_company": "Exness Technologies Ltd",
+    "trade_server": "Exness-MT5Trial15",
+    "symbol": "XAUUSD",
+    "symbol_path": "Pro\\Forex\\XAUUSD",
+    "digits": 3,
+    "point": "0.001",
+    "tick_size": "0.001",
+    "contract_size": "100",
+    "volume_min": "0.01",
+    "volume_step": "0.01",
+    "execution_mode": "MARKET",
+    "margin_mode": "RETAIL_HEDGING",
+    "scope": "Point-in-time demo observation; not a universal broker default and contains no account number."
+  },
+  "accepted_evidence_hashes": {
+    "vps_diagnostic_zip_sha256": "91a1189241521fcc3f0922e4d98b1fdb6c20751f7fed8e60a9c6dac3c5be9928",
+    "vps_diagnostic_final_record_sha256": "c7fb9f24fc6af45647c48ab2ebbbd34a0208c5c930e140fc3a00ec01de966055"
+  },
+  "vps_observation": {
+    "diagnostic_version": "0.2.2",
+    "observation_count": 17260,
+    "record_chain": "PASS_17260_OF_17260",
+    "connected_all_observations": true,
+    "external_python_trading_disabled_all_observations": true,
+    "weekly_or_holiday_schedule_proven": false
+  },
+  "offline_validation": {
+    "risk_governor": "PASS_52_OF_52",
+    "analyst_contract": "PASS_35_OF_35",
+    "replay_acceptance_oracle": "PASS_15_OF_15",
+    "setup_execution_implemented_suite": "PASS_21_OF_21_TEST_METHODS",
+    "raw_ohlc_setup_feature_oracle": "PASS_21_OF_21_TEST_METHODS; PARTIAL_FAMILY_COVERAGE",
+    "vps_diagnostic_package": "PASS_3_OF_3_TEST_METHODS",
+    "full_ohlc_derived_setup_golden_corpus": "INCOMPLETE",
+    "licensed_historical_replay": "INSUFFICIENT_EVIDENCE"
+  },
+  "openai_benchmark": {
+    "budget_ceiling_usd": "10.00",
+    "live_cost_incurred_usd": "0.00",
+    "primary": "gpt-5.6-terra",
+    "challenger": "gpt-5.6-sol",
+    "cost_baseline": "gpt-5.6-luna",
+    "store": false,
+    "tools": [],
+    "dry_status": "PASS",
+    "live_status": "NOT_RUN_API_KEY_ABSENT",
+    "outbound_data": "MINIMIZED_DERIVED_ANALYTICAL_FEATURES_ONLY"
+  },
+  "event_data_review": {
+    "purchase_authorized": false,
+    "admitted_provider": null,
+    "technical_first_candidate": "Trading Economics",
+    "contract_comparison_candidate": "Benzinga",
+    "public_terms_primary_rejection": "EODHD",
+    "recommendation": "NO_PURCHASE_QUOTE_AND_TRIAL_REVIEW"
+  },
+  "remaining_gate_0_blockers": [
+    "authoritative weekly and holiday XAUUSD sessions",
+    "restart/reconnect/network/clock/build reliability matrix",
+    "full OHLC-derived setup golden corpus",
+    "live bounded Terra/Sol/Luna benchmark",
+    "written provider rights and sample conformance",
+    "licensed immutable historical replay",
+    "strategy volume cap and margin reserve",
+    "pause-resumption and emergency/incident runbooks"
+  ]
+}

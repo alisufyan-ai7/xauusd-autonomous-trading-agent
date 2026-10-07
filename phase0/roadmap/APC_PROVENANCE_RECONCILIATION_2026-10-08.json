@@ -1,0 +1,41 @@
+{
+  "schema_version": "apc-provenance-reconciliation-1.0",
+  "recorded_date_local": "2026-10-08",
+  "timezone": "Asia/Karachi",
+  "source_revision": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+  "accepted_plan_path": "phase0/roadmap/ACCELERATED_PRODUCTION_CANDIDATE_PLAN_2026-10-05.md",
+  "accepted_plan_sha256": "93476cb2ed088727856010e389fb25ccdd017676b18c237e2b350312ac7438d4",
+  "previous_workspace_plan_sha256": "7517a768f3b7a98e4f46af0932b25578c7e94c15332fba502dbf186b8a0a23cd",
+  "cause": "After owner acceptance, four governance-status lines were edited in place in the accepted plan instead of recording acceptance in a separate immutable record.",
+  "correction": "The exact accepted plan bytes were restored. Owner acceptance remains separately recorded in APC_BASELINE_ACCEPTANCE_2026-10-05.json; no accepted term was reinterpreted or replaced.",
+  "changed_lines_classification": [
+    "status label",
+    "non-authority statement",
+    "proposed-baseline acceptance sentence",
+    "closing authority sentence"
+  ],
+  "git_provenance": {
+    "forensic_root_ref": "forensic/apc-root-checkpoint-81483d3",
+    "forensic_root_commit": "81483d3da6c2f02c3c478bff82e80770407fe544",
+    "reconstructed_checkpoint": "0ad18bbc903e91a3cbd9135186d71e023d786000",
+    "reconstructed_checkpoint_parent": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+    "forensic_and_reconstructed_tree": "c056bc653a92b875e5b039928a796eda5973e77e",
+    "byte_equivalence": "PASS",
+    "r42_objects_restored": {
+      "commit_objects": 1,
+      "root_tree": "0949ac71e31e018e6e6861c4349c607e768293f9",
+      "tree_objects": 40,
+      "blob_objects": 394,
+      "blob_bytes": 1744367,
+      "sha_verification": "PASS"
+    },
+    "forensic_root_delta_from_r42": {
+      "added_paths": 84,
+      "deleted_r42_paths": 374,
+      "modified_r42_paths": 20
+    },
+    "r42_owned_paths_restored": 394,
+    "r42_owned_path_byte_equivalence": "PASS"
+  },
+  "publication_authorized": false
+}

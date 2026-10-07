@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.38",
+  "recorded_utc": "2026-08-25T21:52:03Z",
+  "mode": "CLOSURE_ONLY",
+  "gate_0_status": "INCOMPLETE",
+  "matrix_result": "7_PASS_7_PENDING",
+  "controlled_test_baseline": "PASS_358_OF_358_ACROSS_25_GROUPS_AT_R35",
+  "r37_focused_alert_controls": "PASS_24_OF_24_ACROSS_3_GROUPS",
+  "r38_focused_receipt_controls": "PASS_35_OF_35_ACROSS_3_GROUPS",
+  "r38_final_matrix_controls": "PASS_11_OF_11",
+  "G0-07": {
+    "status": "PENDING",
+    "third_retry_authorized": false
+  },
+  "G0-09": {
+    "result": "PASS_SPEC_ONLY",
+    "attempts_verified": 2,
+    "channels_verified": [
+      "EMAIL",
+      "TELEGRAM_PUSH"
+    ],
+    "bounded_acknowledgement": "PASS",
+    "private_audit_chain": "PASS_HASH_ONLY",
+    "risk_authority_restored": false,
+    "status": "PASS"
+  },
+  "r4_window_preserved_unopened": true,
+  "trading_authorized": false,
+  "external_python_trading_required_state": "DISABLED",
+  "claim_limit": "One receipt-bound dual-channel A1 canary only; no general delivery-SLA, broker or trading authority."
+}

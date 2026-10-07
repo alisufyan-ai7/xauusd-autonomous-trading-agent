@@ -108,4 +108,3 @@ The Gate 2 packet must contain:
 - sanitized final report with PASS/FAIL derived from machine-readable receipts.
 
 A failed scenario stops Gate 2. Repair creates a new release candidate and reruns Gate 1 plus the complete Gate 2 matrix; evidence is appended, never overwritten.
-

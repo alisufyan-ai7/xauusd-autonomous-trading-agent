@@ -1,10 +1,10 @@
 # Accelerated Production Candidate Plan
 
-**Status:** APC-A / APC-BASELINE accepted by owner; unpublished implementation baseline  
+**Status:** PROPOSAL ONLY — not an accepted governance baseline  
 **Prepared:** 2026-10-05 Asia/Karachi / 2026-10-04 UTC  
 **Source baseline:** private `main` R42 at `dea79e9aaebdaf81a09191b0d47e0f87157eb9e1`  
 **Delivery objective:** production-grade, execution-disabled XAUUSD production candidate operating continuously on the VPS by 2026-10-31  
-**Non-authority statement:** production-candidate implementation is authorized. Publication, deployment, an OpenAI call, a VPS disruption, a broker mutation, demo execution and real-money execution remain separately approval-gated.
+**Non-authority statement:** this plan does not authorize publication, implementation, deployment, an OpenAI call, a VPS disruption, a broker mutation, demo execution, or real-money execution.
 
 ## 1. Decision and delivery boundary
 
@@ -25,7 +25,7 @@ The October plan is therefore a greenfield production implementation against unu
 
 ## 3. Proposed new governance baseline
 
-The owner accepted these sequencing changes on 2026-10-05. They govern local implementation preparation immediately but remain unpublished pending separate APC-PUBLISH approval.
+These changes require explicit owner acceptance and publication as a new baseline before implementation begins.
 
 | Proposed change | Why it accelerates delivery | Additional risk | Compensating safeguards | Preserved history / pre-tiny-live requirement |
 |---|---|---|---|---|
@@ -140,4 +140,4 @@ Approval should be granular:
 6. **APC-DEMO:** separately authorize the sealed demo adapter and autonomous Exness demo activation after DEMO-ADMIT passes.
 7. **TINY-LIVE:** later, after every pre-live requirement passes, separately authorize the exact 0.01-lot live activation artifact, account fingerprint, start window and kill/rollback packet.
 
-APC-BASELINE alone authorizes the execution-disabled implementation described here. R42 remains the published `main` baseline until APC-PUBLISH is separately approved. Every other authority listed above remains withheld.
+Until those approvals are given, this file is a proposal only and the R42 sequencing baseline remains controlling.

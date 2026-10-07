@@ -1,0 +1,24 @@
+name: Validate records
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate JSON and decision sequence
+        shell: bash
+        run: |
+          python -m json.tool phase0/PHASE_0_EVIDENCE_MODEL.json >/dev/null
+          python scripts/validate_records.py
+      - name: Verify read-only collector source policy
+        run: python tools/readonly-evidence-collector/verify_readonly.py

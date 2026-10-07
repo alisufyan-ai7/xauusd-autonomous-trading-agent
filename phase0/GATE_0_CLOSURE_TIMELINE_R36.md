@@ -20,4 +20,3 @@ read-only MT5 disconnected state was not observed within 150 seconds. It
 stopped before the first post-baseline event, restored the adapter without a
 reported error and did not begin later faults. Both attempts remain immutable
 failed evidence. Gate 0 still cannot pass before 2026-09-24.
-
