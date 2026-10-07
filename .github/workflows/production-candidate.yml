@@ -1,0 +1,42 @@
+name: production-candidate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "src/xauusd_agent/**"
+      - "tests/**"
+      - "scripts/verify_execution_disabled.py"
+      - "pyproject.toml"
+      - ".github/workflows/production-candidate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install build and validation dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[dev]"
+      - name: Prove the artifact contains no order capability
+        run: python scripts/verify_execution_disabled.py
+      - name: Lint
+        run: python -m ruff check src tests scripts/verify_execution_disabled.py
+      - name: Type check
+        run: python -m mypy src/xauusd_agent
+      - name: Test
+        run: python -m pytest --cov=xauusd_agent --cov-report=term-missing --cov-fail-under=85
+      - name: Build execution-disabled package
+        run: python -m build
+

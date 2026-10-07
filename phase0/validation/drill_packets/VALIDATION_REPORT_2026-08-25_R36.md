@@ -24,3 +24,4 @@ unavailable while the selected adapter was disabled.
 
 No `DISCONNECT` record or later restart/fault record was appended. No broker
 mutation, demo/live order action or trading authorization followed.
+

@@ -1,9 +1,9 @@
 # Master roadmap to production
 
-**Roadmap version:** R42  
-**Recorded:** 2026-08-26  
-**Authoritative source revision:** private `main` at `5cf293dd83e4c3db999e521029cd3a8139baf289` (R41)  
-**Current gate:** Gate 0 — `INCOMPLETE`, 7 PASS / 7 PENDING  
+**Roadmap version:** R43 (staged; publication approval required)  
+**Recorded:** 2026-10-04  
+**Authoritative source revision:** private `main` at `dea79e9aaebdaf81a09191b0d47e0f87157eb9e1` (R42)  
+**Current gate:** Gate 0 — `INCOMPLETE_FAIL_CLOSED`, 7 PASS / 1 FAIL / 6 PENDING  
 **Current operating mode:** closure only; external Python trading disabled; no demo/live trading authorized
 
 This is the single forward-looking schedule and dependency authority for Gates 0–7. Accepted specifications, evidence, Decision Log entries, and historical revision records remain authoritative for their own claims. This roadmap does not add an acceptance requirement, alter a frozen interface, reclassify evidence, authorize an external action, or replace a gate decision.
@@ -26,7 +26,7 @@ Preparation may run ahead of the active gate, but evidence may be credited only 
 
 ## 2. Critical path to the first tiny-live trade
 
-1. Close Gate 0 without reopening frozen decisions: mature R4, capture eligible G0-04/G0-06 evidence, resolve every remaining evidence item, preserve G0-07 history/no-third-drill constraint, run G0-08 and G0-12 after G0-05 PASS, obtain separate approval for G0-14, then conduct the final Gate 0 review. (`CALENDAR_WAIT`, `EVIDENCE`, `EXTERNAL_DEPENDENCY`, `OWNER_APPROVAL`)
+1. Close Gate 0 without reclassifying frozen evidence: preserve G0-05/R4 as `FAIL`; seal and publish the prospectively registered R5 successor before its future evaluation data; wait for a genuine G0-04 transition; complete fresh prospective G0-06 normal/weekend and officially published XAU holiday boundaries; and, only after separate operational approval, execute the new G0-07 campaign once under its stronger dual-MT5/OS observation mechanism. If and only if R5 passes, run G0-08 and G0-12; then obtain separate approval for G0-14 and conduct the final Gate 0 review. (`CALENDAR_WAIT`, `EVIDENCE`, `EXTERNAL_DEPENDENCY`, `OWNER_APPROVAL`)
 2. Implement the deterministic runtime against the frozen contracts and pass Gate 1. (`ENGINEERING`, `EVIDENCE`)
 3. Bind the actual Gate 1 implementation to the frozen adversarial matrix and pass Gate 2. (`ENGINEERING`, `EVIDENCE`)
 4. Execute the registered immutable historical replay and pass Gate 3. (`ENGINEERING`, `EVIDENCE`)
@@ -34,7 +34,7 @@ Preparation may run ahead of the active gate, but evidence may be credited only 
 6. Obtain separate demo authority, run the Exness demo lifecycle packet, and pass Gate 5. (`OWNER_APPROVAL`, `EXTERNAL_DEPENDENCY`, `EVIDENCE`)
 7. Revalidate the live account/symbol and obtain explicit real-money activation approval before the first Gate 6 tiny-live action. (`OWNER_APPROVAL`, `EXTERNAL_DEPENDENCY`)
 
-The current critical-path uncertainty is Gate 0, not engineering throughput. G0-04 is event-dependent and G0-07 remains an unresolved preserved fail-closed result with no third drill authorized. Therefore no unconditional production date is defensible yet.
+The current critical-path uncertainty is Gate 0, not engineering throughput. R5 has not yet been registered; G0-04 is event-dependent; the exact XAU holiday boundary is publication-dependent; and G0-07 operation remains separately approval-gated. Therefore no unconditional Gate 0 or production date is defensible. R34 and R35 remain immutable fail-closed attempts; the newly authorized campaign is a distinct prospective generation, not a retry or reinterpretation of either attempt.
 
 ## 3. Forecast
 
@@ -42,7 +42,8 @@ Dates below are planning forecasts, not acceptance criteria. “Earliest” assu
 
 | Milestone | Earliest technically defensible | Realistic planning date/range | Basis |
 |---|---|---|---|
-| Gate 0 PASS | **2026-09-24, strictly conditional** | **Not yet date-certain**; reforecast when G0-04 and G0-07 have admissible closure paths | R4 opens only on Sep 24; G0-04/G0-07 can remain blocking; G0-14 needs approval. |
+| Successor G0-05/R5 result | **2026-12-09**, only if complete registration is published by 2026-10-05 UTC, followed by a full UTC embargo day and a 63-complete-day window | **2026-12-16 to 2026-12-18** if the development bundle is sealed and registration is published around 2026-10-12 | Nine full weeks provide defensible sample headroom over R4's observed total-row and ROLLOVER rates; acceptance thresholds are unchanged. |
+| Gate 0 PASS | **Not date-certain; no earlier than the R5 result and all other blockers** | **Event- and approval-dependent after mid-December 2026** | G0-04 needs a natural qualifying transition; G0-06 needs three prospective boundary classes including a published XAU holiday; G0-07 needs separate operational approval and a one-attempt PASS; G0-08/G0-12 wait for R5 PASS; G0-14 needs separate approval. |
 | Gates 1–3 complete | 7–9 weeks after Gate 0 PASS | 10–14 weeks after Gate 0 PASS | Gate 1 implementation 4–6 weeks; Gate 2 actual-implementation adversarial pass 2–3 weeks; Gate 3 registered replay 1–2 weeks. Preparation runs now. |
 | Gate 4 shadow start | First market session after Gate 3 PASS | Within 1 week after Gate 3 PASS | Deployment-off reconciliation and start-record review must pass first. |
 | Gate 4 shadow end | Start + at least one full market month and required event coverage | 5–7 weeks after start | Mandatory observation window is not compressed; unresolved incidents extend it. |
@@ -50,7 +51,7 @@ Dates below are planning forecasts, not acceptance criteria. “Earliest” assu
 | Gate 6 earliest tiny-live start | Earliest estimate: 3–6 weeks after Gate 5 starts, only after Gate 5 PASS and explicit real-money approval | 4–8 weeks after Gate 5 starts | Forecast assumption only; the Gate 5 lifecycle evidence, not elapsed time, controls. |
 | Gate 7 first scaling decision | Earliest estimate: 6–12 weeks after Gate 6 activation | 10–16 weeks after Gate 6 activation | Forecast assumption only; a predeclared tiny-live sample and no critical incidents are required. Each increase needs approval. |
 
-If Gate 0 passed on the theoretical earliest date of 2026-09-24, the optimistic arithmetic would place Gates 1–3 completion in mid-to-late November 2026, Gate 4 completion in late December 2026 or January 2027, Gate 5 demo start immediately thereafter, and the earliest Gate 6 tiny-live consideration in February 2027. This is a scenario, not a commitment, because Gate 0 is not yet schedulable.
+The old 2026-09-24 Gate 0 scenario is retired by R4's immutable `FAIL`. Downstream dates must be recomputed from the eventual objective Gate 0 PASS; no downstream elapsed-time estimate changes a frozen acceptance rule or authorizes execution.
 
 ## 4. Gate-by-gate authority
 
@@ -61,12 +62,12 @@ If Gate 0 passed on the theoretical earliest date of 2026-09-24, the optimistic 
 | Purpose | Close every frozen specification and evidence claim without creating production or trading capability. |
 | Entry criteria | Current Phase 0 dossier, Decision Log and final evidence matrix are authoritative; closure-only direction accepted. |
 | Exit criteria | Every frozen Gate 0 matrix claim has one admitted typed receipt with matching sanitized artifact hash; final matrix and owner review return PASS. |
-| Dependencies | R4 maturity (`CALENDAR_WAIT`); natural/event/session states (`EXTERNAL_DEPENDENCY`); G0-04/G0-06/G0-08/G0-12 evidence (`EVIDENCE`); G0-14 permission (`OWNER_APPROVAL`); defensible closure of G0-07 without a prohibited third drill (`EVIDENCE`). |
-| Parallel work | Keep G0-04 capture ready; prepare eligible G0-06 capture; prepare sealed R4 evaluator inputs without opening them; maintain G0-08/G0-12 preflight; prepare documentation-only Gate 1–4 packets. |
-| Owner actions/approvals | Separate approval before G0-14 Sol; final Gate 0 pass/fail review; any genuinely new operational/external action. No owner action is requested merely to wait. |
+| Dependencies | Prospective R5 registration/window/result (`CALENDAR_WAIT`, `EVIDENCE`); natural G0-04 and published G0-06 states (`EXTERNAL_DEPENDENCY`); separate G0-07 operational approval and admitted one-attempt campaign (`OWNER_APPROVAL`, `EVIDENCE`); G0-08/G0-12 after R5 PASS (`EVIDENCE`); G0-14 permission (`OWNER_APPROVAL`). |
+| Parallel work | Seal the R5 development bundle and registration; keep G0-04 GET-only capture ready; register and execute eligible G0-06 boundaries prospectively; prepare but do not operate G0-07; maintain G0-08/G0-12 preflight; prepare documentation-only Gate 1–4 packets. |
+| Owner actions/approvals | Publication approval for the completed R5 registration; separate operational approval for G0-07 after protocol review; separate approval before G0-14 Sol; final Gate 0 pass/fail review. No owner action is requested for GET-only monitoring or elapsed-time waits. |
 | Earliest realistic start | In progress. |
-| Target completion range | Not before 2026-09-24; otherwise event/evidence dependent and currently not date-certain. |
-| Blockers | G0-04, G0-05, G0-06, G0-07, G0-08, G0-12, G0-14. No third G0-07 drill. |
+| Target completion range | Not before the R5 result; otherwise event/evidence/approval dependent and currently not date-certain. |
+| Blockers | G0-04, G0-05, G0-06, G0-07, G0-08, G0-12 and G0-14. R4 is immutable `FAIL`; R34/R35 are immutable fail-closed attempts. |
 | Trading mode | **Disabled.** External Python trading disabled; no demo/live action. |
 
 ### Gate 1 — deterministic implementation/unit-integration validation
@@ -178,12 +179,12 @@ If Gate 0 passed on the theoretical earliest date of 2026-09-24, the optimistic 
 
 | Item | Status/dependency | Earliest eligible action | Parallel preparation now |
 |---|---|---|---|
-| G0-04 | `EXTERNAL_DEPENDENCY`, `EVIDENCE`; natural revision/holiday/acquisition failure/recovery | Event-dependent | Keep GET-only capture packet ready; do not cause an outage. |
-| G0-05 | `CALENDAR_WAIT`, `EVIDENCE`; sealed R4 | Evaluate 2026-09-24 UTC | Verify code/config/registration hashes only; do not open window data. |
-| G0-06 | `CALENDAR_WAIT`, `EXTERNAL_DEPENDENCY`, `EVIDENCE` | 2026-09-08 UTC, conditional | Maintain fresh rendered schedule and boundary inventory procedure. |
-| G0-07 | `EVIDENCE`; R34/R35 preserved fail-closed | Unscheduled | No third drill and no reopening. Review only existing evidence for an admissible, non-reclassified closure path. |
-| G0-08 | `EVIDENCE`; requires G0-05 PASS | 2026-09-24 UTC or later | Keep stress-artifact/account-evaluation packet and hash bindings ready. |
-| G0-12 | `EVIDENCE`; requires G0-05 PASS and new untouched holdout | After 2026-09-24 | Keep replay engine/report preparation separate from the unopened holdout. |
+| G0-04 | `EXTERNAL_DEPENDENCY`, `EVIDENCE`; no qualifying natural transition observed | Event-dependent | Continue GET-only monitoring; do not cause an outage or manufacture a transition. |
+| G0-05 | `FAIL` for immutable R4; successor R5 is `PREPARED_NOT_REGISTERED` | Earliest R5 result 2026-12-09 only under the stated publication/embargo/window assumptions | Seal the chronological development bundle, complete all hashes, publish registration before future data, enforce one full UTC embargo day, and never open/extend/retune the evaluation. |
+| G0-06 | `CALENDAR_WAIT`, `EXTERNAL_DEPENDENCY`, `EVIDENCE`; September checkpoints elapsed unverified | After fresh prospective registration of exact rendered XAU rows | Capture new normal rollover and weekend BEFORE/INSIDE/AFTER sets; separately wait for and prospectively register the next officially published XAU holiday boundary. No backfill. |
+| G0-07 | `OWNER_APPROVAL`, `EVIDENCE`; R34/R35 immutable fail-closed; new campaign prepared only | After protocol publication and separate operational approval | Complete static/offline preparation for a distinct one-attempt campaign using two independent MT5 observers plus an OS observer. No disconnect/restart/mutation yet. |
+| G0-08 | `EVIDENCE`; requires successor G0-05 PASS | Only after admitted R5 PASS | Keep stress-artifact/account-evaluation packet and hash bindings ready; do not start. |
+| G0-12 | `EVIDENCE`; requires successor G0-05 PASS and new untouched holdout | Only after admitted R5 PASS | Keep replay engine/report preparation separate from the unopened holdout; do not start. |
 | G0-14 | `OWNER_APPROVAL`, `EVIDENCE`; requires G0-12 PASS | Same/next UTC day after approval and G0-12 PASS | Offline request/response validation only; stop and ask before any Sol action. |
 
 ## 6. Preparation control plane
@@ -204,6 +205,11 @@ R40 adds machine-readable preparation records to reduce Gate 1–4 startup delay
 | `phase0/roadmap/GATE_2_FAULT_MATRIX_REGISTER_R42.json` | Eleven frozen simulated-fault families prepared for later artifact binding | Register only; no scenario executed |
 | `phase0/roadmap/GATE_3_ACCEPTANCE_REPORT_SCHEMA_R42.json` | Frozen replay acceptance fields and procedure in machine-readable form | Schema only; no trial or holdout opened |
 | `phase0/roadmap/GATE_4_MONITORING_REGISTER_R42.json` | Pre-start monitoring inventory with thresholds deferred to hash-bound Gate 1–3 outputs | Inventory only; Gate 4 has not started |
+| `phase0/roadmap/G0_05_R5_PREREGISTRATION_DRAFT.json` | Successor R5 design, unchanged frozen acceptance and 63-day sample-sufficiency window | Draft only; not registered until the development bundle is sealed and the complete registration is published |
+| `phase0/roadmap/G0_06_PROSPECTIVE_CAPTURE_PLAN_R43.md` | Fresh normal/weekend capture and future officially published XAU holiday readiness | Preparation only; missed September checkpoints are not backfilled |
+| `phase0/roadmap/G0_07_PROSPECTIVE_CAMPAIGN_V2.md` | Stronger observation, safety controls, one-attempt budget, reconciliation, rollback and exact owner actions | Protocol preparation only; no operational action authorized |
+| `phase0/roadmap/G0_07_CAMPAIGN_V2_REGISTRATION.json` | Machine-readable G0-07 campaign identity and frozen acceptance | Prepared, not operationally approved or started |
+| `phase0/roadmap/GATE_0_RECOVERY_CRITICAL_PATH_R43.json` | Conditional dependency/parallelism/forecast register | Planning only; no item promoted and no external action authorized |
 
 The preparation register is the task-level execution view. This master remains the only forward-looking gate/schedule authority.
 

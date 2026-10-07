@@ -1,0 +1,39 @@
+{
+  "schema_version": "apc-r42-product-test-traceability-1.0",
+  "recorded_date_utc": "2026-10-07",
+  "source_revision": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+  "scope": "EXECUTION_DISABLED_PRODUCTION_CANDIDATE",
+  "claim_limit": "Component coverage only; this is not PCR-1 or PCR-2 acceptance and is not Gate 0 credit.",
+  "port_coverage": {
+    "G1-PORT-FOUNDATION": ["tests/unit/core/test_primitives.py", "tests/unit/test_config.py"],
+    "G1-PORT-MARKET-DATA": ["tests/unit/market/test_admission.py"],
+    "G1-PORT-IDENTITY": ["tests/unit/core/test_primitives.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G1-PORT-CALENDAR-GUARDS": ["tests/unit/guards/test_event_guard.py", "tests/unit/guards/test_market_gates.py"],
+    "G1-PORT-FEATURE-SETUP": ["tests/unit/features/test_indicators.py", "tests/unit/features/test_setups.py"],
+    "G1-PORT-ANALYST": ["tests/unit/analyst/test_analyst.py"],
+    "G1-PORT-RISK": ["tests/unit/risk/test_policy_a.py"],
+    "G1-PORT-DURABILITY": ["tests/unit/storage/test_durable_storage.py"],
+    "G1-PORT-BROKER-OBSERVATION": ["tests/unit/broker/test_observation.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G1-PORT-COMPOSITION": ["tests/integration/test_shadow_runtime.py"]
+  },
+  "fault_family_component_coverage": {
+    "G2-STATE-REGISTERED": ["tests/unit/storage/test_durable_storage.py", "tests/integration/test_shadow_runtime.py"],
+    "G2-SUBMIT-REGISTERED": ["tests/unit/test_capability_scan.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G2-STORE-REGISTERED": ["tests/unit/storage/test_durable_storage.py"],
+    "G2-IDENTITY-REGISTERED": ["tests/unit/core/test_primitives.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G2-TIME-REGISTERED": ["tests/unit/core/test_primitives.py", "tests/unit/market/test_admission.py"],
+    "G2-DATA-REGISTERED": ["tests/unit/market/test_admission.py", "tests/unit/features/test_indicators.py"],
+    "G2-RISK-REGISTERED": ["tests/unit/risk/test_policy_a.py", "tests/integration/test_shadow_runtime.py"],
+    "G2-GUARD-REGISTERED": ["tests/unit/guards/test_event_guard.py", "tests/unit/guards/test_market_gates.py"],
+    "G2-ANALYST-REGISTERED": ["tests/unit/analyst/test_analyst.py", "tests/integration/test_shadow_runtime.py"],
+    "G2-SERVICE-REGISTERED": ["tests/unit/ops/test_health.py", "tests/unit/ops/test_watchdog.py"],
+    "G2-EVIDENCE-REGISTERED": ["tests/unit/ops/test_release.py", "tests/unit/storage/test_durable_storage.py"]
+  },
+  "current_status": {
+    "component_tests": "PASSING",
+    "sealed_artifact_adversarial_run": "PENDING",
+    "windows_python_3_12_parity": "PENDING",
+    "pcr_1": "NOT_YET_READY",
+    "pcr_2": "NOT_YET_READY"
+  }
+}

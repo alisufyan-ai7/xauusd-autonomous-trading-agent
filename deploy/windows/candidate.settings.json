@@ -1,0 +1,9 @@
+{
+  "schema_version": "execution-disabled-candidate-settings-v1",
+  "execution_enabled": false,
+  "execution_mode": "DISABLED_NO_ADAPTER",
+  "broker_action_count_limit": 0,
+  "analyst_transport_enabled": false,
+  "alert_delivery_enabled": false,
+  "symbol": "XAUUSD"
+}

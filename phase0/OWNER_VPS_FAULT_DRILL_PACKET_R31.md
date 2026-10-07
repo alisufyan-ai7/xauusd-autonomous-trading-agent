@@ -91,3 +91,4 @@ Both commands must pass. Preserve only the publication-safe final matrix hash,
 pre/post exposure-record hashes, event timestamps and PASS result for Gate 0.
 Any unhealthy recovery, identity drift, enabled barrier, unknown/nonzero
 exposure, chain failure or unexpected change ends the drill immediately.
+

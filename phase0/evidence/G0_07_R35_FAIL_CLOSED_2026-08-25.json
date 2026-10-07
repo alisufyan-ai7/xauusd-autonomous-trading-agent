@@ -19,3 +19,4 @@
   "trading_authorized": false,
   "claim_limit": "Sanitized control-flow result only. The transcript cannot distinguish a still-connected terminal from an unavailable read-only observer during adapter disablement; raw private transcript, paths and records are not published."
 }
+
