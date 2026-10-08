@@ -4,9 +4,9 @@
   "timezone": "Asia/Karachi",
   "linux_python_3_12": {
     "python": "3.12.14",
-    "pytest_passed": 202,
+    "pytest_passed": 207,
     "pytest_failed": 0,
-    "coverage_percent": 89.78,
+    "coverage_percent": 90.27835479850437,
     "ruff": "PASS",
     "strict_mypy": "PASS",
     "capability_scan": "PASS"
@@ -14,13 +14,18 @@
   "offline_deployment_rollback": {
     "implementation": "src/xauusd_agent/ops/deployment.py",
     "tests": "tests/integration/test_offline_deployment_rollback.py",
-    "tests_passed": 4,
+    "tests_passed": 7,
     "tests_failed": 0,
     "stage_two_releases": "PASS",
     "atomic_marker_rollback": "PASS",
     "pre_stage_tamper_rejection": "PASS",
     "pre_rollback_tamper_rejection": "PASS",
     "unsafe_manifest_path_rejection": "PASS",
+    "final_sealed_artifact_stage": "PASS",
+    "final_sealed_artifact_rollback": "PASS",
+    "final_sealed_artifact_service_started": false,
+    "final_sealed_artifact_execution_enabled": false,
+    "final_sealed_artifact_reconciliation_required": true,
     "service_or_process_action_performed": false,
     "external_action_performed": false
   },
@@ -32,5 +37,5 @@
     "parity_claim": "NOT_ESTABLISHED"
   },
   "status": "PARTIAL_BLOCKED_WINDOWS_NATIVE_PARITY",
-  "claim_limit": "Portable offline deployment/rollback semantics passed locally. Native Windows Python 3.12 and PowerShell execution remain required before PCR-1 can pass. No VPS mutation or deployment occurred."
+  "claim_limit": "Portable offline deployment/rollback semantics passed locally. Native Windows Python 3.12 and PowerShell execution remain required before PCR-2 can pass. No VPS mutation or deployment occurred."
 }
