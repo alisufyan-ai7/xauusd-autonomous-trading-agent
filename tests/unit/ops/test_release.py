@@ -126,6 +126,25 @@ def test_capability_scan_ignore_skips_only_that_file_and_continues(tmp_path: Pat
     )
 
 
+def test_capability_scan_skips_unscanned_entry_and_continues(tmp_path: Path) -> None:
+    (tmp_path / "a-decoy.txt").write_text("safe\n", encoding="utf-8")
+    unsafe = tmp_path / "z-unsafe.py"
+    unsafe.write_text("client.order" + "_send(request)\n", encoding="utf-8")
+    assert scan_capabilities(tmp_path) == (
+        CapabilityFinding("z-unsafe.py", 1, "MT5 order submission"),
+    )
+
+
+def test_capability_scan_reports_non_utf8_then_continues(tmp_path: Path) -> None:
+    (tmp_path / "a-binary.py").write_bytes(b"\xff\xfe")
+    unsafe = tmp_path / "z-unsafe.py"
+    unsafe.write_text("client.order" + "_send(request)\n", encoding="utf-8")
+    assert scan_capabilities(tmp_path) == (
+        CapabilityFinding("a-binary.py", 0, "non-UTF8 source"),
+        CapabilityFinding("z-unsafe.py", 1, "MT5 order submission"),
+    )
+
+
 def test_capability_scan_passes_explicit_utf8_to_reader(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

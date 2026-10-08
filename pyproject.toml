@@ -64,4 +64,6 @@ pytest_add_cli_args = [
   "--ignore=tests/unit/ops/test_windows_deployment.py",
   "--ignore=tests/unit/ops/test_r42_traceability.py",
 ]
-mutate_only_covered_lines = true
+mutate_only_covered_lines = false
+process_isolation = "forkserver"
+forkserver_warmup = "none"

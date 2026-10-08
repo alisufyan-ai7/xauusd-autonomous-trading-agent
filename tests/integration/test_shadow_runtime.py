@@ -16,6 +16,7 @@ from xauusd_agent.guards import (
 )
 from xauusd_agent.market import AdmissionPolicy, Bar, MarketSnapshot, Quote, Timeframe
 from xauusd_agent.reconciliation import (
+    NullExecutionRecord,
     ReconciliationDisposition,
     ReconciliationStatus,
     reconcile_exposure,
@@ -118,6 +119,195 @@ def test_unknown_gate_quarantines_without_broker_action() -> None:
     assert result.decision is DecisionKind.NO_ACTION
     assert result.state is RuntimeState.QUARANTINED
     assert result.broker_action_count == 0
+
+
+def test_every_fail_closed_runtime_branch_preserves_exact_outcome() -> None:
+    base = _inputs()
+    stale_quote = replace(
+        base.market.quote,
+        broker_time=NOW - timedelta(seconds=3),
+        received_time=NOW - timedelta(seconds=3),
+    )
+    cases = (
+        (
+            "admission unknown",
+            replace(base, market=replace(base.market, quote=None)),
+            RuntimeState.QUARANTINED,
+            ("QUOTE_MISSING",),
+        ),
+        (
+            "admission lock",
+            replace(base, market=replace(base.market, quote=stale_quote)),
+            RuntimeState.SHADOW,
+            ("QUOTE_STALE",),
+        ),
+        (
+            "event unknown",
+            replace(
+                base,
+                event_guard=EventGuardDecision(
+                    EventGuardState.UNKNOWN, ("EVENT_INVENTORY_MISSING",)
+                ),
+            ),
+            RuntimeState.QUARANTINED,
+            ("EVENT_INVENTORY_MISSING",),
+        ),
+        (
+            "event source unhealthy",
+            replace(
+                base,
+                event_guard=EventGuardDecision(
+                    EventGuardState.SOURCE_UNHEALTHY, ("SOURCE_UNHEALTHY",)
+                ),
+            ),
+            RuntimeState.QUARANTINED,
+            ("SOURCE_UNHEALTHY",),
+        ),
+        (
+            "event lock",
+            replace(
+                base,
+                event_guard=EventGuardDecision(EventGuardState.PRE_LOCK, ("PRE_LOCK",)),
+            ),
+            RuntimeState.SHADOW,
+            ("PRE_LOCK",),
+        ),
+        (
+            "gate unknown",
+            replace(
+                base,
+                market_gates=(GateDecision(GateState.UNKNOWN, ("SESSION_UNKNOWN",)),),
+            ),
+            RuntimeState.QUARANTINED,
+            ("SESSION_UNKNOWN",),
+        ),
+        (
+            "gate lock",
+            replace(
+                base,
+                market_gates=(GateDecision(GateState.LOCK, ("SESSION_CLOSED",)),),
+            ),
+            RuntimeState.SHADOW,
+            ("SESSION_CLOSED",),
+        ),
+        (
+            "reconciliation quarantine",
+            replace(
+                base,
+                reconciliation=replace(
+                    base.reconciliation,
+                    status=ReconciliationStatus.MISMATCH,
+                    disposition=ReconciliationDisposition.QUARANTINE_HUMAN_REVIEW,
+                    reason_codes=("UNEXPECTED_BROKER_EXPOSURE",),
+                ),
+            ),
+            RuntimeState.QUARANTINED,
+            ("UNEXPECTED_BROKER_EXPOSURE",),
+        ),
+        (
+            "risk quarantine",
+            replace(
+                base,
+                risk=replace(
+                    base.risk,
+                    disposition=RiskDisposition.QUARANTINE,
+                    reason_codes=("UNKNOWN_EXPOSURE",),
+                ),
+            ),
+            RuntimeState.QUARANTINED,
+            ("UNKNOWN_EXPOSURE",),
+        ),
+        (
+            "risk reject",
+            replace(
+                base,
+                risk=replace(
+                    base.risk,
+                    disposition=RiskDisposition.REJECT,
+                    reason_codes=("V1_VOLUME_CAP_EXCEEDED",),
+                ),
+            ),
+            RuntimeState.SHADOW,
+            ("V1_VOLUME_CAP_EXCEEDED",),
+        ),
+        (
+            "analyst inadmissible",
+            replace(
+                base,
+                analyst=AnalystVerdict(
+                    AnalystDecision.NO_TRADE, False, ("ANALYST_UNAVAILABLE",)
+                ),
+            ),
+            RuntimeState.DEGRADED,
+            ("ANALYST_UNAVAILABLE",),
+        ),
+        (
+            "analyst no trade",
+            replace(
+                base,
+                analyst=AnalystVerdict(
+                    AnalystDecision.NO_TRADE, True, ("ANALYST_NO_TRADE",)
+                ),
+            ),
+            RuntimeState.SHADOW,
+            ("ANALYST_NO_TRADE",),
+        ),
+        (
+            "missing setup identity",
+            replace(base, setup_id=None),
+            RuntimeState.QUARANTINED,
+            ("SETUP_IDENTITY_MISSING",),
+        ),
+    )
+
+    for label, inputs, expected_state, expected_reasons in cases:
+        result = evaluate_shadow_cycle(inputs)
+        assert result.state is expected_state, label
+        assert result.decision is DecisionKind.NO_ACTION, label
+        assert result.reason_codes == expected_reasons, label
+        assert result.setup_id is None, label
+        assert result.decision_id == "decision-1", label
+        assert result.observed_at_utc == "2026-10-07T12:00:00.000000Z", label
+        assert len(result.state_hash) == 64, label
+        assert result.null_execution.decision_id == "decision-1", label
+        assert result.null_execution.decided_at_utc == result.observed_at_utc, label
+        assert result.null_execution.setup_id is None, label
+        assert result.null_execution.risk_disposition is inputs.risk.disposition, label
+        assert result.null_execution.risk_reason_codes == inputs.risk.reason_codes, label
+        assert result.execution_capability is ExecutionCapability.ABSENT, label
+        assert result.broker_action_count == 0, label
+
+
+def test_empty_runtime_reason_list_is_replaced_with_stable_fail_closed_reason() -> None:
+    result = evaluate_shadow_cycle(
+        replace(
+            _inputs(),
+            event_guard=EventGuardDecision(EventGuardState.PRE_LOCK, ()),
+        )
+    )
+    assert result.reason_codes == ("ALL_EXECUTION_DISABLED_GATES_PASS",)
+    assert result.state is RuntimeState.SHADOW
+    assert result.decision is DecisionKind.NO_ACTION
+
+
+def test_shadow_cycle_result_rejects_every_execution_capability_violation() -> None:
+    valid = evaluate_shadow_cycle(_inputs())
+    with pytest.raises(ValueError, match="^execution capability must remain absent$"):
+        replace(valid, execution_capability=object())  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="^broker action count must remain zero$"):
+        replace(valid, broker_action_count=1)
+    unsafe_null = NullExecutionRecord(
+        decision_id="decision-1",
+        decided_at_utc="2026-10-07T12:00:00.000000Z",
+        setup_id="setup-1",
+        risk_disposition=RiskDisposition.ALLOW,
+        risk_reason_codes=("ALL_FROZEN_CONTROLS_PASS",),
+    )
+    object.__setattr__(unsafe_null, "broker_action_count", 1)
+    with pytest.raises(
+        ValueError, match="^null execution record must contain zero broker actions$"
+    ):
+        replace(valid, null_execution=unsafe_null)
 
 
 def test_broker_exposure_mismatch_quarantines_without_automatic_close() -> None:
