@@ -41,7 +41,7 @@
     "sealed_artifact_adversarial_run": "PASS_11_OF_11_REGISTERED_FAULT_FAMILIES",
     "offline_deployment_rollback": "PASS_7_OF_7_PLUS_FINAL_SEALED_ARTIFACT_STAGE_ROLLBACK",
     "windows_python_3_12_parity": "BLOCKED_NOT_RUN_UNPUBLISHED_BRANCH",
-    "pcr_1": "PASS",
-    "pcr_2": "PENDING_WINDOWS_PYTHON_3_12_AND_POWERSHELL_PARITY"
+    "pcr_1": "NOT_YET_READY",
+    "pcr_2": "NOT_YET_READY"
   }
 }
