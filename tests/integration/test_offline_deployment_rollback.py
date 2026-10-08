@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -19,14 +20,26 @@ def _release(tmp_path: Path, release_id: str) -> Path:
     wheel.write_bytes(("wheel-" + release_id).encode("ascii"))
     deployment = tmp_path / f"deploy-{release_id}"
     deployment.mkdir()
-    source_settings = Path("deploy/windows/candidate.settings.json")
-    (deployment / source_settings.name).write_bytes(source_settings.read_bytes())
+    (deployment / "candidate.settings.json").write_text(
+        json.dumps(
+            {
+                "execution_enabled": False,
+                "execution_mode": "DISABLED_NO_ADAPTER",
+                "broker_action_count_limit": 0,
+                "analyst_transport_enabled": False,
+                "alert_delivery_enabled": False,
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     for name in (
         "Install-ExecutionDisabledCandidate.ps1",
         "Invoke-ExecutionDisabledRollback.ps1",
         "Test-ExecutionDisabledCandidate.ps1",
     ):
-        (deployment / name).write_bytes((Path("deploy/windows") / name).read_bytes())
+        (deployment / name).write_text("# offline test payload\n", encoding="utf-8")
     root = tmp_path / f"release-{release_id}"
     assemble_release(
         root,
