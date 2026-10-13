@@ -87,7 +87,7 @@ class MT5ReadOnlyAdapter:
             self._mt5.shutdown()
         self._initialized = False
 
-    def __enter__(self) -> "MT5ReadOnlyAdapter":
+    def __enter__(self) -> MT5ReadOnlyAdapter:
         self.initialize()
         return self
 
@@ -116,7 +116,7 @@ class MT5ReadOnlyAdapter:
         currency = str(account.get("currency") or "")
         login = str(account.get("login") or "")
         fingerprint = hashlib.sha256(
-            f"{broker}|{server}|{login}|{currency}".encode("utf-8")
+            f"{broker}|{server}|{login}|{currency}".encode()
         ).hexdigest()
         return AccountObservation(
             observed_at_utc=datetime.now(UTC).isoformat().replace("+00:00", "Z"),
