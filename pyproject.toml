@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xauusd-production-candidate"
+version = "0.1.0.dev0"
+description = "Execution-disabled XAUUSD production candidate"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "hypothesis>=6.112,<7",
+  "mypy>=1.11,<2",
+  "mutmut>=3,<4",
+  "ruff>=0.7,<1",
+  "build>=1.2,<2",
+]
+
+[project.scripts]
+xauusd-shadow = "xauusd_agent.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers"
+testpaths = ["tests"]
+pythonpath = [".", "src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S"]
+ignore = ["S101"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+packages = ["xauusd_agent"]
+
+[tool.mutmut]
+source_paths = ["src/xauusd_agent"]
+only_mutate = [
+  "src/xauusd_agent/config.py",
+  "src/xauusd_agent/runtime.py",
+  "src/xauusd_agent/ops/release.py",
+  "src/xauusd_agent/reconciliation/null_execution.py",
+  "src/xauusd_agent/risk/policy_a.py",
+  "src/xauusd_agent/storage/integrity.py",
+]
+pytest_add_cli_args = [
+  "-q",
+  "--ignore=tests/unit/test_capability_scan.py",
+  "--ignore=tests/unit/ops/test_windows_deployment.py",
+  "--ignore=tests/unit/ops/test_r42_traceability.py",
+]
+mutate_only_covered_lines = false
+process_isolation = "forkserver"
+forkserver_warmup = "none"

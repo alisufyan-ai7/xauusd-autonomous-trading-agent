@@ -1,0 +1,44 @@
+{
+  "schema_version": "apc-implementation-branch-preparation-1.0",
+  "recorded_date_local": "2026-10-05",
+  "timezone": "Asia/Karachi",
+  "source_repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
+  "source_branch": "main",
+  "source_commit": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+  "accepted_plan_expected_sha256": "93476cb2ed088727856010e389fb25ccdd017676b18c237e2b350312ac7438d4",
+  "workspace_plan_observed_sha256_before_reconciliation": "7517a768f3b7a98e4f46af0932b25578c7e94c15332fba502dbf186b8a0a23cd",
+  "workspace_plan_restored_sha256": "93476cb2ed088727856010e389fb25ccdd017676b18c237e2b350312ac7438d4",
+  "plan_identity_status": "MATCH_RESTORED_ACCEPTANCE_RECORDED_SEPARATELY",
+  "plan_provenance_reconciliation": "phase0/roadmap/APC_PROVENANCE_RECONCILIATION_2026-10-08.json",
+  "proposed_branch": "implementation/apc-execution-disabled-v0.1",
+  "local_staging_status": "IN_PROGRESS_UNPUBLISHED",
+  "remote_branch_created": false,
+  "publication_authorized": false,
+  "implementation_authority": "APC-BASELINE",
+  "package_name": "xauusd-production-candidate",
+  "package_version": "0.1.0.dev0",
+  "four_lanes": [
+    "CORE_DURABILITY",
+    "MARKET_FEATURES_GUARDS",
+    "RISK_BROKER_RECONCILIATION",
+    "ANALYST_ALERTS_OPERATIONS"
+  ],
+  "hard_constraints": {
+    "runtime_mode": "SHADOW_ONLY",
+    "broker_sink": "NULL_ONLY",
+    "live_order_capability_allowed": false,
+    "external_python_real_money_trading": "DISABLED",
+    "demo_trading_authorized": false,
+    "live_trading_authorized": false,
+    "external_calls_authorized": false,
+    "vps_change_authorized": false
+  },
+  "publication_preflight": {
+    "required": true,
+    "exact_base_commit_required": true,
+    "exact_file_manifest_required": true,
+    "package_sha256_required": true,
+    "proposed_commit_identity_required": true,
+    "owner_approval_name": "APC-PUBLISH"
+  }
+}

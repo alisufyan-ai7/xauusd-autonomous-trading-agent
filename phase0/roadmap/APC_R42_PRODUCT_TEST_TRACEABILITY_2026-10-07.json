@@ -1,0 +1,47 @@
+{
+  "schema_version": "apc-r42-product-test-traceability-1.0",
+  "recorded_date_utc": "2026-10-07",
+  "source_revision": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+  "scope": "EXECUTION_DISABLED_PRODUCTION_CANDIDATE",
+  "claim_limit": "Execution-disabled product traceability only; this file alone is not PCR-1 or PCR-2 acceptance, is not Gate 0 credit, and does not authorize publication, deployment or trading.",
+  "port_coverage": {
+    "G1-PORT-FOUNDATION": ["tests/unit/core/test_primitives.py", "tests/unit/test_config.py"],
+    "G1-PORT-MARKET-DATA": ["tests/unit/market/test_admission.py"],
+    "G1-PORT-IDENTITY": ["tests/unit/core/test_primitives.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G1-PORT-CALENDAR-GUARDS": ["tests/unit/guards/test_event_guard.py", "tests/unit/guards/test_market_gates.py"],
+    "G1-PORT-FEATURE-SETUP": ["tests/unit/features/test_indicators.py", "tests/unit/features/test_setups.py"],
+    "G1-PORT-ANALYST": ["tests/unit/analyst/test_analyst.py"],
+    "G1-PORT-RISK": ["tests/unit/risk/test_policy_a.py"],
+    "G1-PORT-DURABILITY": ["tests/unit/storage/test_durable_storage.py"],
+    "G1-PORT-BROKER-OBSERVATION": ["tests/unit/broker/test_observation.py", "tests/unit/reconciliation/test_exposure.py"],
+    "G1-PORT-COMPOSITION": ["tests/integration/test_shadow_runtime.py"]
+  },
+  "fault_family_component_coverage": {
+    "G2-STATE-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-SUBMIT-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-STORE-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-IDENTITY-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-TIME-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-DATA-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-RISK-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-GUARD-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-ANALYST-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-SERVICE-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"],
+    "G2-EVIDENCE-REGISTERED": ["tests/adversarial/test_r42_fault_families.py"]
+  },
+  "acceptance_evidence": {
+    "r42_oracle_registry": "phase0/roadmap/APC_R42_ORACLE_RUN_2026-10-08.json",
+    "mutation_acceptance": "phase0/roadmap/APC_MUTATION_ACCEPTANCE_2026-10-08.json",
+    "fault_family_suite": "tests/adversarial/test_r42_fault_families.py"
+  },
+  "current_status": {
+    "component_tests": "PASS_207_OF_207_LINUX_PYTHON_3_12",
+    "r42_oracle_registry": "PASS_17_OF_17_COMMAND_GROUPS_344_TESTS",
+    "mutation_acceptance": "PASS_902_EXECUTED_862_KILLED_40_NONCRITICAL_ZERO_CRITICAL_SURVIVORS",
+    "sealed_artifact_adversarial_run": "PASS_11_OF_11_REGISTERED_FAULT_FAMILIES",
+    "offline_deployment_rollback": "PASS_7_OF_7_PLUS_FINAL_SEALED_ARTIFACT_STAGE_ROLLBACK",
+    "windows_python_3_12_parity": "BLOCKED_NOT_RUN_UNPUBLISHED_BRANCH",
+    "pcr_1": "NOT_YET_READY",
+    "pcr_2": "NOT_YET_READY"
+  }
+}

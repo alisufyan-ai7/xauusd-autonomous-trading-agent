@@ -1,0 +1,127 @@
+{
+  "schema_version": "apc-r42-oracle-registry-run-1.0",
+  "recorded_date_local": "2026-10-08",
+  "timezone": "Asia/Karachi",
+  "r42_commit": "dea79e9aaebdaf81a09191b0d47e0f87157eb9e1",
+  "r42_tree": "0949ac71e31e018e6e6861c4349c607e768293f9",
+  "registry": "phase0/roadmap/GATE_1_BUILD_TEST_PIPELINE_R41.json#existing_authoritative_commands",
+  "harness_environment": {
+    "python": "3.12.14",
+    "pythonpath_additions": [
+      "repository root",
+      "phase0/validation/replay_admission",
+      "phase0/validation/final_gate"
+    ],
+    "reason": "Frozen commands contain mixed package and local imports; explicit paths make their intended modules resolvable without editing R42."
+  },
+  "command_groups_total": 17,
+  "command_groups_passed": 17,
+  "command_groups_failed": 0,
+  "tests_total": 344,
+  "cases": [
+    {
+      "id": "ALERT_EVIDENCE",
+      "status": "PASS",
+      "tests": 24,
+      "log_sha256": "eb75f81435604e56dcd5a47df6166aaf468982186fe93ae54865e99216ff9072"
+    },
+    {
+      "id": "ANALYST_RUNTIME",
+      "status": "PASS",
+      "tests": 27,
+      "log_sha256": "86f3d67ed08eca21841f3e46b8bd6b00bf2dcae29de3c14101566702e06b06d8"
+    },
+    {
+      "id": "DATA_ACQUISITION",
+      "status": "PASS",
+      "tests": 18,
+      "log_sha256": "529a2aa779a66dca9582e1b3fa7c5567eb9e6bccb793a54c16c64efb26afaf70"
+    },
+    {
+      "id": "EMPIRICAL_CALIBRATION",
+      "status": "PASS",
+      "tests": 22,
+      "log_sha256": "1ed023d8aac20a56cfcb4f6807bc40d7d1e8a41b1d9d06edc2933d071c4f59f6"
+    },
+    {
+      "id": "EVENT_GUARD",
+      "status": "PASS",
+      "tests": 43,
+      "log_sha256": "55a80855baf833b17e2daa5c49c3c0f648a0eb17321eccde0ebba0d1cad34013"
+    },
+    {
+      "id": "EVENT_TRANSITIONS",
+      "status": "PASS",
+      "tests": 11,
+      "log_sha256": "d0f37c9e969e361e61309504430cf5916aa094cb5dbb0f0bf296ae7c82c9f9c8"
+    },
+    {
+      "id": "MARGIN_EVIDENCE",
+      "status": "PASS",
+      "tests": 14,
+      "log_sha256": "8865bad3f36720d47d6aae2346205a0c168dd7f885ba3c2403b78cf6136a8ee0"
+    },
+    {
+      "id": "OPERATIONAL_POLICY",
+      "status": "PASS",
+      "tests": 15,
+      "log_sha256": "85c6c5ba5182ed4b1ce7b26081162f3b6c6b02fdd56ec564085faba3f99dc5d0"
+    },
+    {
+      "id": "RECORDS",
+      "status": "PASS",
+      "tests": 0,
+      "log_sha256": "24a4a98eda0429d8cda3e6b96e7b00302246fd01cfe8d126288254185dc2b60c"
+    },
+    {
+      "id": "RELIABILITY_FINAL_GATE",
+      "status": "PASS",
+      "tests": 41,
+      "log_sha256": "88a4676e941b488d6aa0c68e1c7be37a9eebc9f08ceea140af963fde686c564f"
+    },
+    {
+      "id": "REPLAY_ACCEPTANCE",
+      "status": "PASS",
+      "tests": 3,
+      "log_sha256": "12943f4ccdbdf25db9d81f40ce06f8ca0ede82097a1654c3f3d7174d060e3507"
+    },
+    {
+      "id": "REPLAY_ADMISSION",
+      "status": "PASS",
+      "tests": 19,
+      "log_sha256": "a7e7c60257b03bd6edf20a9c0a068a1270d9690b51821eefb92ff40c4d828653"
+    },
+    {
+      "id": "RISK_ANALYST",
+      "status": "PASS",
+      "tests": 9,
+      "log_sha256": "7a8737d894e475eccd79a532657aa63355201e0796218636c8e1af806e942b37"
+    },
+    {
+      "id": "SESSION_EVIDENCE",
+      "status": "PASS",
+      "tests": 8,
+      "log_sha256": "32d01c498e44a599f247d6cc0f5d62f5ce44a00b3337bb9e99c4bc7d3bb26c98"
+    },
+    {
+      "id": "SETUP_EXECUTION",
+      "status": "PASS",
+      "tests": 21,
+      "log_sha256": "fb710130c648c9015c1cff2cea714969f6141ab09b01903ec58f592027de8d3a"
+    },
+    {
+      "id": "SETUP_FEATURES",
+      "status": "PASS",
+      "tests": 56,
+      "log_sha256": "2eab179b1fddd15b2b2bda75fedafb44ba74c973420a293cb3a1c34d05602708"
+    },
+    {
+      "id": "SHOCK_CALIBRATION",
+      "status": "PASS",
+      "tests": 13,
+      "log_sha256": "8973e5aff6cc3ceba2d8c6529c6bcb83407facbd1ffacb3315816225f7084b80"
+    }
+  ],
+  "status": "PASS",
+  "claim_limit": "Offline R42 oracle regression only; no provider, OpenAI, alert, broker, VPS, demo or live action occurred."
+}

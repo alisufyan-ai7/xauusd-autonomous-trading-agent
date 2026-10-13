@@ -1,0 +1,51 @@
+"""Pure deterministic features and advisory setup lifecycle."""
+
+from .indicators import (
+    BarGeometry,
+    adx,
+    atr,
+    bar_geometry,
+    confirmed_swings,
+    ema,
+    regression_slope,
+    rejection_bar,
+    rsi,
+    true_ranges,
+    wilders,
+)
+from .setups import (
+    Direction,
+    Predicate,
+    SetupCandidate,
+    SetupConfig,
+    SetupFamily,
+    SetupLifecycle,
+    SetupState,
+    evaluate_setup,
+    select_unambiguous,
+    transition,
+)
+
+__all__ = [
+    "BarGeometry",
+    "Direction",
+    "Predicate",
+    "SetupCandidate",
+    "SetupConfig",
+    "SetupFamily",
+    "SetupLifecycle",
+    "SetupState",
+    "adx",
+    "atr",
+    "bar_geometry",
+    "confirmed_swings",
+    "ema",
+    "evaluate_setup",
+    "regression_slope",
+    "rejection_bar",
+    "rsi",
+    "select_unambiguous",
+    "transition",
+    "true_ranges",
+    "wilders",
+]
