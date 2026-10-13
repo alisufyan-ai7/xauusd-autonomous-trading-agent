@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import platform
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -32,6 +33,8 @@ def test_pcr3_host_controls_require_explicit_tokens_and_zero_execution() -> None
 
 @pytest.mark.skipif(platform.system() != "Windows", reason="PowerShell parser is Windows-only")
 def test_pcr3_host_control_scripts_parse_on_native_windows() -> None:
+    powershell = shutil.which("powershell.exe")
+    assert powershell is not None
     scripts = [
         WINDOWS / "Start-ExecutionDisabledCandidate.ps1",
         WINDOWS / "Stop-ExecutionDisabledCandidate.ps1",
@@ -42,8 +45,8 @@ def test_pcr3_host_control_scripts_parse_on_native_windows() -> None:
             "$ErrorActionPreference='Stop';"
             f"$null=[scriptblock]::Create((Get-Content -LiteralPath '{script}' -Raw))"
         )
-        completed = subprocess.run(
-            ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", command],
+        completed = subprocess.run(  # noqa: S603 -- executable is resolved from runner PATH
+            [powershell, "-NoProfile", "-NonInteractive", "-Command", command],
             check=False,
             capture_output=True,
             text=True,
