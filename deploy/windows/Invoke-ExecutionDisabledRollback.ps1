@@ -18,7 +18,8 @@ $Preflight = Join-Path $PreviousRoot "deploy\windows\Test-ExecutionDisabledCandi
 $ActiveMarker = Join-Path $InstallRoot "active-release.txt"
 if (-not $PSCmdlet.ShouldProcess($ActiveMarker, "Repoint to verified execution-disabled release $PreviousRelease")) { return }
 $TemporaryMarker = Join-Path $InstallRoot "active-release.rollback"
-Set-Content -LiteralPath $TemporaryMarker -Value $PreviousRelease -Encoding utf8NoBOM
+$Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($TemporaryMarker, "$PreviousRelease`n", $Utf8NoBom)
 Move-Item -LiteralPath $TemporaryMarker -Destination $ActiveMarker -Force
 
 [pscustomobject]@{

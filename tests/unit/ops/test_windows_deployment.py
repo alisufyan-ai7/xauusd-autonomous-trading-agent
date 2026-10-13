@@ -28,3 +28,13 @@ def test_preflight_requires_hash_manifest_and_zero_capability():
     assert 'Join-Path $ReleaseRoot "release-manifest.json"' in preflight
     assert "Get-FileHash -LiteralPath $FilePath -Algorithm SHA256" in preflight
     assert "Manifest broker action limit is not zero" in preflight
+
+
+def test_installer_and_rollback_are_windows_powershell_51_utf8_compatible():
+    installer = (WINDOWS / "Install-ExecutionDisabledCandidate.ps1").read_text(encoding="utf-8")
+    rollback = (WINDOWS / "Invoke-ExecutionDisabledRollback.ps1").read_text(encoding="utf-8")
+
+    for script in (installer, rollback):
+        assert "utf8NoBOM" not in script
+        assert "System.Text.UTF8Encoding" in script
+        assert "[System.IO.File]::WriteAllText" in script
