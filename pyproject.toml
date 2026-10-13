@@ -8,7 +8,9 @@ version = "0.1.0.dev0"
 description = "Execution-disabled XAUUSD production candidate"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+  "MetaTrader5==5.0.6090; platform_system == 'Windows'",
+]
 
 [project.optional-dependencies]
 dev = [

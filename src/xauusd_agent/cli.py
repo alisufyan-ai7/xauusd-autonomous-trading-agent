@@ -1,4 +1,4 @@
-"""Command-line entry point for local validation of the shadow artifact."""
+"""Command-line entry point for the execution-disabled shadow artifact."""
 
 from __future__ import annotations
 
@@ -13,11 +13,28 @@ from .config import RuntimeConfig
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="xauusd-shadow")
     parser.add_argument("--state-directory", type=Path, required=True)
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument(
         "--print-preflight",
         action="store_true",
-        help="Print the execution-disabled preflight and exit without starting a service.",
+        help="Print the static execution-disabled preflight and exit.",
     )
+    mode.add_argument(
+        "--broker-preflight",
+        action="store_true",
+        help="Verify guarded live MT5 access and zero exposure, then exit.",
+    )
+    mode.add_argument(
+        "--run-service",
+        action="store_true",
+        help="Run continuous guarded read-only shadow service.",
+    )
+    mode.add_argument(
+        "--once",
+        action="store_true",
+        help="Run exactly one guarded read-only shadow cycle and exit.",
+    )
+    parser.add_argument("--interval-seconds", type=int, default=15)
     return parser
 
 
@@ -40,8 +57,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.print_preflight:
         print(json.dumps(preflight(config), sort_keys=True, separators=(",", ":")))
         return 0
-    raise SystemExit(
-        "service start is not yet admitted; use --print-preflight until PCR-3 implementation passes"
+
+    from .host import broker_preflight, run_shadow_host
+
+    if args.broker_preflight:
+        print(json.dumps(broker_preflight(), sort_keys=True, separators=(",", ":")))
+        return 0
+    return run_shadow_host(
+        config.state_directory,
+        interval_seconds=args.interval_seconds,
+        once=bool(args.once),
     )
 
 
