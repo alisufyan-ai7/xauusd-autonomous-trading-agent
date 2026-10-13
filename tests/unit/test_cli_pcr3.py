@@ -3,8 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from xauusd_agent import cli
-from xauusd_agent import host
+from xauusd_agent import cli, host
 
 
 def test_cli_static_preflight_is_execution_disabled(tmp_path: Path, capsys) -> None:
