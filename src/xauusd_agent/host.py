@@ -318,7 +318,7 @@ def run_shadow_host(
                     {"execution_enabled": False, "broker_action_count": 0},
                 )
                 lease.release(token)
-            except Exception:
+            except Exception:  # noqa: S110 -- shutdown is best-effort after primary work
                 pass
         if owns_adapter:
             active.close()
