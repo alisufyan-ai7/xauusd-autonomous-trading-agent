@@ -17,7 +17,8 @@ from xauusd_agent.analyst import AnalystDecision, AnalystVerdict
 from xauusd_agent.broker.mt5_readonly import MT5ReadOnlyAdapter
 from xauusd_agent.core.model import AuditEventType
 from xauusd_agent.guards import EventGuardDecision, EventGuardState, GateDecision, GateState
-from xauusd_agent.market import DEFAULT_ADMISSION_POLICY, collect_snapshot
+from xauusd_agent.market import collect_snapshot
+from xauusd_agent.market.admission import DEFAULT_ADMISSION_POLICY
 from xauusd_agent.reconciliation import reconcile_exposure
 from xauusd_agent.risk import ExposureKnowledge, PolicyAInput, evaluate_policy_a
 from xauusd_agent.runtime import ShadowCycleInput, ShadowCycleResult, evaluate_shadow_cycle
