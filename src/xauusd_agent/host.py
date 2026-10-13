@@ -198,6 +198,7 @@ def _append_cycle(journal: AuditJournal, token: LeaseToken, cycle: LiveCycle) ->
             "order_count": cycle.order_count,
             "quarantined_for_exposure": bool(cycle.position_count or cycle.order_count),
             "automatic_close_permitted": False,
+            "broker_action_count": 0,
         },
     )
     journal.append(
