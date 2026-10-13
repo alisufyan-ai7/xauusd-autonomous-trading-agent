@@ -33,7 +33,7 @@ def test_manifest_is_execution_disabled_and_hashes_files(tmp_path):
 
 
 def test_manifest_and_canonical_json_are_exact(tmp_path: Path) -> None:
-    (tmp_path / "safe.py").write_text("VALUE = 1\n", encoding="utf-8")
+    (tmp_path / "safe.py").write_bytes(b"VALUE = 1\n")
     manifest = build_manifest(
         tmp_path,
         release_id="rc1",
