@@ -29,7 +29,8 @@ if (Test-Path -LiteralPath $ActiveMarker -PathType Leaf) {
     Copy-Item -LiteralPath $ActiveMarker -Destination $BackupMarker -Force
 }
 $TemporaryMarker = Join-Path $InstallRoot "active-release.next"
-Set-Content -LiteralPath $TemporaryMarker -Value $ReleaseId -Encoding utf8NoBOM
+$Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText($TemporaryMarker, "$ReleaseId`n", $Utf8NoBom)
 Move-Item -LiteralPath $TemporaryMarker -Destination $ActiveMarker -Force
 
 [pscustomobject]@{
