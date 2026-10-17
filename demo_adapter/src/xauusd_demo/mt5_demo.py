@@ -160,7 +160,7 @@ class DemoMT5Adapter:
             "protective_stop_required": True,
         }
 
-    def _build_request(self, request: DemoOrderRequest) -> dict[str, object]:
+    def _build_request(self, request: DemoOrderRequest) -> dict[str, Any]:
         request.validate()
         assert self._mt5 is not None
 
