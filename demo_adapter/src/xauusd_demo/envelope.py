@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 import uuid
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
 
@@ -55,6 +56,40 @@ class DemoPolicy:
             raise DemoSafetyError("risk_calibration_sha256 must be lowercase SHA-256")
         if self.max_deviation_points < 0 or self.max_deviation_points > 100:
             raise DemoSafetyError("max_deviation_points must be within 0..100")
+
+
+@dataclass(frozen=True, slots=True)
+class DemoActivationPermit:
+    activation_id: str
+    account_id_sha256: str
+    server: str
+    max_daily_submissions: int
+    not_before_utc: datetime
+    expires_utc: datetime
+
+    def validate(self, *, now: datetime) -> None:
+        if not self.activation_id.strip() or len(self.activation_id) > 128:
+            raise DemoSafetyError("activation_id must contain 1..128 characters")
+        if _HEX_64.fullmatch(self.account_id_sha256) is None:
+            raise DemoSafetyError("activation account fingerprint must be lowercase SHA-256")
+        if not self.server.strip():
+            raise DemoSafetyError("activation server is empty")
+        if self.max_daily_submissions < 1 or self.max_daily_submissions > 20:
+            raise DemoSafetyError("activation daily submission budget must be within 1..20")
+        for label, value in (
+            ("not_before_utc", self.not_before_utc),
+            ("expires_utc", self.expires_utc),
+            ("now", now),
+        ):
+            if value.tzinfo is None or value.utcoffset() is None:
+                raise DemoSafetyError(f"{label} must be timezone-aware")
+        start = self.not_before_utc.astimezone(UTC)
+        end = self.expires_utc.astimezone(UTC)
+        observed = now.astimezone(UTC)
+        if end <= start:
+            raise DemoSafetyError("activation expiry must be after activation start")
+        if observed < start or observed >= end:
+            raise DemoSafetyError("demo activation permit is not currently valid")
 
 
 @dataclass(frozen=True, slots=True)
