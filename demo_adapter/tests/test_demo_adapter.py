@@ -11,6 +11,7 @@ from types import SimpleNamespace
 import pytest
 
 from xauusd_demo import (
+    DemoActivationPermit,
     DemoIdentity,
     DemoMT5Adapter,
     DemoOrderRequest,
@@ -51,6 +52,17 @@ def executable_policy() -> DemoPolicy:
     return DemoPolicy(
         max_daily_submissions=3,
         risk_calibration_sha256=item.sha256(),
+    )
+
+
+def activation() -> DemoActivationPermit:
+    return DemoActivationPermit(
+        activation_id="TEST-APC-DEMO",
+        account_id_sha256=fingerprint(),
+        server=SERVER,
+        max_daily_submissions=3,
+        not_before_utc=datetime(2026, 10, 17, tzinfo=UTC),
+        expires_utc=datetime(2026, 10, 19, tzinfo=UTC),
     )
 
 
@@ -262,6 +274,26 @@ def test_submission_requires_exact_confirmation_and_execution_enablement(tmp_pat
 
 
 
+
+def test_missing_activation_permit_blocks_send(tmp_path: Path) -> None:
+    mt5 = FakeMT5()
+    mt5.tradeapi_disabled = False
+
+    with ledger(tmp_path) as book:
+        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
+        adapter.initialize()
+        with pytest.raises(DemoSafetyError, match="owner-gated activation permit"):
+            adapter.submit_market_order(
+                request(),
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                risk_calibration=calibration(),
+                now=datetime(2026, 10, 18, tzinfo=UTC),
+            )
+        adapter.close()
+
+    assert mt5.send_calls == 0
+
+
 def test_missing_risk_calibration_blocks_send(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
@@ -273,6 +305,8 @@ def test_missing_risk_calibration_blocks_send(tmp_path: Path) -> None:
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
+                now=datetime(2026, 10, 18, tzinfo=UTC),
             )
         adapter.close()
 
@@ -310,6 +344,7 @@ def test_successful_bounded_demo_submission_reconciles_one_position(tmp_path: Pa
         result = adapter.submit_market_order(
             order,
             confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+            activation_permit=activation(),
             risk_calibration=calibration(),
             now=datetime(2026, 10, 18, tzinfo=UTC),
         )
@@ -337,6 +372,7 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
             adapter.submit_market_order(
                 first,
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
                 risk_calibration=calibration(),
                 now=datetime(2026, 10, 18, tzinfo=UTC),
             )
@@ -348,6 +384,7 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
                 risk_calibration=calibration(),
                 now=datetime(2026, 10, 18, 1, tzinfo=UTC),
             )
