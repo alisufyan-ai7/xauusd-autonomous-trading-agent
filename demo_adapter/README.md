@@ -15,7 +15,10 @@ Current state: implementation and offline validation only.
 - zero existing positions and zero pending orders before new risk;
 - one concurrent position after a successful submission;
 - protective stop required and broker stop-distance checked;
-- explicit confirmation token required for every submission call;
+- explicit confirmation phrase required for every submission call;
+- a time-bounded owner-gated activation permit is mandatory before any submission;
+- the permit must bind the exact demo account fingerprint, server and daily submission budget;
+- deterministic Policy A Risk Governor approval is mandatory and hash-bound to an admitted risk calibration;
 - durable request IDs; duplicates rejected;
 - configurable but hard-bounded daily submission budget;
 - uncertain submission latches the ledger and blocks all further new risk until
