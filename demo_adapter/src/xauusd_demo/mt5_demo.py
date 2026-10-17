@@ -17,7 +17,7 @@ from .envelope import (
 )
 from .ledger import DemoSubmissionLedger
 
-_SUBMIT_CONFIRM_TOKEN = "SUBMIT-BOUNDED-DEMO-XAUUSD"
+SUBMISSION_CONFIRMATION = "SUBMIT-BOUNDED-DEMO-XAUUSD"
 
 
 def _record(value: Any, label: str) -> dict[str, Any]:
@@ -104,7 +104,7 @@ class DemoMT5Adapter:
         if require_execution_enabled and tradeapi_disabled is not False:
             raise DemoSafetyError("external Python demo execution is not enabled")
 
-        demo_mode = int(getattr(self._mt5, "ACCOUNT_TRADE_MODE_DEMO"))
+        demo_mode = int(self._mt5.ACCOUNT_TRADE_MODE_DEMO)
         if int(account.get("trade_mode", -1)) != demo_mode:
             raise DemoSafetyError("account is not an MT5 demo account")
 
@@ -185,21 +185,21 @@ class DemoMT5Adapter:
 
         if request.side is DemoSide.BUY:
             price = ask
-            order_type = int(getattr(self._mt5, "ORDER_TYPE_BUY"))
+            order_type = int(self._mt5.ORDER_TYPE_BUY)
             if request.stop_loss >= bid:
                 raise DemoSafetyError("BUY protective stop must be below current bid")
             if stops_level > 0 and bid - request.stop_loss < stops_level:
                 raise DemoSafetyError("BUY protective stop violates broker stop distance")
         else:
             price = bid
-            order_type = int(getattr(self._mt5, "ORDER_TYPE_SELL"))
+            order_type = int(self._mt5.ORDER_TYPE_SELL)
             if request.stop_loss <= ask:
                 raise DemoSafetyError("SELL protective stop must be above current ask")
             if stops_level > 0 and request.stop_loss - ask < stops_level:
                 raise DemoSafetyError("SELL protective stop violates broker stop distance")
 
         return {
-            "action": int(getattr(self._mt5, "TRADE_ACTION_DEAL")),
+            "action": int(self._mt5.TRADE_ACTION_DEAL),
             "symbol": "XAUUSD",
             "volume": float(request.volume_lots),
             "type": order_type,
@@ -208,17 +208,17 @@ class DemoMT5Adapter:
             "deviation": self._policy.max_deviation_points,
             "magic": 260101,
             "comment": f"XAU-DEMO {request.request_id[:8]}",
-            "type_time": int(getattr(self._mt5, "ORDER_TIME_GTC")),
+            "type_time": int(self._mt5.ORDER_TIME_GTC),
         }
 
     def submit_market_order(
         self,
         request: DemoOrderRequest,
         *,
-        confirm_token: str,
+        confirmation_phrase: str,
         now: datetime | None = None,
     ) -> dict[str, object]:
-        if confirm_token != _SUBMIT_CONFIRM_TOKEN:
+        if confirmation_phrase != SUBMISSION_CONFIRMATION:
             raise DemoSafetyError("exact demo submission confirmation token required")
 
         request.validate()
@@ -261,7 +261,7 @@ class DemoMT5Adapter:
             )
 
         result_row = _record(result, "order_send")
-        done_code = int(getattr(self._mt5, "TRADE_RETCODE_DONE"))
+        done_code = int(self._mt5.TRADE_RETCODE_DONE)
         retcode = int(result_row.get("retcode", -1))
 
         if retcode != done_code:
