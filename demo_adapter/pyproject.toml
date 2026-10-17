@@ -8,6 +8,7 @@ version = "0.1.0.dev0"
 description = "Separately packaged, demo-only XAUUSD MT5 execution adapter"
 requires-python = ">=3.12"
 dependencies = [
+  "xauusd-production-candidate==0.1.0.dev0",
   "MetaTrader5==5.0.6090; platform_system == 'Windows'",
 ]
 
