@@ -16,6 +16,7 @@ from .envelope import (
     DemoSide,
 )
 from .ledger import DemoSubmissionLedger
+from .risk_binding import DemoRiskCalibration, evaluate_bound_demo_risk
 
 SUBMISSION_CONFIRMATION = "SUBMIT-BOUNDED-DEMO-XAUUSD"
 
@@ -216,17 +217,34 @@ class DemoMT5Adapter:
         request: DemoOrderRequest,
         *,
         confirmation_phrase: str,
+        risk_calibration: DemoRiskCalibration | None = None,
         now: datetime | None = None,
     ) -> dict[str, object]:
         if confirmation_phrase != SUBMISSION_CONFIRMATION:
             raise DemoSafetyError("exact demo submission confirmation token required")
 
         request.validate()
-        self._identity_guard(require_execution_enabled=True)
+        _, account = self._identity_guard(require_execution_enabled=True)
         self._zero_exposure_guard()
 
         mt5_request = self._build_request(request)
         assert self._mt5 is not None
+
+        margin_raw = self._mt5.order_calc_margin(
+            int(mt5_request["type"]),
+            "XAUUSD",
+            float(request.volume_lots),
+            float(mt5_request["price"]),
+        )
+        if margin_raw is None:
+            raise DemoSafetyError(f"order_calc_margin failed: {self._mt5.last_error()}")
+        risk = evaluate_bound_demo_risk(
+            account=account,
+            request=request,
+            incremental_margin=_decimal(margin_raw, "incremental margin"),
+            calibration=risk_calibration,
+            expected_calibration_sha256=self._policy.risk_calibration_sha256,
+        )
 
         check = self._mt5.order_check(mt5_request)
         if check is None:
@@ -330,6 +348,8 @@ class DemoMT5Adapter:
             "protective_stop": str(request.stop_loss),
             "mt5_retcode": retcode,
             "order_ticket": ticket,
+            "risk_policy": risk.policy,
+            "risk_reason_codes": list(risk.reason_codes),
             "open_positions": 1,
             "pending_orders": 0,
             "live_account_permitted": False,
