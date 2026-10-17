@@ -43,3 +43,7 @@ python_version = "3.12"
 strict = true
 packages = ["xauusd_demo"]
 mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["xauusd_agent.*"]
+ignore_missing_imports = true
