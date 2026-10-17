@@ -14,12 +14,14 @@ from .envelope import (
 )
 from .ledger import DemoSubmissionLedger
 from .mt5_demo import DemoMT5Adapter
+from .risk_binding import DemoRiskCalibration
 
 __all__ = [
     "DemoIdentity",
     "DemoMT5Adapter",
     "DemoOrderRequest",
     "DemoPolicy",
+    "DemoRiskCalibration",
     "DemoSafetyError",
     "DemoSide",
     "DemoSubmissionLedger",
