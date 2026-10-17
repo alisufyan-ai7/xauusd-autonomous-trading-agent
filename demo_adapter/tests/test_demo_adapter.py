@@ -11,7 +11,12 @@ from types import SimpleNamespace
 import pytest
 
 from xauusd_demo import (
+    ARM_CONFIRMATION,
+    DEMO_LIFECYCLE_SCOPE,
+    RESET_CONFIRMATION,
     DemoActivationPermit,
+    DemoControlState,
+    DemoControlStore,
     DemoIdentity,
     DemoMT5Adapter,
     DemoOrderRequest,
@@ -27,6 +32,7 @@ BROKER = "Exness Technologies Ltd"
 SERVER = "Exness-MT5Trial15"
 LOGIN = "12345678"
 CURRENCY = "USD"
+NOW = datetime(2026, 10, 18, tzinfo=UTC)
 
 
 def fingerprint() -> str:
@@ -42,6 +48,8 @@ def identity() -> DemoIdentity:
 def calibration() -> DemoRiskCalibration:
     return DemoRiskCalibration(
         calibration_id="TEST-DEMO-CALIBRATION",
+        source_sha256="1" * 64,
+        scope=DEMO_LIFECYCLE_SCOPE,
         current_adverse_cost=Decimal("1"),
         stressed_adverse_cost=Decimal("2"),
     )
@@ -63,6 +71,17 @@ def activation() -> DemoActivationPermit:
         max_daily_submissions=3,
         not_before_utc=datetime(2026, 10, 17, tzinfo=UTC),
         expires_utc=datetime(2026, 10, 19, tzinfo=UTC),
+    )
+
+
+def expired_activation() -> DemoActivationPermit:
+    return DemoActivationPermit(
+        activation_id="TEST-APC-DEMO-EXPIRED",
+        account_id_sha256=fingerprint(),
+        server=SERVER,
+        max_daily_submissions=3,
+        not_before_utc=datetime(2026, 10, 16, tzinfo=UTC),
+        expires_utc=datetime(2026, 10, 17, tzinfo=UTC),
     )
 
 
@@ -183,6 +202,19 @@ def ledger(tmp_path: Path, *, cap: int = 3) -> DemoSubmissionLedger:
     )
 
 
+def control(tmp_path: Path) -> DemoControlStore:
+    return DemoControlStore(tmp_path / "control.sqlite3")
+
+
+def arm(item: DemoControlStore, *, permit: DemoActivationPermit | None = None) -> None:
+    item.arm(
+        permit=permit or activation(),
+        identity=identity(),
+        now=NOW,
+        confirmation_phrase=ARM_CONFIRMATION,
+    )
+
+
 def test_request_rejects_non_xauusd_and_volume_above_cap() -> None:
     with pytest.raises(DemoSafetyError):
         DemoOrderRequest(
@@ -214,10 +246,93 @@ def test_request_requires_protective_stop() -> None:
         ).validate()
 
 
+def test_risk_calibration_requires_provenance_and_demo_scope() -> None:
+    with pytest.raises(DemoSafetyError, match="source_sha256"):
+        DemoRiskCalibration(
+            calibration_id="X",
+            source_sha256="bad",
+            scope=DEMO_LIFECYCLE_SCOPE,
+            current_adverse_cost=Decimal("1"),
+            stressed_adverse_cost=Decimal("2"),
+        ).validate()
+
+    with pytest.raises(DemoSafetyError, match="scope"):
+        DemoRiskCalibration(
+            calibration_id="X",
+            source_sha256="1" * 64,
+            scope="LIVE",
+            current_adverse_cost=Decimal("1"),
+            stressed_adverse_cost=Decimal("2"),
+        ).validate()
+
+
+def test_control_defaults_killed_and_arms_only_with_exact_confirmation(tmp_path: Path) -> None:
+    with control(tmp_path) as gate:
+        assert gate.snapshot().state is DemoControlState.KILLED
+
+        with pytest.raises(DemoSafetyError, match="arm confirmation"):
+            gate.arm(
+                permit=activation(),
+                identity=identity(),
+                now=NOW,
+                confirmation_phrase="WRONG",
+            )
+
+        arm(gate)
+        snapshot = gate.snapshot()
+        assert snapshot.state is DemoControlState.ACTIVE
+        assert snapshot.activation_id == activation().activation_id
+        assert snapshot.account_id_sha256 == fingerprint()
+
+
+def test_quarantine_requires_explicit_reset_before_rearm(tmp_path: Path) -> None:
+    with control(tmp_path) as gate:
+        arm(gate)
+        gate.quarantine(reason="TEST_FAULT", now=NOW)
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
+
+        with pytest.raises(DemoSafetyError, match="explicit reset"):
+            arm(gate)
+
+        with pytest.raises(DemoSafetyError, match="reset confirmation"):
+            gate.reset_quarantine_to_killed(
+                confirmation_phrase="WRONG",
+                reason="operator reviewed",
+                now=NOW,
+            )
+
+        gate.reset_quarantine_to_killed(
+            confirmation_phrase=RESET_CONFIRMATION,
+            reason="operator reviewed",
+            now=NOW,
+        )
+        assert gate.snapshot().state is DemoControlState.KILLED
+        arm(gate)
+        assert gate.snapshot().state is DemoControlState.ACTIVE
+
+
+def test_expired_permit_kills_active_control(tmp_path: Path) -> None:
+    with control(tmp_path) as gate:
+        arm(gate)
+        with pytest.raises(DemoSafetyError, match="not currently valid"):
+            gate.assert_active(
+                permit=expired_activation(),
+                identity=identity(),
+                now=NOW,
+            )
+        assert gate.snapshot().state is DemoControlState.KILLED
+
+
 def test_preflight_accepts_exact_demo_identity_while_execution_disabled(tmp_path: Path) -> None:
     mt5 = FakeMT5()
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        adapter = DemoMT5Adapter(
+            identity(),
+            DemoPolicy(3),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
         result = adapter.preflight()
         adapter.close()
@@ -225,6 +340,7 @@ def test_preflight_accepts_exact_demo_identity_while_execution_disabled(tmp_path
     assert result["demo_identity_match"] is True
     assert result["external_python_trading_enabled"] is False
     assert result["open_positions"] == 0
+    assert result["control_state"] == "KILLED"
     assert mt5.send_calls == 0
 
 
@@ -252,120 +368,199 @@ def test_account_fingerprint_mismatch_is_rejected(tmp_path: Path) -> None:
     assert mt5.send_calls == 0
 
 
-def test_submission_requires_exact_confirmation_and_execution_enablement(tmp_path: Path) -> None:
+def test_submission_requires_exact_confirmation(tmp_path: Path) -> None:
     mt5 = FakeMT5()
-
     with ledger(tmp_path) as book:
         adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
         adapter.initialize()
-
         with pytest.raises(DemoSafetyError, match="confirmation token"):
             adapter.submit_market_order(request(), confirmation_phrase="WRONG")
+        adapter.close()
+    assert mt5.send_calls == 0
 
-        with pytest.raises(DemoSafetyError, match="not enabled"):
+
+def test_submission_requires_durable_control(tmp_path: Path) -> None:
+    mt5 = FakeMT5()
+    mt5.tradeapi_disabled = False
+
+    with ledger(tmp_path) as book:
+        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
+        adapter.initialize()
+        with pytest.raises(DemoSafetyError, match="durable kill/quarantine control"):
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
+                risk_calibration=calibration(),
+                now=NOW,
             )
-
         adapter.close()
 
     assert mt5.send_calls == 0
 
 
+def test_execution_disabled_after_arm_quarantines_control(tmp_path: Path) -> None:
+    mt5 = FakeMT5()
+
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
+        adapter.initialize()
+
+        with pytest.raises(DemoSafetyError, match="not enabled"):
+            adapter.submit_market_order(
+                request(),
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
+                risk_calibration=calibration(),
+                now=NOW,
+            )
+
+        adapter.close()
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
+
+    assert mt5.send_calls == 0
 
 
 def test_missing_activation_permit_blocks_send(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
 
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
         with pytest.raises(DemoSafetyError, match="owner-gated activation permit"):
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 risk_calibration=calibration(),
-                now=datetime(2026, 10, 18, tzinfo=UTC),
+                now=NOW,
             )
         adapter.close()
 
     assert mt5.send_calls == 0
 
 
-def test_missing_risk_calibration_blocks_send(tmp_path: Path) -> None:
+def test_missing_risk_calibration_quarantines_control(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
 
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
         with pytest.raises(DemoSafetyError, match="hash-bound risk calibration"):
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 activation_permit=activation(),
-                now=datetime(2026, 10, 18, tzinfo=UTC),
+                now=NOW,
             )
         adapter.close()
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
 
     assert mt5.send_calls == 0
 
 
-def test_existing_exposure_blocks_new_risk(tmp_path: Path) -> None:
+def test_existing_exposure_quarantines_control(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
     mt5.positions = (
         SimpleNamespace(symbol="XAUUSD", volume=0.01, sl=1990.0),
     )
 
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
         with pytest.raises(DemoSafetyError, match="requires zero positions"):
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
+                risk_calibration=calibration(),
+                now=NOW,
             )
         adapter.close()
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
 
     assert mt5.send_calls == 0
 
 
-def test_successful_bounded_demo_submission_reconciles_one_position(tmp_path: Path) -> None:
+def test_successful_bounded_demo_submission_keeps_control_active(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
     order = request()
 
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
         result = adapter.submit_market_order(
             order,
             confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
             activation_permit=activation(),
             risk_calibration=calibration(),
-            now=datetime(2026, 10, 18, tzinfo=UTC),
+            now=NOW,
         )
         adapter.close()
         status = book.status(order.request_id)
+        gate_state = gate.snapshot().state
 
     assert result["status"] == "ACKNOWLEDGED"
     assert result["volume_lots"] == "0.01"
     assert result["live_account_permitted"] is False
+    assert result["control_state"] == "ACTIVE"
     assert status == "ACKNOWLEDGED"
+    assert gate_state is DemoControlState.ACTIVE
     assert mt5.send_calls == 1
 
 
-def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> None:
+def test_uncertain_submission_latches_ledger_and_quarantines_control(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
     mt5.return_none = True
     first = request()
 
-    with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
         adapter.initialize()
 
         with pytest.raises(DemoSafetyError, match="uncertain"):
@@ -374,13 +569,14 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 activation_permit=activation(),
                 risk_calibration=calibration(),
-                now=datetime(2026, 10, 18, tzinfo=UTC),
+                now=NOW,
             )
 
         assert book.status(first.request_id) == "UNCERTAIN"
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
 
         mt5.return_none = False
-        with pytest.raises(DemoSafetyError, match="requires reconciliation"):
+        with pytest.raises(DemoSafetyError, match="not ACTIVE"):
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
@@ -394,10 +590,38 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
     assert mt5.send_calls == 1
 
 
+def test_kill_blocks_new_submission_before_broker_send(tmp_path: Path) -> None:
+    mt5 = FakeMT5()
+    mt5.tradeapi_disabled = False
+
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        gate.kill(reason="OWNER_KILL", now=NOW)
+        adapter = DemoMT5Adapter(
+            identity(),
+            executable_policy(),
+            book,
+            control=gate,
+            module=mt5,
+        )
+        adapter.initialize()
+        with pytest.raises(DemoSafetyError, match="not ACTIVE"):
+            adapter.submit_market_order(
+                request(),
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                activation_permit=activation(),
+                risk_calibration=calibration(),
+                now=NOW,
+            )
+        adapter.close()
+
+    assert mt5.send_calls == 0
+
+
 def test_daily_submission_budget_is_hard_bounded(tmp_path: Path) -> None:
     with ledger(tmp_path, cap=1) as book:
         first = request()
-        book.reserve(first, now=datetime(2026, 10, 18, tzinfo=UTC))
+        book.reserve(first, now=NOW)
         book.mark_acknowledged(first.request_id, mt5_retcode=10009, order_ticket="1")
 
         with pytest.raises(DemoSafetyError, match="budget exhausted"):

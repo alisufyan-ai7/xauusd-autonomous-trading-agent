@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
+from .control import DemoControlStore
 from .envelope import (
     DemoActivationPermit,
     DemoIdentity,
@@ -51,6 +52,7 @@ class DemoMT5Adapter:
         policy: DemoPolicy,
         ledger: DemoSubmissionLedger,
         *,
+        control: DemoControlStore | None = None,
         module: Any | None = None,
     ) -> None:
         identity.validate()
@@ -58,6 +60,7 @@ class DemoMT5Adapter:
         self._identity = identity
         self._policy = policy
         self._ledger = ledger
+        self._control = control
         self._mt5 = module
         self._initialized = False
 
@@ -148,6 +151,9 @@ class DemoMT5Adapter:
     def preflight(self) -> dict[str, object]:
         terminal, _ = self._identity_guard(require_execution_enabled=False)
         positions, orders = self._zero_exposure_guard()
+        control_state = "KILLED"
+        if self._control is not None:
+            control_state = self._control.snapshot().state.value
         return {
             "demo_identity_match": True,
             "demo_trade_mode": True,
@@ -159,6 +165,7 @@ class DemoMT5Adapter:
             "maximum_volume_lots": "0.01",
             "maximum_concurrent_positions": 1,
             "protective_stop_required": True,
+            "control_state": control_state,
         }
 
     def _build_request(self, request: DemoOrderRequest) -> dict[str, Any]:
@@ -213,6 +220,20 @@ class DemoMT5Adapter:
             "type_time": int(self._mt5.ORDER_TIME_GTC),
         }
 
+    def _mark_uncertain_and_quarantine(
+        self,
+        *,
+        request_id: str,
+        detail: str,
+        now: datetime,
+    ) -> None:
+        self._ledger.mark_uncertain(request_id, detail=detail)
+        if self._control is not None:
+            self._control.quarantine(
+                reason=f"UNCERTAIN_SUBMISSION:{detail}",
+                now=now,
+            )
+
     def submit_market_order(
         self,
         request: DemoOrderRequest,
@@ -226,19 +247,36 @@ class DemoMT5Adapter:
             raise DemoSafetyError("exact demo submission confirmation token required")
 
         request.validate()
-        _, account = self._identity_guard(require_execution_enabled=True)
-        self._zero_exposure_guard()
-
         effective_now = now or datetime.now(UTC)
+
         if activation_permit is None:
             raise DemoSafetyError("demo execution requires an owner-gated activation permit")
+        if self._control is None:
+            raise DemoSafetyError("demo execution requires a durable kill/quarantine control")
+
         activation_permit.validate(now=effective_now)
-        if activation_permit.account_id_sha256 != self._identity.account_id_sha256:
-            raise DemoSafetyError("activation account fingerprint mismatch")
-        if activation_permit.server != self._identity.server:
-            raise DemoSafetyError("activation server mismatch")
         if activation_permit.max_daily_submissions != self._policy.max_daily_submissions:
+            self._control.quarantine(
+                reason="ACTIVATION_DAILY_BUDGET_MISMATCH",
+                now=effective_now,
+            )
             raise DemoSafetyError("activation daily submission budget mismatch")
+
+        self._control.assert_active(
+            permit=activation_permit,
+            identity=self._identity,
+            now=effective_now,
+        )
+
+        try:
+            _, account = self._identity_guard(require_execution_enabled=True)
+            self._zero_exposure_guard()
+        except DemoSafetyError:
+            self._control.quarantine(
+                reason="PRE_SUBMIT_IDENTITY_OR_EXPOSURE_FAILURE",
+                now=effective_now,
+            )
+            raise
 
         mt5_request = self._build_request(request)
         assert self._mt5 is not None
@@ -250,14 +288,26 @@ class DemoMT5Adapter:
             float(mt5_request["price"]),
         )
         if margin_raw is None:
+            self._control.quarantine(
+                reason="MARGIN_CALCULATION_UNAVAILABLE",
+                now=effective_now,
+            )
             raise DemoSafetyError(f"order_calc_margin failed: {self._mt5.last_error()}")
-        risk = evaluate_bound_demo_risk(
-            account=account,
-            request=request,
-            incremental_margin=_decimal(margin_raw, "incremental margin"),
-            calibration=risk_calibration,
-            expected_calibration_sha256=self._policy.risk_calibration_sha256,
-        )
+
+        try:
+            risk = evaluate_bound_demo_risk(
+                account=account,
+                request=request,
+                incremental_margin=_decimal(margin_raw, "incremental margin"),
+                calibration=risk_calibration,
+                expected_calibration_sha256=self._policy.risk_calibration_sha256,
+            )
+        except DemoSafetyError:
+            self._control.quarantine(
+                reason="RISK_GOVERNOR_PRECONDITION_OR_DENIAL",
+                now=effective_now,
+            )
+            raise
 
         check = self._mt5.order_check(mt5_request)
         if check is None:
@@ -273,18 +323,21 @@ class DemoMT5Adapter:
         try:
             result = self._mt5.order_send(mt5_request)
         except Exception as exc:
-            self._ledger.mark_uncertain(
-                request.request_id,
-                detail=f"order_send exception: {type(exc).__name__}: {exc}",
+            detail = f"order_send exception: {type(exc).__name__}: {exc}"
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
+                detail=detail,
+                now=effective_now,
             )
             raise DemoSafetyError(
                 "demo submission outcome is uncertain; reconcile before any retry"
             ) from exc
 
         if result is None:
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail=f"order_send returned no result: {self._mt5.last_error()}",
+                now=effective_now,
             )
             raise DemoSafetyError(
                 "demo submission outcome is uncertain; reconcile before any retry"
@@ -295,9 +348,10 @@ class DemoMT5Adapter:
         retcode = int(result_row.get("retcode", -1))
 
         if retcode != done_code:
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail=f"non-final demo retcode={retcode}",
+                now=effective_now,
             )
             raise DemoSafetyError(
                 "demo submission was not definitively completed; reconcile before retry"
@@ -306,41 +360,46 @@ class DemoMT5Adapter:
         positions = self._mt5.positions_get()
         orders = self._mt5.orders_get()
         if positions is None or orders is None:
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail="post-submit exposure observation unavailable",
+                now=effective_now,
             )
             raise DemoSafetyError("post-submit reconciliation unavailable")
 
         positions_tuple = tuple(positions)
         orders_tuple = tuple(orders)
         if len(positions_tuple) != 1 or orders_tuple:
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail=(
                     f"unexpected post-submit exposure: positions={len(positions_tuple)} "
                     f"orders={len(orders_tuple)}"
                 ),
+                now=effective_now,
             )
             raise DemoSafetyError("post-submit exposure failed bounded reconciliation")
 
         position = _record(positions_tuple[0], "position")
         if str(position.get("symbol") or "") != "XAUUSD":
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail="post-submit position symbol mismatch",
+                now=effective_now,
             )
             raise DemoSafetyError("post-submit position identity mismatch")
         if _decimal(position.get("volume"), "position volume") > Decimal("0.01"):
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail="post-submit position volume exceeds 0.01",
+                now=effective_now,
             )
             raise DemoSafetyError("post-submit position exceeded volume cap")
         if _decimal(position.get("sl"), "position stop loss") <= 0:
-            self._ledger.mark_uncertain(
-                request.request_id,
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
                 detail="post-submit protective stop missing",
+                now=effective_now,
             )
             raise DemoSafetyError("post-submit protective stop missing")
 
@@ -362,6 +421,7 @@ class DemoMT5Adapter:
             "order_ticket": ticket,
             "risk_policy": risk.policy,
             "risk_reason_codes": list(risk.reason_codes),
+            "control_state": self._control.snapshot().state.value,
             "open_positions": 1,
             "pending_orders": 0,
             "live_account_permitted": False,

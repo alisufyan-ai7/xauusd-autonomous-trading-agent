@@ -1,0 +1,47 @@
+{
+  "schema_version": "demo-admit-operational-controls-1.0",
+  "recorded_date_local": "2026-10-18",
+  "timezone": "Asia/Karachi",
+  "base_main": "d87fab07af82aefb097841b4bd54832ddf3fa462",
+  "branch": "implementation/demo-admit-operational-controls-v0.2",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "purpose": "Complete deterministic demo kill/quarantine controls and bind any future demo adverse-cost calibration to explicit source provenance without inventing or promoting unadmitted empirical values.",
+  "already_satisfied": {
+    "pcr1_pass": true,
+    "pcr2_pass": true,
+    "shadow_duration_requirement": true,
+    "dedicated_demo_identity_preflight": true,
+    "zero_exposure_preflight": true,
+    "demo_only_identity_routing": true,
+    "xauusd_only": true,
+    "volume_cap_0_01": true,
+    "one_position_limit": true,
+    "protective_stop_required": true,
+    "bounded_submissions": true,
+    "separate_demo_package": true
+  },
+  "this_change": {
+    "durable_control_default": "KILLED",
+    "activation_state": "ACTIVE only after exact owner-gated permit plus arm confirmation",
+    "uncertain_submission_state": "QUARANTINED",
+    "quarantine_recovery": "explicit reset to KILLED before any fresh arm",
+    "expired_or_invalid_permit": "KILLED",
+    "calibration_scope": "DEMO_LIFECYCLE_ONLY",
+    "calibration_provenance": "source SHA-256 required",
+    "calibration_use": "exact calibration object SHA-256 must equal DemoPolicy admission hash"
+  },
+  "explicitly_unresolved": {
+    "admitted_demo_risk_calibration_values": "NOT_YET_ADMITTED",
+    "reason": "Existing empirical calibration lineage contains fail-closed/nonstationary findings; this implementation does not invent replacement spread/slippage/gap/cost values.",
+    "apc_demo_activation": false,
+    "external_python_trading_enabled": false,
+    "broker_action_authorized": false
+  },
+  "constraints": [
+    "No VPS deployment or mutation is authorized by this record.",
+    "No demo or live order is authorized by this record.",
+    "No calibration numeric value is admitted by this record.",
+    "Real-money use of any demo calibration is prohibited.",
+    "The sealed PCR-3 release remains unchanged."
+  ]
+}
