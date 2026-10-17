@@ -42,11 +42,17 @@ class DemoIdentity:
 @dataclass(frozen=True, slots=True)
 class DemoPolicy:
     max_daily_submissions: int
+    risk_calibration_sha256: str | None = None
     max_deviation_points: int = 20
 
     def validate(self) -> None:
         if self.max_daily_submissions < 1 or self.max_daily_submissions > 20:
             raise DemoSafetyError("max_daily_submissions must be within 1..20")
+        if (
+            self.risk_calibration_sha256 is not None
+            and _HEX_64.fullmatch(self.risk_calibration_sha256) is None
+        ):
+            raise DemoSafetyError("risk_calibration_sha256 must be lowercase SHA-256")
         if self.max_deviation_points < 0 or self.max_deviation_points > 100:
             raise DemoSafetyError("max_deviation_points must be within 0..100")
 
