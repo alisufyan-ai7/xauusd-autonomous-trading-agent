@@ -1,0 +1,41 @@
+{
+  "schema_version": "demo-admit-implementation-registration-1.0",
+  "recorded_date_local": "2026-10-18",
+  "timezone": "Asia/Karachi",
+  "base_main": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
+  "branch": "implementation/demo-admit-bounded-exness-v0.1",
+  "status": "PREPARATION_STARTED",
+  "purpose": "Build and validate the separately packaged, demo-only Exness MT5 execution lane required for DEMO-ADMIT without changing or deploying the execution-disabled PCR-3 release.",
+  "current_pcr3_release": "pcr3-execution-disabled-e0383a50e2cc",
+  "current_pcr3_execution_capability": "ABSENT",
+  "demo_activation_authorized": false,
+  "live_activation_authorized": false,
+  "vps_mutation_authorized_by_this_record": false,
+  "broker_action_authorized_by_this_record": false,
+  "admission_criteria": {
+    "pcr1_pass": true,
+    "pcr2_pass": true,
+    "minimum_clean_shadow_hours": 48,
+    "shadow_duration_evidence_status": "SATISFIED_PENDING_DURABLE_SANITIZED_RECORD",
+    "dedicated_demo_account_fingerprint": "REQUIRES_FRESH_PREFLIGHT_AND_ALLOWLIST_BINDING",
+    "zero_demo_exposure_at_activation": "REQUIRES_FRESH_PREFLIGHT",
+    "demo_only_identity_routing": "TO_IMPLEMENT",
+    "xauusd_only": "TO_IMPLEMENT",
+    "maximum_volume_lots": "0.01",
+    "maximum_concurrent_positions": 1,
+    "averaging_or_martingale": "PROHIBITED",
+    "protective_stop_required": true,
+    "bounded_submissions": "TO_REGISTER",
+    "deterministic_kill_or_quarantine": "TO_IMPLEMENT_AND_TEST",
+    "demo_adapter_packaged_separately": "TO_IMPLEMENT",
+    "live_account_fingerprint_selection": "MUST_BE_IMPOSSIBLE"
+  },
+  "implementation_constraints": [
+    "Do not modify the sealed PCR-3 release.",
+    "Do not deploy to the VPS during implementation preparation.",
+    "Do not enable MT5 external Python trading during implementation preparation.",
+    "Do not submit, modify, cancel, or close any demo or live order without separate APC-DEMO activation approval.",
+    "Keep the demo adapter outside the production-candidate package capability boundary.",
+    "Fail closed on account identity mismatch, non-XAUUSD symbol, volume above 0.01 lot, nonzero pre-existing exposure, missing protective stop, stale or unknown reconciliation state, or uncertain submission outcome."
+  ]
+}
