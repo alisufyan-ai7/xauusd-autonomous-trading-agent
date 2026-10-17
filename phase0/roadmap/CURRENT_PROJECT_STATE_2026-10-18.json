@@ -1,0 +1,89 @@
+{
+  "schema_version": "current-project-state-1.0",
+  "as_of_date": "2026-10-18",
+  "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
+  "authoritative_main_sha": "33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf",
+  "source_of_truth": "GITHUB",
+  "active_focus": "DEMO_ADMIT",
+  "pcr3": {
+    "release_id": "pcr3-execution-disabled-e0383a50e2cc",
+    "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
+    "task_name": "XAUUSD Execution-Disabled Shadow",
+    "execution_capability": "ABSENT",
+    "execution_enabled": false,
+    "broker_action_count": 0,
+    "last_verified_state": "RUNNING"
+  },
+  "demo_admit_duration": {
+    "criterion_hours": 48,
+    "accepted_operational_lineage_hours": 57.173,
+    "decision": "SATISFIED_FOR_ACCELERATED_DEMO_ADMIT",
+    "formal_gate4_implication": "NONE"
+  },
+  "demo_identity": {
+    "broker": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "currency": "USD",
+    "account_id_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+    "trade_mode": "DEMO",
+    "symbol": "XAUUSD"
+  },
+  "demo_staging_r2": {
+    "status": "PASS",
+    "release_id": "demo-admit-d87fab07af82-r2",
+    "source_revision": "d87fab07af82aefb097841b4bd54832ddf3fa462",
+    "source_archive_sha256": "b3b5a6841e9d7b4518b88f08d837af1d5a0108a0b4f4934459a8d5b1d72f9865",
+    "production_wheel_sha256": "9b9211950c02010eeed9741a0469722714cde017fb22e0ce27f4e90a7dddf482",
+    "demo_wheel_sha256": "27fe0f0c0620c82b75e4b063942d0ce7ffbda5cece91f7852895a60a849dfbc8",
+    "manifest_sha256": "dc2a2f9ed6917968cbd2a35434e441eb184af6425630e7d838f4e59774d62a35",
+    "external_python_trading_enabled": false,
+    "activation_permit_present": false,
+    "broker_action_authorized": false,
+    "demo_order_submitted": false,
+    "note": "Valid evidence for PR5 lineage only; successor with PR6 controls must be rebuilt/staged."
+  },
+  "pr5": {
+    "status": "MERGED",
+    "head_sha": "32ef6dbb937ba09315350a7259feae5acfe20be7",
+    "merge_sha": "d87fab07af82aefb097841b4bd54832ddf3fa462"
+  },
+  "pr6": {
+    "status": "MERGED",
+    "head_sha": "0f75511d06ee7a803711c6ac28afb8553bf42a7a",
+    "base_sha": "d87fab07af82aefb097841b4bd54832ddf3fa462",
+    "merge_sha": "33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf",
+    "controls": [
+      "durable KILLED/ACTIVE/QUARANTINED state",
+      "explicit arm confirmation",
+      "owner kill",
+      "quarantine latch",
+      "explicit reset to KILLED before re-arm",
+      "expired/invalid permit kill",
+      "source-hash-bound DEMO_LIFECYCLE_ONLY calibration contract"
+    ]
+  },
+  "current_blocker": {
+    "name": "DEMO_LIFECYCLE_ADVERSE_COST_CALIBRATION",
+    "status": "NOT_YET_ADMITTED",
+    "required_fields": [
+      "current_adverse_cost",
+      "stressed_adverse_cost"
+    ],
+    "constraints": [
+      "source-backed",
+      "prospectively registered",
+      "DEMO_LIFECYCLE_ONLY",
+      "hash-bound",
+      "no silent zero substitution",
+      "no promotion to real-money evidence"
+    ]
+  },
+  "authorization": {
+    "external_python_trading": "NOT_AUTHORIZED",
+    "demo_activation": "NOT_AUTHORIZED",
+    "demo_broker_action": "NOT_AUTHORIZED",
+    "live_broker_action": "NOT_AUTHORIZED",
+    "real_money_trading": "NOT_AUTHORIZED"
+  },
+  "next_substantive_action": "Prospectively register and obtain source-backed demo-lifecycle-only adverse-cost calibration evidence while broker execution remains disabled."
+}
