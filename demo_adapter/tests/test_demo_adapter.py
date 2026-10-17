@@ -1,4 +1,4 @@
-from __future__ import annotations
+# ruff: noqa: I001\nfrom __future__ import annotations
 
 import hashlib
 import uuid
@@ -214,12 +214,12 @@ def test_submission_requires_exact_confirmation_and_execution_enablement(tmp_pat
         adapter.initialize()
 
         with pytest.raises(DemoSafetyError, match="confirmation token"):
-            adapter.submit_market_order(request(), confirm_token="WRONG")
+            adapter.submit_market_order(request(), confirmation_phrase="WRONG")
 
         with pytest.raises(DemoSafetyError, match="not enabled"):
             adapter.submit_market_order(
                 request(),
-                confirm_token="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
             )
 
         adapter.close()
@@ -240,7 +240,7 @@ def test_existing_exposure_blocks_new_risk(tmp_path: Path) -> None:
         with pytest.raises(DemoSafetyError, match="requires zero positions"):
             adapter.submit_market_order(
                 request(),
-                confirm_token="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
             )
         adapter.close()
 
@@ -257,7 +257,7 @@ def test_successful_bounded_demo_submission_reconciles_one_position(tmp_path: Pa
         adapter.initialize()
         result = adapter.submit_market_order(
             order,
-            confirm_token="SUBMIT-BOUNDED-DEMO-XAUUSD",
+            confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
             now=datetime(2026, 10, 18, tzinfo=UTC),
         )
         adapter.close()
@@ -283,7 +283,7 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
         with pytest.raises(DemoSafetyError, match="uncertain"):
             adapter.submit_market_order(
                 first,
-                confirm_token="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 now=datetime(2026, 10, 18, tzinfo=UTC),
             )
 
@@ -293,7 +293,7 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
         with pytest.raises(DemoSafetyError, match="requires reconciliation"):
             adapter.submit_market_order(
                 request(),
-                confirm_token="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 now=datetime(2026, 10, 18, 1, tzinfo=UTC),
             )
 
