@@ -9,6 +9,7 @@ from decimal import Decimal
 from typing import Any
 
 from .envelope import (
+    DemoActivationPermit,
     DemoIdentity,
     DemoOrderRequest,
     DemoPolicy,
@@ -217,6 +218,7 @@ class DemoMT5Adapter:
         request: DemoOrderRequest,
         *,
         confirmation_phrase: str,
+        activation_permit: DemoActivationPermit | None = None,
         risk_calibration: DemoRiskCalibration | None = None,
         now: datetime | None = None,
     ) -> dict[str, object]:
@@ -226,6 +228,17 @@ class DemoMT5Adapter:
         request.validate()
         _, account = self._identity_guard(require_execution_enabled=True)
         self._zero_exposure_guard()
+
+        effective_now = now or datetime.now(UTC)
+        if activation_permit is None:
+            raise DemoSafetyError("demo execution requires an owner-gated activation permit")
+        activation_permit.validate(now=effective_now)
+        if activation_permit.account_id_sha256 != self._identity.account_id_sha256:
+            raise DemoSafetyError("activation account fingerprint mismatch")
+        if activation_permit.server != self._identity.server:
+            raise DemoSafetyError("activation server mismatch")
+        if activation_permit.max_daily_submissions != self._policy.max_daily_submissions:
+            raise DemoSafetyError("activation daily submission budget mismatch")
 
         mt5_request = self._build_request(request)
         assert self._mt5 is not None
@@ -255,8 +268,7 @@ class DemoMT5Adapter:
                 f"order_check rejected request: retcode={check_row.get('retcode')}"
             )
 
-        reservation_time = now or datetime.now(UTC)
-        self._ledger.reserve(request, now=reservation_time)
+        self._ledger.reserve(request, now=effective_now)
 
         try:
             result = self._mt5.order_send(mt5_request)
