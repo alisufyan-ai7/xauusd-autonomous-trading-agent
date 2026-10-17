@@ -15,6 +15,7 @@ from xauusd_demo import (
     DemoMT5Adapter,
     DemoOrderRequest,
     DemoPolicy,
+    DemoRiskCalibration,
     DemoSafetyError,
     DemoSide,
     DemoSubmissionLedger,
@@ -35,6 +36,22 @@ def fingerprint() -> str:
 
 def identity() -> DemoIdentity:
     return DemoIdentity(BROKER, SERVER, fingerprint(), CURRENCY)
+
+
+def calibration() -> DemoRiskCalibration:
+    return DemoRiskCalibration(
+        calibration_id="TEST-DEMO-CALIBRATION",
+        current_adverse_cost=Decimal("1"),
+        stressed_adverse_cost=Decimal("2"),
+    )
+
+
+def executable_policy() -> DemoPolicy:
+    item = calibration()
+    return DemoPolicy(
+        max_daily_submissions=3,
+        risk_calibration_sha256=item.sha256(),
+    )
 
 
 def request(*, side: DemoSide = DemoSide.BUY) -> DemoOrderRequest:
@@ -87,6 +104,9 @@ class FakeMT5:
             login=LOGIN,
             currency=CURRENCY,
             trade_mode=self.trade_mode,
+            equity=10000.0,
+            margin_free=10000.0,
+            margin=0.0,
         )
 
     def positions_get(self) -> tuple[object, ...]:
@@ -108,6 +128,19 @@ class FakeMT5:
     def symbol_info_tick(self, symbol: str) -> object:
         assert symbol == "XAUUSD"
         return SimpleNamespace(bid=2000.0, ask=2000.2)
+
+    def order_calc_margin(
+        self,
+        order_type: int,
+        symbol: str,
+        volume: float,
+        price: float,
+    ) -> float:
+        assert order_type in (self.ORDER_TYPE_BUY, self.ORDER_TYPE_SELL)
+        assert symbol == "XAUUSD"
+        assert volume == 0.01
+        assert price > 0
+        return 5.0
 
     def order_check(self, payload: dict[str, object]) -> object:
         assert payload["symbol"] == "XAUUSD"
@@ -228,6 +261,24 @@ def test_submission_requires_exact_confirmation_and_execution_enablement(tmp_pat
     assert mt5.send_calls == 0
 
 
+
+def test_missing_risk_calibration_blocks_send(tmp_path: Path) -> None:
+    mt5 = FakeMT5()
+    mt5.tradeapi_disabled = False
+
+    with ledger(tmp_path) as book:
+        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+        adapter.initialize()
+        with pytest.raises(DemoSafetyError, match="hash-bound risk calibration"):
+            adapter.submit_market_order(
+                request(),
+                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+            )
+        adapter.close()
+
+    assert mt5.send_calls == 0
+
+
 def test_existing_exposure_blocks_new_risk(tmp_path: Path) -> None:
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
@@ -254,11 +305,12 @@ def test_successful_bounded_demo_submission_reconciles_one_position(tmp_path: Pa
     order = request()
 
     with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
         adapter.initialize()
         result = adapter.submit_market_order(
             order,
             confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+            risk_calibration=calibration(),
             now=datetime(2026, 10, 18, tzinfo=UTC),
         )
         adapter.close()
@@ -278,13 +330,14 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
     first = request()
 
     with ledger(tmp_path) as book:
-        adapter = DemoMT5Adapter(identity(), DemoPolicy(3), book, module=mt5)
+        adapter = DemoMT5Adapter(identity(), executable_policy(), book, module=mt5)
         adapter.initialize()
 
         with pytest.raises(DemoSafetyError, match="uncertain"):
             adapter.submit_market_order(
                 first,
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                risk_calibration=calibration(),
                 now=datetime(2026, 10, 18, tzinfo=UTC),
             )
 
@@ -295,6 +348,7 @@ def test_uncertain_submission_latches_and_blocks_followup(tmp_path: Path) -> Non
             adapter.submit_market_order(
                 request(),
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                risk_calibration=calibration(),
                 now=datetime(2026, 10, 18, 1, tzinfo=UTC),
             )
 
