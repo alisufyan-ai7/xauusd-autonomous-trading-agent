@@ -40,6 +40,8 @@ $repo = [IO.Path]::GetFullPath($RepositoryRoot)
 $registration = Resolve-Existing $RegistrationPath
 $script = Resolve-Existing $MyInvocation.MyCommand.Path
 $hostPy = Resolve-Existing (Join-Path $repo "demo_adapter\scripts\v12_windows_mt5_readonly_host.py")
+$attemptPy = Resolve-Existing (Join-Path $repo "demo_adapter\scripts\v12_attempt_journal.py")
+$portPy = Resolve-Existing (Join-Path $repo "demo_adapter\scripts\v12_journaled_readonly_port.py")
 $verifier = Resolve-Existing (Join-Path $repo "demo_adapter\scripts\v12-readonly-verifier.ps1")
 $terminal = Resolve-Existing $ExistingTerminalExe
 $output = [IO.Path]::GetFullPath($PrivateOutputPath)
@@ -64,7 +66,117 @@ if ($record.approved_pr13_design_sha -cne
     $record.exact_owner_approval_id -cne $OwnerFirstRunConfirmationId -or
     $record.approval_for_vps_capture -cne "EXPLICIT_OWNER_APPROVED" -or
     $record.collector_ps_sha256 -cne $CollectorSHA256 -or
-    $record.verifier_ps_sha256 -cne $VerifierSHA256) {
+    $record.verifier_ps_sha256 -cne $VerifierSHA256 -or
+    $record.attempt_journal_module_sha256 -cnotmatch '^[a-f0-9]{64}
+    throw "NO_EXACT_OWNER_AND_CODE_PINNED_CAPTURE_REGISTRATION"
+}
+# Every attempt is exclusive and immutable; NO repeat using same frozen run
+# registration, including an earlier failed or forcibly interrupted attempt.
+$attemptFile = Join-Path ([IO.Path]::GetDirectoryName($output)) (
+    "v12-attempt-" + $RegistrationSHA256 + ".jsonl")
+if ([IO.File]::Exists($attemptFile)) {
+    throw "REGISTERED_ATTEMPT_ALREADY_EXISTS_NO_RERUN_OR_RELABEL"
+}
+Assert-FileHash $attemptPy ([string]$record.attempt_journal_module_sha256) "ATTEMPT_JOURNAL_MODULE"
+Assert-FileHash $portPy ([string]$record.journaled_readonly_port_sha256) "JOURNALED_READ_ONLY_PORT"
+
+# Program methods are frozen; the other core Python source hashes must be
+# pre-registered, as must exact Exness XAUUSD sessions, Event Guard and costs.
+$required = @{
+ "demo_adapter\scripts\v11_capture_orchestrator.py" = [string]$record.read_only_core_source_sha256
+ "demo_adapter\scripts\v11_readonly_collector.py" = [string]$record.read_only_preflight_source_sha256
+ "demo_adapter\scripts\v11_quote_coverage.py" = [string]$record.quote_protocol_source_sha256
+ "demo_adapter\scripts\v11_windows_mt5_readonly_host.py" = [string]$record.mt5_bound_port_source_sha256
+}
+foreach ($relative in $required.Keys) {
+    Assert-FileHash (Join-Path $repo $relative) $required[$relative] $relative
+}
+$python = Resolve-Existing (Join-Path $repo ".venv\Scripts\python.exe")
+$running = @(Get-Process -Name "terminal64" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Path -and
+        $_.Path.Equals($terminal,[StringComparison]::OrdinalIgnoreCase) })
+if ($running.Count -ne 1 -or [IO.Path]::GetFileName($terminal).ToLowerInvariant() -ne "terminal64.exe") {
+    throw "EXACT_SINGLE_EXISTING_MT5_TERMINAL_NOT_CONFIRMED"
+}
+$initialPid = [int]$running[0].Id
+$oldLocation = (Get-Location).Path
+$oldBytecode = $env:PYTHONDONTWRITEBYTECODE
+try {
+    $env:PYTHONDONTWRITEBYTECODE = "1"
+    Set-Location (Join-Path $repo "demo_adapter")
+    & $python -B -m scripts.v12_windows_mt5_readonly_host `
+        --registration $registration `
+        --registration-sha256 $RegistrationSHA256 `
+        --host-sha256 $HostSHA256 `
+        --owner-run-id $OwnerFirstRunConfirmationId `
+        --terminal-path $terminal `
+        --private-output $output
+    if ($LASTEXITCODE -ne 0) {
+        throw "READ_ONLY_CAPTURE_REJECTED_NO_ADMISSION"
+    }
+}
+finally {
+    Set-Location $oldLocation
+    $env:PYTHONDONTWRITEBYTECODE = $oldBytecode
+    $post = @(Get-Process -Name "terminal64" -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path -and
+            $_.Path.Equals($terminal,[StringComparison]::OrdinalIgnoreCase) })
+    if ($post.Count -ne 1 -or [int]$post[0].Id -ne $initialPid) {
+        Write-Error "TERMINAL_PROCESS_SET_CHANGED_REJECT_CAPTURE_AND_INVESTIGATE"
+    }
+}
+Write-Output "COLLECTION_FINISHED_RAW_HASH_ONLY_INDEPENDENT_VERIFIER_REQUIRED"
+ -or
+    $record.journaled_readonly_port_sha256 -cnotmatch '^[a-f0-9]{64}
+    throw "NO_EXACT_OWNER_AND_CODE_PINNED_CAPTURE_REGISTRATION"
+}
+# Program methods are frozen; the other core Python source hashes must be
+# pre-registered, as must exact Exness XAUUSD sessions, Event Guard and costs.
+$required = @{
+ "demo_adapter\scripts\v11_capture_orchestrator.py" = [string]$record.read_only_core_source_sha256
+ "demo_adapter\scripts\v11_readonly_collector.py" = [string]$record.read_only_preflight_source_sha256
+ "demo_adapter\scripts\v11_quote_coverage.py" = [string]$record.quote_protocol_source_sha256
+ "demo_adapter\scripts\v11_windows_mt5_readonly_host.py" = [string]$record.mt5_bound_port_source_sha256
+}
+foreach ($relative in $required.Keys) {
+    Assert-FileHash (Join-Path $repo $relative) $required[$relative] $relative
+}
+$python = Resolve-Existing (Join-Path $repo ".venv\Scripts\python.exe")
+$running = @(Get-Process -Name "terminal64" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Path -and
+        $_.Path.Equals($terminal,[StringComparison]::OrdinalIgnoreCase) })
+if ($running.Count -ne 1 -or [IO.Path]::GetFileName($terminal).ToLowerInvariant() -ne "terminal64.exe") {
+    throw "EXACT_SINGLE_EXISTING_MT5_TERMINAL_NOT_CONFIRMED"
+}
+$initialPid = [int]$running[0].Id
+$oldLocation = (Get-Location).Path
+$oldBytecode = $env:PYTHONDONTWRITEBYTECODE
+try {
+    $env:PYTHONDONTWRITEBYTECODE = "1"
+    Set-Location (Join-Path $repo "demo_adapter")
+    & $python -B -m scripts.v12_windows_mt5_readonly_host `
+        --registration $registration `
+        --registration-sha256 $RegistrationSHA256 `
+        --host-sha256 $HostSHA256 `
+        --owner-run-id $OwnerFirstRunConfirmationId `
+        --terminal-path $terminal `
+        --private-output $output
+    if ($LASTEXITCODE -ne 0) {
+        throw "READ_ONLY_CAPTURE_REJECTED_NO_ADMISSION"
+    }
+}
+finally {
+    Set-Location $oldLocation
+    $env:PYTHONDONTWRITEBYTECODE = $oldBytecode
+    $post = @(Get-Process -Name "terminal64" -ErrorAction SilentlyContinue |
+        Where-Object { $_.Path -and
+            $_.Path.Equals($terminal,[StringComparison]::OrdinalIgnoreCase) })
+    if ($post.Count -ne 1 -or [int]$post[0].Id -ne $initialPid) {
+        Write-Error "TERMINAL_PROCESS_SET_CHANGED_REJECT_CAPTURE_AND_INVESTIGATE"
+    }
+}
+Write-Output "COLLECTION_FINISHED_RAW_HASH_ONLY_INDEPENDENT_VERIFIER_REQUIRED"
+) {
     throw "NO_EXACT_OWNER_AND_CODE_PINNED_CAPTURE_REGISTRATION"
 }
 # Program methods are frozen; the other core Python source hashes must be
