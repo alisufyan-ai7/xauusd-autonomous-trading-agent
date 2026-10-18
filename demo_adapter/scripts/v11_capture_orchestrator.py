@@ -146,21 +146,28 @@ def rehearse_orchestrator(
         for entry in observed:
             try:
                 stamp = int(entry["time_msc"])
-                # Same-ms duplicates stay in the source and cause the
-                # conservative coverage validator to reject ambiguity.
+                # Preserve source row order, timestamp and MT5 flags.
+                # Same-millisecond rows are distinct observations.
                 bid = str(entry["bid"])
                 ask = str(entry["ask"])
+                flags = int(entry["flags"])
             except (TypeError, KeyError, ValueError) as exc:
                 raise CaptureSafetyError("invalid raw broker tick") from exc
-            if not start <= stamp < end:
-                # end-inclusive MT5 range boundaries cannot be silently
-                # rewritten or attributed to the next adjacent segment.
-                raise CaptureSafetyError("tick at an unsupported chunk boundary")
-            all_ticks.append(QuoteSample(stamp, bid, ask))
+            chunk_from = _utc_millis(chunk_start)
+            chunk_to = _utc_millis(chunk_end)
+            if not chunk_from <= stamp < chunk_to:
+                # The MT5 API may include the end boundary. Reject an
+                # ambiguous overlapping chunk rather than silently deduping
+                # or dropping potentially adverse boundary records.
+                raise CaptureSafetyError("tick at ambiguous chunk boundary")
+            all_ticks.append(QuoteSample(
+                stamp, bid, ask, source_ordinal=len(all_ticks), flags=flags
+            ))
     _identity_and_zero(port, contract.expected_identity_sha256)
 
     coverage = evaluate_quote_coverage(
-        contract.start_utc, contract.end_utc, polls, all_ticks
+        contract.start_utc, contract.end_utc, polls, all_ticks,
+        require_source_ordinal=True,
     )
     result_polls = tuple(polls)
     result_ticks = tuple(all_ticks)
