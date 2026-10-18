@@ -63,7 +63,7 @@ def test_flat_before_entry_session_end_no_rollover_and_no_auto_close() -> None:
     assert entry["all_pending_orders_must_be_broker_confirmed_absent"] is True
     assert entry["known_owned_positions_must_be_broker_confirmed_closed"] is True
     assert "EARLIER" in entry["flat_by"]
-    assert "NO_AUTOMATIC_UNKNOWN_EXPOSURE" in entry["if_not_flat_or_unknown"]
+    assert "NEVER_AUTOCLOSE_UNKNOWN_EXPOSURE" in entry["if_not_flat_or_unknown"]
     assert reg["policy_a_unchanged"]["human_only_emergency"] == "E1"
 
 
