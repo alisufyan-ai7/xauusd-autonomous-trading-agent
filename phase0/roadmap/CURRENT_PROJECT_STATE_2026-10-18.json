@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Independently verify and review owner-selected PR8 v1.1 preregistration; perform offline-only collector prep and full Policy A cash-risk correction/test preparation. Before any evidence capture, register exact UTC run window/source/tool hashes and obtain separate VPS read-only capture authorization. Do not merge/activate without separate approval.",
+  "next_substantive_action": "Review and separately approve exact-head draft PR8 selected v1.1 design. Offline-only engineering next: implement and independently test complete Policy A USD stop-loss and period risk, and prepare hash-audited read-only collector. Before any VPS evidence capture register exact UTC run window and obtain separate permission; no merge, deployment or broker action is inferred.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -114,7 +114,8 @@
       "phase0/roadmap/DEMO_LIFECYCLE_CALIBRATION_OWNER_DECISION_2026-10-18.json",
       "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
       "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md",
-      "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json"
+      "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json",
+      "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json"
     ]
   },
   "last_github_reconciliation": {
@@ -173,6 +174,8 @@
     "collector_test_status": "NOT_STARTED",
     "full_policy_a_cash_risk_implementation": "OPEN_HARD_BLOCKER",
     "demo_admit_decision": "BLOCKED",
-    "broker_actions": 0
+    "broker_actions": 0,
+    "full_policy_a_cash_risk_correction_test_registration": "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json",
+    "full_policy_a_cash_risk_correction_current_status": "PRE_REGISTERED_OFFLINE_IMPLEMENTATION_AND_INDEPENDENT_TESTS_PENDING"
   }
 }
