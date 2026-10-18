@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Review exact-head draft PR13 prospective v1.2 Option A method and all Windows/Linux adversarial offline CI. Owner final approval of successor PREREG DESIGN ONLY is the next genuine boundary. No merge/VPS/MT5/execution toggle/capture/demo-live order authority. After final design owner approval, independently preregister actual Exness-XAUUSD-and-Event-Guard-qualified UTC 4h/overlap regime, then obtain another separate VPS read-only capture approval.",
+  "next_substantive_action": "Continue ONLY owner-independent offline design/implementation: source-root/capture manifest validation, immutable method binding, full 4h versus overlap cohorts and flat-before-session cutoff review; run independent synthetic Windows/Linux CI. No actual date-specific broker capture, source-admitted calibration, VPS, MT5 actions, trading, or PR merge absent separate explicit approval.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -291,7 +291,7 @@
   "owner_option_a_safety_refinements_2026_10_18": {
     "decision": "APPROVE_OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS",
     "decision_authority": "PROSPECTIVE_DESIGN_AND_REGISTRATION_PREPARATION_ONLY",
-    "owner_successor_final_preregistration_approval": false,
+    "owner_successor_final_preregistration_approval": true,
     "reconciled_before_update": {
       "main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
       "draft_pr_heads": {
@@ -355,8 +355,8 @@
       "demo_orders": false,
       "live_trading": false
     },
-    "next_gate": "PREPARE_SOURCE_PINNED_V1_2_PREREG_AND_ADVERSARIAL_OFFLINE_TESTS; PRESENT_EXACT_SHA_FOR_OWNER_FINAL_SUCCESSOR_DESIGN_APPROVAL; STOP",
-    "successor_preparation_status": "SEPARATE_V1_2_SOURCE_AND_SYNTHETIC_TESTS_PREPARED_FINAL_OWNER_APPROVAL_PENDING",
+    "next_gate": "Implement offline independent source evidence preflight with synthetic negative tests on separate child branch; stop before any real source, capture, VPS, merge or trading",
+    "successor_preparation_status": "V1_2_DESIGN_APPROVED_AT_EXACT_IMMUTABLE_PR13_HEAD__NO_DATA_OR_DEMO_ADMISSION",
     "successor_preregistration": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_2_OPTION_A_SAFETY_2026-10-18.json",
     "successor_method": "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_2_OPTION_A_SAFETY_2026-10-18.md",
     "run_window_template": "phase0/roadmap/DEMO_V12_OPTION_A_RUN_WINDOW_TEMPLATE_UNREGISTERED_2026-10-18.json",
@@ -375,11 +375,41 @@
     "flat_lifecycle_owner_attended_live_drill_passed": false,
     "no_actual_broker_ticks_seen": true,
     "option_a_in_principle_approved": true,
-    "v1_2_successor_final_design_approved": false,
+    "v1_2_successor_final_design_approved": true,
     "merge_authority": false,
     "capture_authority": false,
     "vps_authority": false,
     "demo_trading_authority": false,
-    "live_trading_authority": false
+    "live_trading_authority": false,
+    "owner_approved_exact_pr13_design_sha": "847829378956670e8936bf46c82e685de41145fd",
+    "owner_approved_exact_pr12_parent_sha": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+    "owner_approved_v12_prereg_blob_sha": "c7dcf520fe2a3b12437cec6a1b5dd06c25494d5f",
+    "owner_design_approval_record": "PR #13 comment 6256228112",
+    "authorized_now": "OFFLINE_FROZEN_DESIGN_AND_OWNER_INDEPENDENT_IMPLEMENTATION_ONLY"
+  },
+  "v12_design_final_approval_2026_10_19": {
+    "status": "APPROVED_DESIGN_ONLY_NO_REAL_CAPTURE_OR_EXECUTION",
+    "exact_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+    "exact_parent_pr12_sha": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+    "frozen_v10_blob": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "frozen_v11_blob": "5210056f0a07faad9225e24228392f43090c5561",
+    "frozen_v12_blob": "c7dcf520fe2a3b12437cec6a1b5dd06c25494d5f",
+    "approved_design_comment_id": 6256228112,
+    "source_of_truth": "PRIVATE_GITHUB_PR13_IMMUTABLE_OWNER_APPROVAL_COMMENT",
+    "successor_implementation_branch": "implementation/demo-v12-offline-evidence-gates-20261019",
+    "planned_implementation": "PURE_OFFLINE_SOURCE_PROVENANCE_AND_PROSPECTIVE_WINDOW_PACKET_FAIL_CLOSED_VALIDATION",
+    "merge_authority": false,
+    "vps_authority": false,
+    "real_broker_capture_authority": false,
+    "mt5_configuration_authority": false,
+    "external_python_trading_enablement_authority": false,
+    "demo_order_authority": false,
+    "live_order_authority": false,
+    "actual_utc_capture_window_selected": false,
+    "actual_account_fee_slippage_gap_costs_admitted": false,
+    "actual_execution_slippage_measured": false,
+    "demonstration_admit_pass": false,
+    "runtime_order_submission_veto": "UNCHANGED_HARD_QUARANTINE",
+    "historical_failures_unchanged": true
   }
 }
