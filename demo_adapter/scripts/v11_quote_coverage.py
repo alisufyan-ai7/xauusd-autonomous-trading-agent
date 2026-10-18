@@ -137,6 +137,10 @@ def evaluate_quote_coverage(
         ) and (type(tick.source_ordinal) is not int
                or tick.source_ordinal <= last_ordinal):
             raise QuoteCoverageError("duplicate-millisecond source sequence unknown")
+        if require_source_ordinal and tick.source_ordinal != len(times):
+            raise QuoteCoverageError("source ordinal not contiguous and zero-based")
+        if require_source_ordinal and type(tick.flags) is not int:
+            raise QuoteCoverageError("raw tick flags missing")
         if tick.source_ordinal is not None:
             if type(tick.source_ordinal) is not int or tick.source_ordinal <= last_ordinal:
                 raise QuoteCoverageError("source ordinal not strictly increasing")
