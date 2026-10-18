@@ -10,7 +10,7 @@ This math engine has no MT5 import, order API, file I/O, or side effects.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR, localcontext
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal, localcontext
 from enum import StrEnum
 from typing import Final
 
@@ -232,7 +232,8 @@ def evaluate_full_policy_a(data: FullPolicyAInput) -> FullPolicyAResult:
 
         cur_equity = data.equity_usd - data.m1_current_adverse_cost_usd
         cur_used = data.margin_used_usd + data.incremental_margin_usd
-        cur_free = data.free_margin_usd - data.m1_current_adverse_cost_usd - data.incremental_margin_usd
+        cur_free = (data.free_margin_usd - data.m1_current_adverse_cost_usd
+                    - data.incremental_margin_usd)
         stress_equity = data.equity_usd - data.m1_stressed_adverse_cost_usd
         stress_used = (data.margin_used_usd +
                        STRESS_MARGIN_MULTIPLIER * data.incremental_margin_usd)
