@@ -13,7 +13,8 @@ MANIFEST = ROOT / (
 
 def test_published_sha256_source_bytes_match_both_os_checkouts() -> None:
     packet = json.loads(MANIFEST.read_text("utf-8"))
-    assert packet["status"] == "REVIEWED_CODE_HASHES_ONLY_NEVER_OWNER_RUN_PERMIT"
+    assert packet["status"].endswith("NEVER_OWNER_RUN_PERMIT")
+    assert "IMMUTABLE_FAILURE_JOURNAL" in packet["status"]
     assert len(packet["files"]) == 9
     for entry in packet["files"]:
         raw = (ROOT / entry["path"]).read_bytes()
