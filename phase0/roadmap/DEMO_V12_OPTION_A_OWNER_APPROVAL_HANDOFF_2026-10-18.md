@@ -34,3 +34,17 @@ The two new pure offline math modules do **not** import MetaTrader5, connect to 
 ## Exact next genuine owner boundary
 
 After reviewing the exact GitHub PR head and independent CI logs, present **approval of the separately versioned v1.2 method only** (not source acquisition) as a new owner decision. Do not select an exact UTC window, merge any PR, use VPS or MT5, change external Python trading permissions, capture broker data, stage demo operations or place orders. Separate approvals remain necessary for all those actions. Prior Gate failures and PCR3 remain immutable.
+
+
+## Owner-requested metadata reconciliation — final-design approval still pending (2026-10-18)
+
+**Strict metadata-only correction, no method change:** Prior PR #13 HEAD `1f55d0b3b50fa6448c80b08dbcd518b0446bd64b` was reconciled against current GitHub. `main` remains `ccaa8338aecee8bd3afbc358644410dff6c512e5`; PR #11 actual `5da628e9410c08467009cff1a8cdfe4440f0f414`; PR #12 actual `b03e1ba3ee2434744010ac8bdf37904ba19df730`. PR #8–#13 remain DRAFT UNMERGED. The sole **source correction file** is `phase0/roadmap/CURRENT_PROJECT_STATE_2026-10-18.json`, corrected in commit `546008eb49670276f9202a1cd2f173284d2327cc`. The PR #11 dependency head and PR #12 `head_sha` now match GitHub.
+
+**Unambiguous authorization:** `option_a_in_principle_approved=true`, **`v1_2_successor_final_design_approved=false`**; `merge_authority=false`, `capture_authority=false`, `vps_authority=false`, `demo_trading_authority=false`, `live_trading_authority=false` in the machine state, mirrored in the owner decision metadata. The old `owner_option_adopted=false` was removed as it conflated in-principle scope with final successor/design authority. Historical PR #12 option-review records remain historical; no reclassification or retroactive amendment.
+
+**Validation of exact metadata-correction commit** `546008eb49670276f9202a1cd2f173284d2327cc`:
+- [GitHub records workflow #39129219630](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39129219630): **SUCCESS**.
+- [GitHub demo-admit offline workflow #39129219623](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39129219623): **SUCCESS**: Windows Python 3.12 **158 passed**; Ubuntu Python 3.12 **157 passed, 1 Windows-only parser test skipped**. This runs the affected offline suite as well as general offline checks.
+- An additional **final exact-head run** occurs when this review-handoff metadata is committed. The authoritative final HEAD and validation links are recorded in [the PR #13 description](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/13) and its immutable final review comment after that run. This file cannot embed its own commit hash; do not misinterpret the correction-commit SHA as the final HEAD.
+
+**Integrity:** The v1.0 preregistration Git blob is still `3e6e0d19e70da5a02002615160e3f0c0a0367b77`, v1.1 preregistration Git blob `5210056f0a07faad9225e24228392f43090c5561`. The v1.2 prospective substantive method, JSON preregistration, run-window template, implementation and tests are unchanged. No order-submission veto, Policy A, E1/P1, risk gate, calendar rule, capture condition or authorizing control was modified. **STOP at the final v1.2 successor DESIGN-ONLY owner approval boundary.** No merges, VPS access, MT5 actions, broker capture or demo/live trading were performed.
