@@ -129,13 +129,13 @@ def evaluate_quote_coverage(
             successor = indexed.get(timestamp + horizon * 1000)
             if successor is None:
                 continue
-            # Only a pair entirely contained in the same 10-minute block
-            # meets that block's horizon-specific coverage requirement.
-            if (timestamp + horizon * 1000 - start_ms) // (10 * 60 * 1000) != bucket:
-                continue
+            # All observed eligible pairs contribute to the worst quote
+            # move, including pairs crossing a 10-minute bin boundary.
             later_bid, later_ask = successor
             maxima[horizon] = max(maxima[horizon], later_ask - ask, bid - later_bid)
-            qualified[horizon].add(bucket)
+            # Only within-bin pairs qualify the coverage of that bin.
+            if (timestamp + horizon * 1000 - start_ms) // (10 * 60 * 1000) == bucket:
+                qualified[horizon].add(bucket)
     if any(len(qualified[h]) != 24 for h in (1, 5, 30)):
         raise QuoteCoverageError("insufficient true tick pairs in 10-minute blocks")
 
