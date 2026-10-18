@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prepare separate prospective v1.2 Option A successor with baseline non-event overlap current cost and broader full-window/stress-event stressed cost, pre-demo quote-slippage proxy floor, flat-before-overlap/session-end rule and no rollover/overnight. Complete independent offline adversarial tests. Stop for owner exact-head successor design approval; no VPS, broker capture, GitHub merge, config change, demo/live trades.",
+  "next_substantive_action": "Review exact-head draft PR13 prospective v1.2 Option A method and all Windows/Linux adversarial offline CI. Owner final approval of successor PREREG DESIGN ONLY is the next genuine boundary. No merge/VPS/MT5/execution toggle/capture/demo-live order authority. After final design owner approval, independently preregister actual Exness-XAUUSD-and-Event-Guard-qualified UTC 4h/overlap regime, then obtain another separate VPS read-only capture approval.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -349,6 +349,24 @@
       "demo_orders": false,
       "live_trading": false
     },
-    "next_gate": "PREPARE_SOURCE_PINNED_V1_2_PREREG_AND_ADVERSARIAL_OFFLINE_TESTS; PRESENT_EXACT_SHA_FOR_OWNER_FINAL_SUCCESSOR_DESIGN_APPROVAL; STOP"
+    "next_gate": "PREPARE_SOURCE_PINNED_V1_2_PREREG_AND_ADVERSARIAL_OFFLINE_TESTS; PRESENT_EXACT_SHA_FOR_OWNER_FINAL_SUCCESSOR_DESIGN_APPROVAL; STOP",
+    "successor_preparation_status": "SEPARATE_V1_2_SOURCE_AND_SYNTHETIC_TESTS_PREPARED_FINAL_OWNER_APPROVAL_PENDING",
+    "successor_preregistration": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_2_OPTION_A_SAFETY_2026-10-18.json",
+    "successor_method": "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_2_OPTION_A_SAFETY_2026-10-18.md",
+    "run_window_template": "phase0/roadmap/DEMO_V12_OPTION_A_RUN_WINDOW_TEMPLATE_UNREGISTERED_2026-10-18.json",
+    "owner_handoff": "phase0/roadmap/DEMO_V12_OPTION_A_OWNER_APPROVAL_HANDOFF_2026-10-18.md",
+    "draft_pr13": {
+      "number": 13,
+      "branch": "research/demo-v12-option-a-safety-prereg-20261018",
+      "parent_pr12_head": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+      "status": "DRAFT_UNMERGED",
+      "exact_head": "SEE_GITHUB_PR_AND_TOP_LEVEL_FINAL_COMMENT"
+    },
+    "current_cost_scope_tested_offline": "STRICT_NON_EVENT_ENTRY_ELIGIBLE_OVERLAP",
+    "stressed_cost_scope_tested_offline": "ENTIRE_4H_OBSERVATION_PLUS_EXTERNAL_EVENT_STRESS_SOURCE",
+    "broker_fees_numeric_admitted": false,
+    "pre_demo_slippage_numeric_admitted": false,
+    "flat_lifecycle_owner_attended_live_drill_passed": false,
+    "no_actual_broker_ticks_seen": true
   }
 }
