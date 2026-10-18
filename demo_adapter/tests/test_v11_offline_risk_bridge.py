@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import copy
 import hashlib
-from datetime import UTC, datetime
 from typing import Any
 
 import pytest
@@ -20,7 +19,7 @@ def _identity() -> str:
 
 
 def bundle() -> dict[str, dict[str, Any]]:
-    t = "2026-10-18T10:00:00Z"
+    t = "2026-10-19T14:00:00Z"
     return {
         "account": {
             "observed_utc": t, "company": "Exness Technologies Ltd",
@@ -45,8 +44,8 @@ def bundle() -> dict[str, dict[str, Any]]:
             "observed_utc": t, "positions": [], "orders": [],
             "journal_status": "RECONCILED", "period_boundary_status": "RECONCILED",
             "complete_trade_attribution": True,
-            "day_boundary_utc": "2026-10-18T00:00:00Z",
-            "week_boundary_utc": "2026-10-12T00:00:00Z",
+            "day_boundary_utc": "2026-10-19T00:00:00Z",
+            "week_boundary_utc": "2026-10-19T00:00:00Z",
             "inception_utc": "2026-09-01T00:00:00Z",
             "day_start_equity_usd": "10000", "day_external_flows_usd": "0",
             "week_start_equity_usd": "10000", "week_external_flows_usd": "0",
@@ -129,7 +128,7 @@ def test_missing_period_or_unreconciled_history_fails() -> None:
     ("symbol", "trade_freeze_level", "-1"),
     ("symbol", "tick_value_loss_per_lot_usd", None),
     ("tick", "bid", "2000.70"),
-    ("tick", "tick_utc", "2026-10-18T09:59:54Z"),
+    ("tick", "tick_utc", "2026-10-19T13:59:54Z"),
     ("guard", "event", "UNKNOWN"),
     ("guard", "admitted_spread_ceiling_price", "0.01"),
     ("costs", "scope", "LIVE"),
@@ -147,7 +146,7 @@ def test_fail_closed_broker_accounting_market_component(
 
 def test_same_epoch_time_skew_prevents_mixed_state() -> None:
     data = bundle()
-    data["ledger"]["observed_utc"] = "2026-10-18T09:59:57Z"
+    data["ledger"]["observed_utc"] = "2026-10-19T13:59:57Z"
     with pytest.raises(CaptureSafetyError, match="mixed epoch"):
         review(data)
 
