@@ -164,7 +164,7 @@ def test_windows_powershell_v12_collector_and_verifier_parse_only() -> None:
             "[ref]$tokens,[ref]$errors)|Out-Null;"
             "if($errors.Count -ne 0){$errors|Out-String|Write-Host;exit 91}"
         )
-        result = subprocess.run(
+        result = subprocess.run(  # noqa: S603 (fixed trusted PowerShell parser only)
             [shell, "-NoProfile", "-NonInteractive", "-Command", ps],
             capture_output=True, text=True, timeout=20, check=False,
             env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
