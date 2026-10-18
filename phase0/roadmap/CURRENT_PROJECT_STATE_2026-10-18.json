@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Owner exact-head review of draft PR #8 (do not merge without approval); then offline prepare/test isolated PowerShell 5.1-compatible read-only evidence collector and obtain separate approval before any VPS capture. Numeric demo cost admission and full Policy A gap corrections remain blocked.",
+  "next_substantive_action": "Review documented PR8 duration comparison; obtain owner design-only decision on retaining v1.0 multi-day evidence vs replacing prospectively with separately versioned restricted-session v1.1 before capture. No PR merge, VPS capture, trading enablement, demo action or relaxation of full Policy A controls.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -123,5 +123,19 @@
     "vps_accessed": false,
     "broker_actions": 0,
     "external_python_trading": "DISABLED_UNCHANGED_AS_LAST_VERIFIED"
+  },
+  "calibration_duration_critical_review_2026_10_18": {
+    "status": "RECOMMEND_REVISION_BEFORE_MERGE_NOT_ADOPTED",
+    "document": "phase0/roadmap/DEMO_ADMIT_CALIBRATION_DURATION_CRITICAL_REVIEW_2026-10-18.md",
+    "assessed_pr8_head": "b3252410140fb1202e03582811629d4a85954010",
+    "original_preregistration": "V1_5_MARKET_DAYS_3_ROLLOVERS_1_WEEKLY_REOPEN_UNCHANGED",
+    "recommendation": "EVALUATE_V1_1_RESTRICTED_LIQUID_SESSION_DEMO_ONLY",
+    "proposed_evidence_minimum": "ONE_CONTIGUOUS_4_HOUR_LIQUID_ELIGIBLE_WINDOW_WITH_STRICT_PROVENANCE_COVERAGE_AND_UNKNOWN_REJECTION",
+    "scope_expansion": "BLOCKED_UNTIL_FRESH_PROSPECTIVE_EVIDENCE",
+    "policy_a_cash_risk_binding": "UNWAIVED_PRE_ACTION_BLOCKER",
+    "mandatory_numeric_source_calibration": "NOT_ADMITTED",
+    "rollover_reopen_trading": "BLOCKED_WITHOUT_SEPARATE_PROSPECTIVE_BOUNDARY_EVIDENCE_AND_APPROVAL",
+    "owner_design_acceptance": "PENDING",
+    "broker_and_vps_actions": "NONE"
   }
 }
