@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import importlib
 import json
-import os
 import sys
 import time
 from dataclasses import asdict
@@ -22,7 +21,11 @@ from typing import Any
 
 from scripts.v11_capture_orchestrator import rehearse_orchestrator
 from scripts.v11_readonly_collector import (
-    CaptureSafetyError, WindowContract, _identity_and_zero, _market, _timestamp,
+    CaptureSafetyError,
+    WindowContract,
+    _identity_and_zero,
+    _market,
+    _timestamp,
 )
 from scripts.v11_windows_mt5_readonly_host import BoundReadOnlyMT5, _private_write
 
@@ -78,7 +81,9 @@ def _preregistered(record: dict[str, Any], owner_run_id: str) -> WindowContract:
         "risk_source_sha256", "read_only_core_source_sha256",
     ):
         if not _hex(record.get(required)):
-            raise CaptureSafetyError("unverified official/broker/implementation source: " + required)
+            raise CaptureSafetyError(
+                "unverified official/broker/implementation source: " + required
+            )
     if record.get("source_origin_review_is_not_hash_authentication") is not True:
         raise CaptureSafetyError("source-origin verification disclaimer missing")
     if (record.get("real_window_prospective_frozen") is not True
@@ -160,7 +165,8 @@ def main(argv: list[str] | None = None) -> int:
     x = p.parse_args(argv)
     if sys.platform != "win32":
         raise CaptureSafetyError("Windows read-only scope only")
-    if not _hex(x.host_sha256) or hashlib.sha256(Path(__file__).read_bytes()).hexdigest() != x.host_sha256:
+    host_digest = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    if not _hex(x.host_sha256) or host_digest != x.host_sha256:
         raise CaptureSafetyError("host source not independently pinned")
     record = _read_verified(x.registration, x.registration_sha256)
     contract = _preregistered(record, x.owner_run_id)
