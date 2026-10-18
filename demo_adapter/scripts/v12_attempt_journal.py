@@ -13,9 +13,10 @@ import argparse
 import hashlib
 import json
 import os
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 INITIAL_CHAIN = "0" * 64
 _SUCCESS = "COMPLETED_RAW_NOT_ADMITTED"
