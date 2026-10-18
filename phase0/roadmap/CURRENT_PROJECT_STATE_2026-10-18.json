@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Await explicit owner option A/B/C selection for new prospective v1.1 successor session-scope registration. Option A recommended keeps a four-hour verified liquid-market observation but allows any future demo entry ONLY in separately evidenced London-New York overlap; require complete independently verified XAUUSD schedule/UTC DST/official Event Guard before an exact run and separate VPS read-only capture approval. Do not merge, access VPS, enable broker Python trading, or arm demo based on offline CI.",
+  "next_substantive_action": "Prepare separate prospective v1.2 Option A successor with baseline non-event overlap current cost and broader full-window/stress-event stressed cost, pre-demo quote-slippage proxy floor, flat-before-overlap/session-end rule and no rollover/overnight. Complete independent offline adversarial tests. Stop for owner exact-head successor design approval; no VPS, broker capture, GitHub merge, config change, demo/live trades.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -271,7 +271,7 @@
     "option_A_recommended": "4H_BROKER_LIQUID_OBSERVATION_INCLUDES_CENTER_OVERLAP_BUT_DEMO_ENTRY_ONLY_WITHIN_OVERLAP",
     "option_B": "SHORTEN_OBSERVATION_TO_OVERLAP_ONLY_SUBJECT_TO_SUFFICIENCY",
     "option_C": "PRESERVE_LITERAL_V11_FULL_4H_OVERLAP_AND_REMAIN_BLOCKED",
-    "selected_option": null,
+    "selected_option": "OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS_NOT_FINAL_SUCCESSOR_ADMISSION",
     "owner_option_adopted": false,
     "numeric_calibration_admitted": false,
     "capture_window_registered": false,
@@ -279,6 +279,76 @@
     "demonstration_activation_authorized": false,
     "runtime_cash_risk_submission_veto": "QUARANTINE_BEFORE_ORDER_CHECK_AND_SEND",
     "historical_v10_blob": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
-    "safe_changes_only": "REVIEW_AND_SYNTHETIC_OFFLINE_MATH"
+    "safe_changes_only": "REVIEW_AND_SYNTHETIC_OFFLINE_MATH",
+    "owner_option_a_in_principle_decision_recorded_later": true
+  },
+  "owner_option_a_safety_refinements_2026_10_18": {
+    "decision": "APPROVE_OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS",
+    "decision_authority": "PROSPECTIVE_DESIGN_AND_REGISTRATION_PREPARATION_ONLY",
+    "owner_successor_final_preregistration_approval": false,
+    "reconciled_before_update": {
+      "main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+      "draft_pr_heads": {
+        "8": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+        "9": "6e5f32b771d511c670bbb348f0dd0fb427412fd5",
+        "10": "81ee6286fd2a3da528bed5c397ed816a103c1566",
+        "11": "5da628e9410c08467009cff1a8cdfe4440f0f414",
+        "12": "b03e1ba3ee2434744010ac8bdf37904ba19df730"
+      },
+      "all_draft_unmerged": true
+    },
+    "preparation_branch": "research/demo-v12-option-a-safety-prereg-20261018",
+    "base_pr12_sha": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+    "new_successor_version": "v1.2_OPTION_A_SUCCESSOR_PROSPECTIVE",
+    "historical_v10_blob_sha": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "v10_unchanged": true,
+    "v11_unchanged": true,
+    "observation": {
+      "duration_minutes": 240,
+      "contiguous": true,
+      "entire_window_broker_xauusd_eligible_source_backed": true,
+      "specific_utc_start": null,
+      "specific_utc_end": null,
+      "illustrative_1230_to_1630_is_not_selected": true
+    },
+    "entry": {
+      "allowed_regime": "INDEPENDENTLY_VERIFIED_NON_EVENT_LONDON_NY_OVERLAP_ONLY",
+      "event_shock_unknown_rejected": true,
+      "session_broker_dst_holiday_guard_sources_required": true,
+      "broker_date_schedule_sha": null,
+      "calendar_guard_sha": null
+    },
+    "current_adverse_cost_scope": "ONLY_VERIFIED_NON_EVENT_ENTRY_ELIGIBLE_OBSERVATIONS_INSIDE_ADMITTED_OVERLAP",
+    "stressed_adverse_cost_scope": "CONSERVATIVE_BROADER_FULL_4H_PLUS_RELEVANT_INDEPENDENT_STRESS_EVENT_EVIDENCE_WITH_PROVENANCE",
+    "numerical_costs": {
+      "current": null,
+      "stressed": null,
+      "quote_move_not_execution_slippage": true,
+      "predemo_slippage": "PROSPECTIVELY_DEFINED_CONSERVATIVE_PROXY_FLOOR_NOT_MEASURED_FILL",
+      "later_demo_execution_slippage": "SEPARATELY_AUTHORIZED_MEASURE_AND_REVIEW",
+      "double_count_control_required": true
+    },
+    "lifecycle": {
+      "flat_before_session_window_end": true,
+      "owned_positions_and_pending_orders_reconciled": true,
+      "planned_exit_and_attended_supervision_required": true,
+      "overnight_or_rollover_holding_allowed": false,
+      "unexpected_or_unknown_exposure": "QUARANTINE_HUMAN_ONLY_E1_NO_AUTOMATIC_UNKNOWN_CLOSE"
+    },
+    "full_policy_a": "FROZEN_UNWAIVED",
+    "v1_lots_cap": "0.01",
+    "m1_stressed_and_current_controls": "MANDATORY",
+    "existing_kill_reconciliation": "UNCHANGED",
+    "runtime_submission_veto": "HARD_QUARANTINE_BEFORE_ORDER_CHECK_OR_SEND",
+    "authorization": {
+      "merge_pr12_or_successor": false,
+      "vps_access": false,
+      "real_broker_market_capture": false,
+      "mt5_change": false,
+      "enable_external_python_trading": false,
+      "demo_orders": false,
+      "live_trading": false
+    },
+    "next_gate": "PREPARE_SOURCE_PINNED_V1_2_PREREG_AND_ADVERSARIAL_OFFLINE_TESTS; PRESENT_EXACT_SHA_FOR_OWNER_FINAL_SUCCESSOR_DESIGN_APPROVAL; STOP"
   }
 }
