@@ -27,6 +27,7 @@ $files = @(
     "demo_adapter\scripts\v11_capture_orchestrator.py",
     "demo_adapter\scripts\v11_quote_coverage.py",
     "demo_adapter\scripts\v11_offline_risk_bridge.py",
+    "demo_adapter\scripts\v11_windows_mt5_readonly_host.py",
     "src\xauusd_agent\risk\full_policy_a.py"
 )
 $blocked = @(
