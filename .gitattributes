@@ -8,3 +8,5 @@ demo_adapter/scripts/v11_capture_orchestrator.py text eol=lf
 demo_adapter/scripts/v11_quote_coverage.py text eol=lf
 demo_adapter/scripts/v11_readonly_collector.py text eol=lf
 demo_adapter/scripts/v11_windows_mt5_readonly_host.py text eol=lf
+demo_adapter/scripts/v12_attempt_journal.py text eol=lf
+demo_adapter/scripts/v12_journaled_readonly_port.py text eol=lf
