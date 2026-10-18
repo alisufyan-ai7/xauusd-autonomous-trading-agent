@@ -115,6 +115,7 @@ def replay_full_policy_a(
     _require(type(proposal) is dict, "candidate record must be canonical")
 
     now = _utc(proposal.get("decision_utc"), "candidate decision")
+    _require(now.weekday() < 5, "weekend/reopen regime not independently eligible")
     for name, record in records.items():
         source_time = _utc(record.get("observed_utc"), name + " observed")
         _require(timedelta(0) <= now - source_time <= timedelta(seconds=2),
