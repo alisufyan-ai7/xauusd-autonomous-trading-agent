@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Continue ONLY owner-independent offline design/implementation: source-root/capture manifest validation, immutable method binding, full 4h versus overlap cohorts and flat-before-session cutoff review; run independent synthetic Windows/Linux CI. No actual date-specific broker capture, source-admitted calibration, VPS, MT5 actions, trading, or PR merge absent separate explicit approval.",
+  "next_substantive_action": "Offline build and test one PowerShell 5.1 read-only collector + independent verifier with exact source SHA and private immutable output; source-check official Exness/US agency schedules. If date-specific broker XAUUSD session, raw official hashes or Event Guard unknown, FAIL CLOSED and STOP; provide missing evidence and no runnable first-capture command.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -413,5 +413,30 @@
     "demonstration_admit_pass": false,
     "runtime_order_submission_veto": "UNCHANGED_HARD_QUARANTINE",
     "historical_failures_unchanged": true
+  },
+  "v12_readonly_evidence_phase_2026_10_19": {
+    "owner_decision": "APPROVED_PREPARATION_AND_CONTROLLED_V1_2_READ_ONLY_EVIDENCE_PHASE_NOT_TRADING",
+    "authority_scope": "OWNER_INDEPENDENT_OFFICIAL_SOURCE_RESEARCH_PROSPECTIVE_REGISTRATION_DRAFT_WINDOWS_COLLECTOR_AND_VERIFIER_OFFLINE_TESTS; STOP_BEFORE_FIRST_REAL_VPS_RUN_FOR_FINAL_EXECUTION_CONFIRMATION",
+    "parent_pr14_sha": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
+    "immutable_pr13_design_sha": "847829378956670e8936bf46c82e685de41145fd",
+    "approved_v12_prereg_git_blob": "c7dcf520fe2a3b12437cec6a1b5dd06c25494d5f",
+    "child_branch": "implementation/demo-v12-readonly-vps-prep-20261019",
+    "official_public_sources_independently_reviewed": "PARTIAL_NAVIGATION_ONLY_NEED_CANONICAL_SOURCE_BYTES_AND_DYNAMIC_EXNESS_XAUUSD_INSTRUMENT_DATE_SCHEDULE",
+    "public_source_origin_snapshot_sha256_status": "NOT_AVAILABLE_FROM_READ_ONLY_WEB_SNAPSHOTS_NOT_AUTHENTICATED_RAW_BYTES",
+    "required_broker_fee_symbol_quote_conversion_stress_source": "UNVERIFIED_NO_MT5_READ_YET",
+    "exact_four_hour_utc_window": null,
+    "exact_entry_overlap_utc": null,
+    "collector_ps_sha256": null,
+    "independent_verifier_ps_sha256": null,
+    "private_destination": "NOT_YET_PINNED_TO_EXISTING_PRIVATE_VPS_DIRECTORY",
+    "first_actual_vps_capture_executed": false,
+    "first_actual_vps_capture_final_confirmation_required": true,
+    "order_execution_permit": false,
+    "external_python_trading_enabled": false,
+    "merge_permit": false,
+    "demo_live_order_modification_or_cancel_or_close": false,
+    "preserved_pcr3_and_existing_tasks": true,
+    "next_stop": "BEFORE_FIRST_ACTUAL_VPS_READ_ONLY_CAPTURE_EXECUTION__REQUIRE_PINNED_SOURCE_HASHES_EXACT_WINDOW_COLLECTOR_VERIFIER_HASHES_PRIVATE_PATH_AND_OWNER_CONFIRMATION",
+    "comment": "Do not reword this read-only-phase approval as blanket permission for unregistered VPS access or unknown source capture."
   }
 }
