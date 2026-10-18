@@ -135,23 +135,30 @@ def test_daily_at_75_pass_and_75_01_fail() -> None:
 
 
 def test_weekly_and_drawdown_boundaries() -> None:
-    base = good(equity_usd=d("9875"), balance_usd=d("9875"),
-                free_margin_usd=d("9875"),
-                day_start_equity_usd=d("9875"),
-                week_start_equity_usd=d("10000"),
-                normalized_high_water_usd=d("9875"))
+    # A 9875 equity also LOWERS the independent 0.25% trade cap to 24.68:
+    # choose a $24 plan, not $25, so the period-limit boundary is isolated.
+    base = good(
+        stop_adverse=d("1979.20"), equity_usd=d("9875"),
+        balance_usd=d("9875"), free_margin_usd=d("9875"),
+        day_start_equity_usd=d("9875"),
+        week_start_equity_usd=d("10001"),
+        normalized_high_water_usd=d("9875"),
+    )
+    assert evaluate_full_policy_a(base).l_plan == d("24.00")
     assert evaluate_full_policy_a(base).week_prospective == d("150")
     assert evaluate_full_policy_a(base).mathematics_pass
-    check(replace(base, week_start_equity_usd=d("10000.01")),
+    check(replace(base, week_start_equity_usd=d("10001.01")),
           "POLICY_A_WEEKLY_LOSS_USD")
-    dd_base = good(equity_usd=d("9725"), balance_usd=d("9725"),
-                   free_margin_usd=d("9725"),
-                   day_start_equity_usd=d("9725"),
-                   week_start_equity_usd=d("9725"),
-                   normalized_high_water_usd=d("10200"))
+    dd_base = good(
+        stop_adverse=d("1979.20"), equity_usd=d("9725"),
+        balance_usd=d("9725"), free_margin_usd=d("9725"),
+        day_start_equity_usd=d("9725"),
+        week_start_equity_usd=d("9725"),
+        normalized_high_water_usd=d("10201"),
+    )
     assert evaluate_full_policy_a(dd_base).drawdown_prospective == d("500")
     assert evaluate_full_policy_a(dd_base).mathematics_pass
-    check(replace(dd_base, normalized_high_water_usd=d("10200.01")),
+    check(replace(dd_base, normalized_high_water_usd=d("10201.01")),
           "POLICY_A_DRAWDOWN_USD")
 
 
