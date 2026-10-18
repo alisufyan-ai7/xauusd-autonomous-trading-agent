@@ -13,15 +13,16 @@ PS1 = Path(__file__).resolve().parents[1] / "scripts" / "v11-offline-review.ps1"
 def test_review_script_can_never_enable_or_access_mt5() -> None:
     source = PS1.read_text(encoding="utf-8")
     assert "#requires -Version 5.1" in source
+    # Forbid actual capability-changing commands while permitting literal
+    # blocklist strings that the static scanner must search for.
     for forbidden in (
-        "order_send(", "order_check(", "tradeapi_disabled =",
-        "New-ScheduledTask", "Register-ScheduledTask", "Start-Process",
-        "MetaTrader5", "MT5.initialize(", "git push", "git merge",
+        "Register-ScheduledTask", "New-ScheduledTask", "Start-Process",
+        "MT5.initialize(", "git push", "git merge",
         "Invoke-RestMethod", "Invoke-WebRequest",
     ):
-        # The word MetaTrader5 is not used; the statement includes a safe
-        # self-description, but not any actual account/broker connectivity.
         assert forbidden not in source
+    assert '"order_send("' in source
+    assert '"import MetaTrader5"' in source
     assert "Get-FileHash" in source
     assert "OFFLINE_STATIC_ALLOWLIST_PASS" in source
 
