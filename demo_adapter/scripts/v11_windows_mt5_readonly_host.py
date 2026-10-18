@@ -27,7 +27,7 @@ from scripts.v11_readonly_collector import (
     _identity_and_zero,
 )
 
-APPROVAL_TOKEN = "OWNER_APPROVED_READ_ONLY_XAUUSD_V11_CAPTURE"
+CAPTURE_MODE_CONFIRMATION = "OWNER_APPROVED_READ_ONLY_XAUUSD_V11_CAPTURE"
 SCOPED_PLATFORM = "win32"
 
 
@@ -89,7 +89,7 @@ def _read_registration(
         raise CaptureSafetyError("run registration is not JSON") from exc
     if not isinstance(record, dict):
         raise CaptureSafetyError("invalid run registration root")
-    if record.get("owner_capture_decision") != APPROVAL_TOKEN:
+    if record.get("owner_capture_decision") != CAPTURE_MODE_CONFIRMATION:
         raise CaptureSafetyError("run has no explicit separate owner decision")
     if record.get("output_scope") != "PRIVATE_LOCAL_EXNESS_DEMO_ONLY":
         raise CaptureSafetyError("private output scope not registered")
@@ -135,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # This intentionally requires a future *specific* authorization. No
     # binary can independently tell whether the owner actually granted it.
-    if args.separate_owner_approval != APPROVAL_TOKEN:
+    if args.separate_owner_approval != CAPTURE_MODE_CONFIRMATION:
         raise CaptureSafetyError("separate owner capture approval not supplied")
     if sys.platform != SCOPED_PLATFORM:
         raise CaptureSafetyError("real MT5 read-only host is Windows-only")
