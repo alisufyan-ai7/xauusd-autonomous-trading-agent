@@ -111,7 +111,7 @@ def evaluate_quote_coverage(
     # about future market microstructure.
     if times[0] - start_ms > 5000 or end_ms - times[-1] > 5000:
         raise QuoteCoverageError("uncovered starting or ending tick interval")
-    if any(b - a > 5000 for a, b in zip(times, times[1:])):
+    if any(b - a > 5000 for a, b in zip(times, times[1:], strict=False)):
         raise QuoteCoverageError("unclassified tick gap above five seconds")
 
     maxima = {1: Decimal(0), 5: Decimal(0), 30: Decimal(0)}
