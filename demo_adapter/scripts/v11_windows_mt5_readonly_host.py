@@ -91,7 +91,7 @@ def _read_registration(
         raise CaptureSafetyError("invalid run registration root")
     if record.get("owner_capture_decision") != APPROVAL_TOKEN:
         raise CaptureSafetyError("run has no explicit separate owner decision")
-    if record.get("output_scope") != "PRIVATE_LOCAL_EXXESS_DEMO_ONLY":
+    if record.get("output_scope") != "PRIVATE_LOCAL_EXNESS_DEMO_ONLY":
         raise CaptureSafetyError("private output scope not registered")
     contract = WindowContract.from_record(record)
     if contract.start_utc.weekday() >= 5:
