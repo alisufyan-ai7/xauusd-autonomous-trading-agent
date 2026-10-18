@@ -1,0 +1,69 @@
+{
+  "schema_version": "xauusd-demo-calibration-owner-decision-1.0",
+  "recorded_date_local": "2026-10-18",
+  "timezone": "Asia/Karachi",
+  "source": "OWNER_EXPLICIT_CHAT_DECISION_2026-10-18",
+  "type": "METHOD_SELECTION_ONLY",
+  "decision": "ADOPT_RESTRICTED_SESSION_DEMO_ADMIT_CALIBRATION_V1_1",
+  "status": "ACCEPTED_DESIGN_ONLY_NOT_NUMERIC_ADMISSION",
+  "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+  "reviewed_pr8_head": "68f2dcbdd9dac8a6bdfda76fd2a562a4a21f4aea",
+  "preserved_v1_0": {
+    "path": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json",
+    "original_blob_sha": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "historical_status": "REGISTERED_METHOD_ONLY_NO_CALIBRATION_ADMITTED",
+    "initial_demo_admit_selection": "NOT_SELECTED",
+    "permitted_mutation": "NONE",
+    "historical_evidence_reclassified": false
+  },
+  "selected_v1_1": {
+    "path": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+    "selection": "SELECTED_DESIGN_FOR_PROSPECTIVE_INITIAL_DEMO_ADMIT",
+    "scope": "DEMO_LIFECYCLE_ONLY",
+    "observation_target": "ONE_QUALIFYING_CONTIGUOUS_4_HOUR_LIQUID_SESSION",
+    "four_hours_statistical_confidence_claim": false,
+    "exact_capture_utc_window": "REQUIRES_RUN_SPECIFIC_REGISTRATION_BEFORE_CAPTURE",
+    "supported_entry_conditions_only": true,
+    "out_of_scope": [
+      "ROLLOVER",
+      "WEEKLY_REOPEN",
+      "ILLIQUID_SESSION",
+      "HIGH_IMPACT_EVENT",
+      "SHOCK_OR_UNKNOWN",
+      "HOLIDAY_OR_SESSION_BOUNDARY",
+      "UNSUPPORTED_STATE"
+    ],
+    "missing_cost_or_provenance": "FAIL_CLOSED_COLLECT_MORE_PROSPECTIVELY"
+  },
+  "unchanged_hard_blocks": [
+    "FULL_POLICY_A_PER_TRADE_USD_LOSS_TO_STOP_BUDGET",
+    "FULL_POLICY_A_CONCURRENT_DAILY_WEEKLY_DRAWDOWN_AND_STREAK",
+    "V1_VOLUME_MAX_0_01",
+    "M1_CURRENT_AND_STRESSED_MARGIN_REQUIREMENTS",
+    "VERIFIED_SPREAD_SLIPPAGE_PROXY_GAP_COMMISSION_SWAP_USD_CONVERSION",
+    "EXACT_DECIMAL_AND_IMMUTABLE_SHA256_PROVENANCE",
+    "FRESH_BROKER_IDENTITY_ZERO_EXPOSURE_AND_RUNTIME_GUARDS",
+    "DURABLE_KILLED_QUARANTINED_CONTROLS",
+    "NO_AUTOMATED_UNKNOWN_EXPOSURE_CLOSURE"
+  ],
+  "authority_not_granted": [
+    "MERGE_PR_8",
+    "VPS_ACCESS_OR_MUTATION",
+    "BROKER_SOURCE_CAPTURE",
+    "MT5_EXTERNAL_PYTHON_ENABLEMENT",
+    "APC_DEMO_ACTIVATION",
+    "ACTIVATION_PERMIT",
+    "ORDER_CHECK_OR_SEND",
+    "DEMO_OR_LIVE_TRADING"
+  ],
+  "historical_failures_preserved": [
+    "G0_05_R4_FAIL",
+    "G0_07_R34_FAIL_CLOSED",
+    "G0_07_R35_FAIL_CLOSED",
+    "DUKASCOPY_R3_FAIL_CLOSED",
+    "PCR3_QUARANTINED",
+    "DEMO_STAGING_R0_R1_FAIL_CLOSED"
+  ],
+  "numeric_calibration_admitted": false,
+  "demo_admit_pass": false
+}
