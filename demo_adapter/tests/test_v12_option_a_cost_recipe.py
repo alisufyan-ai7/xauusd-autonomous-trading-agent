@@ -21,7 +21,10 @@ OVERLAP_START = START + timedelta(hours=1)
 OVERLAP_END = END
 
 
-def sample() -> tuple[tuple[MinuteAdverseQuote, ...], tuple[ExternalEventStressQuote, ...], OptionAComponentProof]:
+def sample() -> tuple[
+    tuple[MinuteAdverseQuote, ...], tuple[ExternalEventStressQuote, ...],
+    OptionAComponentProof,
+]:
     quotes = tuple(
         MinuteAdverseQuote(
             minute_index=i, timestamp_utc=START + timedelta(minutes=i),
