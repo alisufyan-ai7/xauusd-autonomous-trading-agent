@@ -394,3 +394,16 @@ Also inspect PR #5 and PR #6 and all commits after this file's recorded main bef
 - Dukascopy R3 `FAIL_CLOSED` and earlier PCR-3 `QUARANTINED` remain preserved. PCR-3 execution-disabled release, shared VPS worktree, XAUUSD scheduled task, other tasks and all broker state were **not touched** in this GitHub preparation step.
 - **Next controlled action:** after owner exact-head review of PR #8, prepare and independently check a Windows PowerShell 5.1-compatible, statically allow-listed *read-only* XAUUSD collector in an isolated path, then request separate specific owner VPS-capture approval. No script/VPS run is authorized by PR #8; the numeric admission decision and successor implementation are later distinct gates.
 
+
+
+## 18. Critical review of PR #8 duration — recommendation only (2026-10-18)
+
+After a new exact GitHub reconciliation, draft PR #8's fixed `5 distinct market days + 3 rollover boundaries + 1 weekly reopening` was found to be a **candidate research-coverage choice**, not a frozen DEMO-ADMIT or Policy A entry criterion. A rigorous restricted-session DEMO-only alternative may reduce waiting by restricting trade entry to predeclared, liquid, owner-attended windows, not by assuming missing costs are zero or weakening Risk Governor limits.
+
+The complete comparative review is `phase0/roadmap/DEMO_ADMIT_CALIBRATION_DURATION_CRITICAL_REVIEW_2026-10-18.md` in draft PR #8. It recommends evaluating a `v1.1_RESTRICTED_SESSION_PROPOSED` registration with a prospectively defined contiguous 4-hour eligible window, explicit sampling/gap/fee/swap/source evidence, strict unknown/boundary bans and unchanged risk-buffer/Decimal/hash/provenance rules. This is a design recommendation **not selected, accepted, registered as the active replacement or admitted**. The original v1.0 five-day preregistration is preserved unchanged and remains the only currently written preregistration; no capture has begun.
+
+**Non-negotiable prerequisite:** correct the complete Policy A cash-risk binding for stop-loss USD planned loss, concurrent/daily/weekly/drawdown/streak, V1/M1, snapshot freshness and fail-closed unknown exposure **before any broker action**. A shorter quote sample cannot validate execution slippage or guarantee actual stop-loss fills. Position exposure may persist beyond an entry session, so supervised monitoring and explicitly authorized exit/emergency plans are required before any demo activation.
+
+**Status:** PR #8 draft and unmerged; `main` remains `ccaa8338aecee8bd3afbc358644410dff6c512e5`; no VPS access/changes, MT5 execution enablement, permit or broker action was made by this review.
+
+**Next owner decision needed (design only):** whether to select a prospectively frozen limited-session v1.1 method, or retain five-day/boundary coverage. Do **not request merge** until the method selection and revised exact-head review are completed. Each subsequent PR merge, VPS capture, staging and APC-DEMO action is independently gated.
