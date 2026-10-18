@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Check exact-head draft PR11. Resolve full 4-hour London-NY-overlap versus Exness market-centre 3h discrepancy with instrument-specific official evidence; date-specific DST/holiday/event guard and excluded BLS releases. If none qualifies, request new prospective owner session-window decision. Independently qualify broker-accounting-fee/FX source hashes before requesting separately approved VPS read-only window capture. Never merge or enable demo trading from passing offline tests.",
+  "next_substantive_action": "Await explicit owner option A/B/C selection for new prospective v1.1 successor session-scope registration. Option A recommended keeps a four-hour verified liquid-market observation but allows any future demo entry ONLY in separately evidenced London-New York overlap; require complete independently verified XAUUSD schedule/UTC DST/official Event Guard before an exact run and separate VPS read-only capture approval. Do not merge, access VPS, enable broker Python trading, or arm demo based on offline CI.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -235,5 +235,50 @@
     "no_external_python_trading_enablement": true,
     "all_prs_unmerged": true,
     "handoff": "phase0/roadmap/DEMO_V11_TICK_SOURCE_WINDOW_HANDOFF_2026-10-18.md"
+  },
+  "session_feasibility_owner_options_2026_10_18": {
+    "selected_v11_method_unchanged": true,
+    "status": "PUBLISHED_CENTER_TABLE_FULL_4H_OVERLAP_INFEASIBLE_OWNER_METHOD_CHOICE_REQUIRED",
+    "parent_pr11_head": "5da628e9410c08467009cff1a8cdfe4440f0f414",
+    "pr12": {
+      "number": 12,
+      "status": "DRAFT_UNMERGED",
+      "branch": "research/demo-v11-session-eligibility-option-review-20261018",
+      "head_sha": null,
+      "base_pr11_head": "5da628e9410c08467009cff1a8cdfe4440f0f414"
+    },
+    "source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+    "summer_overlap_utc": [
+      "13:30",
+      "16:30"
+    ],
+    "summer_overlap_minutes": 180,
+    "winter_overlap_utc": [
+      "14:30",
+      "16:30"
+    ],
+    "winter_overlap_minutes": 120,
+    "generic_center_hours_not_xauusd_instrument_specific": true,
+    "exact_broker_xauusd_schedule_sha256": null,
+    "calendar_event_guard_healthy_verified": false,
+    "documented_events_utc": [
+      "2026-10-20T12:30:00Z CENSUS_NEW_RESIDENTIAL_CONSTRUCTION",
+      "2026-10-20T14:00:00Z BLS_STATE_EMPLOYMENT",
+      "2026-10-22T12:30:00Z DOL_WEEKLY_CLAIMS_RECURRING_UNVERIFIED_EVENT_GUARD"
+    ],
+    "options_file": "phase0/roadmap/DEMO_V11_SESSION_SCOPE_OWNER_OPTIONS_2026-10-18.json",
+    "feasibility_review": "phase0/roadmap/DEMO_V11_SESSION_FEASIBILITY_OWNER_DECISION_REVIEW_2026-10-18.md",
+    "option_A_recommended": "4H_BROKER_LIQUID_OBSERVATION_INCLUDES_CENTER_OVERLAP_BUT_DEMO_ENTRY_ONLY_WITHIN_OVERLAP",
+    "option_B": "SHORTEN_OBSERVATION_TO_OVERLAP_ONLY_SUBJECT_TO_SUFFICIENCY",
+    "option_C": "PRESERVE_LITERAL_V11_FULL_4H_OVERLAP_AND_REMAIN_BLOCKED",
+    "selected_option": null,
+    "owner_option_adopted": false,
+    "numeric_calibration_admitted": false,
+    "capture_window_registered": false,
+    "data_capture_authorized": false,
+    "demonstration_activation_authorized": false,
+    "runtime_cash_risk_submission_veto": "QUARANTINE_BEFORE_ORDER_CHECK_AND_SEND",
+    "historical_v10_blob": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "safe_changes_only": "REVIEW_AND_SYNTHETIC_OFFLINE_MATH"
   }
 }
