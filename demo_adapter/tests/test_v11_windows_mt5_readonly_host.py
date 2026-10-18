@@ -10,8 +10,8 @@ from typing import Any
 
 import pytest
 
-from scripts.v11_readonly_collector import CaptureSafetyError
 from scripts import v11_windows_mt5_readonly_host as host
+from scripts.v11_readonly_collector import CaptureSafetyError
 
 
 def document() -> dict[str, Any]:
