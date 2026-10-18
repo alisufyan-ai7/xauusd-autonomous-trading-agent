@@ -130,6 +130,8 @@ def evaluate_quote_coverage(
         bid, ask = quote(tick)
         if tick.timestamp_ms < last_ms:
             raise QuoteCoverageError("source order not monotonic by time_msc")
+        if last_ms == tick.timestamp_ms and last_ordinal < 0:
+            raise QuoteCoverageError("duplicate-millisecond prior source sequence unknown")
         if (
             require_source_ordinal or last_ms == tick.timestamp_ms
         ) and (type(tick.source_ordinal) is not int
