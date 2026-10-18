@@ -125,8 +125,11 @@ def test_unclassified_source_gap_never_interpolated(
     full: tuple[list[QuoteSample], list[QuoteSample]],
 ) -> None:
     polls, ticks = full
-    bad = [t for t in ticks if not BASE_MS + 100000 <= t.timestamp_ms <
-           BASE_MS + 110000]
+    # Build an internally consistent stream whose original source genuinely
+    # observed no ticks for 10 seconds; reindex its synthetic source ordinals.
+    missing = [t for t in ticks if not BASE_MS + 100000 <= t.timestamp_ms <
+               BASE_MS + 110000]
+    bad = [replace(t, source_ordinal=i) for i, t in enumerate(missing)]
     with pytest.raises(QuoteCoverageError, match="gap"):
         check(polls, bad)
 
