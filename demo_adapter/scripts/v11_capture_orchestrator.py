@@ -110,6 +110,8 @@ def rehearse_orchestrator(
         # Do not silently replace unknown broker trading disablement or
         # network disconnection with a positive preflight assumption.
         terminal = port.terminal_info()
+        if hasattr(terminal, "_asdict"):
+            terminal = terminal._asdict()
         if (terminal is None or not isinstance(terminal, dict)
                 or terminal.get("tradeapi_disabled") is not True
                 or terminal.get("connected") is not True):
