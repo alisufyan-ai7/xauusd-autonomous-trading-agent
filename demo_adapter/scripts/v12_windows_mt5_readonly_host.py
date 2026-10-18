@@ -28,6 +28,8 @@ from scripts.v11_readonly_collector import (
     _timestamp,
 )
 from scripts.v11_windows_mt5_readonly_host import BoundReadOnlyMT5, _private_write
+from scripts.v12_attempt_journal import AttemptJournal, attempt_path
+from scripts.v12_journaled_readonly_port import JournaledReadOnlyPort
 
 DESIGN_SHA = "847829378956670e8936bf46c82e685de41145fd"
 PREP_SHA = "9d768fcfd160b3ccfc92ecef44fe040da6b77db6"
@@ -95,7 +97,7 @@ def _preregistered(record: dict[str, Any], owner_run_id: str) -> WindowContract:
     return contract
 
 
-def _summary(port: BoundReadOnlyMT5, expected_sha: str) -> dict[str, Any]:
+def _summary(port: Any, expected_sha: str) -> dict[str, Any]:
     identity = _identity_and_zero(port, expected_sha)
     account = port.account_info()
     symbol = port.symbol_info("XAUUSD")
@@ -177,12 +179,25 @@ def main(argv: list[str] | None = None) -> int:
     now = datetime.now(UTC)
     if not timedelta(0) <= contract.start_utc - now <= timedelta(minutes=5):
         raise CaptureSafetyError("run outside separately approved five-minute prewindow")
-    # Call path explicitly, NO login/password/server inputs or configuration.
-    mt5 = importlib.import_module("MetaTrader5")
-    if not bool(mt5.initialize(str(x.terminal_path))):
-        raise CaptureSafetyError("MT5 read-only attach failed")
+    # Persist the attempt BEFORE MT5 import/initialize. The filename is
+    # deterministic per frozen registration. A failed or killed attempt cannot
+    # be replaced or retried under this exact registration, even if owner
+    # supplies another output filename in the same pinned private directory.
+    journal_path = attempt_path(x.private_output.parent, x.registration_sha256)
+    journal = AttemptJournal(
+        journal_path, x.registration_sha256, "OWNER_GATED_V12_READ_ONLY",
+    )
+    mt5: Any = None
+    initialized = False
     try:
-        port = BoundReadOnlyMT5(mt5)
+        # Never select or log in to another broker account; the MT5 Python
+        # attach is permitted only with a separately pre-approved running
+        # terminal and exact disabled-trading mode.
+        mt5 = importlib.import_module("MetaTrader5")
+        if not bool(mt5.initialize(str(x.terminal_path))):
+            raise CaptureSafetyError("MT5 read-only attach failed")
+        initialized = True
+        port = JournaledReadOnlyPort(BoundReadOnlyMT5(mt5), journal)
         before = _summary(port, contract.expected_identity_sha256)
         _market(port)
         result = rehearse_orchestrator(
@@ -194,6 +209,7 @@ def main(argv: list[str] | None = None) -> int:
             "status": "RAW_PRIVATE_READ_ONLY_NOT_CALIBRATION_OR_EXECUTION",
             "registration_sha256": x.registration_sha256,
             "host_sha256": x.host_sha256,
+            "attempt_journal_file": journal_path.name,
             "window_start_utc": contract.start_utc.isoformat(),
             "window_end_utc": contract.end_utc.isoformat(),
             "v12_overlap_start_utc": record["v12_overlap_start_utc"],
@@ -212,11 +228,30 @@ def main(argv: list[str] | None = None) -> int:
             "order_actions": 0,
         }
         digest = _private_write(x.private_output, raw)
+        # The wrapper is never re-used for trading or position mutation.
+        # Shutdown the Python attachment before marking the run complete.
+        mt5.shutdown()
+        initialized = False
+        journal.success(digest)
         print("PRIVATE_RAW_SHA256=" + digest)
+        print("PRIVATE_ATTEMPT_JOURNAL=" + journal_path.name)
         print("READ_ONLY_RAW_EVIDENCE_ONLY_NOT_CALIBRATION_ADMITTED")
         return 0
+    except BaseException as exc:
+        try:
+            journal.failed(type(exc).__name__)
+        except BaseException:
+            # The independent verifier treats a missing final terminal event
+            # or truncated line as INCOMPLETE_FAIL_CLOSED. No auto retry.
+            pass
+        raise
     finally:
-        mt5.shutdown()
+        if initialized and mt5 is not None:
+            try:
+                mt5.shutdown()
+            except BaseException:
+                pass
+        journal.close()
 
 
 if __name__ == "__main__":
