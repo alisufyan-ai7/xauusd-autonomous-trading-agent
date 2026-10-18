@@ -146,6 +146,9 @@ def rehearse_orchestrator(
         for entry in observed:
             try:
                 stamp = int(entry["time_msc"])
+                time_seconds = int(entry["time"])
+                if stamp // 1000 != time_seconds:
+                    raise CaptureSafetyError("MT5 time/time_msc crosscheck mismatch")
                 # Preserve source row order, timestamp and MT5 flags.
                 # Same-millisecond rows are distinct observations.
                 bid = str(entry["bid"])
