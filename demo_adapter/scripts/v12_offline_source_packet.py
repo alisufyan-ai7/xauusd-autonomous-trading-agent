@@ -12,7 +12,8 @@ import hashlib
 import json
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 APPROVED_PR13_SHA = "847829378956670e8936bf46c82e685de41145fd"
 APPROVED_PARENT_PR12_SHA = "b03e1ba3ee2434744010ac8bdf37904ba19df730"
