@@ -1,0 +1,60 @@
+{
+  "schema": "DEMO_V12_READ_ONLY_EVIDENCE_PINNED_SOURCE_HASHES_2026_10_19",
+  "status": "REVIEWED_CODE_HASHES_ONLY_NEVER_OWNER_RUN_PERMIT",
+  "sha256_scope": "EXACT_UTF8_LF_FILE_BYTES_AS_STORED_IN_GITHUB; VERIFY_WITH_Get-FileHash_SHA256_ON_WINDOWS_BEFORE_RUN",
+  "derived_method": "Independent deterministic SHA-256 over downloaded GitHub UTF-8 file content; SHA256 implementation validated by SHA256('abc') standard known-answer vector. Must re-check with native Windows Get-FileHash before first execution.",
+  "owner_approved_design_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+  "offline_preflight_pr14_sha": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
+  "files": [
+    {
+      "path": "demo_adapter/scripts/v12-readonly-collector.ps1",
+      "sha256": "03d8e7cdaa5cbf8de79f9b20327548a060f5e0feb809509a87ffd224c3f67222",
+      "git_blob_sha1": "d66e19aae79012b347af760034af37c88177c1f3",
+      "role": "SINGLE_POWERSHELL_5_1_ENTRYPOINT_FUTURE_RUN"
+    },
+    {
+      "path": "demo_adapter/scripts/v12-readonly-verifier.ps1",
+      "sha256": "a808c47d4668038161400d8a8444d63d1edb67f9920225974a052993025772a7",
+      "git_blob_sha1": "09b4acd23e8519e235aadb50d9d9f585ede5c35e",
+      "role": "INDEPENDENT_READ_ONLY_PRIVATE_RAW_INTEGRITY_VERIFIER"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_windows_mt5_readonly_host.py",
+      "sha256": "fd2dac266bdb1083d0dcb062b95d279abd3cbf1d1938cb0c8109ecdddcfd2687",
+      "git_blob_sha1": "76c633ec415cafd1000a05ee78a7cb4ada569f8f",
+      "role": "ISOLATED_OWNER_GATED_MT5_READ_ONLY_HOST_NO_ORDER_CAPABILITIES"
+    },
+    {
+      "path": "demo_adapter/scripts/v11_capture_orchestrator.py",
+      "sha256": "e4e95785e2669589abfb25f7cf07075631fd646c0aeef6ad38d381634faf09df",
+      "git_blob_sha1": "e7b403fb871dce83b03720e763c7e8cdf54311bf",
+      "role": "FROZEN_4H_POLLING_AND_TRUE_TICK_RANGE_CORE"
+    },
+    {
+      "path": "demo_adapter/scripts/v11_quote_coverage.py",
+      "sha256": "6b5e71b628dfeacc04ae7d750cf6ae942a2ce2bd4bbcfe1149f397dbc8045dad",
+      "git_blob_sha1": "6e8ce6743fa275d52dbcaa6774aa2756195fdb99",
+      "role": "FROZEN_TRUE_TICK_SEQUENCE_COVERAGE"
+    },
+    {
+      "path": "demo_adapter/scripts/v11_readonly_collector.py",
+      "sha256": "ca81f62362d56b74fb7f4b9ab5768f44913498da3a4dc861fbad0d8824d6833d",
+      "git_blob_sha1": "895357bce8349dceb87a799060ad1c45e445b6c0",
+      "role": "FROZEN_ACCOUNT_FINGERPRINT_AND_ZERO_EXPOSURE_GUARDS"
+    },
+    {
+      "path": "demo_adapter/scripts/v11_windows_mt5_readonly_host.py",
+      "sha256": "e41fdb1e08c331a0c49a8f260ce247162647ae4cfd0cd56989e0936674ce2ca7",
+      "git_blob_sha1": "ce44f09fc2821aeda13a9d63eb5858f839d95949",
+      "role": "FROZEN_BOUNDED_READ_ONLY_PORT_AND_PRIVATE_CREATE_EXCLUSIVE"
+    }
+  ],
+  "real_broker_and_official_sources_sha256_verified": false,
+  "official_exness_date_specific_xauusd_sha256": null,
+  "event_guard_health_for_window_sha256": null,
+  "exact_utc_capture_window": null,
+  "independent_first_actual_execution_approval_id": null,
+  "private_vps_output_path": null,
+  "callers_must_check_sha_from_native_checkout": true,
+  "no_execution_trading_permit": true
+}
