@@ -22,7 +22,6 @@ from xauusd_agent.risk.full_policy_a import (
 from scripts.v11_readonly_collector import CaptureSafetyError
 
 SEGMENTS = ("account", "symbol", "tick", "ledger", "costs", "guard")
-EXPECTED_FINGERPRINT = "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91"
 
 
 def _canonical(value: object) -> bytes:
@@ -79,6 +78,7 @@ def _require(condition: bool, error: str) -> None:
 def replay_full_policy_a(
     bundle: Mapping[str, Any],
     independent_pins: Mapping[str, str],
+    expected_fingerprint_sha256: str,
 ) -> FullPolicyAResult:
     """Derive cash risk from *synthetic replay* records without trusting booleans.
 
@@ -86,6 +86,10 @@ def replay_full_policy_a(
     for authenticated broker, history, Event Guard or account-specific costs.
     Any validation failure RAISES, never creates an admission/permit.
     """
+    _require(type(expected_fingerprint_sha256) is str
+             and len(expected_fingerprint_sha256) == 64
+             and all(ch in "0123456789abcdef" for ch in expected_fingerprint_sha256),
+             "invalid independently pinned account fingerprint")
     _require(set(bundle) == set(SEGMENTS) | {"candidate"},
              "bundle segments missing/unknown")
     _require(set(independent_pins) == set(SEGMENTS),
@@ -128,7 +132,7 @@ def replay_full_policy_a(
     fp = hashlib.sha256(
         f"{account['company']}|{account['server']}|{login}|USD".encode()
     ).hexdigest()
-    _require(fp == EXPECTED_FINGERPRINT, "demo fingerprint mismatch")
+    _require(fp == expected_fingerprint_sha256, "demo fingerprint mismatch")
 
     _require(symbol.get("symbol") == "XAUUSD"
              and tick.get("symbol") == "XAUUSD"
