@@ -2,7 +2,7 @@
   "schema_version": "current-project-state-1.0",
   "as_of_date": "2026-10-18",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
-  "authoritative_main_sha": "33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf",
+  "authoritative_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
   "source_of_truth": "GITHUB",
   "active_focus": "DEMO_ADMIT",
   "pcr3": {
@@ -64,7 +64,7 @@
   },
   "current_blocker": {
     "name": "DEMO_LIFECYCLE_ADVERSE_COST_CALIBRATION",
-    "status": "NOT_YET_ADMITTED",
+    "status": "NOT_ADMITTED",
     "required_fields": [
       "current_adverse_cost",
       "stressed_adverse_cost"
@@ -76,7 +76,16 @@
       "hash-bound",
       "no silent zero substitution",
       "no promotion to real-money evidence"
-    ]
+    ],
+    "additional_blockers": [
+      "FULL_POLICY_A_STOP_LOSS_USD_CAP_NOT_ENFORCED_IN_DEMO_RISK_BINDING",
+      "RUNTIME_QUOTE_FRESHNESS_AND_SPREAD_GATES_MISSING",
+      "MISSING_STOP_DISTANCE_METADATA_DEFAULTS_TO_ZERO",
+      "CALIBRATION_SOURCE_PROVENANCE_NOT_INDEPENDENTLY_ADMITTED"
+    ],
+    "current_adverse_cost": null,
+    "stressed_adverse_cost": null,
+    "admitted_calibration_sha256": null
   },
   "authorization": {
     "external_python_trading": "NOT_AUTHORIZED",
@@ -85,5 +94,34 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prospectively register and obtain source-backed demo-lifecycle-only adverse-cost calibration evidence while broker execution remains disabled."
+  "next_substantive_action": "Owner exact-head review of draft PR #8 (do not merge without approval); then offline prepare/test isolated PowerShell 5.1-compatible read-only evidence collector and obtain separate approval before any VPS capture. Numeric demo cost admission and full Policy A gap corrections remain blocked.",
+  "pr7": {
+    "status": "MERGED",
+    "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
+    "merge_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5"
+  },
+  "pr8": {
+    "number": 8,
+    "status": "DRAFT_UNMERGED",
+    "branch": "research/demo-admit-adverse-cost-prereg-20261018",
+    "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "scope": "PROSPECTIVE_DEMO_LIFECYCLE_CALIBRATION_METHOD_AND_STATIC_RISK_GAP_REVIEW",
+    "authorization": "NONE_FOR_CAPTURE_VPS_MERGE_OR_BROKER",
+    "files": [
+      "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json",
+      "phase0/roadmap/DEMO_LIFECYCLE_ADVERSE_COST_METHOD_2026-10-18.md",
+      "phase0/roadmap/DEMO_ADMIT_RISK_GAP_REVIEW_2026-10-18.md"
+    ]
+  },
+  "last_github_reconciliation": {
+    "date_local": "2026-10-18",
+    "main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "pr5": "MERGED",
+    "pr6": "MERGED",
+    "pr7": "MERGED",
+    "pr8": "DRAFT_UNMERGED",
+    "vps_accessed": false,
+    "broker_actions": 0,
+    "external_python_trading": "DISABLED_UNCHANGED_AS_LAST_VERIFIED"
+  }
 }
