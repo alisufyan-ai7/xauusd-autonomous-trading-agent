@@ -309,6 +309,20 @@ class DemoMT5Adapter:
             )
             raise
 
+        # HARD FAIL CLOSED until an independently reviewed runtime source supplies
+        # complete full Policy A cash-risk inputs (true stop-loss USD, period
+        # cashflows, day/week/inception baselines, committed risk and freshness).
+        # The earlier V1/M1 evaluation is NECESSARY BUT NOT SUFFICIENT.
+        # No caller-supplied Boolean or synthetic FullPolicyAInput can override
+        # the missing broker-authoritative reconciliation source.
+        self._control.quarantine(
+            reason="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED",
+            now=effective_now,
+        )
+        raise DemoSafetyError(
+            "full Policy A broker-reconciled USD cash-risk binding is not admitted"
+        )
+
         check = self._mt5.order_check(mt5_request)
         if check is None:
             raise DemoSafetyError(f"order_check failed: {self._mt5.last_error()}")
