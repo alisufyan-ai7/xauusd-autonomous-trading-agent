@@ -241,16 +241,16 @@ def main(argv: list[str] | None = None) -> int:
         try:
             journal.failed(type(exc).__name__)
         except BaseException:
-            # The independent verifier treats a missing final terminal event
-            # or truncated line as INCOMPLETE_FAIL_CLOSED. No auto retry.
-            pass
+            # Missing final record classifies INCOMPLETE_FAIL_CLOSED.
+            # Do not reveal untrusted broker exception contents.
+            print("FAIL_CLOSED_JOURNAL_TERMINATION_INCOMPLETE", file=sys.stderr)
         raise
     finally:
         if initialized and mt5 is not None:
             try:
                 mt5.shutdown()
             except BaseException:
-                pass
+                print("FAIL_CLOSED_MT5_SHUTDOWN_UNCONFIRMED", file=sys.stderr)
         journal.close()
 
 
