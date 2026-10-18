@@ -49,9 +49,7 @@ def test_current_scope_cannot_include_observation_only_stress() -> None:
 def test_slippage_is_proxy_floor_only_and_later_demo_measurement_is_separate() -> None:
     reg = _read(REGISTRATION)
     sl = reg["slippage"]
-    assert sl["pre_demo_execution_slippage_measured"] if (
-        "pre_demo_execution_slippage_measured" in sl
-    ) else not sl["no_quote_move_masquerading_as_realized_slippage"] is False
+    assert sl["no_quote_move_masquerading_as_realized_slippage"] is True
     assert sl["pinned_allowance_usd"] is None
     assert sl["pinned_allowance_proof_sha256"] is None
     assert "QUOTE_PROXY" in sl["registration_kind"]
@@ -66,7 +64,6 @@ def test_flat_before_entry_session_end_no_rollover_and_no_auto_close() -> None:
     assert entry["known_owned_positions_must_be_broker_confirmed_closed"] is True
     assert "EARLIER" in entry["flat_by"]
     assert "NO_AUTOMATIC_UNKNOWN_EXPOSURE" in entry["if_not_flat_or_unknown"]
-    assert reg["policy_a_unchanged"]["owner_human_only_emergency"] if False else True
     assert reg["policy_a_unchanged"]["human_only_emergency"] == "E1"
 
 
