@@ -47,7 +47,7 @@ def test_missing_one_minute_block_fails(
 ) -> None:
     polls, ticks = complete
     no_minute = [x for x in polls
-                 if not START_MS + 700000 <= x.timestamp_ms < START_MS + 760000]
+                 if not START_MS + 720000 <= x.timestamp_ms < START_MS + 780000]
     with pytest.raises(QuoteCoverageError, match="completeness|coverage"):
         evaluate_quote_coverage(START, END, no_minute, ticks)
 
