@@ -232,14 +232,19 @@ def evaluate_full_policy_a(data: FullPolicyAInput) -> FullPolicyAResult:
 
         cur_equity = data.equity_usd - data.m1_current_adverse_cost_usd
         cur_used = data.margin_used_usd + data.incremental_margin_usd
-        cur_free = (data.free_margin_usd - data.m1_current_adverse_cost_usd
-                    - data.incremental_margin_usd)
+        cur_free = min(
+            data.free_margin_usd - data.m1_current_adverse_cost_usd
+            - data.incremental_margin_usd,
+            cur_equity - cur_used,
+        )
         stress_equity = data.equity_usd - data.m1_stressed_adverse_cost_usd
         stress_used = (data.margin_used_usd +
                        STRESS_MARGIN_MULTIPLIER * data.incremental_margin_usd)
-        stress_free = (data.free_margin_usd -
-                       data.m1_stressed_adverse_cost_usd -
-                       STRESS_MARGIN_MULTIPLIER * data.incremental_margin_usd)
+        stress_free = min(
+            data.free_margin_usd - data.m1_stressed_adverse_cost_usd
+            - STRESS_MARGIN_MULTIPLIER * data.incremental_margin_usd,
+            stress_equity - stress_used,
+        )
         cur_level = (cur_equity / cur_used * 100) if cur_used > 0 else None
         stress_level = (stress_equity / stress_used * 100) if stress_used > 0 else None
         if (cur_equity <= 0 or cur_free < 0
