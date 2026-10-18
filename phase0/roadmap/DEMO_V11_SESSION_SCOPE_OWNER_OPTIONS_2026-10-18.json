@@ -1,0 +1,148 @@
+{
+  "schema_version": "demo-v11-session-scope-owner-options-1.0",
+  "review_utc_date": "2026-10-18",
+  "state": "OFFLINE_REVIEW_PROPOSALS_ONLY_NO_CHANGE_TO_SELECTED_V1_1",
+  "parent_pr11_head": "5da628e9410c08467009cff1a8cdfe4440f0f414",
+  "adopted_v1_1_preregistration": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+  "adopted_v1_1_changed": false,
+  "original_v1_0_blob_sha_immutable": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+  "public_generic_center_reference": {
+    "source_url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+    "published_page_reported_updated": "2026-09-29",
+    "time_zone": "UTC+0",
+    "summer": {
+      "london": [
+        "08:00",
+        "16:30"
+      ],
+      "new_york": [
+        "13:30",
+        "20:00"
+      ],
+      "intersection": [
+        "13:30",
+        "16:30"
+      ],
+      "overlap_minutes": 180
+    },
+    "winter": {
+      "london": [
+        "08:00",
+        "16:30"
+      ],
+      "new_york": [
+        "14:30",
+        "21:00"
+      ],
+      "intersection": [
+        "14:30",
+        "16:30"
+      ],
+      "overlap_minutes": 120
+    },
+    "interpretation": "GENERIC_TRADING_CENTER_TABLE_NOT_XAUUSD_INSTRUMENT_SPECIFIC_NOT_LIQUIDITY_OR_EXECUTION_GUARANTEE",
+    "exact_date_specific_broker_xauusd_schedule_verified": false,
+    "live_event_guard_healthy_verified": false,
+    "actual_source_snapshot_sha256": null
+  },
+  "option_A": {
+    "name": "4H_OBSERVATION_SUPERSET_WITH_ONLY_STRICT_OVERLAP_DEMO_ENTRIES",
+    "status": "RECOMMENDED_OWNER_DECISION_REQUIRED",
+    "proposed_scope": "Prospectively register contiguous 4h fully eligible liquid XAUUSD source collection where 3h in summer or 2h in winter lies within independently verified published London-NY center overlap; the remainder is separately verified eligible liquid London-only (or another specifically accepted) observation regime",
+    "reference_summer_observation_utc": [
+      "12:30",
+      "16:30"
+    ],
+    "reference_summer_trade_entry_utc": [
+      "13:30",
+      "16:30"
+    ],
+    "reference_winter_observation_utc": [
+      "12:30",
+      "16:30"
+    ],
+    "reference_winter_trade_entry_utc": [
+      "14:30",
+      "16:30"
+    ],
+    "treat_as_actual_qualified_window": false,
+    "minimum_4h_tick_and_poll_coverage_preserved": true,
+    "costs_scope": "MAX_ACROSS_ENTIRE_FOUR_HOURS_AS_ADVERSE_CONSERVATIVE_FLOOR; ENTRY_ONLY_IF_MARKET_STATE_SUPPORTED_WITHIN_VALIDATED_OVERLAP",
+    "no_trading_in_observation_only_segment": true,
+    "future_overnight_position_risk_not_inferred_to_zero": true,
+    "source_hashes_event_guard_and_actual_ticks_mandatory": true,
+    "mandatory_policy_a_unchanged": true,
+    "requires_new_versioned_owner_approved_preregistration": true
+  },
+  "option_B": {
+    "name": "SHORTEN_EVIDENCE_TARGET_TO_FULL_VERIFIED_OVERLAP_ONLY",
+    "status": "ALTERNATE_OWNER_DECISION_REQUIRED",
+    "summer_target_minutes": 180,
+    "winter_target_minutes": 120,
+    "reason": "FULL_4H_IN_PUBLIC_OVERLAP_CANNOT_BE_MET_MECHANICALLY",
+    "reduced_duration_is_stronger_confidence_claim": false,
+    "all_costs_source_and_full_policy_a_unchanged": true,
+    "conditional_more_evidence_if_any_component_missing": true,
+    "requires_new_versioned_owner_approved_preregistration": true
+  },
+  "option_C": {
+    "name": "RETAIN_EXISTING_LITERAL_FULL_FOUR_HOUR_OVERLAP",
+    "status": "FAIL_CLOSED_PENDING_SUPERSEDING_EVIDENCE",
+    "can_meet_generic_published_center_table": false,
+    "action": "NO_CAPTURES_OR_APPROVALS_ON_ASSUMPTION; WAIT_FOR_INSTRUMENT_SPECIFIC_AUTHORITATIVE_PROOF_OR_OWNER_NEW_DESIGN",
+    "owner_method_not_automatically_changed": true
+  },
+  "known_event_candidates": [
+    {
+      "date": "2026-10-20",
+      "time_utc": "12:30",
+      "source": "https://www.census.gov/construction/soc/schedule.html",
+      "name": "US Census New Residential Construction",
+      "relation": "CONFLICTS_WITH_REFERENCE_12_30_TO_16_30_OBSERVATION",
+      "event_guard_impact": "UNVERIFIED"
+    },
+    {
+      "date": "2026-10-20",
+      "time_utc": "14:00",
+      "source": "https://www.bls.gov/schedule/2026/10_sched_list.htm",
+      "name": "BLS State Employment and Unemployment",
+      "relation": "WITHIN_REFERENCE_OVERLAP",
+      "event_guard_impact": "UNVERIFIED"
+    },
+    {
+      "date": "2026-10-22",
+      "time_utc": "12:30",
+      "source": "https://www.dol.gov/ui/data.pdf",
+      "name": "Recurring US DOL unemployment insurance weekly claims — Thursday US summer 8:30 ET",
+      "relation": "AT_REFERENCE_12_30_START",
+      "event_guard_impact": "UNVERIFIED_CONFIRMED_RECURRING_SCHEDULE_NOT_DATE_SPECIFIC_AGENCY_SNAPSHOT"
+    },
+    {
+      "date": "2026-10-28",
+      "time_utc": "18:00",
+      "source": "https://www.federalreserve.gov/newsevents/2026-october.htm",
+      "name": "FOMC meeting communication at 14:00 US Eastern",
+      "relation": "OUTSIDE_GENERIC_SUMMER_12_30_TO_16_30_REFERENCE_BUT_OTHER_FOMC_RELATED_BLOCKS_UNKNOWN",
+      "event_guard_impact": "UNVERIFIED"
+    }
+  ],
+  "exact_future_window_start_utc": null,
+  "exact_future_window_end_utc": null,
+  "independent_source_hashes": {
+    "broker": null,
+    "official_sessions": null,
+    "official_events": null,
+    "fees": null,
+    "collector": null,
+    "guard": null
+  },
+  "current_adverse_cost": null,
+  "stressed_adverse_cost": null,
+  "selected_option": null,
+  "owner_scope_decision_record": null,
+  "broker_vps_capture_authorized": false,
+  "MT5_external_python_trading_enablement_authorized": false,
+  "trade_authorized": false,
+  "merge_authorized": false,
+  "immutable_failures_unchanged": true
+}
