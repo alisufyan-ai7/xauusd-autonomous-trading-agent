@@ -11,6 +11,7 @@ param(
     [Parameter(Mandatory=$true)][string]$ExpectedCollectorSHA256,
     [Parameter(Mandatory=$true)][string]$ExpectedVerifierSHA256,
     [Parameter(Mandatory=$true)][string]$ExpectedHostSHA256,
+    [Parameter(Mandatory=$true)][string]$ExpectedJournalModuleSHA256,
     [Parameter(Mandatory=$true)][string]$PrivateRawPath,
     [Parameter(Mandatory=$true)][string]$ExpectedRawSHA256
 )
@@ -39,6 +40,7 @@ Assert-Pinned $script $ExpectedVerifierSHA256 "REVIEWED_VERIFIER"
 Assert-Pinned (Join-Path $PSScriptRoot "v12-readonly-collector.ps1") $ExpectedCollectorSHA256 "REVIEWED_COLLECTOR"
 Assert-Pinned (Join-Path $PSScriptRoot "v12_windows_mt5_readonly_host.py") $ExpectedHostSHA256 "REVIEWED_HOST"
 Assert-Pinned $RegistrationPath $RegistrationSHA256 "APPROVED_REGISTRATION"
+Assert-Pinned (Join-Path $PSScriptRoot "v12_attempt_journal.py") $ExpectedJournalModuleSHA256 "IMMUTABLE_ATTEMPT_VERIFIER_MODULE"
 Assert-Pinned $PrivateRawPath $ExpectedRawSHA256 "PRIVATE_BROKER_RAW_EVIDENCE"
 if ([IO.Path]::GetFullPath($PrivateRawPath).StartsWith(
     $root + [IO.Path]::DirectorySeparatorChar,
@@ -51,6 +53,7 @@ if ($r.approved_pr13_design_sha -cne "847829378956670e8936bf46c82e685de41145fd" 
     $r.approved_pr14_evidence_sha -cne "9d768fcfd160b3ccfc92ecef44fe040da6b77db6" -or
     $r.collector_ps_sha256 -cne $ExpectedCollectorSHA256 -or
     $r.verifier_ps_sha256 -cne $ExpectedVerifierSHA256 -or
+    $r.attempt_journal_module_sha256 -cne $ExpectedJournalModuleSHA256 -or
     $e.registration_sha256 -cne $RegistrationSHA256 -or
     $e.host_sha256 -cne $ExpectedHostSHA256) {
     throw "LINEAGE_OR_FROZEN_REVIEW_SOURCE_MISMATCH"
@@ -98,6 +101,37 @@ foreach ($row in @($e.ticks)) {
         throw "RAW_TICK_FLAGS_ORDER_OR_UTC_BOUNDARY_INVALID"
     }
 }
+# Reconstruct the deterministic journal path from the original immutable
+# registration SHA; do not search alternate locations or pick a later attempt.
+$journal = Join-Path ([IO.Path]::GetDirectoryName(
+    [IO.Path]::GetFullPath($PrivateRawPath))) (
+    "v12-attempt-" + $RegistrationSHA256 + ".jsonl")
+if (-not [IO.File]::Exists($journal)) {
+    throw "MISSING_DURABLE_ATTEMPT_JOURNAL_NO_CALIBRATION"
+}
+$python = Join-Path $root ".venv\Scripts\python.exe"
+if (-not [IO.File]::Exists($python)) {
+    throw "PINNED_PYTHON_RUNTIME_ABSENT"
+}
+$previousDir = (Get-Location).Path
+$oldBytecode = $env:PYTHONDONTWRITEBYTECODE
+try {
+    $env:PYTHONDONTWRITEBYTECODE = "1"
+    Set-Location (Join-Path $root "demo_adapter")
+    & $python -B -m scripts.v12_attempt_journal --verify-only `
+        --journal $journal `
+        --registration-sha256 $RegistrationSHA256 `
+        --raw-sha256 $ExpectedRawSHA256
+    if ($LASTEXITCODE -ne 0) {
+        throw "FAIL_CLOSED_OR_INCOMPLETE_ATTEMPT_NOT_AN_ADMITTED_CAPTURE"
+    }
+}
+finally {
+    Set-Location $previousDir
+    $env:PYTHONDONTWRITEBYTECODE = $oldBytecode
+}
+Write-Output ("PRIVATE_ATTEMPT_JOURNAL_SHA256={0}" -f
+    (Get-FileHash -LiteralPath $journal -Algorithm SHA256).Hash.ToLowerInvariant())
 # No uploaded source is authentic merely because the record and hash agree.
 Write-Output ("PRIVATE_RAW_SHA256_VERIFIED={0}" -f $ExpectedRawSHA256)
 Write-Output ("TICKS_RETAINED={0} POLLS_RETAINED={1}" -f @($e.ticks).Count,@($e.polls).Count)
