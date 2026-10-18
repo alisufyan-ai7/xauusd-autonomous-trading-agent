@@ -32,6 +32,7 @@ $files = @(
     "demo_adapter\scripts\v12_option_a_cost_recipe.py",
     "demo_adapter\scripts\v12_option_a_flat_lifecycle.py",
     "demo_adapter\scripts\v12_offline_source_packet.py",
+    "demo_adapter\scripts\v12_windows_mt5_readonly_host.py",
     "demo_adapter\scripts\v11_session_scope_feasibility.py",
     "src\xauusd_agent\risk\full_policy_a.py"
 )
@@ -77,7 +78,8 @@ if ($RunSyntheticTests) {
             "tests/test_v12_option_a_cost_recipe.py",
             "tests/test_v12_option_a_flat_lifecycle.py",
             "tests/test_v12_option_a_preregistration.py",
-            "tests/test_v12_offline_source_packet.py"
+            "tests/test_v12_offline_source_packet.py",
+            "tests/test_v12_windows_readonly_capture_preparation.py"
         )
         & $python -m pytest -q $tests
         if ($LASTEXITCODE -ne 0) {
