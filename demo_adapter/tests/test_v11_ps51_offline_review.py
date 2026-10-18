@@ -37,7 +37,8 @@ def test_native_windows_powershell_parser_only() -> None:
         "if ($errors.Count -gt 0) { $errors | Out-String; exit 1 }"
     )
     completed = subprocess.run(  # noqa: S603
-        [str(Path(os.environ["SystemRoot"]) / "System32" / "WindowsPowerShell" / "v1.0" / "powershell.exe"),  # noqa: S607
+        [str(Path(os.environ["SystemRoot"]) / "System32"
+             / "WindowsPowerShell" / "v1.0" / "powershell.exe"),
          "-NoProfile", "-NonInteractive", "-Command", command],
         capture_output=True, text=True, timeout=20, check=False,
     )
