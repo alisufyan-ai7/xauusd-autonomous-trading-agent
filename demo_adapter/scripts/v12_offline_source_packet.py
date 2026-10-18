@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from collections.abc import Mapping
 from typing import Any
 
 APPROVED_PR13_SHA = "847829378956670e8936bf46c82e685de41145fd"
