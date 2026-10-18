@@ -511,7 +511,9 @@ def test_existing_exposure_quarantines_control(tmp_path: Path) -> None:
     assert mt5.send_calls == 0
 
 
-def test_successful_bounded_demo_submission_keeps_control_active(tmp_path: Path) -> None:
+def test_full_policy_cash_binding_not_admitted_quarantines_no_send(tmp_path: Path) -> None:
+    # The old synthetic successful-submission fixture is deliberately NOT a
+    # suitable Policy A cash-risk authority: no period/cash-flow/stop oracle.
     mt5 = FakeMT5()
     mt5.tradeapi_disabled = False
     order = request()
@@ -519,75 +521,44 @@ def test_successful_bounded_demo_submission_keeps_control_active(tmp_path: Path)
     with ledger(tmp_path) as book, control(tmp_path) as gate:
         arm(gate)
         adapter = DemoMT5Adapter(
-            identity(),
-            executable_policy(),
-            book,
-            control=gate,
-            module=mt5,
+            identity(), executable_policy(), book, control=gate, module=mt5,
         )
         adapter.initialize()
-        result = adapter.submit_market_order(
-            order,
-            confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
-            activation_permit=activation(),
-            risk_calibration=calibration(),
-            now=NOW,
-        )
-        adapter.close()
-        status = book.status(order.request_id)
-        gate_state = gate.snapshot().state
-
-    assert result["status"] == "ACKNOWLEDGED"
-    assert result["volume_lots"] == "0.01"
-    assert result["live_account_permitted"] is False
-    assert result["control_state"] == "ACTIVE"
-    assert status == "ACKNOWLEDGED"
-    assert gate_state is DemoControlState.ACTIVE
-    assert mt5.send_calls == 1
-
-
-def test_uncertain_submission_latches_ledger_and_quarantines_control(tmp_path: Path) -> None:
-    mt5 = FakeMT5()
-    mt5.tradeapi_disabled = False
-    mt5.return_none = True
-    first = request()
-
-    with ledger(tmp_path) as book, control(tmp_path) as gate:
-        arm(gate)
-        adapter = DemoMT5Adapter(
-            identity(),
-            executable_policy(),
-            book,
-            control=gate,
-            module=mt5,
-        )
-        adapter.initialize()
-
-        with pytest.raises(DemoSafetyError, match="uncertain"):
+        with pytest.raises(DemoSafetyError, match="full Policy A broker-reconciled"):
             adapter.submit_market_order(
-                first,
+                order,
                 confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
                 activation_permit=activation(),
                 risk_calibration=calibration(),
                 now=NOW,
             )
-
-        assert book.status(first.request_id) == "UNCERTAIN"
         assert gate.snapshot().state is DemoControlState.QUARANTINED
-
-        mt5.return_none = False
-        with pytest.raises(DemoSafetyError, match="not ACTIVE"):
-            adapter.submit_market_order(
-                request(),
-                confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
-                activation_permit=activation(),
-                risk_calibration=calibration(),
-                now=datetime(2026, 10, 18, 1, tzinfo=UTC),
-            )
-
+        assert book.status(order.request_id) is None
         adapter.close()
 
-    assert mt5.send_calls == 1
+    assert mt5.send_calls == 0
+
+
+def test_uncertain_ledger_fault_latches_quarantine_without_broker_call(
+    tmp_path: Path,
+) -> None:
+    # Preserve direct uncertain-outcome control regression while the actual
+    # broker submission path remains hard-denied for missing full Policy A.
+    mt5 = FakeMT5()
+    order = request()
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        adapter = DemoMT5Adapter(
+            identity(), executable_policy(), book, control=gate, module=mt5,
+        )
+        book.reserve(order, now=NOW)
+        adapter._mark_uncertain_and_quarantine(
+            request_id=order.request_id, detail="SYNTHETIC_UNCERTAIN",
+            now=NOW,
+        )
+        assert book.status(order.request_id) == "UNCERTAIN"
+        assert gate.snapshot().state is DemoControlState.QUARANTINED
+    assert mt5.send_calls == 0
 
 
 def test_kill_blocks_new_submission_before_broker_send(tmp_path: Path) -> None:
