@@ -63,8 +63,8 @@ def test_success_is_only_raw_complete_not_calibrated(
     journal, path = make(tmp_path)
     journal.append("POLL_QUOTE", {"ordinal": 0, "bid": "1", "ask": "2"})
     journal.success(RAW_SHA)
+    journal.failed("LATER_FABRICATED")  # closed journals ignore later failures
     with pytest.raises(AttemptJournalError, match="closed"):
-        journal.failed("LATER_FABRICATED")
         journal.append("POLL_QUOTE", {"ordinal": 1})
     journal.close()
     assert verify_attempt(path, REGISTRATION, RAW_SHA) == (
