@@ -1,18 +1,26 @@
-"""Strict OFFLINE coverage and quote-proxy calculator for v1.1.
+"""Prospectively frozen v1.1 quote-only tick protocol. No MT5 import.
 
-Accepts synthetic or later separately captured PRIVATE raw read-only samples.
-No MT5 import, credentials, network calls, broker capability, or admission.
-A measured quote proxy is not realized execution slippage.
+MT5 time_msc is UTC event time, and distinct records can share milliseconds.
+Arrival/source sequence is preserved; no deduplication, sorting, interpolation
+or retrospective selection. The observed worst quote move is not a fill bound.
 """
 from __future__ import annotations
 
+from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
+# Candidate engineering protocol v1.1-T1: frozen BEFORE broker capture.
+HORIZONS_SECONDS = (1, 5, 30)
+MATCH_TOLERANCE_MS = 250
+MAX_INTERTICK_GAP_MS = 5000
+TOTAL_EXPECTED_POLL_SLOTS = 2880
+MIN_POLL_COMPLETENESS = Decimal("0.99")
+
 
 class QuoteCoverageError(ValueError):
-    """No admitted source costs can be computed from inadequate coverage."""
+    """Missing/ambiguous evidence. Never return a cost admission."""
 
 
 @dataclass(frozen=True)
@@ -20,6 +28,8 @@ class QuoteSample:
     timestamp_ms: int
     bid: str
     ask: str
+    source_ordinal: int | None = None
+    flags: int | None = None
 
 
 @dataclass(frozen=True)
@@ -39,14 +49,14 @@ class QuoteCoverageResult:
 
 def _price(raw: str) -> Decimal:
     if type(raw) is not str:
-        raise QuoteCoverageError("raw price must be decimal string")
+        raise QuoteCoverageError("raw prices must be exact decimal strings")
     try:
-        price = Decimal(raw)
+        value = Decimal(raw)
     except Exception as exc:
-        raise QuoteCoverageError("bad raw decimal price") from exc
-    if not price.is_finite() or price <= 0:
-        raise QuoteCoverageError("unknown or nonpositive raw price")
-    return price
+        raise QuoteCoverageError("invalid raw quote") from exc
+    if not value.is_finite() or value <= 0:
+        raise QuoteCoverageError("missing or nonpositive quote")
+    return value
 
 
 def evaluate_quote_coverage(
@@ -54,99 +64,131 @@ def evaluate_quote_coverage(
     end_utc: datetime,
     polls: list[QuoteSample],
     ticks: list[QuoteSample],
+    *,
+    require_source_ordinal: bool = False,
 ) -> QuoteCoverageResult:
-    """Reject gaps instead of interpolating or ignoring unfavorable segments.
+    """Quote-only maxima with deterministic ±250 ms matching, no fallback.
 
-    All timestamps are UTC epoch milliseconds. The immutable accepted run
-    manifest and read-only source SHA must be authenticated by a separate
-    verifier; this function NEVER emits USD costs or an admission decision.
+    For each source tick at t and horizon h, consider *all* subsequent true
+    ticks with time_msc in [t+h-250ms, t+h+250ms], inclusive. Maximize adverse
+    ASK rise and BID decline separately over this full candidate set. A pair
+    qualifies a ten-minute bin only if both endpoints fall within the bin;
+    cross-bin pairs still contribute to global maxima. Equal-millisecond
+    source ticks are distinct if source ordinals prove preserved read order.
+    No midpoint, no as-of estimate, no crossing a >5-second unknown gap.
     """
-    if (start_utc.tzinfo is None or start_utc.utcoffset() != timedelta(0)
-            or end_utc - start_utc != timedelta(hours=4)):
+    if (
+        start_utc.tzinfo is None or end_utc.tzinfo is None
+        or start_utc.utcoffset() != timedelta(0)
+        or end_utc.utcoffset() != timedelta(0)
+        or end_utc - start_utc != timedelta(hours=4)
+    ):
         raise QuoteCoverageError("expected exact four-hour UTC registration")
     start_ms = int(start_utc.astimezone(UTC).timestamp() * 1000)
     end_ms = int(end_utc.astimezone(UTC).timestamp() * 1000)
-    total_slots = 2880
-    poll_slots: set[int] = set()
-    minute_bins: set[int] = set()
-    spread_max = Decimal(0)
+    slots: set[int] = set()
+    minutes: set[int] = set()
+    max_spread = Decimal(0)
 
-    def parsed(sample: QuoteSample) -> tuple[Decimal, Decimal]:
-        if type(sample.timestamp_ms) is not int:
-            raise QuoteCoverageError("event timestamp not a true integer millis")
-        if not start_ms <= sample.timestamp_ms < end_ms:
-            raise QuoteCoverageError("quote outside prospectively registered window")
-        bid, ask = _price(sample.bid), _price(sample.ask)
+    def quote(record: QuoteSample) -> tuple[Decimal, Decimal]:
+        if type(record.timestamp_ms) is not int:
+            raise QuoteCoverageError("noninteger UTC millisecond timestamp")
+        if not start_ms <= record.timestamp_ms < end_ms:
+            raise QuoteCoverageError("tick outside prospectively registered window")
+        bid, ask = _price(record.bid), _price(record.ask)
         if bid >= ask:
-            raise QuoteCoverageError("inverted or nonpositive spread")
+            raise QuoteCoverageError("inverted or invalid bid/ask")
+        if record.flags is not None and (
+            type(record.flags) is not int or record.flags < 0
+        ):
+            raise QuoteCoverageError("invalid raw tick flags")
         return bid, ask
 
     for poll in polls:
-        bid, ask = parsed(poll)
-        slot = (poll.timestamp_ms - start_ms) // 5000
-        minute = (poll.timestamp_ms - start_ms) // 60000
-        poll_slots.add(slot)
-        minute_bins.add(minute)
-        spread_max = max(spread_max, ask - bid)
+        bid, ask = quote(poll)
+        if poll.source_ordinal is not None:
+            raise QuoteCoverageError("observer polls cannot impersonate source tick order")
+        elapsed = poll.timestamp_ms - start_ms
+        slots.add(elapsed // 5000)
+        minutes.add(elapsed // 60000)
+        max_spread = max(max_spread, ask - bid)
 
-    if len(poll_slots) * 100 < total_slots * 99 or len(minute_bins) != 240:
+    if (
+        Decimal(len(slots)) / Decimal(TOTAL_EXPECTED_POLL_SLOTS)
+        < MIN_POLL_COMPLETENESS or len(minutes) != 240
+    ):
         raise QuoteCoverageError("missing poll completeness or one-minute coverage")
 
-    indexed: dict[int, tuple[Decimal, Decimal]] = {}
+    if not ticks:
+        raise QuoteCoverageError("empty source tick stream")
     times: list[int] = []
+    bids: list[Decimal] = []
+    asks: list[Decimal] = []
+    last_ordinal = -1
+    last_ms = -1
     for tick in ticks:
-        bid, ask = parsed(tick)
-        if tick.timestamp_ms in indexed:
-            raise QuoteCoverageError("duplicate tick timestamp, sequencing unknown")
-        indexed[tick.timestamp_ms] = bid, ask
+        bid, ask = quote(tick)
+        if tick.timestamp_ms < last_ms:
+            raise QuoteCoverageError("source order not monotonic by time_msc")
+        if (
+            require_source_ordinal or last_ms == tick.timestamp_ms
+        ) and (type(tick.source_ordinal) is not int
+               or tick.source_ordinal <= last_ordinal):
+            raise QuoteCoverageError("duplicate-millisecond source sequence unknown")
+        if tick.source_ordinal is not None:
+            if type(tick.source_ordinal) is not int or tick.source_ordinal <= last_ordinal:
+                raise QuoteCoverageError("source ordinal not strictly increasing")
+            last_ordinal = tick.source_ordinal
         times.append(tick.timestamp_ms)
-        spread_max = max(spread_max, ask - bid)
-    if times != sorted(times):
-        raise QuoteCoverageError("unsorted genuine tick timestamps")
-    if not times:
-        raise QuoteCoverageError("empty tick source")
+        bids.append(bid)
+        asks.append(ask)
+        last_ms = tick.timestamp_ms
+        max_spread = max(max_spread, ask - bid)
 
-    # No long unobserved tick intervals. This is an explicit conservative
-    # engineering threshold for the initial liquid-window sample, not a claim
-    # about future market microstructure.
-    if times[0] - start_ms > 5000 or end_ms - times[-1] > 5000:
-        raise QuoteCoverageError("uncovered starting or ending tick interval")
-    if any(b - a > 5000 for a, b in zip(times, times[1:], strict=False)):
+    if times[0] - start_ms > MAX_INTERTICK_GAP_MS:
+        raise QuoteCoverageError("unclassified opening tick gap")
+    if end_ms - times[-1] > MAX_INTERTICK_GAP_MS:
+        raise QuoteCoverageError("unclassified closing tick gap")
+    if any(b - a > MAX_INTERTICK_GAP_MS
+           for a, b in zip(times, times[1:], strict=False)):
         raise QuoteCoverageError("unclassified tick gap above five seconds")
 
-    maxima = {1: Decimal(0), 5: Decimal(0), 30: Decimal(0)}
-    qualified: dict[int, set[int]] = {1: set(), 5: set(), 30: set()}
-    gap_max = Decimal(0)
-    previous: tuple[Decimal, Decimal] | None = None
-    for timestamp in times:
-        bid, ask = indexed[timestamp]
-        if previous is not None:
-            old_bid, old_ask = previous
-            gap_max = max(gap_max, ask - old_ask, old_bid - bid)
-        previous = bid, ask
-        bucket = (timestamp - start_ms) // (10 * 60 * 1000)
-        for horizon in (1, 5, 30):
-            successor = indexed.get(timestamp + horizon * 1000)
-            if successor is None:
-                continue
-            # All observed eligible pairs contribute to the worst quote
-            # move, including pairs crossing a 10-minute bin boundary.
-            later_bid, later_ask = successor
-            maxima[horizon] = max(maxima[horizon], later_ask - ask, bid - later_bid)
-            # Only within-bin pairs qualify the coverage of that bin.
-            if (timestamp + horizon * 1000 - start_ms) // (10 * 60 * 1000) == bucket:
-                qualified[horizon].add(bucket)
-    if any(len(qualified[h]) != 24 for h in (1, 5, 30)):
-        raise QuoteCoverageError("insufficient true tick pairs in 10-minute blocks")
+    moves = {1: Decimal(0), 5: Decimal(0), 30: Decimal(0)}
+    covered: dict[int, set[int]] = {1: set(), 5: set(), 30: set()}
+    max_gap = Decimal(0)
+
+    for i, start_time in enumerate(times):
+        if i:
+            # Adjacent original rows, including same-ms ticks; no favorable
+            # elimination of duplicates or cross-boundary quote jumps.
+            max_gap = max(
+                max_gap, asks[i] - asks[i - 1], bids[i - 1] - bids[i]
+            )
+        bucket = (start_time - start_ms) // (10 * 60 * 1000)
+        for horizon in HORIZONS_SECONDS:
+            target = start_time + horizon * 1000
+            lo = bisect_left(times, target - MATCH_TOLERANCE_MS, i + 1)
+            hi = bisect_right(times, target + MATCH_TOLERANCE_MS, lo)
+            for j in range(lo, hi):
+                moves[horizon] = max(
+                    moves[horizon],
+                    asks[j] - asks[i],
+                    bids[i] - bids[j],
+                )
+                if (times[j] - start_ms) // (10 * 60 * 1000) == bucket:
+                    covered[horizon].add(bucket)
+
+    if any(len(covered[h]) != 24 for h in HORIZONS_SECONDS):
+        raise QuoteCoverageError("insufficient true timestamped tick pairs in 10-minute blocks")
 
     return QuoteCoverageResult(
         status="QUOTE_ONLY_EVIDENCE_NOT_CALIBRATION_ADMITTED",
-        distinct_poll_slots=len(poll_slots),
-        eligible_minute_bins=len(minute_bins),
+        distinct_poll_slots=len(slots),
+        eligible_minute_bins=len(minutes),
         tick_count=len(times),
-        maximum_spread_price=str(spread_max),
-        max_adverse_move_price_1s=str(maxima[1]),
-        max_adverse_move_price_5s=str(maxima[5]),
-        max_adverse_move_price_30s=str(maxima[30]),
-        max_adverse_tick_jump_price=str(gap_max),
+        maximum_spread_price=str(max_spread),
+        max_adverse_move_price_1s=str(moves[1]),
+        max_adverse_move_price_5s=str(moves[5]),
+        max_adverse_move_price_30s=str(moves[30]),
+        max_adverse_tick_jump_price=str(max_gap),
     )
