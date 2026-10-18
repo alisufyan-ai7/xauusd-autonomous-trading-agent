@@ -30,3 +30,5 @@
 - Before recommending further work: review exact PR #10 head, both Linux/Windows demo-admit CI jobs, records validation and the offline-only test report. If any failure, do not call this stage PASS.
 
 **Next:** resolve exact tick sequencing/tolerances prospectively, independently verify real broker/account/journal cost sources in a later separately authorized read-only session, and build a trusted runtime evidence adapter with adversarial no-order-on-reject tests. Only request real VPS capture approval after an independently signed/reviewed registration and code hashes exist; only request DEMO-ADMIT after a distinct end-to-end safety gate.
+
+**Prospective run template:** `phase0/roadmap/DEMO_V11_EXACT_CAPTURE_RUN_TEMPLATE_OFFLINE_ONLY_2026-10-18.json` deliberately leaves UTC start/end, source code hashes, tick matching/duplicate sequence policy, official session/event provenance and owner approval NULL or `REQUIRED_SEPARATELY`. It is **not a completed run registration**, cannot substitute for an explicitly frozen owner-approved artifact, and does not admit source capture.
