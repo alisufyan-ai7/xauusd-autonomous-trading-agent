@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Review documented PR8 duration comparison; obtain owner design-only decision on retaining v1.0 multi-day evidence vs replacing prospectively with separately versioned restricted-session v1.1 before capture. No PR merge, VPS capture, trading enablement, demo action or relaxation of full Policy A controls.",
+  "next_substantive_action": "Independently verify and review owner-selected PR8 v1.1 preregistration; perform offline-only collector prep and full Policy A cash-risk correction/test preparation. Before any evidence capture, register exact UTC run window/source/tool hashes and obtain separate VPS read-only capture authorization. Do not merge/activate without separate approval.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -105,12 +105,16 @@
     "status": "DRAFT_UNMERGED",
     "branch": "research/demo-admit-adverse-cost-prereg-20261018",
     "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
-    "scope": "PROSPECTIVE_DEMO_LIFECYCLE_CALIBRATION_METHOD_AND_STATIC_RISK_GAP_REVIEW",
-    "authorization": "NONE_FOR_CAPTURE_VPS_MERGE_OR_BROKER",
+    "scope": "SELECTED_V1_1_PREREGISTRATION_PLUS_PRESERVED_V1_0_AND_OPEN_RISK_GAPS",
+    "authorization": "DESIGN_ACCEPTED_ONLY_NO_MERGE_NO_VPS_NO_BROKER",
     "files": [
       "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json",
       "phase0/roadmap/DEMO_LIFECYCLE_ADVERSE_COST_METHOD_2026-10-18.md",
-      "phase0/roadmap/DEMO_ADMIT_RISK_GAP_REVIEW_2026-10-18.md"
+      "phase0/roadmap/DEMO_ADMIT_RISK_GAP_REVIEW_2026-10-18.md",
+      "phase0/roadmap/DEMO_LIFECYCLE_CALIBRATION_OWNER_DECISION_2026-10-18.json",
+      "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+      "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md",
+      "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json"
     ]
   },
   "last_github_reconciliation": {
@@ -125,7 +129,7 @@
     "external_python_trading": "DISABLED_UNCHANGED_AS_LAST_VERIFIED"
   },
   "calibration_duration_critical_review_2026_10_18": {
-    "status": "RECOMMEND_REVISION_BEFORE_MERGE_NOT_ADOPTED",
+    "status": "HISTORICAL_REVIEW_SUPERSEDED_BY_SUBSEQUENT_OWNER_DESIGN_DECISION",
     "document": "phase0/roadmap/DEMO_ADMIT_CALIBRATION_DURATION_CRITICAL_REVIEW_2026-10-18.md",
     "assessed_pr8_head": "b3252410140fb1202e03582811629d4a85954010",
     "original_preregistration": "V1_5_MARKET_DAYS_3_ROLLOVERS_1_WEEKLY_REOPEN_UNCHANGED",
@@ -135,7 +139,40 @@
     "policy_a_cash_risk_binding": "UNWAIVED_PRE_ACTION_BLOCKER",
     "mandatory_numeric_source_calibration": "NOT_ADMITTED",
     "rollover_reopen_trading": "BLOCKED_WITHOUT_SEPARATE_PROSPECTIVE_BOUNDARY_EVIDENCE_AND_APPROVAL",
-    "owner_design_acceptance": "PENDING",
-    "broker_and_vps_actions": "NONE"
+    "owner_design_acceptance": "ACCEPTED_V1_1_RESTRICTED_SESSION_DESIGN_2026_10_18",
+    "broker_and_vps_actions": "NONE",
+    "v1_0_preservation": "ORIGINAL_BLOB_SHA_3e6e0d19e70da5a02002615160e3f0c0a0367b77_UNMODIFIED_NOT_SELECTED_INITIAL"
+  },
+  "selected_demo_calibration": {
+    "method": "V1_1_RESTRICTED_SESSION",
+    "design_authority": "OWNER_EXPLICIT_DECISION_ACCEPTED_2026_10_18",
+    "owner_decision_file": "phase0/roadmap/DEMO_LIFECYCLE_CALIBRATION_OWNER_DECISION_2026-10-18.json",
+    "preregistration_file": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+    "method_file": "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md",
+    "prospective_run_window_template": "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json",
+    "original_v1_0": {
+      "file": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json",
+      "blob_sha": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+      "selected_for_initial_demo_admit": false,
+      "modified": false
+    },
+    "initial_window": "ONE_PROSPECTIVELY_NAMED_QUALIFYING_CONTIGUOUS_4_HOUR_LIQUID_SESSION",
+    "engineering_threshold_not_statistical_guarantee": true,
+    "initial_allowed_operational_scope": "EXACT_EVIDENCE_SUPPORTED_LIQUID_SESSION_ONLY",
+    "forbidden_entry_regimes": [
+      "ROLLOVER",
+      "WEEKLY_REOPEN",
+      "HIGH_IMPACT_NEWS",
+      "ILLIQUID_SESSION",
+      "SHOCK",
+      "UNSUPPORTED_OR_UNKNOWN"
+    ],
+    "status": "DESIGN_PREREGISTERED_NO_NEW_BROKER_EVIDENCE",
+    "numeric_calibration_status": "NOT_ADMITTED",
+    "run_specific_utc_window_status": "NOT_REGISTERED",
+    "collector_test_status": "NOT_STARTED",
+    "full_policy_a_cash_risk_implementation": "OPEN_HARD_BLOCKER",
+    "demo_admit_decision": "BLOCKED",
+    "broker_actions": 0
   }
 }
