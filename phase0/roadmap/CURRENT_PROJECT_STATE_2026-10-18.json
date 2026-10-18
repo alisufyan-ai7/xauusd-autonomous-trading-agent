@@ -238,7 +238,7 @@
   },
   "session_feasibility_owner_options_2026_10_18": {
     "selected_v11_method_unchanged": true,
-    "status": "PUBLISHED_CENTER_TABLE_FULL_4H_OVERLAP_INFEASIBLE_OWNER_METHOD_CHOICE_REQUIRED",
+    "status": "OPTION_A_V1_2_DESIGN_APPROVED_AT_EXACT_SHA__REAL_SOURCE_AND_CAPTURE_PENDING",
     "parent_pr11_head": "5da628e9410c08467009cff1a8cdfe4440f0f414",
     "pr12": {
       "number": 12,
@@ -271,7 +271,7 @@
     "option_A_recommended": "4H_BROKER_LIQUID_OBSERVATION_INCLUDES_CENTER_OVERLAP_BUT_DEMO_ENTRY_ONLY_WITHIN_OVERLAP",
     "option_B": "SHORTEN_OBSERVATION_TO_OVERLAP_ONLY_SUBJECT_TO_SUFFICIENCY",
     "option_C": "PRESERVE_LITERAL_V11_FULL_4H_OVERLAP_AND_REMAIN_BLOCKED",
-    "selected_option": "OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS_NOT_FINAL_SUCCESSOR_ADMISSION",
+    "selected_option": "OPTION_A_V1_2_SUCCESSOR_DESIGN_APPROVED__NO_CAPTURE_OR_TRADE_PERMISSION",
     "numeric_calibration_admitted": false,
     "capture_window_registered": false,
     "data_capture_authorized": false,
@@ -281,12 +281,14 @@
     "safe_changes_only": "REVIEW_AND_SYNTHETIC_OFFLINE_MATH",
     "owner_option_a_in_principle_decision_recorded_later": true,
     "option_a_in_principle_approved": true,
-    "v1_2_successor_final_design_approved": false,
+    "v1_2_successor_final_design_approved": true,
     "merge_authority": false,
     "capture_authority": false,
     "vps_authority": false,
     "demo_trading_authority": false,
-    "live_trading_authority": false
+    "live_trading_authority": false,
+    "owner_design_approval_exact_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+    "owner_design_approval_comment_id": 6256228112
   },
   "owner_option_a_safety_refinements_2026_10_18": {
     "decision": "APPROVE_OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS",
