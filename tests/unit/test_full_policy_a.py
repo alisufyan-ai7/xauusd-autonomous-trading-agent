@@ -190,9 +190,12 @@ def test_missing_required_field_quarantines(field: str) -> None:
 
 
 def test_nonfinite_float_wrong_symbol_and_volume_grid_fail_closed() -> None:
-    assert evaluate_full_policy_a(good(gap_buffer_usd=d("NaN"))).disposition is FullRiskDisposition.QUARANTINE
-    assert evaluate_full_policy_a(good(gap_buffer_usd=0.0)).disposition is FullRiskDisposition.QUARANTINE
-    assert evaluate_full_policy_a(good(symbol="EURUSD")).disposition is FullRiskDisposition.QUARANTINE
+    assert (evaluate_full_policy_a(good(gap_buffer_usd=d("NaN"))).disposition
+            is FullRiskDisposition.QUARANTINE)
+    assert (evaluate_full_policy_a(good(gap_buffer_usd=0.0)).disposition
+            is FullRiskDisposition.QUARANTINE)
+    assert (evaluate_full_policy_a(good(symbol="EURUSD")).disposition
+            is FullRiskDisposition.QUARANTINE)
     check(good(volume_lots=d("0.02")), "V1_VOLUME_CAP")
     check(good(volume_lots=d("0.005")), "BELOW_BROKER_VOLUME_MIN")
 
@@ -205,6 +208,7 @@ def test_stress_cost_below_current_denied_and_free_margin_gate() -> None:
 
 def test_no_emergency_close_or_broker_import_in_pure_engine() -> None:
     import inspect
+
     from xauusd_agent.risk import full_policy_a
 
     source = inspect.getsource(full_policy_a)
