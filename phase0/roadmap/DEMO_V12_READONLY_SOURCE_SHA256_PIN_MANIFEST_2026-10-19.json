@@ -1,6 +1,6 @@
 {
-  "schema": "DEMO_V12_READ_ONLY_EVIDENCE_PINNED_SOURCE_HASHES_2026_10_19",
-  "status": "REVIEWED_CODE_HASHES_ONLY_NEVER_OWNER_RUN_PERMIT",
+  "schema": "DEMO_V12_READ_ONLY_EVIDENCE_PINNED_SOURCE_HASHES_2026_10_19_REV_B",
+  "status": "REVIEWED_CODE_HASHES_INCLUDE_IMMUTABLE_FAILURE_JOURNAL_NEVER_OWNER_RUN_PERMIT",
   "sha256_scope": "EXACT_UTF8_LF_FILE_BYTES_AS_STORED_IN_GITHUB; VERIFY_WITH_Get-FileHash_SHA256_ON_WINDOWS_BEFORE_RUN",
   "derived_method": "Independent deterministic SHA-256 over downloaded GitHub UTF-8 file content; SHA256 implementation validated by SHA256('abc') standard known-answer vector. Must re-check with native Windows Get-FileHash before first execution.",
   "owner_approved_design_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
@@ -8,20 +8,20 @@
   "files": [
     {
       "path": "demo_adapter/scripts/v12-readonly-collector.ps1",
-      "sha256": "03d8e7cdaa5cbf8de79f9b20327548a060f5e0feb809509a87ffd224c3f67222",
-      "git_blob_sha1": "d66e19aae79012b347af760034af37c88177c1f3",
+      "sha256": "5757bbe6c4549237729399bcb5dc65493cf70183fa0df5542901399518800ab6",
+      "git_blob_sha1": "a244b090d44820bfa9a6ba7fc5c14611405ccad3",
       "role": "SINGLE_POWERSHELL_5_1_ENTRYPOINT_FUTURE_RUN"
     },
     {
       "path": "demo_adapter/scripts/v12-readonly-verifier.ps1",
-      "sha256": "a808c47d4668038161400d8a8444d63d1edb67f9920225974a052993025772a7",
-      "git_blob_sha1": "09b4acd23e8519e235aadb50d9d9f585ede5c35e",
+      "sha256": "3e8579bf5441d1fbfb05e63c3724d6aecfb63612da702f69ed2f64f12a6046ea",
+      "git_blob_sha1": "3dbd98fa9ab1b2be494d1e52bb33aa67c4c9c1af",
       "role": "INDEPENDENT_READ_ONLY_PRIVATE_RAW_INTEGRITY_VERIFIER"
     },
     {
       "path": "demo_adapter/scripts/v12_windows_mt5_readonly_host.py",
-      "sha256": "fd2dac266bdb1083d0dcb062b95d279abd3cbf1d1938cb0c8109ecdddcfd2687",
-      "git_blob_sha1": "76c633ec415cafd1000a05ee78a7cb4ada569f8f",
+      "sha256": "07bffce9de96d844e194d38e7828fd0366d040bd06a16a2c8a08b1549ea5d905",
+      "git_blob_sha1": "fbc2f2887eea59364b074e9d6888eaee9a8d7385",
       "role": "ISOLATED_OWNER_GATED_MT5_READ_ONLY_HOST_NO_ORDER_CAPABILITIES"
     },
     {
@@ -47,6 +47,18 @@
       "sha256": "e41fdb1e08c331a0c49a8f260ce247162647ae4cfd0cd56989e0936674ce2ca7",
       "git_blob_sha1": "ce44f09fc2821aeda13a9d63eb5858f839d95949",
       "role": "FROZEN_BOUNDED_READ_ONLY_PORT_AND_PRIVATE_CREATE_EXCLUSIVE"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_attempt_journal.py",
+      "sha256": "528623fd1010019763d0c735ab442c07ab62474f84c8947642f99cce1d241076",
+      "git_blob_sha1": "f23753c1714335f38eee4b56a7454a39f6e7c57c",
+      "role": "FSYNC_HASH_CHAIN_EXCLUSIVE_ATTEMPT_JOURNAL_NO_RETRY"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_journaled_readonly_port.py",
+      "sha256": "085d6d51c4634e8ca60c59f9b78c381c6b8d3a7231eebc16ac73843d35cd1cd9",
+      "git_blob_sha1": "be1aee0d1e009349b53dfa6e11daaab57b4fae90",
+      "role": "FSYNC_EVERY_POLL_AND_TRUE_TICK_CHUNK_PARTIAL_FAILURE_EVIDENCE"
     }
   ],
   "real_broker_and_official_sources_sha256_verified": false,
@@ -56,5 +68,7 @@
   "independent_first_actual_execution_approval_id": null,
   "private_vps_output_path": null,
   "callers_must_check_sha_from_native_checkout": true,
-  "no_execution_trading_permit": true
+  "no_execution_trading_permit": true,
+  "attempt_ledger_rule": "EXCLUSIVE_CREATE_PRIVATE_V12_ATTEMPT_REGISTRATION_SHA256_JSONL_HASH_CHAIN_FSYNC_PER_POLL_NO_RERUN_AFTER_FAILED_OR_KILLED",
+  "updated_for_pr16": true
 }
