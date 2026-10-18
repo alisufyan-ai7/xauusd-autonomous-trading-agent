@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Review and separately approve exact-head draft PR8 selected v1.1 design. Offline-only engineering next: implement and independently test complete Policy A USD stop-loss and period risk, and prepare hash-audited read-only collector. Before any VPS evidence capture register exact UTC run window and obtain separate permission; no merge, deployment or broker action is inferred.",
+  "next_substantive_action": "Check exact-head draft PR11. Resolve full 4-hour London-NY-overlap versus Exness market-centre 3h discrepancy with instrument-specific official evidence; date-specific DST/holiday/event guard and excluded BLS releases. If none qualifies, request new prospective owner session-window decision. Independently qualify broker-accounting-fee/FX source hashes before requesting separately approved VPS read-only window capture. Never merge or enable demo trading from passing offline tests.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -170,12 +170,70 @@
     ],
     "status": "DESIGN_PREREGISTERED_NO_NEW_BROKER_EVIDENCE",
     "numeric_calibration_status": "NOT_ADMITTED",
-    "run_specific_utc_window_status": "NOT_REGISTERED",
-    "collector_test_status": "NOT_STARTED",
-    "full_policy_a_cash_risk_implementation": "OPEN_HARD_BLOCKER",
+    "run_specific_utc_window_status": "NOT_REGISTERED_NO_ELIGIBLE_FULL_4H_VERIFIED",
+    "collector_test_status": "OFFLINE_WINDOWS_LINUX_TESTS_PASS_NO_REAL_BROKER_CAPTURE",
+    "full_policy_a_cash_risk_implementation": "PURE_DECIMAL_MATH_TESTED_BUT_RUNTIME_HARD_VETO",
     "demo_admit_decision": "BLOCKED",
     "broker_actions": 0,
     "full_policy_a_cash_risk_correction_test_registration": "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json",
-    "full_policy_a_cash_risk_correction_current_status": "PRE_REGISTERED_OFFLINE_IMPLEMENTATION_AND_INDEPENDENT_TESTS_PENDING"
+    "full_policy_a_cash_risk_correction_current_status": "PURE_POLICY_A_MATH_TESTED_END_TO_END_BROKER_PROVENANCE_BINDING_BLOCKED"
+  },
+  "latest_engineering_2026_10_18": {
+    "status": "OFFLINE_PROTOCOL_TESTED_DEMO_RUNTIME_BLOCKED",
+    "dependency_stack": [
+      {
+        "pr": 8,
+        "head": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+        "status": "DRAFT_UNMERGED_SELECTED_PROSPECTIVE_V1_1_METHOD"
+      },
+      {
+        "pr": 9,
+        "head": "6e5f32b771d511c670bbb348f0dd0fb427412fd5",
+        "status": "DRAFT_UNMERGED_PURE_DECIMAL_FULL_POLICY_A_TESTED_RUNTIME_HARD_VETO"
+      },
+      {
+        "pr": 10,
+        "head": "81ee6286fd2a3da528bed5c397ed816a103c1566",
+        "status": "DRAFT_UNMERGED_OFFLINE_SOURCE_BRIDGE_AND_DORMANT_WINDOWS_READ_ONLY_HOST"
+      },
+      {
+        "pr": 11,
+        "head": "41f87a4db6e85a3cd16fc9fa3957478114af9272",
+        "status": "DRAFT_UNMERGED_PROSPECTIVE_TICK_TIME_SOURCE_REGISTRY_AND_UTC_WINDOW_CHECKER"
+      }
+    ],
+    "main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "original_v1_0_blob_sha": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "original_v1_0_not_selected_initial": true,
+    "protocol_path": "phase0/roadmap/DEMO_V11_T1_TICK_TIMESTAMP_SEQUENCE_PROTOCOL_2026-10-18.json",
+    "protocol_tolerance_ms": 250,
+    "protocol_duplicate_same_millisecond": "PRESERVE_ORDERED_DISTINCT_RECORDS_OR_FAIL_CLOSED",
+    "source_registry": "phase0/roadmap/DEMO_V11_INDEPENDENT_SOURCE_EVIDENCE_REGISTRY_2026-10-18.json",
+    "window_qualification": "NO_VERIFIED_FOUR_HOUR_ALL_OVERLAP_SESSION",
+    "rejected_candidate_utc": [
+      "2026-10-20T13:00:00Z",
+      "2026-10-20T17:00:00Z"
+    ],
+    "rejected_reason": "OFFICIAL_EXNESS_CENTRE_TABLE_3H_OVERLAP_AND_BLS_RELEASE_14UTC_WITH_UNRESOLVED_EVENT_GUARD_CLASSIFICATION",
+    "capture_run_exact_window_registered": false,
+    "source_authenticity_independently_verified": false,
+    "cost_calibration_admitted": false,
+    "full_policy_a_math_implemented_and_offline_tested": true,
+    "full_policy_a_live_broker_accounting_binding_complete": false,
+    "demo_runtime_submission_veto": "HARD_QUARANTINE_PRIOR_TO_BROKER_ORDER_CHECK_AND_SEND",
+    "pr11_validation": {
+      "demo_admit_run_id": 39124407337,
+      "windows_passed": 115,
+      "ubuntu_passed": 114,
+      "ubuntu_windows_only_skipped": 1,
+      "records_run_id": 39124407371,
+      "status": "SUCCESS"
+    },
+    "no_vps_access": true,
+    "no_mt5_connection": true,
+    "no_broker_action": true,
+    "no_external_python_trading_enablement": true,
+    "all_prs_unmerged": true,
+    "handoff": "phase0/roadmap/DEMO_V11_TICK_SOURCE_WINDOW_HANDOFF_2026-10-18.md"
   }
 }
