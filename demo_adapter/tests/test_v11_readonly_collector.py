@@ -134,6 +134,7 @@ def test_window_has_real_utc_timestamps_and_no_wall_clock_assumption() -> None:
 
 def test_source_has_no_mt5_import_or_trade_methods() -> None:
     import inspect
+
     from scripts import v11_readonly_collector as module
 
     source = inspect.getsource(module)
