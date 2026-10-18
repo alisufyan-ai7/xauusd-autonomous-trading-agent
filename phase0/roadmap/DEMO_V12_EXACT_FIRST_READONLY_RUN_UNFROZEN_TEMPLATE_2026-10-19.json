@@ -1,6 +1,6 @@
 {
   "schema_version": "XAUUSD_DEMO_ADMIT_V12_READ_ONLY_FIRST_RUN_NOT_REGISTERED",
-  "status": "NO_ELIGIBLE_DATE_SOURCE_HASHES_OR_OWNER_FIRST_RUN_CONFIRMATION_DO_NOT_EXECUTE",
+  "status": "NO_VERIFIED_WINDOW_OR_SOURCES_NO_FIRST_RUN_CONFIRMATION__NOT_EXECUTABLE__FAILURE_JOURNAL_REQUIRED",
   "approved_pr13_design_sha": "847829378956670e8936bf46c82e685de41145fd",
   "approved_pr14_evidence_sha": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
   "approved_v12_method_git_blob_sha": "c7dcf520fe2a3b12437cec6a1b5dd06c25494d5f",
@@ -51,5 +51,12 @@
   "quote_protocol_source_sha256": null,
   "mt5_bound_port_source_sha256": null,
   "source_authoritative_raw_sha256_status": "NOT_PUBLISHED_MISSING_ORIGINAL_DATE_SPECIFIC_SOURCE_BYTES",
-  "next_owner_boundary": "PRESENT_EXACT_DATE_4H_AND_EVENT_FREE_OVERLAP_ALL_SOURCE_SHA256_COLLECTOR_VERIFIER_HOST_SHA256_PRIVATE_PATH_ONE_POWERSHELL_COMMAND_FOR_FINAL_FIRST_RUN_CONFIRMATION"
+  "next_owner_boundary": "COMPLETE_SOURCE_QUALIFICATION_ORIGIN_SHA_FULL_DATE_SPECIFIC_4H_UTC_ELIGIBILITY_EVENT_GUARD_AND_EXACT_PRIVATE_OUTPUT_PLUS_FAILURE_JOURNAL_PINS__OWNER_FINAL_FIRST_RUN_CONFIRMATION",
+  "attempt_journal_module_sha256": null,
+  "journaled_readonly_port_sha256": null,
+  "failure_journal_path": null,
+  "failure_journal_complete_first_run": false,
+  "same_registration_second_attempt_permitted": false,
+  "partial_data_on_failure_policy": "PRESERVE_PRIVATE_FSYNCED_PER_POLL_AND_TRUE_TICK_RANGE_RECORDS; FAILURE_IF_MISSING_TERMINAL_EVENT; NO_RETRY_SAME_REGISTRATION",
+  "first_run_confirmation_id": null
 }
