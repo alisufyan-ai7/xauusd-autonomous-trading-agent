@@ -38,7 +38,7 @@ def test_start_is_durable_before_any_broker_and_unfinished_is_failure(
     assert "EXNESS_XAUUSD_DEMO_READ_ONLY_NOT_ADMITTED" in content
     journal.close()
     assert verify_attempt(path, REGISTRATION) == "INCOMPLETE_FAIL_CLOSED"
-    with pytest.raises(FileExistsError):
+    with pytest.raises(AttemptJournalError, match="already exists"):
         AttemptJournal(path, REGISTRATION, "WOULD_RETRY")
 
 
@@ -53,7 +53,7 @@ def test_explicit_failure_persists_irrespective_of_private_output(
     journal.close()
     assert verify_attempt(path, REGISTRATION) == "FAIL_CLOSED"
     assert "POLL_QUOTE" in path.read_text("utf-8")
-    with pytest.raises(FileExistsError):
+    with pytest.raises(AttemptJournalError, match="already exists"):
         AttemptJournal(path, REGISTRATION, "SYNTHETIC_SECOND_ATTEMPT")
 
 
