@@ -28,7 +28,7 @@ def document() -> dict[str, Any]:
         "official_event_guard_health_and_event_schedule_sha256": "4" * 64,
         "exact_owner_approval_id": "SYNTHETIC_TEST_NOT_REAL_OWNER_APPROVAL",
         "approval_for_vps_capture": "EXPLICIT_OWNER_APPROVED",
-        "owner_capture_decision": host.APPROVAL_TOKEN,
+        "owner_capture_decision": host.CAPTURE_MODE_CONFIRMATION,
         "output_scope": "PRIVATE_LOCAL_EXNESS_DEMO_ONLY",
     }
 
@@ -123,5 +123,5 @@ def test_host_source_has_no_order_capability_or_scheduler_mutation() -> None:
         assert forbidden not in source
     assert "mt5.initialize()" in source
     assert "mt5.shutdown()" in source
-    assert "APPROVAL_TOKEN" in source
+    assert "CAPTURE_MODE_CONFIRMATION" in source
     assert "PRIVATE_LOCAL_EXNESS_DEMO_ONLY" in source
