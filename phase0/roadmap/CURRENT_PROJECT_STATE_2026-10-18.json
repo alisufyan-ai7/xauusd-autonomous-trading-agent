@@ -198,7 +198,7 @@
       },
       {
         "pr": 11,
-        "head": "41f87a4db6e85a3cd16fc9fa3957478114af9272",
+        "head": "5da628e9410c08467009cff1a8cdfe4440f0f414",
         "status": "DRAFT_UNMERGED_PROSPECTIVE_TICK_TIME_SOURCE_REGISTRY_AND_UTC_WINDOW_CHECKER"
       }
     ],
@@ -244,7 +244,7 @@
       "number": 12,
       "status": "DRAFT_UNMERGED",
       "branch": "research/demo-v11-session-eligibility-option-review-20261018",
-      "head_sha": null,
+      "head_sha": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
       "base_pr11_head": "5da628e9410c08467009cff1a8cdfe4440f0f414"
     },
     "source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
@@ -272,7 +272,6 @@
     "option_B": "SHORTEN_OBSERVATION_TO_OVERLAP_ONLY_SUBJECT_TO_SUFFICIENCY",
     "option_C": "PRESERVE_LITERAL_V11_FULL_4H_OVERLAP_AND_REMAIN_BLOCKED",
     "selected_option": "OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS_NOT_FINAL_SUCCESSOR_ADMISSION",
-    "owner_option_adopted": false,
     "numeric_calibration_admitted": false,
     "capture_window_registered": false,
     "data_capture_authorized": false,
@@ -280,7 +279,14 @@
     "runtime_cash_risk_submission_veto": "QUARANTINE_BEFORE_ORDER_CHECK_AND_SEND",
     "historical_v10_blob": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
     "safe_changes_only": "REVIEW_AND_SYNTHETIC_OFFLINE_MATH",
-    "owner_option_a_in_principle_decision_recorded_later": true
+    "owner_option_a_in_principle_decision_recorded_later": true,
+    "option_a_in_principle_approved": true,
+    "v1_2_successor_final_design_approved": false,
+    "merge_authority": false,
+    "capture_authority": false,
+    "vps_authority": false,
+    "demo_trading_authority": false,
+    "live_trading_authority": false
   },
   "owner_option_a_safety_refinements_2026_10_18": {
     "decision": "APPROVE_OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS",
@@ -367,6 +373,13 @@
     "broker_fees_numeric_admitted": false,
     "pre_demo_slippage_numeric_admitted": false,
     "flat_lifecycle_owner_attended_live_drill_passed": false,
-    "no_actual_broker_ticks_seen": true
+    "no_actual_broker_ticks_seen": true,
+    "option_a_in_principle_approved": true,
+    "v1_2_successor_final_design_approved": false,
+    "merge_authority": false,
+    "capture_authority": false,
+    "vps_authority": false,
+    "demo_trading_authority": false,
+    "live_trading_authority": false
   }
 }
