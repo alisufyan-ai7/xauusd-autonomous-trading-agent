@@ -12,7 +12,6 @@ from scripts.v11_quote_coverage import (
     evaluate_quote_coverage,
 )
 
-
 START = datetime(2026, 10, 19, 13, tzinfo=UTC)
 END = START + timedelta(hours=4)
 START_MS = int(START.timestamp() * 1000)
