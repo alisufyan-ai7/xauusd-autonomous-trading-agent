@@ -29,6 +29,9 @@ $files = @(
     "demo_adapter\scripts\v11_offline_risk_bridge.py",
     "demo_adapter\scripts\v11_windows_mt5_readonly_host.py",
     "demo_adapter\scripts\v11_window_readiness.py",
+    "demo_adapter\scripts\v12_option_a_cost_recipe.py",
+    "demo_adapter\scripts\v12_option_a_flat_lifecycle.py",
+    "demo_adapter\scripts\v11_session_scope_feasibility.py",
     "src\xauusd_agent\risk\full_policy_a.py"
 )
 $blocked = @(
@@ -68,7 +71,11 @@ if ($RunSyntheticTests) {
             "tests/test_v11_capture_orchestrator.py",
             "tests/test_v11_offline_risk_bridge.py",
             "tests/test_v11_tick_protocol.py",
-            "tests/test_v11_window_readiness.py"
+            "tests/test_v11_window_readiness.py",
+            "tests/test_v11_session_scope_feasibility.py",
+            "tests/test_v12_option_a_cost_recipe.py",
+            "tests/test_v12_option_a_flat_lifecycle.py",
+            "tests/test_v12_option_a_preregistration.py"
         )
         & $python -m pytest -q $tests
         if ($LASTEXITCODE -ne 0) {
