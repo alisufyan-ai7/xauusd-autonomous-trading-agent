@@ -1,0 +1,10 @@
+# Byte-identical reviewed read-only evidence scripts on Windows and Linux.
+# Strict published SHA-256 is over UTF-8/LF Git blob bytes; Windows CRLF
+# checkout would otherwise change the hash and must never be normalized later.
+demo_adapter/scripts/v12-readonly-collector.ps1 text eol=lf
+demo_adapter/scripts/v12-readonly-verifier.ps1 text eol=lf
+demo_adapter/scripts/v12_windows_mt5_readonly_host.py text eol=lf
+demo_adapter/scripts/v11_capture_orchestrator.py text eol=lf
+demo_adapter/scripts/v11_quote_coverage.py text eol=lf
+demo_adapter/scripts/v11_readonly_collector.py text eol=lf
+demo_adapter/scripts/v11_windows_mt5_readonly_host.py text eol=lf
