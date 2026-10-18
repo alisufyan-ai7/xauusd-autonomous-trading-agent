@@ -77,7 +77,7 @@ class FakePort:
         from_ms = int(start.timestamp() * 1000)
         stop_ms = int(end.timestamp() * 1000)
         return [
-            {"time_msc": v, "bid": "2000.00", "ask": "2000.20", "flags": 134}
+            {"time_msc": v, "time": v // 1000, "bid": "2000.00", "ask": "2000.20", "flags": 134}
             for v in range(from_ms, stop_ms, 1000)
         ]
 
