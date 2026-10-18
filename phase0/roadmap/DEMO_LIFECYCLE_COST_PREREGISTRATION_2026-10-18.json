@@ -1,0 +1,83 @@
+{
+  "schema_version": "demo-lifecycle-adverse-cost-preregistration-1.0",
+  "registered_date_local": "2026-10-18",
+  "status": "REGISTERED_METHOD_ONLY_NO_CALIBRATION_ADMITTED",
+  "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+  "scope": "DEMO_LIFECYCLE_ONLY",
+  "intended_identity": {
+    "broker": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "currency": "USD",
+    "symbol": "XAUUSD",
+    "mode": "DEMO",
+    "fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+    "volume_lots": "0.01"
+  },
+  "prior_r3": {
+    "status": "FAIL_CLOSED",
+    "bundle_sha256": "138749c9c4c89104a115a25ba4854f61dd4baef04694075602e09494b889ea97",
+    "numeric_reuse_allowed": false
+  },
+  "collection": {
+    "authority": "SEPARATE_OWNER_APPROVAL_REQUIRED",
+    "start_rule": "AFTER_GITHUB_REGISTRATION_COMMIT_AND_OWNER_CAPTURE_APPROVAL",
+    "minimum_distinct_market_days": 5,
+    "weekly_reopen_events": 1,
+    "rollover_boundaries": 3,
+    "sessions": [
+      "ASIA",
+      "LONDON",
+      "LONDON_NY"
+    ],
+    "nominal_poll_seconds": "5",
+    "missing_coverage": "FAIL_CLOSED",
+    "identity_and_exposure_pre_post": "REQUIRED",
+    "raw_source_sha256": null,
+    "manifest_sha256": null,
+    "raw_private_vps_only": true
+  },
+  "components": [
+    "spread_usd",
+    "adverse_1s_quote_move_proxy_usd",
+    "adverse_5s_quote_move_proxy_usd",
+    "adverse_30s_quote_move_proxy_usd",
+    "quote_gap_proxy_usd",
+    "round_trip_commission_usd",
+    "swap_holding_reserve_usd",
+    "verified_usd_conversion"
+  ],
+  "estimator": {
+    "arithmetic": "Decimal",
+    "cost_rounding": "ROUND_CEILING_TO_USD_0.01",
+    "side": "MAX_BUY_SELL",
+    "per_component": "MAX_OBSERVED_ELIGIBLE_OR_ACCOUNT_SPECIFIC_DOCUMENTED_UPPER_BOUND",
+    "current": "CEIL_CENT(SUM(current_component_reserves))",
+    "stressed": "CEIL_CENT(MAX(2*current,SUM(stressed_component_reserves)))",
+    "missing": "NO_ADMISSION",
+    "zero": "ONLY_WITH_EXPLICIT_ACCOUNT_SPECIFIC_ZERO_COST_PROOF",
+    "slippage": "NON_TRADING_QUOTE_MOVE_PROXY_NOT_EXECUTION_SLIPPAGE",
+    "gap": "QUOTE_JUMP_PROXY_NOT_GUARANTEED_STOP_FILL",
+    "coverage_guarantee": "NONE"
+  },
+  "admission": {
+    "status": "BLOCKED",
+    "current_adverse_cost": null,
+    "stressed_adverse_cost": null,
+    "calibration_object_sha256": null,
+    "source_sha256": null,
+    "independent_review_required": true,
+    "governor_stop_loss_cash_cap_gap_must_be_fixed": true,
+    "stale_spread_live_guard_must_be_fixed": true,
+    "calibration_hash_binding_required": true
+  },
+  "safety": {
+    "execution_off": true,
+    "demo_activation_permit": false,
+    "broker_orders_allowed": false,
+    "real_money_validity": false,
+    "production_holdouts_unchanged": true,
+    "mt5_deviation_not_a_slippage_bound": true,
+    "missing_cost_never_zero": true
+  },
+  "next_action": "Prepare and separately authorize isolated Windows PowerShell 5.1-compatible read-only VPS collector; no order_* or trade mutation calls."
+}
