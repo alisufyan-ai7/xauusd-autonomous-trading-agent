@@ -199,8 +199,8 @@ def test_nonfinite_float_wrong_symbol_and_volume_grid_fail_closed() -> None:
 
 def test_stress_cost_below_current_denied_and_free_margin_gate() -> None:
     check(good(m1_stressed_adverse_cost_usd=d("2")), "STRESS_BELOW_CURRENT_COST")
-    check(good(margin_used_usd=d("950"),
-               free_margin_usd=d("9050")), "POLICY_A_M1_CURRENT")
+    check(good(margin_used_usd=d("1000"),
+               free_margin_usd=d("9000")), "POLICY_A_M1_CURRENT")
 
 
 def test_no_emergency_close_or_broker_import_in_pure_engine() -> None:
