@@ -50,8 +50,8 @@
     },
     {
       "path": "demo_adapter/scripts/v12_attempt_journal.py",
-      "sha256": "ed8fc493333b4c2c12327a63106df33e8fd4103e2e61efd351a8174d089937d5",
-      "git_blob_sha1": "76658831f55baf82668c9d3d740b533c0ee2bc17",
+      "sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
+      "git_blob_sha1": "cd572d8cfc6d3cec4aff2457fd0b8f68eaa880aa",
       "role": "FSYNC_HASH_CHAIN_EXCLUSIVE_ATTEMPT_JOURNAL_NO_RETRY"
     },
     {
@@ -71,5 +71,5 @@
   "no_execution_trading_permit": true,
   "attempt_ledger_rule": "EXCLUSIVE_CREATE_PRIVATE_V12_ATTEMPT_REGISTRATION_SHA256_JSONL_HASH_CHAIN_FSYNC_PER_POLL_NO_RERUN_AFTER_FAILED_OR_KILLED",
   "updated_for_pr16": true,
-  "last_repin_reason": "FINAL_WINDOWS_LINUX_CI_AFTER_INDEPENDENT_JOURNAL_IMPORT_AND_SAFE_LOGGING_FIX"
+  "last_repin_reason": "CRITICAL_WINDOWS_BINARY_EXCLUSIVE_JOURNAL_WRITE_CORRECTION__O_BINARY_CANONICAL_SHA256_CROSS_PLATFORM"
 }
