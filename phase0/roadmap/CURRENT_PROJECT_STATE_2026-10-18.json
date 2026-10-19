@@ -466,7 +466,7 @@
     "capture_first_run_status": "BLOCKED_NO_QUALIFIED_OFFICIAL_XAUUSD_DATE_SPECIFIC_WINDOW",
     "capture_date_candidate_screen": "phase0/roadmap/DEMO_V12_NEAR_TERM_SOURCE_QUALIFICATION_2026-10-19.json",
     "failure_preservation_handoff": "phase0/roadmap/DEMO_V12_FAILCLOSED_ATTEMPT_AND_NEAR_TERM_QUALIFICATION_2026-10-19.md",
-    "attempt_journal_module_sha256": "ed8fc493333b4c2c12327a63106df33e8fd4103e2e61efd351a8174d089937d5",
+    "attempt_journal_module_sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
     "journaled_readonly_port_sha256": "085d6d51c4634e8ca60c59f9b78c381c6b8d3a7231eebc16ac73843d35cd1cd9",
     "original_pr15_collector_hash_superseded_for_future_capture": "03d8e7cdaa5cbf8de79f9b20327548a060f5e0feb809509a87ffd224c3f67222",
     "original_pr15_verifier_hash_superseded_for_future_capture": "a808c47d4668038161400d8a8444d63d1edb67f9920225974a052993025772a7",
@@ -480,7 +480,8 @@
     "qualified_entry_utc": null,
     "actual_date_specific_XAUUSD_full_hours_sha256": null,
     "actual_event_guard_health_attested_sha256": null,
-    "no_capture_reason": "OFFICIAL_INTERACTIVE_XAUUSD_DATE_SPECIFIC_INSTRUMENT_ROWS_AND_ORIGINAL_BYTES_UNAVAILABLE_EVENT_GUARD_HEALTH_UNKNOWN"
+    "no_capture_reason": "OFFICIAL_INTERACTIVE_XAUUSD_DATE_SPECIFIC_INSTRUMENT_ROWS_AND_ORIGINAL_BYTES_UNAVAILABLE_EVENT_GUARD_HEALTH_UNKNOWN",
+    "last_repin_reason": "WINDOWS_BINARY_EXCLUSIVE_JOURNAL_HASH_CHAIN_CORRECTION"
   },
   "v12_owner_independent_qualification_2026_10_19": {
     "checkpoint": "OFFLINE_NEAR_TERM_SOURCE_SCREEN_AND_IMMUTABLE_FAILURE_ATTEMPT_PREPARED__ACTUAL_VPS_BLOCKED",
@@ -509,7 +510,7 @@
     "collector_ps_sha256": "5757bbe6c4549237729399bcb5dc65493cf70183fa0df5542901399518800ab6",
     "verifier_ps_sha256": "3e8579bf5441d1fbfb05e63c3724d6aecfb63612da702f69ed2f64f12a6046ea",
     "host_python_sha256": "e0be590304f3a9dbba3d4ca08c54aec4d6171120a1ca4174fdf03f8bfffeb7fd",
-    "journal_python_sha256": "ed8fc493333b4c2c12327a63106df33e8fd4103e2e61efd351a8174d089937d5",
+    "journal_python_sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
     "port_python_sha256": "085d6d51c4634e8ca60c59f9b78c381c6b8d3a7231eebc16ac73843d35cd1cd9",
     "first_run_approval_id": null,
     "private_destination": null,
@@ -517,6 +518,8 @@
     "capture_authorized_for_execution": false,
     "orders_authorized": false,
     "PRs_merged": false,
-    "historical_pcr3_and_failures_preserved": true
+    "historical_pcr3_and_failures_preserved": true,
+    "windows_o_binary_journal_fix": "COMPLETE_CRITICAL_BINARY_FSYNC_PREVENT_CRLF_CANONICAL_HASH_MISMATCH",
+    "exact_first_run_still_blocked": true
   }
 }
