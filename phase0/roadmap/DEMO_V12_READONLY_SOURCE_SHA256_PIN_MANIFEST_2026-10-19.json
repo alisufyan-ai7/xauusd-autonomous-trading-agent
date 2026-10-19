@@ -20,8 +20,8 @@
     },
     {
       "path": "demo_adapter/scripts/v12_windows_mt5_readonly_host.py",
-      "sha256": "07bffce9de96d844e194d38e7828fd0366d040bd06a16a2c8a08b1549ea5d905",
-      "git_blob_sha1": "fbc2f2887eea59364b074e9d6888eaee9a8d7385",
+      "sha256": "e0be590304f3a9dbba3d4ca08c54aec4d6171120a1ca4174fdf03f8bfffeb7fd",
+      "git_blob_sha1": "eaa644dda46afe2ea64909440762b1a82f591418",
       "role": "ISOLATED_OWNER_GATED_MT5_READ_ONLY_HOST_NO_ORDER_CAPABILITIES"
     },
     {
@@ -50,8 +50,8 @@
     },
     {
       "path": "demo_adapter/scripts/v12_attempt_journal.py",
-      "sha256": "528623fd1010019763d0c735ab442c07ab62474f84c8947642f99cce1d241076",
-      "git_blob_sha1": "f23753c1714335f38eee4b56a7454a39f6e7c57c",
+      "sha256": "ed8fc493333b4c2c12327a63106df33e8fd4103e2e61efd351a8174d089937d5",
+      "git_blob_sha1": "76658831f55baf82668c9d3d740b533c0ee2bc17",
       "role": "FSYNC_HASH_CHAIN_EXCLUSIVE_ATTEMPT_JOURNAL_NO_RETRY"
     },
     {
@@ -70,5 +70,6 @@
   "callers_must_check_sha_from_native_checkout": true,
   "no_execution_trading_permit": true,
   "attempt_ledger_rule": "EXCLUSIVE_CREATE_PRIVATE_V12_ATTEMPT_REGISTRATION_SHA256_JSONL_HASH_CHAIN_FSYNC_PER_POLL_NO_RERUN_AFTER_FAILED_OR_KILLED",
-  "updated_for_pr16": true
+  "updated_for_pr16": true,
+  "last_repin_reason": "FINAL_WINDOWS_LINUX_CI_AFTER_INDEPENDENT_JOURNAL_IMPORT_AND_SAFE_LOGGING_FIX"
 }
