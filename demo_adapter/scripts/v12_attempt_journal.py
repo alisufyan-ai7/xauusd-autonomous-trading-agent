@@ -66,7 +66,10 @@ class AttemptJournal:
         self._next = 0
         self._previous = INITIAL_CHAIN
         self._final = False
-        self._fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        self._fd = os.open(
+            path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0),
+            0o600,
+        )
         try:
             self.append("ATTEMPT_STARTED", {
                 "registration_sha256": registration_sha256,
