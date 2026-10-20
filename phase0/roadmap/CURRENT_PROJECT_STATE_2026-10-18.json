@@ -171,7 +171,7 @@
     "status": "DESIGN_PREREGISTERED_NO_NEW_BROKER_EVIDENCE",
     "numeric_calibration_status": "NOT_ADMITTED",
     "run_specific_utc_window_status": "NOT_REGISTERED",
-    "collector_test_status": "NEW_MINIMAL_NATIVE_WINDOWS_OFFLINE_VALIDATION_IN_PROGRESS",
+    "collector_test_status": "NATIVE_WINDOWS_POWERSHELL51_AST_AND_LINUX_OFFLINE_66_Win_65_Linux_PASS_AT_SOURCE_COMMIT_9ed493a5__AWAIT_FINAL_BRANCH_HEAD_CI",
     "full_policy_a_cash_risk_implementation": "PURE_EXACT_DECIMAL_MATH_MERGED__AUTHENTIC_RUNTIME_INPUT_BINDING_STILL_BLOCKED",
     "demo_admit_decision": "BLOCKED",
     "broker_actions": 0,
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "GITHUB_OFFLINE_CODE_AND_NATIVE_WINDOWS_CI_ONLY",
+    "status": "MINIMAL_V11_CAPTURE_SOURCE_OFFLINE_TESTED__EXECUTION_OFF__VPS_STAGING_NOT_APPROVED",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -221,6 +221,36 @@
     "demo_admit_pass": false,
     "apc_demo_activation_authorized": false,
     "real_money_authorized": false,
-    "guard": "ZERO_TRADE_METHODS;ONLY_APPROVED_READONLY_PORT_AND_MT5_INIT_ON_FUTURE_EXPLICIT_CAPTURE_APPROVAL"
+    "guard": "ZERO_TRADE_METHODS;ONLY_APPROVED_READONLY_PORT_AND_MT5_INIT_ON_FUTURE_EXPLICIT_CAPTURE_APPROVAL",
+    "historical_windows_ci_failed": {
+      "run": 39496459205,
+      "classification": "FAIL_NATIVE_PS51_AST_PARSER_SYNTAX",
+      "root_cause": "MALFORMED_DUPLICATED_PS_LAUNCHER_AFTER_PATH_GUARD_EDIT",
+      "preserved": true,
+      "no_vps_invocation": true
+    },
+    "corrected_native_ci": {
+      "source_commit": "9ed493a5506867c7eb8c7bcb6a07e015ab973e1f",
+      "demo_admit_run": 39498884372,
+      "windows_tests_passed": 66,
+      "linux_tests_passed": 65,
+      "linux_windows_only_skips": 1,
+      "result": "SUCCESS",
+      "records_run": 39498884315,
+      "records_result": "SUCCESS",
+      "source_seal_run": 39498884402,
+      "source_seal_result": "SUCCESS",
+      "github_actions_artifact_id": 12298569054,
+      "source_inner_zip_sha256": "eaf41694747261c89fb41fb8af08c70ddf02a7698e925ff6473e807a7ba4190c",
+      "source_manifest_sha256": "2972da9c476c4927c6008bafee2b4de04b97f5a627ff688e74c721b70eb4d3ea",
+      "transport_outer_sha256": "a24a17f8af9567b82c395a8606bfe3e836bc7bc75806cd27f711c5939f78b52a"
+    },
+    "latest_code_head_authoritative_source": "USE EXACT_FINAL_PR28_HEAD_AND_EXACT_SEALED_ARTIFACT_AFTER_FINAL_CI",
+    "capture_output_isolated_root": "LOCALAPPDATA/XAUUSD-DEMO-V11-READONLY/capture-YYYYMMDDTHHMMSSZ",
+    "private_partial_failure_journal": true,
+    "staging_attempts": 0,
+    "staging_owner_approval_received": false,
+    "vps_mt5_initialize_authorized": false,
+    "owner_next_action": "APPROVE_EXACT_SEALED_SOURCE_EXECUTION_OFF_VPS_STAGING_ONLY_AFTER_FINAL_HEAD_CI_REVIEW"
   }
 }
