@@ -1,5 +1,19 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CROSS-LINEAGE DEMO-ADMIT PR8/9 INDEPENDENT REVIEW (2026-10-21)
+
+Current main remains `ccaa8338aecee8bd3afbc358644410dff6c512e5`. PR8 selected v1.1 4h restricted-session design HEAD `8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9` base main; PR9 pure full-Policy-A cash risk and static collector HEAD `6e5f32b771d511c670bbb348f0dd0fb427412fd5` stacked on PR8. Both OPEN/DRAFT/UNMERGED. Original 5-day v1.0 registration original blob `3e6e0d19e70da5a02002615160e3f0c0a0367b77` reverified byte-identical, preserved NOT SELECTED initial v1.1.
+
+CI at original heads: PR8 records run **39117673344 SUCCESS**; PR9 production-candidate **39121001033 SUCCESS** (Windows261 PASS, Linux260 PASS/1 skip); demo-admit **39121001015 SUCCESS** (44 PASS on each Windows/Linux); records **39121001050 SUCCESS**. Offline math is **ALLOW_MATH_ONLY**, not authenticated broker/period-risk binding or `ALLOW_TRADE`, with unconditional demo adapter QUARANTINE before broker `order_check/order_send`. V1.1 collector is injected-port mockable read-only preflight only, not a deployed 4h capture host and not yet native PowerShell 5.1 tested. Price-proxy estimator is exact-ms tick-pair based and has no owner-admitted tolerance, fee/swap proof or gap-fill oracle. **No numerical v1.1 calibration admitted.**
+
+New prospective non-executable template compatibility successor **draft PR27** `review/demo-admit-v11-window-contract-compat-20261021` stacked on original PR9: fixes original template missing `registration_sha256` + `exact_owner_approval_id` fields by NULL placeholders, records unset `tick_pair_tolerance_ms`, adds fail-closed tests and comprehensive GitHub review. Exact PR27 code HEAD `d4091aaa759952f6867165f2c71c0d61317f181c`, exact-head demo-admit CI 39489951270 Windows46 and Linux46 PASS, Validate records 39489951352 SUCCESS. PR8/9 heads preserved immutable; v1.0 unchanged. Full review path on PR27 `phase0/roadmap/DEMO_ADMIT_PR8_PR9_INDEPENDENT_REVIEW_2026-10-21.md`, latest supplemental cross-chat `phase0/roadmap/CROSS_CHAT_HANDOFF_DEMO_ADMIT_PR8_PR9_REVIEW_2026-10-21.md`.
+
+**Merge verdict:** PR8 design-only eligible for exact owner merge review; PR9 math-only eligible for conditional offline source merge review **but is NOT COMPLETE trusted runtime or capture**, and the template contract fix / Windows collector host / exact owner-approved UTC run and tick-pair tolerance must be resolved before requesting a 4h VPS capture. If exact head merge authorizations are later granted, reconcile strict stacked order PR8 -> PR9 -> PR27, not independent PR9-to-main. No PR merged now.
+
+**Historical second lane:** S2 one-shot DEMO_CANARY_ONLY immutable second execution-off stage PASS/KILLED/UNUSED remains as previously recorded; first attempt FAIL_CLOSED remains preserved; no broker APC. The older v1.1 calibration lane and 4h window do not retroactively block the separately prospective/staged S2 engineering-only one-canary route. Nor does S2 stage pass count for broader restricted autonomous DEMO-ADMIT or real money. Owner image shows one visible Exness DEMO account, **not proof no stored live credentials anywhere**. Latest S2 credential attestation and exact order parameters still missing. No VPS/MT5/broker action in this review.
+
+---
+
 ## CURRENT S2 PRE-APC STATUS (2026-10-21) — DEDICATED DEMO TERMINAL UNVERIFIED
 
 Original sealed S2 PR24 artifact was **owner-reported staged PASS on separate attended attempt #2**, with KILLED/UNUSED and zero broker actions; prior attempt #1 remains immutable FAIL_CLOSED_PRE_PYTHON_HASH. **No re-staging is needed or authorized**. Source-of-truth reconciliation on production `main ccaa8338aecee8bd3afbc358644410dff6c512e5` and PR23–PR26 unchanged/unmerged. Detailed non-executable final-preauthorization report: `phase0/roadmap/APC_DEMO_CANARY_FINAL_PREAUTH_GATE_2026-10-21.md`.
