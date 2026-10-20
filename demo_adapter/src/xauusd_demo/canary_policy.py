@@ -6,7 +6,7 @@ directly from one reconciled XAUUSD DEMO broker snapshot by the caller.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import ROUND_CEILING, Decimal
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from typing import Any
 
 from xauusd_agent.risk.policy_a import (
@@ -158,7 +158,7 @@ def evaluate_canary_risk(ev: CanaryRiskEvidence) -> CanaryRiskDecision:
     )
     cap = min(
         RISK_ABSOLUTE_CAP,
-        _up_cent(min(ev.equity, ev.balance, ALLOCATION_CAP) * RISK_RATE),
+        (min(ev.equity, ev.balance, ALLOCATION_CAP) * RISK_RATE).quantize(\n            Decimal("0.01"), rounding=ROUND_FLOOR\n        ),
     )
     if cap <= 0 or worst_loss > cap:
         raise DemoSafetyError("CANARY_FULL_LOSS_TO_STOP_EXCEEDS_POLICY_A_CAP")
