@@ -43,6 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--expires-utc", required=True)
     parser.add_argument("--side", choices=("BUY", "SELL"))
     parser.add_argument("--stop", type=Decimal)
+    parser.add_argument("--price-limit", type=Decimal)
     args = parser.parse_args(argv)
 
     if args.owner_apc != CANARY_APC_TOKEN:
@@ -51,9 +52,11 @@ def main(argv: list[str] | None = None) -> int:
         raise DemoSafetyError("CANARY_REQUIRES_WIN_PYTHON_312")
     if sys.executable.casefold() != PYTHON_EXE.casefold():
         raise DemoSafetyError("CANARY_PINNED_INTERPRETER_MISMATCH")
-    if args.mode == "entry" and (args.side is None or args.stop is None):
+    if args.mode == "entry" and (args.side is None or args.stop is None or
+                                 args.price_limit is None):
         raise DemoSafetyError("CANARY_EXACT_ENTRY_SIDE_AND_STOP_REQUIRED")
-    if args.mode == "close" and (args.side is not None or args.stop is not None):
+    if args.mode == "close" and (args.side is not None or args.stop is not None or
+                                 args.price_limit is not None):
         raise DemoSafetyError("CANARY_CLOSE_MUST_NOT_CREATE_NEW_RISK")
     now = datetime.now(UTC)
     try:
@@ -107,6 +110,7 @@ def main(argv: list[str] | None = None) -> int:
                     now=now, confirmation_phrase=ARM_CONFIRMATION,
                 )
                 assert args.side is not None and args.stop is not None
+                assert args.price_limit is not None
                 result = lifecycle.open_once(
                     request=DemoOrderRequest(
                         request_id=str(uuid.uuid4()), symbol="XAUUSD",
@@ -114,6 +118,7 @@ def main(argv: list[str] | None = None) -> int:
                         stop_loss=args.stop,
                     ),
                     permit=permit, now=now, apc_token=CANARY_APC_TOKEN,
+                    approved_price_limit=args.price_limit,
                 )
                 print("ONE_DEMO_ENTRY_RECONCILED_TICKET=" + result.ticket)
                 print("DEMO_SCENARIO_WORST_LOSS_USD=" + str(result.worst_loss_usd))
