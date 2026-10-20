@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## OWNER DEMO-ONLY PROFILE AND 4H ATTENDANCE ATTESTED (2026-10-21)
+
+Owner explicitly confirms BOTH requested assumptions: **(1)** existing MT5 installation/profile is dedicated to admitted Exness DEMO, has no saved live-account credentials, and no other operator/program will switch accounts during collection; **(2)** owner can remain attended **2026-10-21 17:30–21:30 Pakistan time = 12:30–16:30 UTC**. These are **owner chat attestations**, NOT independently observed MT5 account/session/credential or authorizations to call `mt5.initialize`. Immutable run-specific draft `phase0/roadmap/DEMO_V11_4H_READONLY_RUN_DRAFT_2026-10-21.json` contains owner statements but still `owner_approved_read_only_capture=false`, `approval_for_vps_capture=REQUIRED_SEPARATELY`, no filled owner capture ID or admission SHA. The source contract will still reject live trading/non-DEMO/unknown exposure.
+
+**Remaining narrow external eligibility evidence:** Exness public [instrument trading hours](https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours) offers a **dynamic** XAUUSD/date/timezone selector. Publicly retrievable static text confirms UTC+0 servers, London+NY summer centre hours, daily rollover and general holiday list, but does NOT expose a verified explicit **XAUUSD October 21, 2026 UTC+0** normal-trade/quote-only/closed schedule. Ask owner for the instrument/date-specific output **as table or screenshot** (no account login/secret data). Revalidate independent live event/holiday source health and allowlist; freeze prospectively before the 12:30 UTC start; separate MT5 read-only capture owner approval (explicit `history_deals_get`) still not granted. No further staging, no broker order, no real money.
+
+---
+
+
 ## CURRENT — OWNER-REPORTED OS-ONLY V11 PREFLIGHT PASS (2026-10-21)
 
 **OWNER-PROVIDED OUTPUT AT 2026-10-20T22:14:52Z:** `V11_OS_ONLY_PREFLIGHT_ATTEMPT1_PASS_SOURCE_AND_TERMINAL_PROCESS`, from one approved attended Windows PowerShell 5.1 OS-only check. Exactly one terminal64 process PID **6216**, EXE `C:\Program Files\MetaTrader 5\terminal64.exe`, start `2026-10-06T07:31:09Z`; frozen staged manifest SHA256 `b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f`, all five staged file hashes and execution-OFF marker independently compared by the owner-run script and PASS; Python3.12 EXE present. **This is not live broker account verification or proof of saved-demo-only credentials.** Owner-reported no MT5 import/initialize, no broker reads/capture and no VPS mutation. The OS-only preflight approval is **consumed**; no retry or additional MT5 operation permitted from it. Full exact observed stdout and distinctions in [PR28 comment](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6303011445).
