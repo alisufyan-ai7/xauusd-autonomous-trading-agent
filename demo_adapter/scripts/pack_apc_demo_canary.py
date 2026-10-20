@@ -25,14 +25,23 @@ def _bytes_sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def seal(*, repo_root: Path, wheel_dir: Path, output: Path, head: str) -> dict[str, object]:
+def seal(
+    *, repo_root: Path, wheel_dir: Path, production_wheel_dir: Path,
+    output: Path, head: str,
+) -> dict[str, object]:
     if re.fullmatch(r"[0-9a-f]{40}", head) is None:
         raise ValueError("EXACT_GITHUB_COMMIT_HEAD_REQUIRED")
     wheels = sorted(wheel_dir.glob("xauusd_demo_adapter-*.whl"))
     if len(wheels) != 1 or any(p.is_symlink() for p in wheels):
         raise ValueError("ONE_ISOLATED_DEMO_WHEEL_REQUIRED")
+    production_wheels = sorted(
+        production_wheel_dir.glob("xauusd_production_candidate-*.whl")
+    )
+    if len(production_wheels) != 1 or any(p.is_symlink() for p in production_wheels):
+        raise ValueError("ONE_PINNED_PRODUCTION_RISK_WHEEL_REQUIRED")
     entries: dict[str, bytes] = {
         "wheel/" + wheels[0].name: wheels[0].read_bytes(),
+        "wheel/" + production_wheels[0].name: production_wheels[0].read_bytes(),
     }
     for relative in REQUIRED_SCRIPTS:
         source = repo_root / relative
@@ -73,6 +82,9 @@ def seal(*, repo_root: Path, wheel_dir: Path, output: Path, head: str) -> dict[s
         "archive_name": output.name,
         "archive_sha256": _bytes_sha256(output.read_bytes()),
         "isolated_wheel_sha256": _bytes_sha256(wheels[0].read_bytes()),
+        "production_risk_wheel_sha256": _bytes_sha256(
+            production_wheels[0].read_bytes()
+        ),
         "entry_count": len(entries),
         "attended_python_source_sha256": _bytes_sha256(
             entries["source/demo_adapter/scripts/apc_demo_canary_readonly_preflight.py"]
@@ -87,12 +99,14 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
     parser.add_argument("--wheel-dir", type=Path, required=True)
+    parser.add_argument("--production-wheel-dir", type=Path, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
     parser.add_argument("--head", required=True)
     args = parser.parse_args()
     path = args.outdir / ("apc-demo-canary-" + args.head + ".zip")
     result = seal(
         repo_root=args.repo_root, wheel_dir=args.wheel_dir,
+        production_wheel_dir=args.production_wheel_dir,
         output=path, head=args.head,
     )
     for key, value in result.items():
