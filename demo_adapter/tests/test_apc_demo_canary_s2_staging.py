@@ -137,4 +137,5 @@ def test_s2_stage_native_ps51_here_string_value_hash_matches_pin() -> None:
     )
     assert result.returncode == 0, result.stdout + result.stderr
     marker = "PS51_STAGING_HELPER_CANONICAL_SHA256="
-    assert marker + "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648" in result.stdout
+    expected = "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648"
+    assert marker + expected in result.stdout
