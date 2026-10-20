@@ -158,7 +158,9 @@ def evaluate_canary_risk(ev: CanaryRiskEvidence) -> CanaryRiskDecision:
     )
     cap = min(
         RISK_ABSOLUTE_CAP,
-        (min(ev.equity, ev.balance, ALLOCATION_CAP) * RISK_RATE).quantize(\n            Decimal("0.01"), rounding=ROUND_FLOOR\n        ),
+        (min(ev.equity, ev.balance, ALLOCATION_CAP) * RISK_RATE).quantize(
+            Decimal("0.01"), rounding=ROUND_FLOOR
+        ),
     )
     if cap <= 0 or worst_loss > cap:
         raise DemoSafetyError("CANARY_FULL_LOSS_TO_STOP_EXCEEDS_POLICY_A_CAP")
