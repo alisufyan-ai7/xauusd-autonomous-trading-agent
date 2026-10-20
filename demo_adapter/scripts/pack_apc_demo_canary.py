@@ -15,6 +15,7 @@ from pathlib import Path
 
 REQUIRED_SCRIPTS = (
     "demo_adapter/scripts/apc_demo_canary_attended_operator.py",
+    "demo_adapter/scripts/apc_demo_canary_s2_isolated_loader.py",
     "demo_adapter/scripts/apc_demo_canary_readonly_preflight.py",
     "demo_adapter/scripts/apc-demo-canary-readonly-preflight.ps1",
 )
