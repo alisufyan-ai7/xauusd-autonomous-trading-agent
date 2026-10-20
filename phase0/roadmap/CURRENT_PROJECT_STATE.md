@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT — OWNER-REPORTED OS-ONLY V11 PREFLIGHT PASS (2026-10-21)
+
+**OWNER-PROVIDED OUTPUT AT 2026-10-20T22:14:52Z:** `V11_OS_ONLY_PREFLIGHT_ATTEMPT1_PASS_SOURCE_AND_TERMINAL_PROCESS`, from one approved attended Windows PowerShell 5.1 OS-only check. Exactly one terminal64 process PID **6216**, EXE `C:\Program Files\MetaTrader 5\terminal64.exe`, start `2026-10-06T07:31:09Z`; frozen staged manifest SHA256 `b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f`, all five staged file hashes and execution-OFF marker independently compared by the owner-run script and PASS; Python3.12 EXE present. **This is not live broker account verification or proof of saved-demo-only credentials.** Owner-reported no MT5 import/initialize, no broker reads/capture and no VPS mutation. The OS-only preflight approval is **consumed**; no retry or additional MT5 operation permitted from it. Full exact observed stdout and distinctions in [PR28 comment](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6303011445).
+
+**Next:** prospectively finalize today `2026-10-21T12:30–16:30Z` ONLY IF XAUUSD instrument-specific Exness hours, entire official event-guard source coverage/health, future start, source-hashed static allowlist and owner's 4h attendance are satisfied. Future read-only MT5 initialization+quote/history API (**`history_deals_get` explicitly added to owner one-run scope**) needs a **separate exact explicit owner approval**; no capture is approved, and live trading remains forbidden. Current process PID is time-scoped OS evidence and must be reconciled at activation. Original selected v1.1 methodology, separate V11 execution-OFF stage PASS, S2 historical stages, frozen PR28, and production main are unchanged.
+
+---
+
+
 ## CURRENT OCT 21 ACCELERATION — EARLIEST 4H DEMO V11 CAPTURE CANDIDATE
 
 **OWNER VPS APPROVAL UPDATE:** Owner has explicitly authorized ONE attended OS-only read-only preflight using the frozen GitHub script `phase0/ops/demo_v11_osonly_stage_preflight_20261021.ps1` (Git blob `75788efa3a3de3d05d815076ba3a312c8786c3fb`). Approval is strictly for current UTC clock, existing `terminal64` PID/path/start time, staged SHA/marker and Python executable existence, with no MT5 import/init, no broker read/capture, no trading and no VPS mutation. **Output PENDING, do NOT claim OS preflight PASS yet.** Execute once and preserve any failure without unauthorized repair/retry. Separate MT5 read-only capture approval still NOT received.
