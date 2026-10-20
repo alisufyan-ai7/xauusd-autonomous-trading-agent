@@ -30,7 +30,7 @@ def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     source = SCRIPT.read_text(encoding="utf-8")
     embedded = _embedded_python()
     sha = hashlib.sha256(embedded.encode("ascii")).hexdigest()
-    assert sha == "809bd8a1dd243a4f0835764a785c70049749dd06e43c4d3fa25a0f80e2ac011a"
+    assert sha == "b9d2a6e09e7c4eb57633938bc7150ed2391feb5e4c6e8787a53004b853e1bbf5"
     assert sha in source
     compile(embedded, str(SCRIPT) + ":in-memory-embedded-python", "exec")
     assert FROZEN_S2_HEAD in embedded
