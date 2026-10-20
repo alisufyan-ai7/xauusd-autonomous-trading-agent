@@ -1,6 +1,6 @@
 {
   "schema": "DEMO_V12_READ_ONLY_EVIDENCE_PINNED_SOURCE_HASHES_2026_10_20_SUCCESSOR",
-  "status": "REVIEWED_CODE_HASHES_INCLUDE_IMMUTABLE_FAILURE_JOURNAL_NEVER_OWNER_RUN_PERMIT",
+  "status": "REVIEWED_CODE_HASHES_WITH_IMMUTABLE_FAILURE_JOURNAL_NEVER_OWNER_RUN_PERMIT",
   "sha256_scope": "REVISED_SUCCESSOR_SOURCE_PINS__UTF8_LF_EXACT_GITHUB_CONTENT__NO_EXECUTION",
   "derived_method": "Independent deterministic SHA-256 over downloaded GitHub UTF-8 file content; SHA256 implementation validated by SHA256('abc') standard known-answer vector. Must re-check with native Windows Get-FileHash before first execution.",
   "owner_approved_design_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
