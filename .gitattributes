@@ -4,3 +4,4 @@ demo_adapter/src/xauusd_demo/canary_policy.py text eol=lf
 demo_adapter/src/xauusd_demo/canary_lifecycle.py text eol=lf
 phase0/roadmap/APC_DEMO_CANARY_PROSPECTIVE_REGISTRATION_2026-10-20.json text eol=lf
 demo_adapter/scripts/pack_apc_demo_canary.py text eol=lf
+demo_adapter/scripts/apc_demo_canary_attended_operator.py text eol=lf
