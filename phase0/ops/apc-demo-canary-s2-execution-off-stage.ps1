@@ -3,7 +3,7 @@
 # Exact S2 successor bundle; no Git/network or worktree changes. NOT YET AUTHORIZED.
 [CmdletBinding()]
 param(
-    [string] $Artifact = (Join-Path $env:USERPROFILE 'Downloads\github-actions-artifact-12289113540.zip')
+    [string] $Artifact = (Join-Path $env:USERPROFILE 'Downloads\github-actions-artifact-12289594320.zip')
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
