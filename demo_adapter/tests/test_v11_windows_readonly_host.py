@@ -186,9 +186,14 @@ def test_synthetic_exact_4h_capture_with_fee_redaction() -> None:
     start = datetime.fromisoformat(doc["exact_window_start_utc"])
     port = FakePort(start)
     clock = FakeClock(start, port)
+    journals: list[dict[str, Any]] = []
     result = collector.collect_window(
-        port, _contract(doc), now_fn=clock.read, sleep_fn=clock.sleep
+        port, _contract(doc), now_fn=clock.read, sleep_fn=clock.sleep,
+        on_sample=journals.append,
     )
+    assert len(journals) == collector.SLOTS
+    assert journals[0]["slot"] == 0
+    assert journals[-1]["slot"] == collector.SLOTS - 1
     assert len(result["samples"]) == 2880
     assert len(result["ticks"]) == 14400
     assert len(result["historical_fee_deals"]) == 1
@@ -251,3 +256,13 @@ def test_powershell51_launcher_ast_parser_without_running() -> None:
     assert "Register-ScheduledTask" not in source
     assert "Start-ScheduledTask" not in source
     assert "Get-FileHash" in source
+
+
+def test_partial_observation_journal_is_written_before_final_manifest() -> None:
+    source = inspect.getsource(collector.run_authorized)
+    assert 'poll_observations.partial.jsonl' in source
+    assert 'FAIL_CLOSED_INCOMPLETE_CAPTURE_NO_ADMISSION' in source
+    assert '"retry_authorized": False' in source
+    assert '.open("xb")' in source
+    assert "mt5.shutdown()" in source
+    assert "order_send" not in source
