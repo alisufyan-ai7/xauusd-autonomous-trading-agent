@@ -25,6 +25,7 @@ PUBLIC_ORIGINS = {
     "www.federalreserve.gov",
     "www.census.gov",
     "www.dol.gov",
+    "oui.doleta.gov",
     "www.gov.uk",
 }
 SOURCES = {
@@ -39,6 +40,8 @@ SOURCES = {
     "fed_november": "https://www.federalreserve.gov/newsevents/2026-november.htm",
     "census_advance": "https://www.census.gov/econ/indicators/release_schedule.html",
     "dol_claims": "https://www.dol.gov/agencies/eta/ui-claims",
+    "dol_official_claims_release_schedule":
+        "https://oui.doleta.gov/unemploy/archive.asp",
     "uk_dst": "https://www.gov.uk/when-do-the-clocks-change",
 }
 MAX_BODY_BYTES = 3_000_000
