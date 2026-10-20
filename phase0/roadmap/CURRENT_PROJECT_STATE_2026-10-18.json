@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Owner-attended bounded OS-only preflight to pin current terminal PID/exe, installed five source SHAs, UTC clock, demo-only GUI attestation; no MT5 API import or broker read. Source XAUUSD instrument-specific hours and fresh Event Guard coverage must be proved before any exact run registration and separate read-only MT5 capture approval.",
+  "next_substantive_action": "Approved method and stage PASS are frozen. OS-only preflight source exists but cannot run without owner VPS authorization. Run it attended to pin current terminal PID and staged hash; classify source health and XAUUSD dynamic trading hours. Only then finalize and separately authorize a future 240min read-only MT5 capture.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "ONE ATTENDED VPS OS-ONLY READ-ONLY PREFLIGHT TO VERIFY LIVE TERMINAL PID/PATH/STAGED SOURCE/UTC + DEMO-ONLY CREDENTIAL ATTESTATION; THEN FINALIZE 12:30-16:30 UTC SOURCE-HASHED RUN AND REQUEST SEPARATE READONLY MT5 INITIALIZE/CAPTURE APPROVAL",
+    "owner_next_action": "OWNER APPROVE AND ATTEND EXACT ONE STRICT OS-ONLY VPS PREFLIGHT TO PIN TERMINAL PID/PATH AND STAGED MANIFEST; ALSO ATTEST DEMO-ONLY PROFILE; THEN FINALIZE EXACT RUN RECORD AND REQUEST SEPARATE READONLY MT5 INITIALIZE_AND_4H_CAPTURE PERMISSION",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -366,6 +366,28 @@
       "call_kind": "READ_ONLY_HISTORICAL_ACCOUNT_DEALS__NOT_ORDER_OR_TRADE",
       "capture_approved": false,
       "new_staging_required": false
+    },
+    "os_only_source_preflight": {
+      "status": "SOURCE_PREPARED_OWNER_VPS_OS_READ_APPROVAL_NOT_YET_GIVEN",
+      "script": "phase0/ops/demo_v11_osonly_stage_preflight_20261021.ps1",
+      "reads_only": [
+        "UTC_SYSTEM_CLOCK",
+        "ONE_TERMINAL64_OS_PROCESS_PID_PATH_START_TIME",
+        "STAGED_MANIFEST_SHA256",
+        "FIVE_STAGED_COMPONENT_SHA256",
+        "EXECUTION_OFF_STAGE_MARKER",
+        "EXISTENCE_OF_PINNED_PYTHON_EXE"
+      ],
+      "does_not": [
+        "IMPORT_OR_INITIALIZE_MT5",
+        "BROKER_READ_OR_TICK_CAPTURE",
+        "ORDER_CHECK_OR_SEND",
+        "TOGGLE_EXTERNAL_PYTHON",
+        "CREATE_OR_DELETE_FILES",
+        "CHANGE_TASKS_OR_SETTINGS"
+      ],
+      "owner_output_received": false,
+      "owner_approval_received": false
     }
   }
 }
