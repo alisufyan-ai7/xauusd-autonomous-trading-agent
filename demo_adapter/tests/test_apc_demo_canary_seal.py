@@ -70,9 +70,11 @@ def test_sealed_canary_contains_exact_manifest_and_only_allowed_sources(
         production_wheel.read_bytes()
     ).hexdigest()
     with pytest.raises(ValueError, match="ALREADY_EXISTS"):
-        seal(repo_root=tmp_path, wheel_dir=wheel_dir, output=output, head=head)
+        seal(repo_root=tmp_path, wheel_dir=wheel_dir,
+             production_wheel_dir=production_dir, output=output, head=head)
     second = tmp_path / "second.zip"
-    seal(repo_root=tmp_path, wheel_dir=wheel_dir, output=second, head=head)
+    seal(repo_root=tmp_path, wheel_dir=wheel_dir,
+             production_wheel_dir=production_dir, output=second, head=head)
     assert output.read_bytes() == second.read_bytes()
 
 
@@ -87,14 +89,17 @@ def test_sealing_rejects_multiple_wheels_and_invalid_sha(tmp_path: Path) -> None
     _copy_sources(tmp_path)
     seal = _seal()
     with pytest.raises(ValueError, match="ONE_ISOLATED"):
-        seal(repo_root=tmp_path, wheel_dir=wheel_dir, output=tmp_path / "out.zip",
+        seal(repo_root=tmp_path, wheel_dir=wheel_dir,
+             production_wheel_dir=production_dir, output=tmp_path / "out.zip",
              head="a" * 40)
     first = wheel_dir / "xauusd_demo_adapter-1-py3-none-any.whl"
     first.write_bytes(b"FAKE")
     with pytest.raises(ValueError, match="EXACT_GITHUB"):
-        seal(repo_root=tmp_path, wheel_dir=wheel_dir, output=tmp_path / "out.zip",
+        seal(repo_root=tmp_path, wheel_dir=wheel_dir,
+             production_wheel_dir=production_dir, output=tmp_path / "out.zip",
              head="not-a-valid-sha")
     (wheel_dir / "xauusd_demo_adapter-2-py3-none-any.whl").write_bytes(b"FAKE2")
     with pytest.raises(ValueError, match="ONE_ISOLATED"):
-        seal(repo_root=tmp_path, wheel_dir=wheel_dir, output=tmp_path / "out.zip",
+        seal(repo_root=tmp_path, wheel_dir=wheel_dir,
+             production_wheel_dir=production_dir, output=tmp_path / "out.zip",
              head="a" * 40)
