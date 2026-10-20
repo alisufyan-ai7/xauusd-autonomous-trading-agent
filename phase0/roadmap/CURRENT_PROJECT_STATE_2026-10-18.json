@@ -171,7 +171,7 @@
     "status": "DESIGN_PREREGISTERED_NO_NEW_BROKER_EVIDENCE",
     "numeric_calibration_status": "NOT_ADMITTED",
     "run_specific_utc_window_status": "NOT_REGISTERED",
-    "collector_test_status": "NATIVE_WINDOWS_POWERSHELL51_AST_AND_LINUX_OFFLINE_66_Win_65_Linux_PASS_AT_SOURCE_COMMIT_9ed493a5__AWAIT_FINAL_BRANCH_HEAD_CI",
+    "collector_test_status": "NATIVE_WINDOWS_PS51_PARSER_OFFLINE_CI_66_PASS_LINUX_65_PASS_ONE_SKIP_ON_SOURCE_COMMIT_E0B6EE70__NO_VPS_CAPTURE",
     "full_policy_a_cash_risk_implementation": "PURE_EXACT_DECIMAL_MATH_MERGED__AUTHENTIC_RUNTIME_INPUT_BINDING_STILL_BLOCKED",
     "demo_admit_decision": "BLOCKED",
     "broker_actions": 0,
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "MINIMAL_V11_CAPTURE_SOURCE_OFFLINE_TESTED__EXECUTION_OFF__VPS_STAGING_NOT_APPROVED",
+    "status": "OFFLINE_NATIVE_WINDOWS_AND_LINUX_READONLY_SOURCE_TESTS_PASS__S2_STAGE_UNTOUCHED__NEW_V11_VPS_STAGING_NOT_AUTHORIZED",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,6 +251,25 @@
     "staging_attempts": 0,
     "staging_owner_approval_received": false,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "APPROVE_EXACT_SEALED_SOURCE_EXECUTION_OFF_VPS_STAGING_ONLY_AFTER_FINAL_HEAD_CI_REVIEW"
+    "owner_next_action": "AUTHORIZE_ONE ATTENDED EXACT HASH PINNED V11 EXECUTION_OFF VPS STAGE ONLY; DO NOT CAPTURE",
+    "final_reviewed_source_snapshot": {
+      "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
+      "windows_demo_admit_run": 39499426617,
+      "windows_tests_passed": 66,
+      "linux_tests_passed": 65,
+      "linux_skipped_native_windows_tests": 1,
+      "ci_conclusion": "SUCCESS",
+      "source_seal_run": 39499426584,
+      "source_seal_ci_conclusion": "SUCCESS",
+      "validate_records_run": 39499426581,
+      "validate_records_ci_conclusion": "SUCCESS",
+      "sealed_source_artifact_id": 12298299808,
+      "source_bundle_inner_zip_sha256": "0ec0627bc2d1e07af1b9ccb62cf491bc6641492272ce65981a597dc62f0d6be0",
+      "source_manifest_sha256": "a79ccb90cabbf341a81c828d372b335fa3e81303f54b32141ec7ab2311fe96f6",
+      "actions_transport_outer_sha256": "697a6679add2643640be5fe88e52e760fdc46cd34c809e1d58fe94d00ec38e7a",
+      "stage_helper_sha256": "eb0b241dcac4f53d77dc00b5306c31edfb480867184aedad66da5225276d5cca",
+      "note": "Source-only approval not transferable to another code/head/artifact; capture and broker operations denied."
+    },
+    "execution_off_vps_staging_ready_for_owner_approval": true
   }
 }
