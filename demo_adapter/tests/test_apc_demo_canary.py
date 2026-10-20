@@ -89,6 +89,10 @@ class FakeMT5:
         self.calls = 0
         self.fail_send = False
         self.bad_tick = False
+        self.bad_position_side = False
+        self.bad_magic = False
+        self.missing_deal = False
+        self.bad_open_price = False
 
     def terminal_info(self) -> dict[str, object]:
         return {"connected": True, "tradeapi_disabled": self.tradeapi_disabled}
@@ -150,9 +154,13 @@ class FakeMT5:
         else:
             self.pos = ({
                 "ticket": 77, "symbol": "XAUUSD", "volume": 0.01,
-                "sl": payload["sl"], "type": 0 if payload["type"] == 0 else 1,
+                "sl": payload["sl"],
+                "type": 1 if self.bad_position_side else (0 if payload["type"] == 0 else 1),
+                "magic": 0 if self.bad_magic else canary.MAGIC,
+                "price_open": (2002.0 if self.bad_open_price else payload["price"]),
             },)
-        return {"retcode": self.TRADE_RETCODE_DONE}
+        return {"retcode": self.TRADE_RETCODE_DONE,
+                "deal": 0 if self.missing_deal else 111}
 
 
 def test_deterministic_full_stop_loss_includes_all_buffers() -> None:
@@ -313,3 +321,61 @@ def test_preflight_pure_inspect_no_order_apis() -> None:
             fn(mt5, TICK_TIME)
     finally:
         scope["EXPECTED_FINGERPRINT"] = original
+
+
+@pytest.mark.parametrize(
+    ("problem", "outcome"),
+    [
+        ("bad_position_side", "CANARY_POST_ENTRY_POSITION_MISMATCH"),
+        ("bad_magic", "CANARY_POST_ENTRY_POSITION_MISMATCH"),
+        ("bad_open_price", "CANARY_POST_ENTRY_POSITION_MISMATCH"),
+        ("missing_deal", "CANARY_ENTRY_DEAL_ID_UNKNOWN"),
+    ],
+)
+def test_entry_mismatch_consumes_one_attempt_and_quarantines(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+    problem: str, outcome: str,
+) -> None:
+    mt5, ctrl, journal, lifecycle = _setup(monkeypatch, tmp_path)
+    try:
+        setattr(mt5, problem, True)
+        with pytest.raises(DemoSafetyError, match=outcome):
+            lifecycle.open_once(
+                request=request(), permit=permit(), now=NOW,
+                apc_token=CANARY_APC_TOKEN,
+            )
+        assert mt5.calls == 1
+        assert journal.stage() == "UNCERTAIN"
+        assert ctrl.snapshot().state == DemoControlState.QUARANTINED
+        with pytest.raises(DemoSafetyError, match="BUDGET_CONSUMED"):
+            lifecycle.open_once(
+                request=request(), permit=permit(), now=NOW,
+                apc_token=CANARY_APC_TOKEN,
+            )
+        assert mt5.calls == 1
+    finally:
+        ctrl.close()
+        journal.close()
+
+
+def test_close_unknown_deal_quarantines_without_second_send(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    mt5, ctrl, journal, lifecycle = _setup(monkeypatch, tmp_path)
+    try:
+        lifecycle.open_once(
+            request=request(), permit=permit(), now=NOW,
+            apc_token=CANARY_APC_TOKEN,
+        )
+        mt5.missing_deal = True
+        with pytest.raises(DemoSafetyError, match="CANARY_CLOSE_DEAL_ID_UNKNOWN"):
+            lifecycle.close_once(permit=permit(), now=NOW, apc_token=CANARY_APC_TOKEN)
+        assert mt5.calls == 2
+        assert journal.stage() == "UNCERTAIN"
+        assert ctrl.snapshot().state == DemoControlState.QUARANTINED
+        with pytest.raises(DemoSafetyError, match="CANARY_NOT_IN_CONFIRMED_OPEN_STATE"):
+            lifecycle.close_once(permit=permit(), now=NOW, apc_token=CANARY_APC_TOKEN)
+        assert mt5.calls == 2
+    finally:
+        ctrl.close()
+        journal.close()
