@@ -17,11 +17,17 @@ from decimal import Decimal
 from pathlib import Path
 
 from xauusd_demo.canary_lifecycle import (
-    CANARY_APC_TOKEN, CanaryJournal, DemoCanaryLifecycle, exact_demo_identity,
+    CANARY_APC_TOKEN,
+    CanaryJournal,
+    DemoCanaryLifecycle,
+    exact_demo_identity,
 )
 from xauusd_demo.control import ARM_CONFIRMATION, DemoControlState, DemoControlStore
 from xauusd_demo.envelope import (
-    DemoActivationPermit, DemoOrderRequest, DemoSafetyError, DemoSide,
+    DemoActivationPermit,
+    DemoOrderRequest,
+    DemoSafetyError,
+    DemoSide,
 )
 
 PYTHON_EXE = r"C:\Program Files\Python312\python.exe"
