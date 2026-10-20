@@ -1,3 +1,18 @@
+# CURRENT FINAL PRE-APC REVIEW (2026-10-21) — NO ORDER PERMISSION
+
+Owner instructed: proceed through final APC-DEMO-CANARY **preparation only**, no order or external-Python enable. Live GitHub still has production main `ccaa8338aecee8bd3afbc358644410dff6c512e5`, PR23/24/25/26 draft/unmerged, S2 original sealed PR24 code `89711065a3a2d38fe02282fff3ad1782aabda0d2`, staging helper PR26 `ab98292dde5c6bda9fc63a85eb36aaac36ed605d`, distinct immutable attempt #1 FAIL_CLOSED / attempt #2 owner-reported S2 staging PASS with KILLED/UNUSED/no broker actions. Do not restage or alter old evidence.
+
+**READ FIRST** `phase0/roadmap/APC_DEMO_CANARY_FINAL_PREAUTH_GATE_2026-10-21.md` on review branch `review/apc-demo-canary-final-preauthorization-20261021`. It contains complete operator/lifecycle/Policy A risk/M1, one-shot entry+close and human manual external Python toggle/emergency sequence, residual approval-window risk and an exact future non-executable APC text DRAFT. **Not all conditions are satisfied yet**:
+- **B1 UNVERIFIED:** Existing MT5 terminal is known to have held an admitted Exness DEMO account during a historical read-only observation. This proves ONLY active demo mode at that time, NOT that there are no stored live account credentials. Must obtain owner-performed View > Navigator > Accounts review of every remembered account (and owner attestation of no saved live credentials under the terminal/profile) with NO login, Python MT5 attach or config changes. If any real account listed or unknown saved-credential history, stop: a clean demo-only terminal may require separate VPS authorization. Absence of visible Navigator account alone is not a machine-wide credential proof.
+- **B2/B3 UNBOUND:** No current broker tick or valid directional strategy; neither BUY vs SELL nor exact protective stop nor BUY entry ceiling/SELL floor can be selected honestly from stale price. No guessed quote/order parameters.
+- **B4 UNBOUND:** Exact activation ID + <=20min UTC expiry must be frozen for BOTH attended entry and close. In staged S2, expiry is reconstructed per invocation instead of durably immutable, so procedural enforcement of same owner-approved expiry is required; never use a new CLI expiry to silently extend authorization.
+- **B5 EVENTUAL EXECUTION CHECK:** Current account/exposure/fingerprint, fresh tick, broker USD stop-loss margin checks must be proven at one future separately owner-approved broker session, not via outdated preflight.
+- **B6 OWNER GUARD:** Human must be present to manually enable external Python API ONLY after APC, supervise one entry and known-position closure, disable it again, and handle unknown/timeout with QUARANTINED+manual reconciliation. No automatic unknown-exposure close.
+
+**NEXT OWNER ACTION**: owner explicitly confirms `DEMO_ONLY_TERMINAL_ATTESTED=YES` or NO/UNKNOWN after Navigator/credential audit; until confirmation, broker APC is BLOCKED. User has not been asked to reveal login/passwords, and nothing has been executed on VPS as part of final preparation.
+
+---
+
 # CURRENT RECOVERY HEADLINE — SECOND S2 ATTENDED EXECUTION-OFF STAGING PASS (2026-10-21)
 
 **LATEST OBSERVED OUTCOME (owner-supplied Windows PowerShell transcript): `S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF`** after a **NEW separate owner approval**, not a retry under the consumed first attempt. Complete exact stdout / hashes and result preserved as a [PR26 evidence comment](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6299700345). Evidence is owner-reported, not independently inspected VPS filesystem.
