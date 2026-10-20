@@ -1,0 +1,190 @@
+{
+  "schema": "DEMO_V12_FUTURE_CANDIDATES_READ_ONLY_PUBLIC_SOURCE_AUDIT_V1",
+  "reviewed_utc_date": "2026-10-20",
+  "review_status": "FAIL_CLOSED_NO_QUALIFYING_NEAR_TERM_WINDOW_CAN_BE_ESTABLISHED_FROM_ADMISSIBLE_SOURCES",
+  "frozen_owner_design_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+  "frozen_pr14_sha": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
+  "preserved_pr15_sha": "cbb8f3bf0fc0e46fb187f62a3e849341756a4f80",
+  "evidence_provenance": {
+    "transport": "OFFICIAL_PUBLIC_WEB_PAGE_NAVIGATION_AND_SEARCH__NOT_ORIGINAL_RAW_BODY",
+    "original_source_bytes_sha256": null,
+    "captured_response_headers_and_tls_server_identity": null,
+    "source_retrieval_exact_utc_timestamp": null,
+    "authenticated_source_raw_body_archive_available": false,
+    "restriction": "DO_NOT_SHA_SEARCH_RESULT_OR_MODEL_SUMMARY_AND_PASS_OFF_AS_OFFICIAL_ORIGINAL",
+    "original_bytes_retrieval_attempt": "Network direct download via container/Python failed due environment DNS unavailable; public web search returns parsed/cached text not canonical raw HTTP original",
+    "actual_exness_xauusd_date_specific_dynamic_schedule_rows_authenticated": false
+  },
+  "sources": [
+    {
+      "authority": "Exness official help",
+      "url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+      "supports": "Generates instrument/date-specific schedule covering open/close-only/quote-only, holiday/maintenance/DST; generic 3h US-summer/2h US-winter center overlap; XAUUSD often closed around rollover",
+      "page_body_original_sha256": null,
+      "required_exact_date_xauusd_rows": false
+    },
+    {
+      "authority": "Exness official holidays",
+      "url": "https://get.exness.help/hc/en-us/articles/17923046759836-Holiday-trading-hours",
+      "supports": "Holiday exceptions potentially mutable; no exact 4h proof",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "Exness official contract/commission",
+      "url": "https://get.exness.help/hc/en-us/articles/17854173039388-Commodities",
+      "supports": "Product XAUUSD specs may differ by date/account; no account-specific contract/FX/fee proof",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "Exness account commission",
+      "url": "https://get.exness.help/hc/en-us/articles/360012007919-Are-trading-accounts-charged-a-commission-fee",
+      "supports": "General Pro no commission; cannot infer actual demo fee accounting",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "BLS official October 2026 schedule",
+      "url": "https://www.bls.gov/schedule/2026/10_sched.htm",
+      "supports": "20 Oct State Employment 10:00 ET (14:00 UTC), 21 Oct Usual Weekly Earnings 10:00 ET (14:00 UTC), 28 Oct metropolitan employment 10:00 ET (14:00 UTC)",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "BEA official 2026 schedule",
+      "url": "https://www.bea.gov/news/schedule/",
+      "supports": "29 Oct GDP and Personal Income 08:30 EDT = 12:30 UTC",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "Federal Reserve October calendar",
+      "url": "https://www.federalreserve.gov/newsevents/2026-october.htm",
+      "supports": "FOMC 27-28 Oct, press 28 Oct 14:00 EDT =18:00 UTC; other daily/weekly statistical releases, classification unknown",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "Census official indicators",
+      "url": "https://www.census.gov/econ/indicators/release_schedule.html",
+      "supports": "Advance economic indicators due 28 Oct 08:30 EDT=12:30 UTC",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "Census manufacturing/wholesale",
+      "url": "https://www.census.gov/wholesale/index.html",
+      "supports": "Tentative historical wholesale revisions Oct 26 10:00 EDT=14:00 UTC; must not mark that date event-free",
+      "page_body_original_sha256": null
+    },
+    {
+      "authority": "DOL UI claims official",
+      "url": "https://www.dol.gov/agencies/eta/ui-claims",
+      "supports": "Weekly Thursday UI release; date-specific original 2026-10-22 event source/hash not archived by review",
+      "page_body_original_sha256": null
+    }
+  ],
+  "deterministic_event_guard": {
+    "frozen_source_path": "src/xauusd_agent/guards/event_guard.py",
+    "tiers": {
+      "TIER_1": "30_MIN_BEFORE_30_MIN_AFTER",
+      "TIER_2": "15_MIN_BEFORE_15_MIN_AFTER"
+    },
+    "false_positive_unknown_policy": "UNKNOWN_OR_UNHEALTHY_OR_UNNORMALIZED_MEANS_NO_ENTRY; NO_ASSUMED_EVENT_CLASSIFICATION",
+    "observed_event_health_live": false,
+    "independent_event_origin_proofs_present": false,
+    "tier_for_upcoming_specific_releases": "NOT_INDEPENDENTLY_REGISTERED",
+    "event_normalization_unknown": true,
+    "must_not_shortcut_by_event_absent_from_one_calendar": true
+  },
+  "prospective_screening_only": [
+    {
+      "date": "2026-10-20",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "Census_New_Residential_Construction_12:30",
+        "BLS_State_Employment_14:00"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-21",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "BLS_Usual_Weekly_Earnings_14:00"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-22",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "DOL_weekly_UI_claims_US_Eastern_08:30_expected_timestamp_unarchived"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-23",
+      "status": "EARLIEST_CALENDAR_SCREENING_DATE_ONLY_NOT_QUALIFIED",
+      "known_conflicts_utc": [],
+      "event_absence_proven": false,
+      "broker_xauusd_session_proven": false,
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-26",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "Census_tentative_wholesale_revisions_14:00_UTC"
+      ],
+      "event_absence_proven": false,
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-27",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "US_Fed_FOMC_begins",
+        "Census_Advance_Durable_Goods_12:30"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-28",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "Census_Advance_Indicators_12:30",
+        "BLS_Metropolitan_Employment_14:00",
+        "FOMC_statement_18:00"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    },
+    {
+      "date": "2026-10-29",
+      "status": "UNQUALIFIED",
+      "known_conflicts_utc": [
+        "BEA_GDP_and_personal_income_12:30"
+      ],
+      "exact_full_4h_window": null,
+      "eligible_entry_window": null
+    }
+  ],
+  "required_before_qualifying": [
+    "Date-specific official XAUUSD trading OPEN eligibility for full 240 min including no quote-only, close-only, maintenance and holiday changes with authoritative raw SHA",
+    "Original BLS/BEA/Fed/Census/DOL body hashes and precise UTC source retrieval + independent source/origin proof",
+    "Classified protected events TIER1/TIER2, proper blackout, complete source health and normalization, no unscheduled shock",
+    "UTC/DST London NY overlap evidence source and exact entry subwindow wholly inside observed four hours",
+    "Account-bound symbol/feed, per-account fees/currency/tick-loss conversion, independent gap/slippage proxy and stress source",
+    "Private VPS path/process owner reviewed and owner first-run confirmation"
+  ],
+  "exact_observation_start_utc": null,
+  "exact_observation_end_utc": null,
+  "exact_verified_entry_start_utc": null,
+  "exact_verified_entry_end_utc": null,
+  "official_xauusd_instrument_source_sha256": null,
+  "event_guard_full_health_source_sha256": null,
+  "qualified_run_registered": false,
+  "vps_execution_permitted": false,
+  "demo_or_live_trading_permitted": false
+}
