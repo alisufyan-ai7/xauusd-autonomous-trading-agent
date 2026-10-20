@@ -32,7 +32,7 @@ from xauusd_demo.envelope import (
 
 PYTHON_EXE = r"C:\Program Files\Python312\python.exe"
 TERMINAL_EXE = r"C:\Program Files\MetaTrader 5\terminal64.exe"
-PRIVATE_SUBDIR = "XAUUSD-APC-DEMO-CANARY"
+PRIVATE_SUBDIR = "XAUUSD-APC-DEMO-CANARY-S2"
 
 
 def main(argv: list[str] | None = None) -> int:
