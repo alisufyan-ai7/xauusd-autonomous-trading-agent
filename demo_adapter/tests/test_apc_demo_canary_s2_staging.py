@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 import subprocess
 import sys
@@ -11,9 +12,9 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "phase0/ops/apc-demo-canary-s2-execution-off-stage.ps1"
-FROZEN_S2_HEAD = "ac54a99e4d9ad2ea2b88725824a7b5ece54a12f4"
-FROZEN_S2_SHA = "e51a8f9a2820352f63c0fe4b51dcdd9b72f8b01554f73b72590f10f2c78583d1"
-FROZEN_MANIFEST = "02fc91865aa7db2cf40feb81d236fa2ebba5db7318e6e815ac4ec4c4d903ccd7"
+FROZEN_S2_HEAD = "89711065a3a2d38fe02282fff3ad1782aabda0d2"
+FROZEN_S2_SHA = "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e"
+FROZEN_MANIFEST = "70bf8637208772e91a64b7af2cc06997847dc557752b05d9225b735b30ff13be"
 
 
 def _embedded_python() -> str:
@@ -28,6 +29,12 @@ def _embedded_python() -> str:
 
 def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     source = SCRIPT.read_text(encoding="utf-8")
+    assert hashlib.sha256(SCRIPT.read_bytes()).hexdigest() == (
+        "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0"
+    )
+    assert "Downloads\\\\github-actions-artifact-12289594320.zip" in source
+    assert "github-actions-artifact-12289113540.zip" not in source
+    assert "$ExpectedStageScriptSHA = " in source
     embedded = _embedded_python()
     sha = hashlib.sha256(embedded.encode("ascii")).hexdigest()
     assert sha == "b9d2a6e09e7c4eb57633938bc7150ed2391feb5e4c6e8787a53004b853e1bbf5"
@@ -43,6 +50,9 @@ def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     assert "UNAUTHORIZED_METATRADER5_IMPORT_IN_OFFLINE_STAGE" in embedded
     assert "APC_STAGE_SUCCESS_EXECUTION_OFF_NO_TRADING" in embedded
     assert "APC_STAGE_VERIFIED__KILLED__UNUSED__MT5_UNTOUCHED" in source
+    # Confirm the in-memory source is pinned independently from the PS wrapper.
+    assert "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349" in source
+    assert "github-actions-artifact-12289594320.zip" in source
     for forbidden in (
         "mt5.initialize(", "mt5.order_send(", "mt5.login(",
         "Register-ScheduledTask", "Start-ScheduledTask",
@@ -67,3 +77,21 @@ def test_s2_stage_ps51_syntax_without_execution() -> None:
         capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_main_state_source_of_truth_points_to_live_main_and_preserves_history() -> None:
+    current = "ccaa8338aecee8bd3afbc358644410dff6c512e5"
+    old_merge = "33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf"
+    md = (ROOT / "phase0/roadmap/CURRENT_PROJECT_STATE.md").read_text(
+        encoding="utf-8"
+    )
+    state = json.loads(
+        (ROOT / "phase0/roadmap/CURRENT_PROJECT_STATE_2026-10-18.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert f"**Current merged `main`:** `{current}`" in md
+    assert state["authoritative_main_sha"] == current
+    assert state["pr6"]["merge_sha"] == old_merge
+    assert md.count(old_merge) == 1
+    assert json.dumps(state).count(old_merge) == 1
