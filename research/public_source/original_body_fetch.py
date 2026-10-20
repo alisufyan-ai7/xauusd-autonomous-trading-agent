@@ -130,10 +130,15 @@ def capture(output: Path) -> dict[str, Any]:
             (output / (name + ".original-body")).write_bytes(raw)
             records[name] = {"status": "HTTPS_ORIGINAL_BODY_RETRIEVED", **meta}
         except (OSError, ValueError, urllib.error.URLError) as exc:
+            status_code = int(exc.code) if isinstance(
+                exc, urllib.error.HTTPError
+            ) else None
             records[name] = {
                 "status": "ORIGINAL_BODY_UNAVAILABLE",
                 "requested_url": url,
                 "reason_type": type(exc).__name__,
+                "http_status_when_available": status_code,
+                "failed_at_utc": datetime.now(UTC).isoformat(),
                 "exact_original_http_entity_sha256": None,
                 "accepted_for_capture_registration": False,
             }
@@ -176,6 +181,11 @@ def main() -> int:
         },
     }
     print(json.dumps(summary, sort_keys=True))
+    # Log public HTTP metadata and timestamps for durable cross-chat GitHub
+    # review. NEVER log body bytes, cookies, API keys or private broker data.
+    print("PUBLIC_HTTPS_SOURCE_ORIGIN_REPORT=" + json.dumps(
+        result["sources"], sort_keys=True, separators=(",", ":"),
+    ))
     return 0
 
 
