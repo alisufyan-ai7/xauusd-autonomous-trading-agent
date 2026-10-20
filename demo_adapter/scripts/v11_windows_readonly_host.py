@@ -365,6 +365,11 @@ def run_authorized(argv: list[str] | None = None) -> int:
         raise CaptureSafetyError("run record must be object")
     contract = validate_run_record(record, source, args.run_record_sha256)
     output = Path(args.output_dir)
+    expected_root = Path(os.environ.get("LOCALAPPDATA", "")) / "XAUUSD-DEMO-V11-READONLY"
+    if (output.parent != expected_root or
+            not __import__("re").fullmatch(r"capture-[0-9]{8}T[0-9]{6}Z", output.name)
+            or not (expected_root / "EXECUTION_OFF__NO_CAPTURE_AUTHORIZED").is_file()):
+        raise CaptureSafetyError("output must stay inside registered private stage")
     if output.exists() or output.is_symlink():
         raise CaptureSafetyError("output directory already exists: no retry")
     # Private directory only, no relative paths or existing symlink ancestors.
