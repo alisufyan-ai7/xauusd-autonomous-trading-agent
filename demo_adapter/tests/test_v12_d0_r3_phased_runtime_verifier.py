@@ -34,7 +34,8 @@ def test_new_r3_prospective_registration_never_reuses_failures() -> None:
         "executable_d0_r3_broker_attach_script_in_this_pr",
         "order_check_order_calc_margin_order_send_allowed", "demo_or_live_trading_authorized",
         "github_pr_merge_authorized", "four_hour_240_min_capture_authorized",
-        "pcr3_or_gate0_mutation_authorized", "vps_mutation_or_automatic_runtime_execution_authorized",
+        "pcr3_or_gate0_mutation_authorized",
+        "vps_mutation_or_automatic_runtime_execution_authorized",
     ):
         assert data[field] is False, field
     assert data["private_output_dir"] is None
@@ -43,7 +44,9 @@ def test_new_r3_prospective_registration_never_reuses_failures() -> None:
 def test_exact_owner_survey_is_registered_as_unverified_runtime_candidate() -> None:
     data = json.loads(REG.read_text(encoding="utf-8"))
     evidence = SURVEY.read_text(encoding="utf-8")
-    assert data["survey_sha256"] == "e6095ec5b12a47ea86f6767008027c13e8d0e862ecec50b1a6725024f7c37605"
+    assert data["survey_sha256"] == (
+        "e6095ec5b12a47ea86f6767008027c13e8d0e862ecec50b1a6725024f7c37605"
+    )
     assert data["python_candidate_literal"] == r"C:\Program Files\Python312\python.exe"
     assert data["reported_terminal"]["pid"] == 6216
     assert data["reported_terminal"]["exe"] == r"C:\Program Files\MetaTrader 5\terminal64.exe"
