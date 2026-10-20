@@ -1,0 +1,103 @@
+{
+  "schema": "DEMO_V12_D0_R3_PROSPECTIVE_PHASED_RUNTIME_SOURCE_DISCOVERY_V1",
+  "status": "DESIGN_ONLY__NOT_AUTHORIZED_NOT_EXECUTED__NO_ACTIVATION",
+  "registration_date_utc": "2026-10-20",
+  "parent_pr20_head": "f255f59b401310a5acf2b3b0fc6169ac5635acc9",
+  "previous_failures_immutable": [
+    {
+      "attempt": "R1",
+      "registration_sha256": "ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534",
+      "status": "FAIL_CLOSED_PREATTACH_RESERVED_POWERSHELL_HOST",
+      "retry_allowed": false
+    },
+    {
+      "attempt": "R2",
+      "registration_sha256": "13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61",
+      "status": "FAIL_CLOSED_PREATTACH_NARROW_PYTHON_LOCATOR",
+      "retry_allowed": false
+    }
+  ],
+  "survey_evidence_file": "phase0/roadmap/DEMO_V12_D0_R2_STATIC_VPS_SURVEY_OWNER_REPORTED_2026-10-20.md",
+  "survey_sha256": "e6095ec5b12a47ea86f6767008027c13e8d0e862ecec50b1a6725024f7c37605",
+  "survey_owner_reported_utc": "2026-10-20T14:22:43.0554548Z",
+  "python_candidate_literal": "C:\\Program Files\\Python312\\python.exe",
+  "python_is_venv_on_disk": false,
+  "python_metatrader5_package_directory_on_disk": true,
+  "python_metatrader5_dist_info_on_disk": true,
+  "python_version_3_12_proven": false,
+  "python_metatrader5_import_proven": false,
+  "reported_terminal": {
+    "count": 1,
+    "pid": 6216,
+    "exe": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
+    "runtime_still_same_proven": false
+  },
+  "preflight_script_path": "demo_adapter/scripts/v12-d0-r3-phased-runtime-verifier.ps1",
+  "phases": [
+    {
+      "id": "A_VERSION_ONLY",
+      "approved": false,
+      "executed": false,
+      "python_invoked": true,
+      "mt5_import": false,
+      "mt5_attachment": false,
+      "requested_owner_token": "APPROVE_D0_R3_VERSION_ONLY_ONCE"
+    },
+    {
+      "id": "B_IMPORT_ONLY",
+      "approved": false,
+      "executed": false,
+      "python_invoked": true,
+      "mt5_import": true,
+      "mt5_attachment": false,
+      "requires": "A_VERSION_ONLY_PASS_AND_NEW_OWNER_APPROVAL",
+      "requested_owner_token": "APPROVE_D0_R3_IMPORT_ONLY_ONCE"
+    },
+    {
+      "id": "C_TERMINAL_ONLY",
+      "approved": false,
+      "executed": false,
+      "python_invoked": false,
+      "mt5_import": false,
+      "mt5_attachment": false,
+      "requires": "B_IMPORT_ONLY_PASS_AND_NEW_OWNER_APPROVAL",
+      "requested_owner_token": "APPROVE_D0_R3_TERMINAL_ONLY_ONCE"
+    },
+    {
+      "id": "D_MT5_ATTACH_INVENTORY",
+      "approved": false,
+      "executed": false,
+      "python_invoked": true,
+      "mt5_import": true,
+      "mt5_attachment": true,
+      "requires": "A_B_C_VERIFIED_AND_NEW_SEPARATE_EXACT_HEAD_CODE_REGISTRATION_OWNER_APPROVAL",
+      "requested_owner_token": null
+    }
+  ],
+  "one_attempt_per_r3_d0_registration_sha": true,
+  "r3_d0_attempt_used": false,
+  "r3_owner_approval_received": false,
+  "version_only_owner_approval_received": false,
+  "import_only_owner_approval_received": false,
+  "terminal_only_owner_approval_received": false,
+  "d0_mt5_attachment_owner_approval_received": false,
+  "executable_d0_r3_broker_attach_script_in_this_pr": false,
+  "prior_d0_r1_r2_registration_or_stage_reuse": false,
+  "new_r3_private_stage_created": false,
+  "private_output_dir": null,
+  "read_only_d0_required_broker_identity_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "initial_existing_terminal_must_remain_singleton": true,
+  "tradeapi_disabled_required": true,
+  "zero_exposure_required": true,
+  "mt5_initialize_is_separate_side_effect_risk": true,
+  "four_hour_240_min_capture_authorized": false,
+  "event_guard_source_admission_complete": false,
+  "cash_risk_broker_binding_admitted": false,
+  "order_check_order_calc_margin_order_send_allowed": false,
+  "demo_or_live_trading_authorized": false,
+  "github_pr_merge_authorized": false,
+  "pcr3_or_gate0_mutation_authorized": false,
+  "vps_mutation_or_automatic_runtime_execution_authorized": false,
+  "external_python_trading_enabled": false,
+  "owner_next_approval": "ONE_ATTENDED_VPS_VERSION_ONLY_PHASE_A_AFTER_EXACT_SOURCE_SHA_AND_PR_HEAD_REVERIFY"
+}
