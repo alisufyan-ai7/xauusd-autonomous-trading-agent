@@ -35,6 +35,8 @@ $files = @(
     "demo_adapter\scripts\v12_windows_mt5_readonly_host.py",
     "demo_adapter\scripts\v12_attempt_journal.py",
     "demo_adapter\scripts\v12_journaled_readonly_port.py",
+    "demo_adapter\scripts\v12_attempt_journal.py",
+    "demo_adapter\scripts\v12_journaled_readonly_port.py",
     "demo_adapter\scripts\v11_session_scope_feasibility.py",
     "src\xauusd_agent\risk\full_policy_a.py"
 )
@@ -82,6 +84,7 @@ if ($RunSyntheticTests) {
             "tests/test_v12_option_a_preregistration.py",
             "tests/test_v12_offline_source_packet.py",
             "tests/test_v12_windows_readonly_capture_preparation.py",
+            "tests/test_v12_attempt_journal.py",
             "tests/test_v12_immutable_attempt_journal.py"
         )
         & $python -m pytest -q $tests
