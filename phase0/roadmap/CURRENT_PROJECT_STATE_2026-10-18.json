@@ -314,5 +314,67 @@
     "broker_actions_performed_in_this_review": 0,
     "no_live_account_guarantee_from_static_source": false,
     "owner_human_assessment_required": true
+  },
+  "demo_admit_pr8_pr9_independent_review_2026_10_21": {
+    "review_scope": "GITHUB_ONLY_NO_VPS_MT5_BROKER",
+    "selected_calibration": "V1_1_RESTRICTED_SESSION_OWNER_SELECTED_DESIGN_ONLY",
+    "old_v1_0_blob_sha": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "old_v1_0_initial_selected": false,
+    "pr8": {
+      "number": 8,
+      "head": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+      "base": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+      "state": "OPEN_DRAFT_UNMERGED",
+      "ci": {
+        "records_run": 39117673344,
+        "result": "SUCCESS"
+      },
+      "disposition": "DESIGN_ONLY_OWNER_MERGE_REVIEW_ELIGIBLE_NOT_NUMERIC_ADMISSION"
+    },
+    "pr9": {
+      "number": 9,
+      "head": "6e5f32b771d511c670bbb348f0dd0fb427412fd5",
+      "base": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+      "state": "OPEN_DRAFT_UNMERGED",
+      "ci": {
+        "production_candidate": 39121001033,
+        "demo_admit": 39121001015,
+        "records": 39121001050,
+        "result": "SUCCESS",
+        "windows_production_pass": 261,
+        "linux_production_pass": 260,
+        "windows_demo_pass": 44,
+        "linux_demo_pass": 44
+      },
+      "disposition": "PURE_MATH_TESTED_NO_TRUSTED_BROKER_BINDING_RUNTIME_QUARANTINE_STILL_MANDATORY"
+    },
+    "prospective_pr27": {
+      "head": "d4091aaa759952f6867165f2c71c0d61317f181c",
+      "branch": "review/demo-admit-v11-window-contract-compat-20261021",
+      "base": "6e5f32b771d511c670bbb348f0dd0fb427412fd5",
+      "state": "DRAFT_UNMERGED",
+      "ci": {
+        "demo_admit_run": 39489951270,
+        "records_run": 39489951352,
+        "result": "SUCCESS",
+        "windows_pass": 46,
+        "linux_pass": 46
+      },
+      "change": "ADD_EMPTY_MISSING_WINDOW_CONTRACT_KEYS_AND_UNSET_PAIR_TOLERANCE_WITH_FAILCLOSED_TESTS_ONLY"
+    },
+    "remaining_v11_eligibility": "NO_EXACT_UTC_WINDOW_OR_APPROVAL_NO_REAL_WINDOWS_HOST_NO_TICK_PAIR_TOLERANCE_NO_LIVE_DATA_NO_COST_NUMBERS",
+    "runtime_order_authorized": false,
+    "demo_admit_pass": false,
+    "s2_separate_execution_off_stage_pass_kept": true,
+    "s2_broker_apc_authorized": false,
+    "merge_performed": false,
+    "next_capture_approval_ready": false,
+    "merge_dependency_order": [
+      "PR8",
+      "PR9",
+      "PR27_CORRECTION"
+    ],
+    "primary_review_doc": "phase0/roadmap/DEMO_ADMIT_PR8_PR9_INDEPENDENT_REVIEW_2026-10-21.md",
+    "independent_crosschat_doc": "phase0/roadmap/CROSS_CHAT_HANDOFF_DEMO_ADMIT_PR8_PR9_REVIEW_2026-10-21.md"
   }
 }
