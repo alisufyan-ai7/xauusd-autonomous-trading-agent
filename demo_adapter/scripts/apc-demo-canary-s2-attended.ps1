@@ -15,6 +15,7 @@ param(
     [string] $ExpiryUTC = '',
     [string] $Side = '',
     [string] $Stop = '',
+    [string] $PriceLimit = '',
     [switch] $ShellOnlyTest
 )
 Set-StrictMode -Version Latest
@@ -69,12 +70,14 @@ if ($Mode -ne 'VERIFY') {
                  '--activation-id', $ActivationId,
                  '--expires-utc', $ExpiryUTC)
     if ($Mode -eq 'ENTRY') {
-        if ($Side -cnotin @('BUY','SELL') -or [string]::IsNullOrWhiteSpace($Stop)) {
+        if ($Side -cnotin @('BUY','SELL') -or [string]::IsNullOrWhiteSpace($Stop) -or
+            [string]::IsNullOrWhiteSpace($PriceLimit)) {
             throw 'S2_OWNER_APPROVED_SIDE_AND_SL_REQUIRED'
         }
-        $argsPy += @('--side', $Side, '--stop', $Stop)
+        $argsPy += @('--side', $Side, '--stop', $Stop,
+                     '--price-limit', $PriceLimit)
     }
-    elseif ($Side -ne '' -or $Stop -ne '') {
+    elseif ($Side -ne '' -or $Stop -ne '' -or $PriceLimit -ne '') {
         throw 'S2_CLOSE_CANNOT_SPECIFY_NEW_RISK'
     }
 }
