@@ -10,3 +10,5 @@ demo_adapter/scripts/v11_readonly_collector.py text eol=lf
 demo_adapter/scripts/v11_windows_mt5_readonly_host.py text eol=lf
 demo_adapter/scripts/v12_attempt_journal.py text eol=lf
 demo_adapter/scripts/v12_journaled_readonly_port.py text eol=lf
+demo_adapter/scripts/v12_d0_readonly_inventory.py text eol=lf
+demo_adapter/scripts/v12-d0-readonly-inventory.ps1 text eol=lf
