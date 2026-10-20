@@ -1,0 +1,70 @@
+{
+  "schema": "demo-admit-v11-session-eligibility-prospective-amendment-1",
+  "decision_date": "2026-10-21",
+  "decision": "APPROVED_OWNER_V11_RESTRICTED_SESSION_4H_BAND_CLARIFICATION",
+  "owner_approved": true,
+  "status": "PROSPECTIVE_METHOD_ELIGIBILITY_CLARIFICATION_ACCEPTED__NO_CAPTURE_APPROVAL",
+  "supersedes_only_session_eligibility_wording_from": "VERIFIED_LONDON_NEW_YORK_LIQUID_OVERLAP_ONLY",
+  "new_permitted_session": "VERIFIED_240MIN_LIQUID_LONDON_NY_SUMMER_SESSION_BAND",
+  "duration_minutes_exact": 240,
+  "required_full_simultaneous_summer_overlap_utc": {
+    "start": "13:30",
+    "end": "16:30",
+    "minutes": 180
+  },
+  "additional_allowed_adjacent_minutes_exact": 60,
+  "adjacent_hour_rule": "EXACTLY_60_MINUTES_IMMEDIATELY_BEFORE_OR_AFTER_FULL_3H_SIMULTANEOUS_OVERLAP_WHILE_LONDON_OR_NEW_YORK_OPEN",
+  "eligible_utc_bands_not_specific_date": [
+    "12:30-16:30",
+    "13:30-17:30"
+  ],
+  "initial_candidate_preference": "13:30-17:30 UTC if independent news/session/holiday eligibility is VERIFIED; not yet a run registration",
+  "broker_source_url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+  "broker_published_utc_summer_centres": {
+    "london": "08:00-16:30",
+    "new_york": "13:30-20:00"
+  },
+  "broker_instrument": "XAUUSD",
+  "broker_account_scope": {
+    "broker": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "trade_mode": "DEMO",
+    "currency": "USD",
+    "fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91"
+  },
+  "frozen_rules_unchanged": [
+    "one_contiguous_4_hour_window_only",
+    "all_240_one_minute_bins",
+    "5_second_read_only_observations",
+    "true_tick_pairs_1_5_30_seconds",
+    "no_interpolation_or_favorable_trimming",
+    "spread_tick_freshness_and_shock_guard",
+    "official_event_guard_and_sessions_holidays_dst_verified_before_registration",
+    "0.01_lot_maximum",
+    "zero_positions_and_pending_orders_for_capture",
+    "full_Policy_A_before_any_broker_order",
+    "durable_KILLED_QUARANTINED_no_blind_retry",
+    "historical_v1_0_and_prior_failures_immutable",
+    "NO_REAL_MONEY",
+    "external_python_trading_DISABLED_throughout_capture"
+  ],
+  "not_added": [
+    "multi_day_market_validation",
+    "weekly_reopening_market_validation",
+    "rollover_admission",
+    "out_of_band_trading"
+  ],
+  "read_only_capture_owner_authorized": false,
+  "mt5_initialize_authorized": false,
+  "new_vps_staging_authorized": false,
+  "broker_order_authorized": false,
+  "real_money_authorized": false,
+  "v11_stage_status": "OWNER_REPORTED_EXECUTION_OFF_PASS__NO_CAPTURE",
+  "frozen_staged_pr28_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+  "production_main_at_decision": "2848c98940def262459fd89d5897c6f63dd6aadb",
+  "exact_run_start_utc": null,
+  "exact_run_end_utc": null,
+  "run_record_sha256": null,
+  "run_owner_approval_id": null,
+  "notes": "Prospective additive owner decision. The immutable Oct18 v1.1 method/preregistration and Oct21 staged 5-component ZIP remain unchanged. No exact future date admitted, live broker runtime not accessed."
+}
