@@ -149,3 +149,33 @@ def test_s2_native_process_verify_no_mt5_and_denied_entry(tmp_path: Path) -> Non
     assert denied.returncode != 0
     assert "S2_EXPLICIT_NEW_OWNER_APC_REQUIRED" in denied.stderr
     assert root.is_dir()
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="native Windows PS5.1 only")
+def test_native_ps51_s2_attended_launcher_parses_and_shell_only() -> None:
+    shell = Path(r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
+    assert shell.is_file()
+    parser = (
+        "$errors=$null;$tokens=$null;"
+        "[System.Management.Automation.Language.Parser]::ParseFile("
+        "'" + str(LAUNCHER_PS).replace("'", "''") + "',"
+        "[ref]$tokens,[ref]$errors)|Out-Null;"
+        "if($errors.Count -gt 0){$errors|Format-List;exit 18};"
+        "'S2_PS51_PARSE_PASS'"
+    )
+    parsed = subprocess.run(  # noqa: S603 (isolated CI PowerShell parser)
+        [str(shell), "-NoProfile", "-NonInteractive", "-Command", parser],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert parsed.returncode == 0, parsed.stdout + parsed.stderr
+    shell_only = subprocess.run(  # noqa: S603 (no Python or MT5 launched)
+        [
+            str(shell), "-NoProfile", "-NonInteractive", "-File", str(LAUNCHER_PS),
+            "-Mode", "VERIFY", "-ExactHead", "a" * 40,
+            "-ExactBundleSHA", "b" * 64, "-ExactLoaderSHA", "c" * 64,
+            "-ExpectedTerminalPID", "6216", "-ShellOnlyTest",
+        ],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert shell_only.returncode == 0, shell_only.stdout + shell_only.stderr
+    assert "S2_SHELL_ONLY_NO_PYTHON_NO_MT5" in shell_only.stdout
