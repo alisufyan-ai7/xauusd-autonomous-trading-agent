@@ -24,13 +24,14 @@ def _embedded_python() -> str:
         source,
     )
     assert match is not None
-    return match.group(1) + "\n"
+    # Mirror ACTUAL PowerShell: here-string value may end with LF already.
+    return match.group(1).rstrip("\r\n") + "\n"
 
 
 def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     source = SCRIPT.read_text(encoding="utf-8")
     assert hashlib.sha256(SCRIPT.read_bytes()).hexdigest() == (
-        "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0"
+        "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1"
     )
     artifact_default = next(
         line for line in source.splitlines()
@@ -42,7 +43,7 @@ def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     assert "$ExpectedStageScriptSHA = " in source
     embedded = _embedded_python()
     sha = hashlib.sha256(embedded.encode("ascii")).hexdigest()
-    assert sha == "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349"
+    assert sha == "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648"
     assert sha in source
     compile(embedded, str(SCRIPT) + ":in-memory-embedded-python", "exec")
     assert FROZEN_S2_HEAD in embedded
@@ -56,7 +57,7 @@ def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     assert "APC_STAGE_SUCCESS_EXECUTION_OFF_NO_TRADING" in embedded
     assert "APC_STAGE_VERIFIED__KILLED__UNUSED__MT5_UNTOUCHED" in source
     # Confirm the in-memory source is pinned independently from the PS wrapper.
-    assert "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349" in source
+    assert "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648" in source
     assert "github-actions-artifact-12289594320.zip" in source
     for forbidden in (
         "mt5.initialize(", "mt5.order_send(", "mt5.login(",
@@ -102,3 +103,37 @@ def test_main_state_source_of_truth_points_to_live_main_and_preserves_history() 
     # Enforce its factual lineage, not an arbitrary number of mentions.
     assert old_merge in md
     assert json.dumps(state).count(old_merge) == 1
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="native PS5.1 AST only")
+def test_s2_stage_native_ps51_here_string_value_hash_matches_pin() -> None:
+    """Hash the native AST-decoded here-string, never execute staging source."""
+    shell = Path(r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
+    assert shell.is_file()
+    source = str(SCRIPT).replace("'", "''")
+    command = (
+        "$ErrorActionPreference='Stop';"
+        "$err=$null;$tok=$null;"
+        "$ast=[System.Management.Automation.Language.Parser]::ParseFile("
+        "'" + source + "',[ref]$tok,[ref]$err);"
+        "if($err.Count){throw 'PS51_SYNTAX_ERROR'};"
+        "$nodes=@($ast.FindAll({param($n)"
+        "$n -is [System.Management.Automation.Language.StringConstantExpressionAst]"
+        " -and $n.Extent.Text.StartsWith(\"@'\")},$true));"
+        "if($nodes.Count -ne 1){throw 'PS51_HERESTRING_COUNT_MISMATCH'};"
+        "$canonical=$nodes[0].Value.Replace(\"`r`n\",\"`n\").Replace(\"`r\",\"`n\");"
+        "$canonical=$canonical.TrimEnd([char[]]@([char]13,[char]10))+\"`n\";"
+        "$bytes=[Text.Encoding]::ASCII.GetBytes($canonical);"
+        "$h=[Security.Cryptography.SHA256]::Create();"
+        "try{$actual=[BitConverter]::ToString($h.ComputeHash($bytes))"
+        ".Replace('-','').ToLowerInvariant()}finally{$h.Dispose()};"
+        "if($actual -cne '3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648')"
+        "{throw ('PS51_ACTUAL_HASH_DIFFERS='+$actual)};"
+        "Write-Output ('PS51_STAGING_HELPER_CANONICAL_SHA256='+$actual)"
+    )
+    result = subprocess.run(  # noqa: S603 (native AST-only; no execution)
+        [str(shell), "-NoProfile", "-NonInteractive", "-Command", command],
+        check=False, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "PS51_STAGING_HELPER_CANONICAL_SHA256=3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648" in result.stdout
