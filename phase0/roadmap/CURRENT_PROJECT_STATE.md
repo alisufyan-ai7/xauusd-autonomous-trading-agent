@@ -1,5 +1,17 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT VERIFIED S2 STAGE OUTCOME (2026-10-21)
+
+**Most recent owner-reported attended VPS result: `S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF`.** Complete unchanged console output and SHA evidence at [PR26 stage-2 evidence](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6299700345). Original second approval is **consumed** and cannot be reused. It is evidence from owner-pasted stdout, not an independently inspected host.
+
+Exact reviewed PR26 helper SHA256 `fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1`, in-memory Python SHA256 `3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648`, original PR24 transport ZIP artifact ID 12289594320 SHA256 `596390ca92ec7cb94200a38f04a155ed5273f49bc84e9c9a16ebe48e5e05a160`, immutable sealed inner S2 ZIP SHA256 `6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e`, immutable S2 source HEAD `89711065a3a2d38fe02282fff3ad1782aabda0d2`, stage helper HEAD `ab98292dde5c6bda9fc63a85eb36aaac36ed605d`.
+
+**Staged only in NEW** `C:\Users\Administrator\AppData\Local\XAUUSD-APC-DEMO-CANARY-S2`, durable `KILLED`, `UNUSED` one-entry journal, MetaTrader5 **NOT IMPORTED**, **zero broker actions**. Previously existing MT5 PID6216 preserved by verified wrapper. Both required final `APC_STAGE_SUCCESS_EXECUTION_OFF_NO_TRADING` and `APC_STAGE_VERIFIED__KILLED__UNUSED__MT5_UNTOUCHED` markers present. The previous **S2 attempt #1 remains immutable `FAIL_CLOSED_PRE_PYTHON_HASH`**; original distinct PR23 stage PASS remains untouched.
+
+**NEXT restriction:** neither VPS staging approval permits a broker action. No more VPS activity without a new meaningful authorization. Dedicated demo-only terminal with no live credentials, exact owner side/SL/price-limit, one attended external-Python manual enable->entry->known close->disable, fresh account/quote/exposure checks, full Policy A+M1 and final verified broker flat/KILLED/trading-disabled controls still need to be bound to a separate APC-DEMO-CANARY authorization. Unknown outcome QUARANTINED/human reconcile, never retry. Real-money entirely unauthorized.
+
+---
+
 **As-of date:** 2026-10-18  
 **Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`  
 **Current merged `main`:** `ccaa8338aecee8bd3afbc358644410dff6c512e5`
