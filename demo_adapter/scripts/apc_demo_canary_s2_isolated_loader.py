@@ -11,6 +11,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import runpy
 import sqlite3
 import sys
@@ -30,8 +31,8 @@ def verify_stage(
     root: Path, *, expected_head: str, expected_archive_sha256: str,
 ) -> tuple[Path, Path]:
     if (root.name != STAGE_NAME or not root.is_dir() or root.is_symlink()
-            or len(expected_head) != 40
-            or len(expected_archive_sha256) != 64):
+            or re.fullmatch(r"[0-9a-f]{40}", expected_head) is None
+            or re.fullmatch(r"[0-9a-f]{64}", expected_archive_sha256) is None):
         raise RuntimeError("S2_STAGE_OR_PINS_UNTRUSTED")
     actual_zip = root / "sealed.zip"
     if actual_zip.is_symlink():
@@ -62,6 +63,7 @@ def verify_stage(
         site = root / "site"
         if site.is_symlink() or not site.is_dir():
             raise RuntimeError("S2_SITE_MISSING")
+        expected_site_files: set[str] = set()
         for name, meta in declared.items():
             path = Path(name)
             if (path.is_absolute() or ".." in path.parts or
@@ -81,10 +83,20 @@ def verify_stage(
                         if part.is_absolute() or ".." in part.parts:
                             raise RuntimeError("S2_UNSAFE_WHEEL_MEMBER")
                         disk = site / part
-                        if disk.is_symlink() or not disk.is_file():
+                        if member in expected_site_files:
+                            raise RuntimeError("S2_DUPLICATE_WHEEL_MEMBER")
+                        expected_site_files.add(member)
+                        if (disk.is_symlink() or any(parent.is_symlink() for parent in
+                                disk.parents if parent != site and site in parent.parents)
+                                or not disk.is_file()):
                             raise RuntimeError("S2_SITE_MEMBER_MISSING")
                         if disk.read_bytes() != w.read(member):
                             raise RuntimeError("S2_SITE_MEMBER_TAMPERED")
+        observed_site_files = {
+            p.relative_to(site).as_posix() for p in site.rglob("*") if p.is_file()
+        }
+        if observed_site_files != expected_site_files:
+            raise RuntimeError("S2_UNLISTED_OR_MISSING_SITE_FILE")
     ctrl = root / "control.sqlite3"
     journal = root / "canary.sqlite3"
     if ctrl.is_symlink() or journal.is_symlink():
