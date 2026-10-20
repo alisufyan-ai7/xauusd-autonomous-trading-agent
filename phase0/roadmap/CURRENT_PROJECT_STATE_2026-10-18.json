@@ -171,8 +171,8 @@
     "successor_seven_component_sha_verified": true,
     "new_stage_root": "%LOCALAPPDATA%\\XAUUSD-APC-DEMO-CANARY-S2",
     "new_stage_script_ops_branch": "ops/apc-demo-canary-s2-pinned-execution-off-stage-20261020",
-    "new_stage_script_pinned_commit": "105a9e348659aa7431b7eff07ea6b3d3f787bba9",
-    "new_stage_script_sha256": "03685894ed2249daed63b5ba7bcb60ec5e9db44892b26fa3b1e9d5baf0508166",
+    "new_stage_script_pinned_commit": "ba10183e6735e820d8dcbed1e7ddc871b36a4830",
+    "new_stage_script_sha256": "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0",
     "new_stage_embedded_python_sha256": "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349",
     "new_stage_owner_authorization": false,
     "new_stage_vps_executed": false,
@@ -180,6 +180,17 @@
     "manual_external_python_toggle_authorized": false,
     "live_account_race_risk_addressed_in_runbook": true,
     "new_stage_next_approval": "ONE_NEW_S2_EXECUTION_OFF_VPS_STAGING_WITH_NO_MT5_OR_BROKER_ACTION",
-    "next_apc_after": "S2_STAGING_PASS_AND_DEDICATED_DEMO_TERMINAL_CONFIRMATION"
+    "next_apc_after": "S2_STAGING_PASS_AND_DEDICATED_DEMO_TERMINAL_CONFIRMATION",
+    "old_stage_script_historical_superseded": {
+      "commit": "105a9e348659aa7431b7eff07ea6b3d3f787bba9",
+      "sha256": "03685894ed2249daed63b5ba7bcb60ec5e9db44892b26fa3b1e9d5baf0508166",
+      "incorrect_default_artifact_id": 12289113540,
+      "status": "SUPERSEDED_NOT_EXECUTED"
+    },
+    "new_stage_default_github_artifact_id": 12289594320,
+    "new_stage_default_github_artifact_filename": "github-actions-artifact-12289594320.zip",
+    "new_stage_script_source_checked_out_without_vps_execution": true,
+    "s2_stage_authority": "OWNER_APPROVAL_NOT_YET_GRANTED",
+    "current_main_verified_from_github": "ccaa8338aecee8bd3afbc358644410dff6c512e5"
   }
 }
