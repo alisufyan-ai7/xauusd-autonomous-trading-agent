@@ -86,7 +86,7 @@ def test_bootstrap_no_broker_import_and_no_task_mutation() -> None:
     ):
         assert forbidden not in source
     assert "if ($shellonlytest)" in source
-    assert "new_r2_owner_approval_required" not in source  # not silently assumed
+    assert "new_r2_owner_approval_required" in source  # mandatory rejection without approval
     assert "if (-not $ownerapprovedr2)" in source
     assert "privateevidence" in source
     assert "r2-isolatedstage" in source
