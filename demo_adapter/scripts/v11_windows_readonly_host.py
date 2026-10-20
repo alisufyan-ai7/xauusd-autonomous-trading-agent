@@ -14,9 +14,10 @@ import json
 import os
 import sys
 import time
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any, Callable, Protocol
+from typing import Any, Protocol
 
 # Python -I deliberately omits working/script directory; add only this reviewed
 # project-local scripts root (its bytes are separately checked by the launcher).
