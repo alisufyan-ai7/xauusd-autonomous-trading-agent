@@ -8,10 +8,11 @@ from __future__ import annotations
 import hashlib
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
+from collections.abc import Callable
 
 from .canary_policy import CanaryRiskDecision, CanaryRiskEvidence, d, evaluate_canary_risk
 from .control import DemoControlStore
@@ -151,14 +152,23 @@ class DemoCanaryLifecycle:
     def __init__(
         self, mt5: Any, control: DemoControlStore,
         journal: CanaryJournal,
+        *, clock: Callable[[], datetime] | None = None,
     ) -> None:
         self._mt5 = mt5
         self._control = control
         self._journal = journal
         self._identity = exact_demo_identity()
+        self._clock = clock or (lambda: datetime.now(UTC))
+
+    def _check_clock(self, now: datetime) -> None:
+        current = self._clock()
+        if (now.tzinfo is None or current.tzinfo is None or
+                abs((current.astimezone(UTC) - now.astimezone(UTC)).total_seconds()) > 2):
+            raise DemoSafetyError("CANARY_CLOCK_NOT_CURRENT")
 
     def _check(self, *, now: datetime,
                permit: DemoActivationPermit) -> dict[str, Any]:
+        self._check_clock(now)
         if permit.max_daily_submissions != 1:
             raise DemoSafetyError("CANARY_PERMIT_MUST_LIMIT_TO_ONE")
         self._control.assert_active(permit=permit, identity=self._identity, now=now)
@@ -294,6 +304,11 @@ class DemoCanaryLifecycle:
             ps, os = self._exposure()
             if ps or os:
                 raise DemoSafetyError("CANARY_EXPOSURE_CHANGED_BEFORE_ENTRY")
+            _, newest_tick = self._symbol_quote(self._clock())
+            is_buy = request.side.value == "BUY"
+            current_price = d(newest_tick["ask" if is_buy else "bid"], "latest_entry")
+            if abs(current_price - d(payload["price"], "checked_entry")) > Decimal("0.20"):
+                raise DemoSafetyError("CANARY_ENTRY_QUOTE_MOVED_AFTER_RISK_CHECK")
         except Exception:
             self._control.quarantine(reason="CANARY_PREENTRY_FAIL_CLOSED", now=now)
             raise
