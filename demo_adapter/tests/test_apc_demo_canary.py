@@ -1,4 +1,5 @@
 """Synthetic only. No MT5 import, terminal attachment or real order access."""
+# ruff: noqa: I001
 from __future__ import annotations
 
 import hashlib
