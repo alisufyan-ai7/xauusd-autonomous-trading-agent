@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
   "source_of_truth": "GITHUB",
-  "active_focus": "DEMO_ADMIT_V11_MINIMAL_READONLY_CAPTURE_PREPARATION",
+  "active_focus": "DEMO_ADMIT_V11_READONLY_STAGE_PASS__PROSPECTIVE_4H_CAPTURE_REGISTRATION_NEXT",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Review and separately approve exact-head draft PR8 selected v1.1 design. Offline-only engineering next: implement and independently test complete Policy A USD stop-loss and period risk, and prepare hash-audited read-only collector. Before any VPS evidence capture register exact UTC run window and obtain separate permission; no merge, deployment or broker action is inferred.",
+  "next_substantive_action": "Prepare independently verified qualifying contiguous four-hour UTC London/NY overlap, Exness session/Event Guard source SHA, tick tolerance, account+terminal identity and exact immutable run approval record; do not access VPS/MT5 or request capture until reviewed.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "OFFLINE_NATIVE_WINDOWS_AND_LINUX_READONLY_SOURCE_TESTS_PASS__S2_STAGE_UNTOUCHED__NEW_V11_VPS_STAGING_NOT_AUTHORIZED",
+    "status": "OWNER_REPORTED_V11_STAGE_ATTEMPT1_PASS_EXECUTION_OFF__NO_CAPTURE_NO_MT5",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -210,8 +210,8 @@
     "prospective_utc_window_registered": false,
     "allowed_window_hours": 4,
     "numeric_demo_calibration_admitted": false,
-    "separate_staging_owner_approval_received": false,
-    "staged_on_vps": false,
+    "separate_staging_owner_approval_received": true,
+    "staged_on_vps": true,
     "separate_read_only_vps_capture_approved": false,
     "mt5_import_or_attach_performed": false,
     "broker_action_count": 0,
@@ -248,10 +248,10 @@
     "latest_code_head_authoritative_source": "USE EXACT_FINAL_PR28_HEAD_AND_EXACT_SEALED_ARTIFACT_AFTER_FINAL_CI",
     "capture_output_isolated_root": "LOCALAPPDATA/XAUUSD-DEMO-V11-READONLY/capture-YYYYMMDDTHHMMSSZ",
     "private_partial_failure_journal": true,
-    "staging_attempts": 0,
-    "staging_owner_approval_received": false,
+    "staging_attempts": 1,
+    "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "AUTHORIZE_ONE ATTENDED EXACT HASH PINNED V11 EXECUTION_OFF VPS STAGE ONLY; DO NOT CAPTURE",
+    "owner_next_action": "PREPARE PROSPECTIVE SOURCE_VERIFIED_4H_UTC_WINDOW_EVENT_SESSION_TOLERANCE_ACCOUNT_PID_RECORD; REQUEST DISTINCT READONLY_MT5_ATTACH_AND_CAPTURE APPROVAL; NO TRADING",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -270,6 +270,29 @@
       "stage_helper_sha256": "eb0b241dcac4f53d77dc00b5306c31edfb480867184aedad66da5225276d5cca",
       "note": "Source-only approval not transferable to another code/head/artifact; capture and broker operations denied."
     },
-    "execution_off_vps_staging_ready_for_owner_approval": true
+    "execution_off_vps_staging_ready_for_owner_approval": false,
+    "staging_owner_approval_consumed": true,
+    "next_owner_boundary": "SEPARATE_PROSPECTIVE_EXACT_4H_UTC_READONLY_MT5_CAPTURE_APPROVAL_ONLY_AFTER_RUN_REGISTRATION_READY",
+    "stage_evidence": {
+      "outcome": "DEMO_V11_READONLY_STAGE_ATTEMPT1_PASS_EXECUTION_OFF_NO_CAPTURE",
+      "owner_output_received": true,
+      "independently_inspected_vps_disk": false,
+      "github_evidence_comment": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6302062782",
+      "evidence_document": "phase0/roadmap/DEMO_V11_READONLY_EXECUTION_OFF_STAGE_ATTEMPT1_2026-10-21.md",
+      "sealed_pr28_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+      "sealed_artifact_id": 12300205161,
+      "stage_helper_sha256": "eb0b241dcac4f53d77dc00b5306c31edfb480867184aedad66da5225276d5cca",
+      "transport_outer_sha256": "10115fb5bd412a1df2ec4a80cac7d4e563f3276df3fe29ab2e1dde42b7d3c264",
+      "inner_source_zip_sha256": "987982e0a4585fe4c1283c5557d953162a1d0fcb0f4a62b0253b7488af13a938",
+      "manifest_sha256": "b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f",
+      "component_sha_check": "FIVE_COMPONENTS_VERIFIED",
+      "staged_root": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-DEMO-V11-READONLY",
+      "marker": "EXECUTION_OFF__NO_CAPTURE_AUTHORIZED",
+      "final_marker": "V11_EXECUTION_OFF_STAGE_VERIFIED__NO_MT5_NO_CAPTURE_NO_TRADING",
+      "mt5_imported": false,
+      "capture_authorized": false,
+      "broker_actions": 0,
+      "no_repeat_approval": true
+    }
   }
 }
