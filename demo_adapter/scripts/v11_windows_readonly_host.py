@@ -231,6 +231,7 @@ def collect_window(
     *,
     now_fn: Callable[[], datetime] = utc_now,
     sleep_fn: Callable[[float], None] = time.sleep,
+    on_sample: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Use an injected strictly read-only port; fail closed on any incomplete slot."""
     if now_fn() > contract.start_utc or contract.start_utc - now_fn() > timedelta(minutes=5):
@@ -250,6 +251,8 @@ def collect_window(
         observed = safe_snapshot(port, contract, now)
         observed["slot"] = slot
         observations.append(observed)
+        if on_sample is not None:
+            on_sample(observed)
     if now_fn() < contract.end_utc:
         sleep_fn((contract.end_utc - now_fn()).total_seconds())
     if now_fn() > contract.end_utc + timedelta(seconds=5):
@@ -377,9 +380,19 @@ def run_authorized(argv: list[str] | None = None) -> int:
     try:
         port = MT5ReadOnlyAdapter(mt5)
         _identity_and_zero(port, contract.expected_identity_sha256)
-        result = collect_window(port, contract)
-        # Create output ONLY after complete, verified four-hour collection.
+        # New private path is consumed at start, not after 4h, so an interrupted
+        # capture is never treated as UNUSED or silently eligible for a retry.
         output.mkdir(mode=0o700, parents=False, exist_ok=False)
+
+        def append_one(sample: dict[str, Any], file: Any) -> None:
+            file.write(canonical_json(sample))
+            file.flush()
+            os.fsync(file.fileno())
+
+        with (output / "poll_observations.partial.jsonl").open("xb") as partial:
+            result = collect_window(
+                port, contract, on_sample=lambda sample: append_one(sample, partial)
+            )
         target = output / "private_evidence.json"
         with target.open("xb") as file:
             raw = canonical_json(result)
@@ -399,6 +412,21 @@ def run_authorized(argv: list[str] | None = None) -> int:
         with (output / "manifest.json").open("xb") as file:
             file.write(canonical_json(report))
         print(json.dumps(report, sort_keys=True))
+    except BaseException as exc:
+        if output.is_dir() and not (output / "manifest.json").exists():
+            # Preserve failed run evidence without dumping account/secret data
+            # or falsely claiming complete cost calibration.
+            failure = {
+                "status": "FAIL_CLOSED_INCOMPLETE_CAPTURE_NO_ADMISSION",
+                "exception_class": type(exc).__name__,
+                "collector_sha256": sha256(source),
+                "run_record_sha256": args.run_record_sha256,
+                "broker_actions": 0,
+                "retry_authorized": False,
+            }
+            with (output / "failure_report.json").open("xb") as file:
+                file.write(canonical_json(failure))
+        raise
     finally:
         mt5.shutdown()
     return 0
