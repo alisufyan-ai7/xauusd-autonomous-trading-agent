@@ -1,5 +1,20 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT S2 PRE-APC STATUS (2026-10-21) — DEDICATED DEMO TERMINAL UNVERIFIED
+
+Original sealed S2 PR24 artifact was **owner-reported staged PASS on separate attended attempt #2**, with KILLED/UNUSED and zero broker actions; prior attempt #1 remains immutable FAIL_CLOSED_PRE_PYTHON_HASH. **No re-staging is needed or authorized**. Source-of-truth reconciliation on production `main ccaa8338aecee8bd3afbc358644410dff6c512e5` and PR23–PR26 unchanged/unmerged. Detailed non-executable final-preauthorization report: `phase0/roadmap/APC_DEMO_CANARY_FINAL_PREAUTH_GATE_2026-10-21.md`.
+
+**ACTIVE BLOCKER IS NOW HUMAN DEMO-ONLY TERMINAL CREDENTIAL ATTESTATION**, not historical broader calibration. The previous current-blocker adverse-cost item remains historically applicable to **broader operating-condition or production admission**, but does not prevent the narrowly admitted `DEMO_CANARY_ONLY` deterministic envelope (entry slippage $0.50/oz, gap $2.00/oz, commission $5, swap $2) already source-tested and staged. It is NOT validated real-money calibration.
+
+Existing MT5 terminal was previously observed logged into admitted Exness DEMO. **That observation does NOT prove there are no saved live account credentials**. Owner must inspect MT5 Navigator > Accounts (all server groups), confirm single demo-only remembered login and never-saved live credentials under this user/terminal profile, no alternate auto-switch actor; do not send passwords, login numbers or perform GUI modifications. If unknown/false, no broker APC; a new clean demo-only terminal would need separate VPS authorization.
+
+**ALSO MISSING** exact owner-selected BUY or SELL, tick-aligned protective SL and BUY maximum entry ceiling/SELL minimum entry floor grounded in **fresh** XAUUSD Exness broker quote and a test rationale. Frozen risk veto includes full worst-entry-to-stop <=min($25,0.25% min(equity,balance,$10k)), stressed/current M1 margin >=1000% and >=90% free margin/equity, 0.01 lot, no exposure, fresh tick <=5 sec, spread <=$1/oz, independent symbol/account metadata. Activation ID and short UTC expiry must be literal in final APC and reused unchanged for entry/close; durable source does NOT freeze expiry between invocations, so this is a human procedural gate. Only manual external Python ENABLE -> one order -> known-ticket CLOSE -> DISABLE under separate APC; unknown result QUARANTINED/human reconcile, never retry or auto-close unknown exposure. No source, VPS, MT5, broker or trading modifications in this review.
+
+**DECISION: `APC_DEMO_CANARY_AUTHORIZATION_NOT_READY`** pending owner attestation + exact side/SL/limit and session binding; current permission remains no MT5 attach/order/check/margin, trading toggle or real money.
+
+---
+
+
 ## CURRENT VERIFIED S2 STAGE OUTCOME (2026-10-21)
 
 **Most recent owner-reported attended VPS result: `S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF`.** Complete unchanged console output and SHA evidence at [PR26 stage-2 evidence](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6299700345). Original second approval is **consumed** and cannot be reused. It is evidence from owner-pasted stdout, not an independently inspected host.
