@@ -206,15 +206,25 @@
         "mt5_imported": false,
         "broker_action": false,
         "stage_result": "NO_NEW_S2_STAGE_ESTABLISHED",
-        "github_evidence": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/25#issuecomment-6299219429"
+        "github_evidence": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/25#issuecomment-6299219429",
+        "ps_wrapper_invoked": true
       }
     ],
     "pr26_prospective_fix": {
       "branch": "fix/apc-demo-canary-s2-ps-here-string-hash-20261021",
       "outer_sha256": "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1",
       "embedded_sha256": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
-      "status": "PROSPECTIVE_OFFLINE_REVIEW_CI_PENDING",
-      "new_owner_approval_required": true
+      "status": "OFFLINE_WINDOWS_NATIVE_AST_HASH_PASS__VPS_NOT_AUTHORIZED",
+      "new_owner_approval_required": true,
+      "native_windows_ci": {
+        "run_id": 39482995784,
+        "windows_pass": 55,
+        "linux_pass": 50,
+        "linux_skipped": 5,
+        "source_hash_verified": true,
+        "ast_decoded_hash_verified": true,
+        "python_stage_not_executed": true
+      }
     }
   }
 }
