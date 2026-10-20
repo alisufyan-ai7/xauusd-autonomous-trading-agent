@@ -18,6 +18,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
+# Python -I deliberately omits working/script directory; add only this reviewed
+# project-local scripts root (its bytes are separately checked by the launcher).
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from scripts.v11_readonly_collector import (
     CaptureSafetyError,
     WindowContract,
@@ -104,6 +108,13 @@ def validate_run_record(
         raise CaptureSafetyError("collector SHA missing")
     if sha256(source) != record["exact_collector_source_sha256"]:
         raise CaptureSafetyError("collector source SHA mismatch")
+    from scripts import v11_readonly_collector as primitive
+
+    primitive_file = Path(primitive.__file__).resolve()
+    if primitive_file != Path(__file__).resolve().with_name("v11_readonly_collector.py"):
+        raise CaptureSafetyError("unapproved read-only primitive path")
+    if sha256(primitive_file.read_bytes()) != record.get("exact_readonly_primitive_sha256"):
+        raise CaptureSafetyError("primitive/source SHA mismatch")
     for field in (
         "exact_collector_static_allowlist_verification_sha256",
         "holiday_and_reopening_exclusion_source_sha256",
