@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prepare exact prospective 240-minute UTC London/New York summer band while verifying XAUUSD instrument hours, event/holiday blackouts, terminal identity and tolerance. No MT5/VPS access or broker trade; request separate read-only capture approval when runnable registration is fully pinned.",
+  "next_substantive_action": "Finalize the Oct22 13:30-17:30 UTC provisional 4h run only if event/session/date-specific XAUUSD source checks and immutable source hashes pass. Otherwise prospectively select later qualifying day. Distinct owner authorization required for MT5 initialize/read-only capture; no trade access.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "V11_STAGE_PASS_EXECUTION_OFF__4H_SESSION_BAND_METHOD_ACCEPTED__RUN_DATE_AND_READONLY_CAPTURE_NOT_APPROVED",
+    "status": "STAGE_PASS_EXECUTION_OFF__SESSION_METHOD_APPROVED__OCT22_CANDIDATE_ONLY__ACTUAL_CAPTURE_HOLD",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "PROSPECTIVELY_VERIFY_AND_REGISTER_EXACT_4H_UTC_SUMMER_SESSION_BAND_WITH_BROKER_XAUUSD_SESSION_EVENT_GUARD_SOURCES_TOLERANCE_AND_PINS__THEN_REQUEST_SEPARATE_OWNER_READONLY_CAPTURE_PERMISSION",
+    "owner_next_action": "INDEPENDENTLY_VERIFY_EXNESS_XAUUSD_DATE_HOURS_ALL_RELEVANT_EVENTS_AND_GUARDS_AND_CURRENT_TERMINAL_PID; FREEZE_SOURCE_HASHED_UTC_4H_RUN_REGISTRATION; REQUEST SEPARATE READONLY_MT5_INITIALIZE_AND_CAPTURE_PERMISSION",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -326,6 +326,20 @@
       "approved_change": "ONE_CONTIGUOUS_240MIN_WINDOW_FULL_SUMMER_3H_LONDON_NY_OVERLAP_PLUS_EXACTLY_ONE_ADJACENT_HOUR_WITH_AT_LEAST_ONE_CENTRE_OPEN",
       "approved_prospective_decision": "phase0/roadmap/DEMO_V11_RESTRICTED_SESSION_4H_BAND_OWNER_CLARIFICATION_2026-10-21.json"
     },
-    "session_eligibility_owner_clarification_approved": true
+    "session_eligibility_owner_clarification_approved": true,
+    "window_candidate": {
+      "status": "CONDITIONAL_PRE_SELECTION_NOT_CAPTURE_REGISTRATION",
+      "start_utc": "2026-10-22T13:30:00Z",
+      "end_utc": "2026-10-22T17:30:00Z",
+      "duration_minutes": 240,
+      "pair_tolerance_preselected_ms": 100,
+      "record": "phase0/roadmap/DEMO_V11_4H_CAPTURE_PROSPECTIVE_WINDOW_CANDIDATE_2026-10-22.json",
+      "source_dates_and_hashes_finalized": false,
+      "event_guard_classification_complete": false,
+      "actual_xauusd_instrument_hours_confirmed": false,
+      "current_vps_terminal_pid_verified": false,
+      "owner_attendance_confirmed": false,
+      "capture_authorized": false
+    }
   }
 }
