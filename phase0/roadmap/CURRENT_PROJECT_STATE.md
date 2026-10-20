@@ -1,7 +1,22 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
 **As-of date:** 2026-10-18  
-**Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`  
+**Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`
+**CURRENT GitHub `main` after owner-approved sequential PR8→PR9→PR27 merges (2026-10-21):** `2848c98940def262459fd89d5897c6f63dd6aadb` (historical as-of-2026-10-18 snapshot below preserved).
+
+## LATEST DEMO-ADMIT STATUS — IMPLEMENTATION ONLY / NO CAPTURE AUTHORITY
+
+Owner-approved merge sequence completed in order and GitHub merge ancestry preserved:
+- PR8 original HEAD `8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9` -> main merge `29fe3786128cc2a19e8afdf241dbc3defa272282`.
+- PR9 original HEAD `6e5f32b771d511c670bbb348f0dd0fb427412fd5` -> main merge `5872ad5755777b1c75432ff301981f227c34a287`.
+- PR27 original HEAD `d4091aaa759952f6867165f2c71c0d61317f181c` -> main merge `2848c98940def262459fd89d5897c6f63dd6aadb`.
+Exact source/CI were reconciled before each merge, all merged as merge commits. Selected restricted-session v1.1 remains design only; historical v1.0 blob `3e6e0d19e70da5a02002615160e3f0c0a0367b77` untouched and NOT SELECTED for initial scope.
+
+**NEW DRAFT IMPLEMENTATION PR28** `implementation/demo-v11-minimal-readonly-windows-capture-20261021` contains ONLY an attended native Windows PowerShell5.1 read-only 4-hour collector, tight MT5 read-method allowlist, private hashed 5s/tick+fee evidence with append-only fail evidence, prospectively registered tick tolerance, offline strict USD fee/quote candidate/Policy A receipt bridge, and deterministic five-component source ZIP sealer + one-shot execution-OFF private staging validator. Read full owner-independent specification `phase0/roadmap/DEMO_ADMIT_V11_MINIMAL_READONLY_HOST_IMPLEMENTATION_2026-10-21.md`. No new VPS stage, MT5 import/attach, broker action, external trading toggle, schedule/PCR3/Gate0/real-money action has happened under PR28. Native Windows CI and final exact artifact SHA will be recorded after CI in PR28, not guessed here.
+
+**CURRENT next gate:** after exact-head native Windows CI and source hash success, explicitly request **ONE execution-OFF new isolated v1.1 read-only source staging**, not broker capture. Exact four-hour approved UTC start/end + broker holiday/session/Event Guard source hashes, selected timing tolerance and separate owner capture permission must be frozen before any MT5 import/initialize/read-only capture. Private true tick/cost data and independently verified account commission/swap must then produce a DEMO_LIFECYCLE_ONLY numeric candidate, which remains NOT_ADMITTED without independent verification. Full Policy A math already merged offline, but real authenticated period/cashflow/exposure/broker provenance and cash-risk runtime adapter still require review after actual source evidence. **No DEMO-ADMIT PASS; no APC-DEMO order; real money disabled.** Broader rollover, news, weekly reopen and multi-session market-calibration evidence are deferred for expansion.
+
+  
 **Reconciled merged `main` (2026-10-18):** `ccaa8338aecee8bd3afbc358644410dff6c512e5`
 
 ## 1. Source-of-truth rule
