@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $PythonExe = 'C:\Program Files\Python312\python.exe'
 $StageRoot = Join-Path $env:LOCALAPPDATA 'XAUUSD-APC-DEMO-CANARY-S2'
 $ExpectedTerminal = 'C:\Program Files\MetaTrader 5\terminal64.exe'
-$ExpectedStageScriptSHA = 'b9d2a6e09e7c4eb57633938bc7150ed2391feb5e4c6e8787a53004b853e1bbf5'
+$ExpectedStageScriptSHA = '5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349'
 
 if (-not [IO.File]::Exists($PythonExe)) {
     throw 'APC_STAGE_PINNED_PYTHON_NOT_FOUND__NO_STAGE'
@@ -50,10 +50,10 @@ import subprocess
 import sys
 import zipfile
 
-HEAD = "ac54a99e4d9ad2ea2b88725824a7b5ece54a12f4"
+HEAD = "89711065a3a2d38fe02282fff3ad1782aabda0d2"
 INNER_NAME = f"apc-demo-canary-{HEAD}.zip"
-INNER_SHA = "e51a8f9a2820352f63c0fe4b51dcdd9b72f8b01554f73b72590f10f2c78583d1"
-MANIFEST_SHA = "02fc91865aa7db2cf40feb81d236fa2ebba5db7318e6e815ac4ec4c4d903ccd7"
+INNER_SHA = "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e"
+MANIFEST_SHA = "70bf8637208772e91a64b7af2cc06997847dc557752b05d9225b735b30ff13be"
 FILES = {
     "source/demo_adapter/scripts/apc-demo-canary-readonly-preflight.ps1":
         "11db0ba0877f29ddf62ff0b626dc060d80393176f79d97f7e8dca32f20154519",
@@ -66,9 +66,9 @@ FILES = {
     "source/demo_adapter/scripts/apc_demo_canary_s2_isolated_loader.py":
         "70ae8a926015f3ebbdc22a64b5d7fe14d532539e09f244c62b3eed148f881bc0",
     "wheel/xauusd_demo_adapter-0.1.0.dev0-py3-none-any.whl":
-        "b09ffe222f4529a56c9bf46e08e1aa4837c5434085167067eced0e1c92cbea5e",
+        "d5ea615b7ddf9c508a3260408850b5177a3bc09006fdfae81b3708d58fb7433d",
     "wheel/xauusd_production_candidate-0.1.0.dev0-py3-none-any.whl":
-        "67ca587d565af88f55289f726468333c730325e11fd8714fc56f3267cea6537b",
+        "bb4bb2f95ac0e5f5b6537af0103d95cc0ab44bc2ffe99812578e220202ae03a1",
 }
 EXPECTED_PYTHON = r"C:\Program Files\Python312\python.exe"
 
