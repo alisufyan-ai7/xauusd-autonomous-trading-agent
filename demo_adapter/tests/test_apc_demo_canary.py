@@ -216,7 +216,8 @@ def test_one_entry_one_close_persistently_killed(
     mt5, ctrl, journal, lifecycle = _setup(monkeypatch, tmp_path)
     try:
         result = lifecycle.open_once(
-            request=request(), permit=permit(), now=NOW, apc_token=CANARY_APC_TOKEN
+            request=request(), permit=permit(), now=NOW, apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00")
         )
         assert result.status == "OPEN_RECONCILED"
         assert result.ticket == "77"
@@ -233,6 +234,7 @@ def test_one_entry_one_close_persistently_killed(
             lifecycle.open_once(
                 request=request(), permit=permit(),
                 now=NOW, apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 2
     finally:
@@ -250,6 +252,7 @@ def test_live_account_never_sends_and_quarantines(
             lifecycle.open_once(
                 request=request(), permit=permit(), now=NOW,
                 apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 0
         assert ctrl.snapshot().state == DemoControlState.QUARANTINED
@@ -268,6 +271,7 @@ def test_unknown_entry_no_retry_and_quarantines(
             lifecycle.open_once(
                 request=request(), permit=permit(),
                 now=NOW, apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert journal.stage() == "UNCERTAIN"
         assert ctrl.snapshot().state == DemoControlState.QUARANTINED
@@ -275,6 +279,7 @@ def test_unknown_entry_no_retry_and_quarantines(
             lifecycle.open_once(
                 request=request(), permit=permit(),
                 now=NOW, apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 1
     finally:
@@ -292,6 +297,7 @@ def test_preflight_stale_quote_blocks_send(
             lifecycle.open_once(
                 request=request(), permit=permit(),
                 now=NOW, apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 0
     finally:
@@ -343,6 +349,7 @@ def test_entry_mismatch_consumes_one_attempt_and_quarantines(
             lifecycle.open_once(
                 request=request(), permit=permit(), now=NOW,
                 apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 1
         assert journal.stage() == "UNCERTAIN"
@@ -351,6 +358,7 @@ def test_entry_mismatch_consumes_one_attempt_and_quarantines(
             lifecycle.open_once(
                 request=request(), permit=permit(), now=NOW,
                 apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
             )
         assert mt5.calls == 1
     finally:
@@ -366,6 +374,7 @@ def test_close_unknown_deal_quarantines_without_second_send(
         lifecycle.open_once(
             request=request(), permit=permit(), now=NOW,
             apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2001.00"),
         )
         mt5.missing_deal = True
         with pytest.raises(DemoSafetyError, match="CANARY_CLOSE_DEAL_ID_UNKNOWN"):
@@ -376,6 +385,25 @@ def test_close_unknown_deal_quarantines_without_second_send(
         with pytest.raises(DemoSafetyError, match="CANARY_NOT_IN_CONFIRMED_OPEN_STATE"):
             lifecycle.close_once(permit=permit(), now=NOW, apc_token=CANARY_APC_TOKEN)
         assert mt5.calls == 2
+    finally:
+        ctrl.close()
+        journal.close()
+
+
+def test_owner_approved_entry_ceiling_fails_before_order_check_or_send(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path,
+) -> None:
+    mt5, ctrl, journal, lifecycle = _setup(monkeypatch, tmp_path)
+    try:
+        with pytest.raises(DemoSafetyError, match="BUY_ENTRY_ABOVE_OWNER_LIMIT"):
+            lifecycle.open_once(
+                request=request(), permit=permit(), now=NOW,
+                apc_token=CANARY_APC_TOKEN,
+                approved_price_limit=Decimal("2000.20"),
+            )
+        assert mt5.calls == 0
+        assert journal.stage() == "UNUSED"
+        assert ctrl.snapshot().state == DemoControlState.QUARANTINED
     finally:
         ctrl.close()
         journal.close()
