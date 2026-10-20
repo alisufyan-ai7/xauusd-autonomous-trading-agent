@@ -21,6 +21,7 @@ def _copy_sources(destination: Path) -> None:
     for rel in (
         "demo_adapter/scripts/apc_demo_canary_attended_operator.py",
         "demo_adapter/scripts/apc_demo_canary_s2_isolated_loader.py",
+        "demo_adapter/scripts/apc-demo-canary-s2-attended.ps1",
         "demo_adapter/scripts/apc_demo_canary_readonly_preflight.py",
         "demo_adapter/scripts/apc-demo-canary-readonly-preflight.ps1",
     ):
@@ -49,19 +50,19 @@ def test_sealed_canary_contains_exact_manifest_and_only_allowed_sources(
     record = seal(repo_root=tmp_path, wheel_dir=wheel_dir,
                   production_wheel_dir=production_dir, output=output, head=head)
     assert record["archive_name"] == "first.zip"
-    assert record["entry_count"] == 7
+    assert record["entry_count"] == 8
     assert record["isolated_wheel_sha256"] == hashlib.sha256(
         fake_wheel.read_bytes()
     ).hexdigest()
     assert record["archive_sha256"] == hashlib.sha256(output.read_bytes()).hexdigest()
     with zipfile.ZipFile(output) as archive:
-        assert len(archive.namelist()) == 7
+        assert len(archive.namelist()) == 8
         manifest = json.loads(archive.read("manifest.json"))
         assert manifest["exact_git_head"] == head
         assert manifest["broker_action_authorized"] is False
         assert manifest["vps_staging_authorized"] is False
         assert manifest["mt5_python_execution_authorized"] is False
-        assert len(manifest["source_files"]) == 6
+        assert len(manifest["source_files"]) == 7
         for item in manifest["source_files"]:
             payload = archive.read(item["path"])
             assert len(payload) == item["bytes"]
