@@ -52,12 +52,16 @@ jobs:
           $sum = (Get-FileHash -LiteralPath $wheel[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant()
           Write-Output ("DEMO_CANARY_WHEEL_SHA256=" + $sum)
           Write-Output ("DEMO_CANARY_EXACT_HEAD=" + "${{ github.event.pull_request.head.sha }}")
+      - name: Build pinned production Policy A dependency wheel
+        if: runner.os == 'Windows'
+        run: python -m build --wheel --outdir prod-dist ..
       - name: Seal one complete demo canary archive
         if: runner.os == 'Windows'
         run: >-
           python scripts/pack_apc_demo_canary.py
           --repo-root ..
           --wheel-dir dist
+          --production-wheel-dir prod-dist
           --outdir sealed
           --head ${{ github.event.pull_request.head.sha }}
       - name: Upload one sealed successor demo canary archive
