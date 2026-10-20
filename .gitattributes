@@ -1,1 +1,5 @@
 demo_adapter/scripts/v11_windows_readonly_capture.ps1 text eol=lf
+demo_adapter/scripts/v11_windows_readonly_host.py text eol=lf
+demo_adapter/scripts/v11_readonly_collector.py text eol=lf
+demo_adapter/scripts/v11_quote_coverage.py text eol=lf
+demo_adapter/scripts/v11_policy_a_source_bridge.py text eol=lf
