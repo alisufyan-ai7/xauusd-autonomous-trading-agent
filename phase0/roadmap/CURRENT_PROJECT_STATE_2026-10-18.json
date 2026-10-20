@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Owner approval for narrow 4h liquid London/NY session-band clarification after official Exness centre-hours contradiction; no capture permission. Then source-hash and event-calendar checked run-specific registration followed by separate MT5 read-only owner approval.",
+  "next_substantive_action": "Prepare exact prospective 240-minute UTC London/New York summer band while verifying XAUUSD instrument hours, event/holiday blackouts, terminal identity and tolerance. No MT5/VPS access or broker trade; request separate read-only capture approval when runnable registration is fully pinned.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "STAGE_PASS_EXECUTION_OFF__PROSPECTIVE_4H_WINDOW_ELIGIBILITY_CONFLICT_HOLD",
+    "status": "V11_STAGE_PASS_EXECUTION_OFF__4H_SESSION_BAND_METHOD_ACCEPTED__RUN_DATE_AND_READONLY_CAPTURE_NOT_APPROVED",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "OWNER_CLARIFY_STRICT_4H_OVERLAP_ELIGIBILITY_TO_4H_LIQUID_LONDON_NY_SESSION_BAND_OR_HOLD; THEN PROSPECTIVELY_REGISTER_DATE_AND_NEW_READONLY_VPS_CAPTURE_APPROVAL",
+    "owner_next_action": "PROSPECTIVELY_VERIFY_AND_REGISTER_EXACT_4H_UTC_SUMMER_SESSION_BAND_WITH_BROKER_XAUUSD_SESSION_EVENT_GUARD_SOURCES_TOLERANCE_AND_PINS__THEN_REQUEST_SEPARATE_OWNER_READONLY_CAPTURE_PERMISSION",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -295,7 +295,7 @@
       "no_repeat_approval": true
     },
     "window_eligibility_conflict": {
-      "status": "HOLD__OWNER_PROSPECTIVE_CLARIFICATION_REQUIRED",
+      "status": "RESOLVED_FOR_METHOD_ONLY_BY_EXPLICIT_OWNER_PROSPECTIVE_4H_SESSION_BAND_CLARIFICATION",
       "source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
       "official_public_centre_hours_utc": {
         "summer": {
@@ -312,7 +312,7 @@
       "existing_selected_method": "ONE_CONTIGUOUS_240MIN_WINDOW_IN_VERIFIED_LONDON_NEW_YORK_LIQUID_OVERLAP_ONLY",
       "contradiction": "NO_240MIN_STRICT_CENTRE_OVERLAP_EXISTS_UNDER_OFFICIAL_EXNESS_TABLE",
       "proposed_minimal_change": "ONE_240MIN_LIQUID_LONDON_NY_SESSION_BAND_WITH_FULL_3H_SUMMER_OVERLAP_PLUS_UP_TO_1H_ADJACENT_WITH_A_MAJOR_CENTRE_OPEN",
-      "proposed_change_owner_approved": false,
+      "proposed_change_owner_approved": true,
       "proposed_date_or_window_registered": false,
       "owner_capture_approval": false,
       "unverified_conditions": [
@@ -322,7 +322,10 @@
         "shocks/spread/live health",
         "source SHA and prospective pairing tolerance"
       ],
-      "github_receipt": "phase0/roadmap/DEMO_V11_READONLY_EXECUTION_OFF_STAGE_ATTEMPT1_2026-10-21.md"
-    }
+      "github_receipt": "phase0/roadmap/DEMO_V11_READONLY_EXECUTION_OFF_STAGE_ATTEMPT1_2026-10-21.md",
+      "approved_change": "ONE_CONTIGUOUS_240MIN_WINDOW_FULL_SUMMER_3H_LONDON_NY_OVERLAP_PLUS_EXACTLY_ONE_ADJACENT_HOUR_WITH_AT_LEAST_ONE_CENTRE_OPEN",
+      "approved_prospective_decision": "phase0/roadmap/DEMO_V11_RESTRICTED_SESSION_4H_BAND_OWNER_CLARIFICATION_2026-10-21.json"
+    },
+    "session_eligibility_owner_clarification_approved": true
   }
 }
