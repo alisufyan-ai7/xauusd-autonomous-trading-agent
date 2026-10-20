@@ -12,7 +12,10 @@ from typing import Any
 import pytest
 
 from scripts.v12_attempt_journal import (
-    AttemptJournal, AttemptJournalError, attempt_path, verify_attempt,
+    AttemptJournal,
+    AttemptJournalError,
+    attempt_path,
+    verify_attempt,
 )
 from scripts.v12_journaled_readonly_port import JournaledReadOnlyPort
 
