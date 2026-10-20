@@ -158,3 +158,30 @@ def test_unknown_unhealthy_tentative_and_shock_never_healthy() -> None:
     ):
         obs = EventObservation(**{**kwargs, **change})
         assert not evaluate_event_guard(obs).entry_allowed
+
+
+def test_unknown_event_tier_must_not_be_assumed_tier_two() -> None:
+    at = datetime(2026, 11, 3, 15, 0, tzinfo=UTC)
+    with pytest.raises(ValueError, match="unknown event tier"):
+        ProtectedEvent("JOLTS_unclassified", at, "UNKNOWN")
+
+
+def test_runtime_hard_veto_and_broker_quote_freshness_source_still_frozen() -> None:
+    from pathlib import Path
+
+    adapter_root = Path(__file__).resolve().parents[1]
+    runtime = (
+        adapter_root / "src" / "xauusd_demo" / "mt5_demo.py"
+    ).read_text(encoding="utf-8")
+    quote_bridge = (
+        adapter_root / "scripts" / "v11_offline_risk_bridge.py"
+    ).read_text(encoding="utf-8")
+    assert "FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED" in runtime
+    assert "full Policy A broker-reconciled USD cash-risk binding is not admitted" in runtime
+    assert runtime.index('reason="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED"') < (
+        runtime.index("check = self._mt5.order_check(mt5_request)")
+    )
+    assert "broker tick is stale" in quote_bridge
+    assert "timedelta(seconds=2)" in quote_bridge
+    assert "stop not normalized to tick grid" in quote_bridge
+    assert "stop not adverse" in quote_bridge
