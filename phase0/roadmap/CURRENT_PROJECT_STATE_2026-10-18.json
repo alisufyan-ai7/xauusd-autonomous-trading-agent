@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
   "source_of_truth": "GITHUB",
-  "active_focus": "DEMO_ADMIT_V11_READONLY_STAGE_PASS__PROSPECTIVE_4H_CAPTURE_REGISTRATION_NEXT",
+  "active_focus": "DEMO_V11_EARLIEST_OCT21_CAPTURE_RUN_DRAFT_AND_EXPLICIT_OS_PREFLIGHT_OWNER_BOUNDARY",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Finalize the Oct22 13:30-17:30 UTC provisional 4h run only if event/session/date-specific XAUUSD source checks and immutable source hashes pass. Otherwise prospectively select later qualifying day. Distinct owner authorization required for MT5 initialize/read-only capture; no trade access.",
+  "next_substantive_action": "Owner-attended bounded OS-only preflight to pin current terminal PID/exe, installed five source SHAs, UTC clock, demo-only GUI attestation; no MT5 API import or broker read. Source XAUUSD instrument-specific hours and fresh Event Guard coverage must be proved before any exact run registration and separate read-only MT5 capture approval.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "STAGE_PASS_EXECUTION_OFF__SESSION_METHOD_APPROVED__OCT22_CANDIDATE_ONLY__ACTUAL_CAPTURE_HOLD",
+    "status": "V11_STAGE_PASS_EXECUTION_OFF__OCT21_4H_RUN_DRAFT_PREPARED__OS_PREFLIGHT_AND_LIVE_SOURCE_PROOF_AND_OWNER_MT5_CAPTURE_APPROVAL_PENDING",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "INDEPENDENTLY_VERIFY_EXNESS_XAUUSD_DATE_HOURS_ALL_RELEVANT_EVENTS_AND_GUARDS_AND_CURRENT_TERMINAL_PID; FREEZE_SOURCE_HASHED_UTC_4H_RUN_REGISTRATION; REQUEST SEPARATE READONLY_MT5_INITIALIZE_AND_CAPTURE_PERMISSION",
+    "owner_next_action": "ONE ATTENDED VPS OS-ONLY READ-ONLY PREFLIGHT TO VERIFY LIVE TERMINAL PID/PATH/STAGED SOURCE/UTC + DEMO-ONLY CREDENTIAL ATTESTATION; THEN FINALIZE 12:30-16:30 UTC SOURCE-HASHED RUN AND REQUEST SEPARATE READONLY MT5 INITIALIZE/CAPTURE APPROVAL",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -328,18 +328,44 @@
     },
     "session_eligibility_owner_clarification_approved": true,
     "window_candidate": {
-      "status": "CONDITIONAL_PRE_SELECTION_NOT_CAPTURE_REGISTRATION",
-      "start_utc": "2026-10-22T13:30:00Z",
-      "end_utc": "2026-10-22T17:30:00Z",
+      "status": "PROSPECTIVE_DRAFT_ONLY__NOT_APPROVED_OR_RUNNABLE",
+      "preferred_date": "2026-10-21",
+      "start_utc": "2026-10-21T12:30:00Z",
+      "end_utc": "2026-10-21T16:30:00Z",
       "duration_minutes": 240,
-      "pair_tolerance_preselected_ms": 100,
-      "record": "phase0/roadmap/DEMO_V11_4H_CAPTURE_PROSPECTIVE_WINDOW_CANDIDATE_2026-10-22.json",
-      "source_dates_and_hashes_finalized": false,
-      "event_guard_classification_complete": false,
+      "pakistan_local_time": "2026-10-21 17:30–21:30",
+      "registered_tick_pair_tolerance_proposal_ms": 100,
+      "latest_draft": "phase0/roadmap/DEMO_V11_4H_READONLY_RUN_DRAFT_2026-10-21.json",
+      "event_session_source_gate": "phase0/roadmap/DEMO_V11_2026-10-21_EVENT_SESSION_SOURCE_GATE.md",
+      "static_readonly_source_proof": "phase0/roadmap/DEMO_V11_STATIC_READONLY_ALLOWLIST_VERIFICATION_2026-10-21.json",
+      "specific_event_findings": [
+        {
+          "utc": "2026-10-21T14:00:00Z",
+          "source": "BLS",
+          "event": "Usual Weekly Earnings Q3 2026",
+          "frozen_tier": "WATCH_ONLY"
+        },
+        {
+          "utc": "2026-10-21T14:00:00Z",
+          "source": "NY_FED",
+          "event": "Outlook-at-Risk",
+          "frozen_tier": "WATCH_ONLY"
+        }
+      ],
       "actual_xauusd_instrument_hours_confirmed": false,
+      "event_guard_source_agreement_fresh": false,
+      "raw_official_pages_sha_independently_frozen": false,
       "current_vps_terminal_pid_verified": false,
       "owner_attendance_confirmed": false,
-      "capture_authorized": false
+      "run_canonical_sha256": null,
+      "owner_readonly_capture_approval": false
+    },
+    "read_only_source_contract_gap": {
+      "status": "REQUIRES_EXPLICIT_ONE_RUN_OWNER_CAPTURE_SCOPE_ALLOWANCE",
+      "detail": "Staged host calls history_deals_get for fee/swap history; original v1.1 read-method list omits history_deals_get",
+      "call_kind": "READ_ONLY_HISTORICAL_ACCOUNT_DEALS__NOT_ORDER_OR_TRADE",
+      "capture_approved": false,
+      "new_staging_required": false
     }
   }
 }
