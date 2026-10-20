@@ -55,7 +55,8 @@ if ($shaCollector -cne $registration.exact_collector_source_sha256 -or
     throw 'V11_SOURCE_COMPONENT_SHA_MISMATCH'
 }
 if ($registration.terminal_exe -cne $ExpectedTerminalExe -or
-    $registration.expected_terminal_pid -isnot [int] -or
+    (($registration.expected_terminal_pid -isnot [int]) -and
+     ($registration.expected_terminal_pid -isnot [long])) -or
     $registration.expected_terminal_pid -le 0) {
     throw 'V11_UNAPPROVED_TERMINAL_IDENTITY'
 }
