@@ -56,6 +56,7 @@ def fixture() -> dict[str, Any]:
         "gap_proxy_sha256", "independent_source_origin_review_sha256",
         "collector_ps_sha256", "verifier_ps_sha256",
         "risk_source_sha256", "read_only_core_source_sha256",
+        "attempt_journal_source_sha256", "journaled_readonly_port_source_sha256",
     ):
         rec[source] = "e" * 64
     return rec
