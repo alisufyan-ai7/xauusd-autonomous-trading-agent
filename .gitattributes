@@ -15,3 +15,4 @@ demo_adapter/scripts/v12-d0-readonly-inventory.ps1 text eol=lf
 phase0/roadmap/DEMO_V12_D0_DIAGNOSTIC_NOT_CAPTURE_FROZEN_REGISTRATION_2026-10-20.json text eol=lf
 demo_adapter/scripts/v12-d0-r2-attended-bootstrap.ps1 text eol=lf
 phase0/roadmap/DEMO_V12_D0_R2_FROZEN_REGISTRATION_2026-10-20.json text eol=lf
+demo_adapter/scripts/v12-d0-r2-python-environment-readonly-survey.ps1 text eol=lf
