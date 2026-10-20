@@ -164,3 +164,56 @@ def test_registration_remains_d0_and_not_v12_4h() -> None:
     assert packet["v12_overlap_start_utc"] is None
     assert packet["owner_first_run_confirmation_id"] is None
     assert packet["real_window_prospective_frozen"] is False
+
+
+def test_single_d0_snapshot_synthetic_match_never_admits_market(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import hashlib
+
+    from scripts import v12_d0_readonly_inventory
+
+    expected = hashlib.sha256(
+        b"Exness Technologies Ltd|Exness-MT5Trial15|12345678|USD"
+    ).hexdigest()
+    monkeypatch.setattr(v12_d0_readonly_inventory, "EXPECTED_IDENTITY", expected)
+    fake = FakeReadonlyPort()
+    result = observe_only(fake)
+    assert result["account"]["external_python_trading_disabled"] is True
+    assert result["account"]["known_positions"] == 0
+    assert result["symbol"]["trade_mode"] == "4"
+    assert result["tick"]["bid"] == "4100"
+    assert result["session_interpretation"].startswith("NOT_ADMITTED_")
+    assert result["actual_current_stressed_costs_admitted"] is False
+    assert result["trading_orders_permitted"] is False
+    assert result["event_guard_health_known"] is False
+    assert result["order_actions"] == 0
+    assert fake.calls.count("positions_get") == 2
+    assert fake.calls.count("orders_get") == 2
+    assert fake.calls.count("symbol_info") == 1
+    assert fake.calls.count("symbol_info_tick") == 1
+
+
+def test_d0_prospective_contract_source_byte_pins() -> None:
+    import hashlib
+
+    record = ROOT / (
+        "phase0/roadmap/"
+        "DEMO_V12_D0_DIAGNOSTIC_NOT_CAPTURE_FROZEN_REGISTRATION_2026-10-20.json"
+    )
+    doc = json.loads(record.read_text("utf-8"))
+    pins = {
+        PS: doc["collector_ps_sha256"],
+        HOST: doc["host_sha256"],
+        ROOT / "demo_adapter/scripts/v12_attempt_journal.py":
+            doc["attempt_journal_sha256"],
+    }
+    for file, pin in pins.items():
+        assert hashlib.sha256(file.read_bytes()).hexdigest() == pin, file
+        assert b"\r\n" not in file.read_bytes()
+    assert doc["broker_trading_allowed"] is False
+    assert doc["four_hour_capture_allowed"] is False
+    assert doc["vps_mt5_execution_authorized_in_git"] is False
+    assert doc["owner_d0_confirmation"] is None
+    assert doc["full_4h_observation_start_utc"] is None
+    assert doc["actual_cost_admission_allowed"] is False
