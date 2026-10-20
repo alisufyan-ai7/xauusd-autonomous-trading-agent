@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
   "source_of_truth": "GITHUB",
-  "active_focus": "V11_OS_ONLY_PREFLIGHT_PASS__RUN_WINDOW_AND_SEPARATE_CAPTURE_AUTHORIZATION_PENDING",
+  "active_focus": "V11_OWNER_DEMO_ONLY_ATTENDANCE_ATTESTED__DATE_SPECIFIC_EXNESS_XAUUSD_SCHEDULE_OUTSTANDING",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Use the recorded owner-reported 2026-10-20T22:14:52Z OS/terminal snapshot, verify source/market/event eligibility and demo-only terminal credential attestation, freeze exact future four-hour candidate. Separate owner MT5 read-only capture approval required before calling initialize; no broker trading.",
+  "next_substantive_action": "Verify exact Oct21 XAUUSD interactive Exness schedule from selected instrument/date UTC+0; no automatic inference from generic center table. Full live event and holiday source health hashes remain needed. Owner has not approved mt5.initialize or read-only broker capture. Keep stage execution-off.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "EXECUTION_OFF_STAGE_PASS__OS_ONLY_PREFLIGHT_ATTEMPT1_PASS__READONLY_BROKER_CAPTURE_NOT_APPROVED",
+    "status": "V11_STAGE_AND_OS_PREFLIGHT_PASS__OWNER_DEMO_ATTENDANCE_CONFIRMED__XAUUSD_SPECIFIC_HOURS_AND_SEPARATE_CAPTURE_APPROVAL_PENDING",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "Finalize external broker XAUUSD/date-specific session and Event Guard SHA/prospective exact UTC window; obtain explicit separate owner approval for historical history_deals_get plus MT5 initialize and four-hour READ_ONLY capture. Do not assume saved-live-credential absence.",
+    "owner_next_action": "Owner provide XAUUSD-specific Oct21 UTC+0 Exness interactive trading-hours schedule screenshot/table only; register and hash remaining source/guard proof; then separately request exact read-only mt5.initialize + history_deals_get 4h capture approval, no trading.",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -356,11 +356,12 @@
       "event_guard_source_agreement_fresh": false,
       "raw_official_pages_sha_independently_frozen": false,
       "current_vps_terminal_pid_verified": true,
-      "owner_attendance_confirmed": false,
+      "owner_attendance_confirmed": true,
       "run_canonical_sha256": null,
       "owner_readonly_capture_approval": false,
       "os_preflight_terminal_pid": 6216,
-      "os_preflight_as_of_utc": "2026-10-20T22:14:52Z"
+      "os_preflight_as_of_utc": "2026-10-20T22:14:52Z",
+      "owner_demo_only_and_no_live_credentials_attested": true
     },
     "read_only_source_contract_gap": {
       "status": "REQUIRES_EXPLICIT_ONE_RUN_OWNER_CAPTURE_SCOPE_ALLOWANCE",
@@ -422,6 +423,21 @@
         "owner_approved_capture"
       ],
       "repeat_os_only_preflight_authorized": false
+    },
+    "owner_capture_preconditions_attestation": {
+      "status": "OWNER_CONFIRMED_DEMO_ONLY_CREDENTIALS_AND_FOUR_HOUR_ATTENDANCE__NOT_INDEPENDENTLY_VERIFIED",
+      "demo_only_mt5_installation_and_profile": true,
+      "no_saved_live_account_credentials_attested": true,
+      "no_operator_or_program_account_switch_during_capture_attested": true,
+      "owner_four_hour_attendance_confirmed": true,
+      "exact_attended_window_utc": [
+        "2026-10-21T12:30:00Z",
+        "2026-10-21T16:30:00Z"
+      ],
+      "timestamp_of_chat_attestation_day": "2026-10-21",
+      "account_fingerprint_authentic_broker_api_verified": false,
+      "source_kind": "OWNER_VERBAL_CHAT_CONFIRMATION",
+      "separate_mt5_initialize_and_capture_approval_granted": false
     }
   }
 }
