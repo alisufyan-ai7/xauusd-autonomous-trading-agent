@@ -83,7 +83,7 @@ try {
     $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
     $acl = New-Object Security.AccessControl.DirectorySecurity
     $acl.SetAccessRuleProtection($true,$false)
-    $rule = New-Object Security.AccessControl.FileSystemAccessRule(
+    $rule = [Security.AccessControl.FileSystemAccessRule]::new(
         $identity.User,
         [Security.AccessControl.FileSystemRights]::FullControl,
         ([Security.AccessControl.InheritanceFlags]::ContainerInherit -bor
