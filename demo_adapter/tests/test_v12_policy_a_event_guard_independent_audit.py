@@ -21,7 +21,6 @@ from xauusd_agent.risk.full_policy_a import (
     evaluate_full_policy_a,
 )
 
-
 D = Decimal
 
 
