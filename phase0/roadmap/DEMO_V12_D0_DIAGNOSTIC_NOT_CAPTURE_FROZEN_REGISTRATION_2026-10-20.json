@@ -8,7 +8,7 @@
   "parent_pr17_sha": "6ac06d365214f1a0146b3669a529d14a127ca5de",
   "expected_demo_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
   "collector_ps_sha256": "adc226a7d21ca7eb296f100ad0a6c79d9554c76ca15ca260c3c82959f0312274",
-  "host_sha256": "3af8afe3742f563df3a4c53157b6b0537b93362f99cde8a4b3facd78955a28e3",
+  "host_sha256": "ea1496f715a6601f47098ee15a9d09645dc804a63ab9248fa60a4d36d3f52260",
   "attempt_journal_sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
   "run_authority": "NOT_GRANTED_USER_MUST_EXPLICITLY_APPROVE_EXACT_PR_AND_THREE_SOURCE_PINS",
   "one_attempt_per_registration_sha": true,
