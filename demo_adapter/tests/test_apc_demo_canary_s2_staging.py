@@ -32,7 +32,12 @@ def test_s2_staging_embedded_python_exact_hash_and_compile_only() -> None:
     assert hashlib.sha256(SCRIPT.read_bytes()).hexdigest() == (
         "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0"
     )
-    assert "Downloads\\\\github-actions-artifact-12289594320.zip" in source
+    artifact_default = next(
+        line for line in source.splitlines()
+        if line.strip().startswith("[string] $Artifact =")
+    )
+    assert "github-actions-artifact-12289594320.zip" in artifact_default
+    assert "12289113540" not in artifact_default
     assert "github-actions-artifact-12289113540.zip" not in source
     assert "$ExpectedStageScriptSHA = " in source
     embedded = _embedded_python()
