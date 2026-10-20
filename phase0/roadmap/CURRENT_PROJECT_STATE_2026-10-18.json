@@ -699,6 +699,15 @@
     "may_not_run_bootstrap_without_new_approval": true,
     "four_hour_source_capture_permitted": false,
     "policy_a_external_python_trading_order_actions_permitted": false,
-    "pcr3_and_all_historical_failures_immutable": true
+    "pcr3_and_all_historical_failures_immutable": true,
+    "first_green_windows_linux_ci_at_head": "702f7fbb90f5c82ccacb8983d57215590ff19e6e",
+    "first_green_windows_linux_ci_run": 39427969089,
+    "first_green_windows_python312_tests_passed": 291,
+    "first_green_linux_python312_tests_passed": 286,
+    "first_green_linux_skips": 5,
+    "first_green_records_validation_run": 39427968998,
+    "native_ps51_parser_and_safe_shell_only_runtime": "PASS_IN_GITHUB_ACTIONS_NO_BROKER",
+    "owner_approval_rejection_native_ps51_test": "PASS",
+    "earlier_ci_red_tests_preserved": true
   }
 }
