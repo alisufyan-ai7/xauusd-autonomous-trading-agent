@@ -1,5 +1,16 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT OCT 21 ACCELERATION — EARLIEST 4H DEMO V11 CAPTURE CANDIDATE
+
+**Preferred prospective window** `2026-10-21 12:30:00–16:30:00 UTC` (Pakistan 17:30–21:30) under previously owner-approved 240-minute summer London/NY band, **NOT yet approved nor source-admitted**. Exact static approved PR28 staged helper/5-source-component hashes are pinned in `phase0/roadmap/DEMO_V11_STATIC_READONLY_ALLOWLIST_VERIFICATION_2026-10-21.json`; draft one-run record at `phase0/roadmap/DEMO_V11_4H_READONLY_RUN_DRAFT_2026-10-21.json` intentionally maintains all approval/health/terminal/current-source fields null/false. Official Exness centre-hours structure supports proposed times; actual date-specific XAUUSD instrument schedule still not independently hash verified. Event-specific 14:00 UTC Oct21 BLS Usual Weekly Earnings and NY Fed Outlook-at-Risk are **watch-only under the frozen, checked Tier1/Tier2 taxonomy**, NOT proof of market non-shock or final source health. Details / authoritative URLs / exact outstanding checks and read-method compatibility issue: `phase0/roadmap/DEMO_V11_2026-10-21_EVENT_SESSION_SOURCE_GATE.md`.
+
+**GENUINE narrow source-contract issue**: staged read-only host reads `history_deals_get` for XAUUSD 90d historical account-specific commission/swap source evidence, while original v1.1 method's enumerated read-only list did not include that one method. Later one-run owner capture permission must **explicitly include this specific READ-ONLY function** or maintain HOLD. It does NOT create orders, change methodology to a 90-day market calibration, or require restaging. No silent authorization.
+
+**NEXT OWNER ACTION: one attended strictly OS-ONLY read-only VPS preflight**, verifying terminal PID/path/UTC and installed stage/source SHA and owner DEMO-only credentials assurance. This must NOT import, initialize, or attach MT5, access account/ticks/history, enable external Python trading, run any broker API or create/delete staged data. After its owner-supplied results and independently verifiable Exness instrument-hours / authoritative Event Guard source proof, finalize a prospectively hash-pinned run and request a **separate** 4h read-only MT5 attach/capture approval. One previous staging approval consumed; staged root `EXECUTION_OFF__NO_CAPTURE_AUTHORIZED` still in place, PR28 frozen, no DEMO-ADMIT PASS or APC-DEMO, real-money disabled.
+
+---
+
+
 ## CURRENT — V11 READ-ONLY EXECUTION-OFF STAGING PASS (2026-10-21)
 
 **Latest authoritative observed staging result: `DEMO_V11_READONLY_STAGE_ATTEMPT1_PASS_EXECUTION_OFF_NO_CAPTURE`**, following **ONE owner-approved attended VPS execution-OFF stage attempt**. Owner supplied Windows PowerShell 5.1 stdout with matching source-only helper `eb0b241dcac4f53d77dc00b5306c31edfb480867184aedad66da5225276d5cca`, GitHub Actions artifact ID `12300205161` outer SHA256 `10115fb5bd412a1df2ec4a80cac7d4e563f3276df3fe29ab2e1dde42b7d3c264`, sealed ZIP `987982e0a4585fe4c1283c5557d953162a1d0fcb0f4a62b0253b7488af13a938`, inner manifest `b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f`, **all five** source components checked. Exact frozen PR28 source HEAD `90c3e93330edeee58a0709a41e7393f7818f4ea8`, draft/unmerged; production main still `2848c98940def262459fd89d5897c6f63dd6aadb`.
