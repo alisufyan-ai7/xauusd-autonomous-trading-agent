@@ -123,7 +123,9 @@ def observe_only(mt5: Any) -> dict[str, Any]:
                    for k in SYMBOL_KEYS},
         "tick": {k: str(tick[k]) if tick.get(k) is not None else None
                  for k in TICK_KEYS} if tick is not None else None,
-        "session_interpretation": "NOT_ADMITTED_SYMBOL_TRADE_MODE_AND_ONE_QUOTE_NOT_PROOF_OF_FOUR_HOURS",
+        "session_interpretation": (
+            "NOT_ADMITTED_SYMBOL_TRADE_MODE_AND_ONE_QUOTE_NOT_PROOF_OF_FOUR_HOURS"
+        ),
         "actual_current_stressed_costs_admitted": False,
         "trading_orders_permitted": False,
         "event_guard_health_known": False,
