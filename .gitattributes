@@ -18,3 +18,5 @@ phase0/roadmap/DEMO_V12_D0_R2_FROZEN_REGISTRATION_2026-10-20.json text eol=lf
 demo_adapter/scripts/v12-d0-r2-python-environment-readonly-survey.ps1 text eol=lf
 demo_adapter/scripts/v12-d0-r3-phased-runtime-verifier.ps1 text eol=lf
 phase0/roadmap/DEMO_V12_D0_R3_PROSPECTIVE_NONEXECUTABLE_REGISTRATION_2026-10-20.json text eol=lf
+demo_adapter/scripts/v12-d0-r3-a2-version-only-ps51.ps1 text eol=lf
+phase0/roadmap/DEMO_V12_D0_R3_PHASE_A2_PROSPECTIVE_VERSION_ONLY_REGISTRATION_2026-10-20.json text eol=lf

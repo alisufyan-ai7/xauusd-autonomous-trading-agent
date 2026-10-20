@@ -891,5 +891,32 @@
     "merge_authorized": false,
     "next_owner_approval": "EXACT_GH_SHA_AND_SOURCE_SHA_PINNED_ATTENDED_PHASE_A_PYTHON_3_12_VERSION_ONLY_ONE_RUN__NO_IMPORT_OR_MT5_ATTACH",
     "final_validated_exact_head_ci": "RESOLVE_PR_CONVERSATION_AFTER_FINAL_CI"
+  },
+  "v12_d0_r3_a1_failure_and_a2_prospective_correction_2026_10_20": {
+    "authority": "PREVIOUS_GITHUB_ONLY_PREPARATION_SCOPE__NO_NEW_VPS_AUTHORIZATION",
+    "parent_frozen_pr21_head": "f0423f40ae1cb51c01b915b6cfb5f7d7e799ce1e",
+    "a1_owner_approval_consumed": true,
+    "a1_owner_pasted_sha_verified": true,
+    "a1_source_sha256": "3bc6a33b459bfebd732cf08725b2d34b95edf33b223266f6b9839f6aa3490281",
+    "a1_error": "PYTHON_FILE_STRING_LINE1__POWERSHELL_NATIVECOMMANDERROR__TRUNCATED_TRACEBACK",
+    "a1_status": "FAIL_CLOSED_INCOMPLETE_VERSION_VERIFICATION",
+    "a1_python_process_started": true,
+    "a1_version_312_proven": false,
+    "a1_mt5_import": false,
+    "a1_mt5_attach": false,
+    "a1_broker_access": false,
+    "a1_same_approval_rerun_allowed": false,
+    "a1_incident": "phase0/roadmap/DEMO_V12_D0_R3_PHASE_A1_OWNER_VPS_FAILURE_2026-10-20.md",
+    "a2_registration": "phase0/roadmap/DEMO_V12_D0_R3_PHASE_A2_PROSPECTIVE_VERSION_ONLY_REGISTRATION_2026-10-20.json",
+    "a2_script": "demo_adapter/scripts/v12-d0-r3-a2-version-only-ps51.ps1",
+    "a2_handoff": "phase0/roadmap/CROSS_CHAT_HANDOFF_PR22_2026-10-20.md",
+    "a2_status": "DESIGN_ONLY_NOT_APPROVED_NOT_EXECUTED",
+    "a2_owner_approval": false,
+    "a2_vps_executed": false,
+    "a2_ci_final": "SEE_PR22_FINAL_APPROVED_SHA_CI_COMMENT",
+    "r1_r2_immutable_fail_closed": true,
+    "r3_d0_broker_attempt_started": false,
+    "phase_b_c_d_approved": false,
+    "next_owner_approval": "NEW_SEPARATE_A2_VERSION_ONLY_ONE_ATTENDED_PYTHON_START__NO_MT5_IMPORT_OR_BROKER"
   }
 }

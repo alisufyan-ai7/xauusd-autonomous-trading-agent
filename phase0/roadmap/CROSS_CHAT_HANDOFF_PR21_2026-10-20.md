@@ -26,3 +26,8 @@ Owner-approved PR20 read-only file/registry/PATH/process survey SHA `e6095ec5b12
 - **NEXT ONLY OWNER APPROVAL** after exact-head CI: one attended, pinned-script **A VERSION_ONLY** runtime verification launching the discovered Python candidate without importing MT5 or calling broker, with stdout returned for review. This is NOT approved under GitHub-only preparation. Then request B separately, then C, and only afterwards evaluate a future D0 attachment approval. No preemptive B/C/D authorization.
 
 **Stop after reporting DONE / IN PROGRESS / BLOCKED / NEXT with exact PR head, file hashes, Windows/Linux/record CI. No PR merges, VPS commands, MT5 imports, attachments, broker reads, capture, orders or live trading under this task.**
+
+
+## SUPERSESSION — OWNER PHASE A1 HAS NOW FAILED CLOSED
+
+Owner's one approved Phase A1 (PR21 pinned source SHA) verified the SHA but Python printed `File "<string>", line 1` and PowerShell `NativeCommandError` before any version PASS marker. A1 approval **CONSUMED; never rerun**. New separately stacked draft PR22 has immutable A1 incident `phase0/roadmap/DEMO_V12_D0_R3_PHASE_A1_OWNER_VPS_FAILURE_2026-10-20.md`, prospective A2 quote-free version-only script, native PS5.1 CI test, and UNAPPROVED A2 registration. Read `phase0/roadmap/CROSS_CHAT_HANDOFF_PR22_2026-10-20.md` and final PR22 CI/HEAD comment. Older next-owner statement about Phase A1 is historical and no longer an authorization. R1/R2 remain separately immutable FAIL_CLOSED, no MT5 broker read/trade or VPS change.
