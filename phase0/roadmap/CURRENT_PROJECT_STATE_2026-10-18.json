@@ -121,7 +121,7 @@
     "original_sealed_archive_sha256": "61535b668da13605d62a00517bc76cc6b4b918eab1db769b001e64b1bfa241a5",
     "historical_failures_distinct_and_immutable": true,
     "successor_branch": "implementation/apc-demo-canary-s2-execution-closure-20261020",
-    "successor_status": "NEW_SEPARATELY_SEALED_PREP_ONLY_NOT_VPS_STAGED_NOT_EXECUTED",
+    "successor_status": "S2_SEALED_ARTIFACT_STAGED_EXECUTION_OFF_ONLY__KILLED_UNUSED__NO_BROKER_PERMISSION",
     "successor_prepared_code": [
       "demo_adapter/src/xauusd_demo/canary_lifecycle.py",
       "demo_adapter/scripts/apc_demo_canary_attended_operator.py",
@@ -153,7 +153,7 @@
     "new_s2_vps_stage_completed": false,
     "apc_demo_canary_owner_approval": false,
     "next_read_first": "phase0/roadmap/CROSS_CHAT_HANDOFF_APC_DEMO_CANARY_S2_2026-10-20.md",
-    "next_material_owner_boundary": "NEW_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_EXACT_HEAD_NATIVE_CI_AND_BUNDLE_HASH",
+    "next_material_owner_boundary": "AFTER_DEMO_ONLY_TERMINAL_CONFIRMATION_AND_OWNER_SIDE_STOP_PRICE_LIMIT_ONE_APC_DEMO_CANARY",
     "successor_exact_code_ci_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
     "successor_pr": 24,
     "successor_ci": {
@@ -171,16 +171,16 @@
     "successor_seven_component_sha_verified": true,
     "new_stage_root": "%LOCALAPPDATA%\\XAUUSD-APC-DEMO-CANARY-S2",
     "new_stage_script_ops_branch": "ops/apc-demo-canary-s2-pinned-execution-off-stage-20261020",
-    "new_stage_script_pinned_commit": "ba10183e6735e820d8dcbed1e7ddc871b36a4830",
-    "new_stage_script_sha256": "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0",
-    "new_stage_embedded_python_sha256": "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349",
+    "new_stage_script_pinned_commit": "ab98292dde5c6bda9fc63a85eb36aaac36ed605d",
+    "new_stage_script_sha256": "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1",
+    "new_stage_embedded_python_sha256": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
     "new_stage_owner_authorization": true,
-    "new_stage_vps_executed": false,
+    "new_stage_vps_executed": true,
     "apc_demo_canary_broker_execution_authorized": false,
     "manual_external_python_toggle_authorized": false,
     "live_account_race_risk_addressed_in_runbook": true,
-    "new_stage_next_approval": "NEW_SEPARATE_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_PR26_CI_AND_OWNER_APPROVAL",
-    "next_apc_after": "S2_STAGING_PASS_AND_DEDICATED_DEMO_TERMINAL_CONFIRMATION",
+    "new_stage_next_approval": "NONE_STAGING_COMPLETE__NO_RETRY",
+    "next_apc_after": "STAGE_PASS_CONFIRMED__AWAIT_DEDICATED_DEMO_ONLY_TERMINAL_AND_FINAL_EXACT_ORDER_PARAMETERS",
     "old_stage_script_historical_superseded": {
       "commit": "105a9e348659aa7431b7eff07ea6b3d3f787bba9",
       "sha256": "03685894ed2249daed63b5ba7bcb60ec5e9db44892b26fa3b1e9d5baf0508166",
@@ -190,7 +190,7 @@
     "new_stage_default_github_artifact_id": 12289594320,
     "new_stage_default_github_artifact_filename": "github-actions-artifact-12289594320.zip",
     "new_stage_script_source_checked_out_without_vps_execution": true,
-    "s2_stage_authority": "ATTEMPT1_OWNER_APPROVAL_CONSUMED_FAIL_CLOSED_PRE_PYTHON_HASH",
+    "s2_stage_authority": "ATTEMPT2_OWNER_APPROVAL_CONSUMED_PASS_EXECUTION_OFF__NO_BROKER_AUTHORITY",
     "current_main_verified_from_github": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
     "failed_stage_attempts": [
       {
@@ -214,8 +214,8 @@
       "branch": "fix/apc-demo-canary-s2-ps-here-string-hash-20261021",
       "outer_sha256": "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1",
       "embedded_sha256": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
-      "status": "OFFLINE_WINDOWS_NATIVE_AST_HASH_PASS__VPS_NOT_AUTHORIZED",
-      "new_owner_approval_required": true,
+      "status": "VPS_STAGING_ATTEMPT2_PASS__OWNER_REPORTED__APPROVAL_CONSUMED",
+      "new_owner_approval_required": false,
       "native_windows_ci": {
         "run_id": 39482995784,
         "windows_pass": 55,
@@ -225,6 +225,38 @@
         "ast_decoded_hash_verified": true,
         "python_stage_not_executed": true
       }
-    }
+    },
+    "successful_stage_attempts": [
+      {
+        "attempt": 2,
+        "classification": "S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF",
+        "owner_approved": true,
+        "owner_approval_consumed": true,
+        "evidence_type": "OWNER_PASTED_VPS_POWERSHELL_OUTPUT",
+        "github_evidence": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6299700345",
+        "source_pr": 26,
+        "stage_helper_head": "ab98292dde5c6bda9fc63a85eb36aaac36ed605d",
+        "helper_source_sha256": "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1",
+        "helper_embedded_python_sha256": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
+        "artifact_id": 12289594320,
+        "artifact_transport_sha256": "596390ca92ec7cb94200a38f04a155ed5273f49bc84e9c9a16ebe48e5e05a160",
+        "original_s2_source_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+        "sealed_inner_zip_sha256": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+        "stage_directory": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-APC-DEMO-CANARY-S2",
+        "control_state": "KILLED",
+        "journal_state": "UNUSED",
+        "observed_preexisting_terminal_pid": 6216,
+        "post_terminal_identity_checked_by_wrapper": true,
+        "metatrader5_imported": false,
+        "broker_actions": 0,
+        "completion_markers": [
+          "APC_STAGE_SUCCESS_EXECUTION_OFF_NO_TRADING",
+          "APC_STAGE_VERIFIED__KILLED__UNUSED__MT5_UNTOUCHED"
+        ],
+        "staging_repeat_permitted": false,
+        "broker_execution_authorized": false
+      }
+    ],
+    "new_stage_completed": true
   }
 }
