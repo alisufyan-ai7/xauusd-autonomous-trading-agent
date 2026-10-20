@@ -197,7 +197,9 @@ def _setup(
         permit=permit(), identity=canary.exact_demo_identity(),
         now=NOW, confirmation_phrase=ARM_CONFIRMATION,
     )
-    return mt5, ctrl, journal, DemoCanaryLifecycle(mt5, ctrl, journal)
+    return mt5, ctrl, journal, DemoCanaryLifecycle(
+        mt5, ctrl, journal, clock=lambda: NOW
+    )
 
 
 def test_one_entry_one_close_persistently_killed(
