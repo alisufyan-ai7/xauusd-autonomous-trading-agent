@@ -1,0 +1,45 @@
+# APC-DEMO-CANARY — consolidated minimum first Exness DEMO lifecycle (2026-10-20)
+
+**CLASSIFICATION: GITHUB/OFFLINE PREPARATION ONLY — NO BROKER AUTHORITY.**
+Fresh independent branch from frozen `main` `ccaa8338aecee8bd3afbc358644410dff6c512e5`. Do not merge PRs #8–#22 individually. Keep their draft heads, original registrations, original VPS raw evidence, approvals and failures immutable; this consolidation does not retroactively turn FAIL_CLOSED into pass or derive trading permission.
+
+## Exact scope decision for PRs #8–#22
+
+- Existing `main`: reuse `DemoIdentity`, `DemoActivationPermit`, `DemoControlStore` (durable default KILLED, human arming, fail-to-QUARANTINED), package isolation, and original `DemoMT5Adapter` **unchanged and execution-blocked**. No shared PCR3 or production execution enablement.
+- PR #9: its full Policy A pure USD cash risk method and tests provide precedent. The minimum canary implementation **calls frozen main `evaluate_policy_a`** for current/stressed M1 and separately computes true scenario cash loss-to-stop, a stricter per-trade cap. This is explicitly **NOT** the full live-calibrated day/week/full Policy A admission, and cannot be used for real money.
+- PR #13: reuse mathematical cost/flat-session design principles only, without bringing its four-hour/window permission or dated schedule.
+- PRs #15–#18: reuse the principle of strict broker identity, bounded read-only MT5 metadata, journaled one-attempt semantics, no silent source waiver. New source intentionally does not cherry-pick the 4h source-collector mechanism.
+- PRs #8, #10–#12, #14, #16–#17: historical full 4h/rollover/Guard/official-source qualification stays intact **for expanded demo and real money**, not first bounded demo lifecycle validation.
+- PRs #18–#22: historical D0 R1 `ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534` FAIL_CLOSED, R2 `13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61` FAIL_CLOSED, Phase A1 consumed FAIL_CLOSED. The static owner scan had system Python candidate `C:\Program Files\Python312\python.exe` (MT5 metadata on disk) and terminal PID6216 EXE `C:\Program Files\MetaTrader 5\terminal64.exe`. Unexecuted prospective A2 is **SUPERSEDED**, NOT PASS, NOT APPROVED, NOT RETRIED. PRs unchanged.
+
+## Minimal distinct new artifacts
+
+- `demo_adapter/src/xauusd_demo/canary_policy.py` — **DEMO_CANARY_ONLY** deterministic loss from worst assumed fill through adverse stop, with explicit fees, slippage and gap scenario, comparison against independent broker USD tick value/contract size and broker `order_calc_profit`, risk cap `min($25,0.25% of min(balance,equity,$10,000))`, plus frozen M1 **both current and 2x stressed** margin ≥1000% and free margin ≥90% equity. No fictitious zero cost or claim of immutable max realized loss.
+- `demo_adapter/src/xauusd_demo/canary_lifecycle.py` — one optional owner-approved entry and one separately invoked closure, durable exclusive-entry intent and close intent via SQLite FULL+WAL; strict DEMO trade mode; pinned Exness company/server/currency/account fingerprint; no MT5 login, no live routing; XAUUSD and exact 0.01 lot; 0 existing positions/pending; mandatory broker-valid stop, broker filling, fresh quote; order_check before send; unknown outcome => durable UNCERTAIN + QUARANTINED, never automatic retry or automatic unknown-exposure closure. One entry forever, one controlled close, then KILLED. If stop missing/mismatch after entry, quarantine and human reconcile. A close may not be possible when Python trading disabled; the protective broker SL remains but is not guaranteed to prevent slippage/gaps.
+- `demo_adapter/scripts/apc_demo_canary_readonly_preflight.py` — attended one-shot Python3.12 and pinned MetaTrader5 version, single `initialize(path=existing)`, *read-only* MT5 terminal/account/positions/orders/XAUUSD metadata/quote, exact allowed Exness DEMO fingerprint, and requires `tradeapi_disabled=true`. The unprovided account login stays out of stdout; only fingerprint emitted. **MT5.initialize() may spawn/activate a terminal even without trading**: explicitly supervised process-side-effect risk.
+- `demo_adapter/scripts/apc-demo-canary-readonly-preflight.ps1` — exact-source-SHA-attested PowerShell5.1 wrapper with in-memory Python STDIN source, Python/MT5 process identity checks before and after, no VPS source write/Git/task actions. Requires owner-read-only approval; no Python -c quoted literals (resolves prospective A1 defect).
+
+## DEMO_CANARY_ONLY scenario envelope — not real money
+
+All budget constants are frozen in code: `0.01` lots, `$0.50` adverse entry slippage price, `$2.00` adverse stop gap price, `$5.00` commission allowance, `$2.00` swap allowance, `<=5 s` quote age, `<=$1.00` spread, <=`$25` AND <= 0.25% equity/balance/allocation. Stressed M1 deducts **2× computed full scenario loss** and **2× incremental margin**. All numerical risk gates are independently sourced from one live symbol and account snapshot, including `trade_tick_value_loss`, `trade_tick_size`, XAUUSD contract size, profit currency USD, order_calc_profit/ margin, supported filling and broker stop/volume grid. Fail closed on missing or contradictory values.
+
+These are deliberately conservative **hypothetical scenario assumptions**, not evidence that a stop cannot slip beyond them. At actual broker conditions a gap, commission, spread or fill can exceed the estimate, even on demo. Strictly forbid promotion of this calibration into real-money use; collect empirical session/rollover/event evidence later before broader autonomous DEMO or real-money gates.
+
+## Shortest gates / owner authority
+
+**Gate 1 — ONE ATTENDED READ-ONLY PREFLIGHT (new separate owner approval):**
+One OS-attended Windows PS5.1 call verifies Python3.12, exact pinned Python interpreter and MT5 Python distribution/module version, one existing terminal process with same PID/EXE before and after, `mt5.initialize(existing MT5 path)`, connected exact Exness DEMO account SHA, XAUUSD contract/tick/quote freshness/filling/margin state, zero positions and pending and `tradeapi_disabled=true`. No order_*, no login, no MT5 settings/config/tasks/file writes. If MT5 initialize changes process, report FAIL CLOSED. No repeated run without owner decision. Broker snapshot evidence owner-transmitted and only demo-canary validated, not 4h session admission.
+
+**Gate 2 — ONE EXECUTION-OFF VPS STAGING (new owner approval):**
+After preflight and sealed exact source/wheel hashes, create a NEW isolated private canary directory/ACL, install exact wheel from reviewed artifact, create new durable canary journal+control default KILLED, verify Python and broker cannot send orders, no Task Scheduler or PCR3 changes, no mutable shared worktree or legacy data reuse. Local files are VPS mutations; explicitly owner-gated. A PR MERGE, if asked, is an **independent** approval, not required to stage a pinned source/wheel. The prior Gate0/R1/R2/A1 records remain unchanged.
+
+**Gate 3 — ONE APC-DEMO-CANARY (new explicit broker-action approval):**
+Owner reviews exact account/fingerprint, risk cap, side, stop, projected scenario loss/margins, current quote/session and intended entry and closure. During a short supervised canary window only, knowingly enable MT5 external Python trading if necessary (separate setting authority included **explicitly in this future exact APC**), arm bound ACTIVE control with one-submission permit, place at most one 0.01-lot XAUUSD demo entry with protective SL, reconcile precisely one position, invoke at most one controlled owner-supervised close with no retries, reconcile flat, transition KILLED and disable external Python trading again. If any uncertain result, QUARANTINE, no blind retry/no automatic unknown-exposure closure; human reconciles. **NO continued autonomous trading** after the canary.
+
+After canary PASS: separately authorize restricted-session autonomous DEMO runtime. Session/rollover/event evidence and empirical calibration may be collected on DEMO without shortening real-money admission gates.
+
+## Stop conditions and known open engineering limitations
+
+The current **source-only consolidation** does NOT constitute preflight PASS, calibration admission, sealed wheel receipt on the VPS, or owner APC. It does not merge or deploy anything. Offline tests use mock MT5 objects and CI runner only; no CI proof of Exness tradeability or live account state. A lifecycle `order_send` can have uncertain outcomes despite order_check; no automatic retry and no guaranteed stop fill. A broker account/terminal may change between read and send; perform latest-possible identity/flat checks, hold terminal singleton/session control, and QUARANTINE unexpected observations. Use only the frozen demo fingerprint and no broker login/select path.
+
+**Required follow-up for acceptance:** exact-head CI and Windows native PS5.1 dry-run, source+wheel SHA sealing in PR comment and downloadable CI artifact; owner preflight; owner execution-off staged verification; then exact APC-DEMO-CANARY. If any condition fails, stop; no automatic fallback into live trading or broader demo.

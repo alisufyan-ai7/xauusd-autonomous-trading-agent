@@ -85,5 +85,31 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prospectively register and obtain source-backed demo-lifecycle-only adverse-cost calibration evidence while broker execution remains disabled."
+  "next_substantive_action": "Prospectively register and obtain source-backed demo-lifecycle-only adverse-cost calibration evidence while broker execution remains disabled.",
+  "apc_demo_canary_consolidation_2026_10_20": {
+    "status": "GITHUB_OFFLINE_ONLY__NOT_STAGED_NOT_ADMITTED",
+    "authoritative_consolidation_doc": "phase0/roadmap/APC_DEMO_CANARY_CONSOLIDATION_2026-10-20.md",
+    "prospective_registration": "phase0/roadmap/APC_DEMO_CANARY_PROSPECTIVE_REGISTRATION_2026-10-20.json",
+    "branch": "implementation/apc-demo-canary-consolidated-20261020",
+    "main_base": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "historical_draft_prs_8_to_22_unmodified": true,
+    "r1_r2_immutable_failures_preserved": true,
+    "r3_a1_failed_consumed": true,
+    "r3_a2_not_executed_superseded": true,
+    "canary_design_limits": {
+      "symbol": "XAUUSD",
+      "lots": "0.01",
+      "open_count": 1,
+      "close_count": 1,
+      "profit_mode": "DEMO_CANARY_ONLY"
+    },
+    "full_real_money_risk_gate_unchanged": true,
+    "vps_preflight_approved": false,
+    "mt5_initialized_by_new_branch": false,
+    "vps_staging_approved": false,
+    "canary_order_approved": false,
+    "external_python_trading_enabled": false,
+    "pr_merged": false,
+    "next_owner_approval": "ONE_ATTENDED_CONSOLIDATED_READ_ONLY_MT5_PREFLIGHT__AFTER_EXACT_HEAD_CI"
+  }
 }

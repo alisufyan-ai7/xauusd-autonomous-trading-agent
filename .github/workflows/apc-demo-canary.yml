@@ -1,0 +1,62 @@
+name: APC DEMO CANARY sealed offline wheel
+
+on:
+  pull_request:
+    paths:
+      - "demo_adapter/**"
+      - ".github/workflows/apc-demo-canary.yml"
+      - "phase0/roadmap/APC_DEMO_CANARY_*"
+      - "phase0/roadmap/CROSS_CHAT_HANDOFF_APC_DEMO_CANARY_*"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-canary:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        working-directory: demo_adapter
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install offline dependencies
+        run: |
+          python -m pip install -e ..
+          python -m pip install -e ".[dev]"
+      - name: Lint
+        run: python -m ruff check src tests scripts
+      - name: Type check
+        run: python -m mypy src/xauusd_demo
+      - name: Synthetic tests only
+        run: python -m pytest -q
+      - name: Verify separation from production wheel
+        run: python scripts/verify_package_boundary.py
+      - name: Build isolated demo-only wheel
+        run: python -m build --wheel --outdir dist
+      - name: Seal exact Windows wheel SHA256
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $wheel = @(Get-ChildItem -LiteralPath dist -Filter '*.whl')
+          if ($wheel.Count -ne 1) { throw 'EXPECTED_ONE_CANARY_WHEEL' }
+          $sum = (Get-FileHash -LiteralPath $wheel[0].FullName -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Output ("DEMO_CANARY_WHEEL_SHA256=" + $sum)
+          Write-Output ("DEMO_CANARY_EXACT_HEAD=" + "${{ github.event.pull_request.head.sha }}")
+      - name: Upload sealed Windows canary wheel
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apc-demo-canary-wheel-${{ github.event.pull_request.head.sha }}
+          path: demo_adapter/dist/*.whl
+          if-no-files-found: error
+          retention-days: 30

@@ -384,3 +384,12 @@ Also inspect PR #5 and PR #6 and all commits after this file's recorded main bef
 ---
 
 **Next substantive action:** prospectively register and obtain source-backed evidence for the demo-lifecycle-only adverse-cost calibration, while keeping broker execution disabled.
+
+
+## 17. 2026-10-20 APC-DEMO-CANARY CONSOLIDATION (UNMERGED BRANCH, NOT AN ADMISSION)
+
+Owner redirected the project toward the shortest safe **ONE controlled Exness demo canary lifecycle**, not tiny A2/B/C/D approvals. A fresh independent branch from frozen main `ccaa8338aecee8bd3afbc358644410dff6c512e5` contains the execution-disabled consolidated demo-canary risk/lifecycle and read-only preflight source with offline tests. Historical draft PRs #8–#22 remain untouched and unmerged; R1 and R2 separate consumed FAIL_CLOSED, A1 consumed FAIL_CLOSED and A2 unexecuted/superseded. The old paragraph above about requiring 4h source-backed calibration before any demo action is a historical scope; revised **DEMO_CANARY_ONLY** hypothetical cost envelope and strict broker metadata verification is allowed for *one* demo lifecycle only, never for real money or restricted autonomous demo admission.
+
+Read first `phase0/roadmap/APC_DEMO_CANARY_CONSOLIDATION_2026-10-20.md`, `phase0/roadmap/APC_DEMO_CANARY_PROSPECTIVE_REGISTRATION_2026-10-20.json` and `phase0/roadmap/CROSS_CHAT_HANDOFF_APC_DEMO_CANARY_2026-10-20.md` on the new consolidated branch and its exact final PR HEAD/CI artifact SHA. Reuse frozen main controls; original `mt5_demo.py` full cash-risk QUARANTINE remains intact and is **not removed**. New separate one-entry/one-close canary module is explicitly owner-gated and inert absent direct approved use. Full hypothetical loss-to-stop cash-risk, frozen M1 margin, exact Exness DEMO fingerprint and symbol required; unknown outcome permanently latches QUARANTINED, never automatic retry.
+
+Next three meaningful owner boundaries: (1) one attended MT5 read-only preflight with potential initialize side effects; (2) execution-off VPS isolated staging (GitHub merge independent, not mandatory); (3) one explicit APC-DEMO-CANARY covering at most one entry and one controlled closure and disabling after. **No approval for any of those has been given**, no Python/MT5/broker action performed in this consolidation, no VPS or Scheduler/PCR3/Gate0 changes, real-money still disabled.
