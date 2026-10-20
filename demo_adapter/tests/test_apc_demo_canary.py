@@ -77,6 +77,8 @@ class FakeMT5:
     TRADE_ACTION_DEAL = 1
     ORDER_TIME_GTC = 0
     TRADE_RETCODE_DONE = 10009
+    ORDER_FILLING_FOK = 0
+    ORDER_FILLING_IOC = 1
 
     def __init__(self) -> None:
         self.live = False
@@ -114,6 +116,7 @@ class FakeMT5:
             "volume_step": 0.01, "point": 0.01,
             "trade_tick_size": 0.01, "trade_tick_value_loss": 1.0,
             "trade_contract_size": 100, "trade_stops_level": 10,
+            "filling_mode": 1,
         }
 
     def symbol_info_tick(self, symbol: str) -> dict[str, object]:
