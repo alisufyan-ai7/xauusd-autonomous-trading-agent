@@ -174,12 +174,12 @@
     "new_stage_script_pinned_commit": "ba10183e6735e820d8dcbed1e7ddc871b36a4830",
     "new_stage_script_sha256": "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0",
     "new_stage_embedded_python_sha256": "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349",
-    "new_stage_owner_authorization": false,
+    "new_stage_owner_authorization": true,
     "new_stage_vps_executed": false,
     "apc_demo_canary_broker_execution_authorized": false,
     "manual_external_python_toggle_authorized": false,
     "live_account_race_risk_addressed_in_runbook": true,
-    "new_stage_next_approval": "ONE_NEW_S2_EXECUTION_OFF_VPS_STAGING_WITH_NO_MT5_OR_BROKER_ACTION",
+    "new_stage_next_approval": "NEW_SEPARATE_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_PR26_CI_AND_OWNER_APPROVAL",
     "next_apc_after": "S2_STAGING_PASS_AND_DEDICATED_DEMO_TERMINAL_CONFIRMATION",
     "old_stage_script_historical_superseded": {
       "commit": "105a9e348659aa7431b7eff07ea6b3d3f787bba9",
@@ -190,7 +190,31 @@
     "new_stage_default_github_artifact_id": 12289594320,
     "new_stage_default_github_artifact_filename": "github-actions-artifact-12289594320.zip",
     "new_stage_script_source_checked_out_without_vps_execution": true,
-    "s2_stage_authority": "OWNER_APPROVAL_NOT_YET_GRANTED",
-    "current_main_verified_from_github": "ccaa8338aecee8bd3afbc358644410dff6c512e5"
+    "s2_stage_authority": "ATTEMPT1_OWNER_APPROVAL_CONSUMED_FAIL_CLOSED_PRE_PYTHON_HASH",
+    "current_main_verified_from_github": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "failed_stage_attempts": [
+      {
+        "attempt": 1,
+        "classification": "FAIL_CLOSED_PRE_PYTHON_HASH",
+        "owner_approved": true,
+        "approval_consumed": true,
+        "outer_wrapper_sha_verified": "2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0",
+        "expected_embedded_sha": "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349",
+        "observed_embedded_sha": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
+        "failure_marker": "APC_STAGE_HELPER_SHA256_MISMATCH__NOT_EXECUTED",
+        "python_stage_invoked": false,
+        "mt5_imported": false,
+        "broker_action": false,
+        "stage_result": "NO_NEW_S2_STAGE_ESTABLISHED",
+        "github_evidence": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/25#issuecomment-6299219429"
+      }
+    ],
+    "pr26_prospective_fix": {
+      "branch": "fix/apc-demo-canary-s2-ps-here-string-hash-20261021",
+      "outer_sha256": "fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1",
+      "embedded_sha256": "3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648",
+      "status": "PROSPECTIVE_OFFLINE_REVIEW_CI_PENDING",
+      "new_owner_approval_required": true
+    }
   }
 }
