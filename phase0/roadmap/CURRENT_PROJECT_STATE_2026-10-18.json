@@ -111,5 +111,48 @@
     "external_python_trading_enabled": false,
     "pr_merged": false,
     "next_owner_approval": "ONE_ATTENDED_CONSOLIDATED_READ_ONLY_MT5_PREFLIGHT__AFTER_EXACT_HEAD_CI"
+  },
+  "apc_demo_canary_s2_safety_readiness_2026_10_20": {
+    "authority": "OWNER_INDEPENDENT_GITHUB_AND_OFFLINE_ONLY",
+    "frozen_main": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+    "frozen_pr23_head": "e32f6dda35b2f29f2f5c0d762d0d26846bc5f384",
+    "original_execution_off_stage": "OWNER_REPORTED_PASS_KILLED_UNUSED_UNTOUCHED",
+    "original_stage_path": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-APC-DEMO-CANARY",
+    "original_sealed_archive_sha256": "61535b668da13605d62a00517bc76cc6b4b918eab1db769b001e64b1bfa241a5",
+    "historical_failures_distinct_and_immutable": true,
+    "successor_branch": "implementation/apc-demo-canary-s2-execution-closure-20261020",
+    "successor_status": "NEW_SEPARATELY_SEALED_PREP_ONLY_NOT_VPS_STAGED_NOT_EXECUTED",
+    "successor_prepared_code": [
+      "demo_adapter/src/xauusd_demo/canary_lifecycle.py",
+      "demo_adapter/scripts/apc_demo_canary_attended_operator.py",
+      "demo_adapter/scripts/apc_demo_canary_s2_isolated_loader.py",
+      "demo_adapter/scripts/apc-demo-canary-s2-attended.ps1",
+      "demo_adapter/tests/test_apc_demo_canary_s2_loader.py"
+    ],
+    "code_gates": {
+      "exact_demo_fingerprint": true,
+      "one_XAUUSD_lot_001": true,
+      "initial_flat_required": true,
+      "owner_side_stop_and_price_limit": true,
+      "post_entry_side_magic_deal_and_fill_price": true,
+      "unknown_entry_close_quarantine": true,
+      "once_only_send": true,
+      "full_USD_stop_risk_and_M1": true
+    },
+    "operator_boundaries": {
+      "mt5_import_during_prep": false,
+      "mt5_initialize_during_prep": false,
+      "broker_actions_during_prep": 0,
+      "external_python_toggled": false,
+      "scheduler_changes": false,
+      "real_money_authorized": false
+    },
+    "dedicated_demo_only_terminal_proven": false,
+    "human_external_api_disable_after_canary_proven": false,
+    "new_s2_vps_stage_owner_approval": false,
+    "new_s2_vps_stage_completed": false,
+    "apc_demo_canary_owner_approval": false,
+    "next_read_first": "phase0/roadmap/CROSS_CHAT_HANDOFF_APC_DEMO_CANARY_S2_2026-10-20.md",
+    "next_material_owner_boundary": "NEW_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_EXACT_HEAD_NATIVE_CI_AND_BUNDLE_HASH"
   }
 }
