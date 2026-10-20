@@ -317,13 +317,23 @@ class DemoCanaryLifecycle:
             result = row(self._mt5.order_send(payload), "ENTRY_RESULT")
             if result.get("retcode") != self._mt5.TRADE_RETCODE_DONE:
                 raise DemoSafetyError("CANARY_NONFINAL_ENTRY_ACK")
+            if type(result.get("deal")) is not int or result["deal"] <= 0:
+                raise DemoSafetyError("CANARY_ENTRY_DEAL_ID_UNKNOWN")
             ps, os = self._exposure()
             if len(ps) != 1 or os:
                 raise DemoSafetyError("CANARY_POST_ENTRY_EXPOSURE_UNCERTAIN")
             p = row(ps[0], "POSITION")
+            wanted_side = (self._mt5.POSITION_TYPE_BUY
+                           if request.side.value == "BUY"
+                           else self._mt5.POSITION_TYPE_SELL)
             if (p.get("symbol") != "XAUUSD" or
+                    p.get("type") != wanted_side or
+                    p.get("magic") != MAGIC or
                     d(p.get("volume"), "position_volume") != request.volume_lots or
-                    d(p.get("sl"), "position_sl") != request.stop_loss):
+                    d(p.get("sl"), "position_sl") != request.stop_loss or
+                    abs(d(p.get("price_open"), "position_open_price")
+                        - d(payload["price"], "requested_entry_price"))
+                    > Decimal("0.20")):
                 raise DemoSafetyError("CANARY_POST_ENTRY_POSITION_MISMATCH")
             if type(p.get("ticket")) is not int or p["ticket"] <= 0:
                 raise DemoSafetyError("CANARY_POST_ENTRY_TICKET_UNKNOWN")
@@ -354,7 +364,7 @@ class DemoCanaryLifecycle:
                 raise DemoSafetyError("CANARY_CLOSE_EXPOSURE_UNCERTAIN")
             pos = row(ps[0], "CLOSE_POSITION")
             if (str(pos.get("ticket")) != expected_ticket or
-                    pos.get("symbol") != "XAUUSD" or
+                    pos.get("symbol") != "XAUUSD" or pos.get("magic") != MAGIC or
                     d(pos.get("volume"), "close_volume") != volume or
                     d(pos.get("sl"), "close_sl") != stop):
                 raise DemoSafetyError("CANARY_CLOSE_POSITION_CHANGED")
@@ -387,6 +397,8 @@ class DemoCanaryLifecycle:
             done = row(self._mt5.order_send(payload), "CLOSE_RESULT")
             if done.get("retcode") != self._mt5.TRADE_RETCODE_DONE:
                 raise DemoSafetyError("CANARY_CLOSE_ACK_UNCERTAIN")
+            if type(done.get("deal")) is not int or done["deal"] <= 0:
+                raise DemoSafetyError("CANARY_CLOSE_DEAL_ID_UNKNOWN")
             ps, os = self._exposure()
             if ps or os:
                 raise DemoSafetyError("CANARY_CLOSE_NOT_FLAT")
