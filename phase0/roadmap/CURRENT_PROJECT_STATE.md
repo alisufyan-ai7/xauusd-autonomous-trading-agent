@@ -2,7 +2,7 @@
 
 **As-of date:** 2026-10-18  
 **Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`  
-**Current merged `main`:** `33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf`
+**Current merged `main`:** `ccaa8338aecee8bd3afbc358644410dff6c512e5`
 
 ## 1. Source-of-truth rule
 
