@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER BOUNDARY D0: PR18 separate prospectively frozen unexecuted one-shot read-only metadata source-discovery packet ready for exact owner approval after final exact-head Windows/Linux verification. This is NOT v1.2 4h capture or trading. Read-only D0 can discover terminal/Exness demo symbol/account facts safely subject to explicitly disclosed initialize attach risk; no public Exness original webpage SHA prerequisite to D0. Keep full original 4h Exness XAUUSD event/Guard source qualification and all frozen Policy A requirements unchanged. No VPS/MT5 before separate exact D0 owner approval.",
+  "next_substantive_action": "STOP after immutable R1 preattach bootstrap failure. No MT5 attach or broker read was evidenced. Preserve R1 staged files/proof SHA and no rerun. Independently validate prospective GitHub-only R2 bootstrap + distinct registration and Windows/Linux tests, then seek a separate owner exact-head approval before ANY new VPS D0 attempt. Four-hour admission/PCR3, broker order and trading remain disabled.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -624,7 +624,7 @@
     "d0_python_sha256": "ea1496f715a6601f47098ee15a9d09645dc804a63ab9248fa60a4d36d3f52260",
     "d0_attempt_journal_sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
     "d0_scope": "ONE_READ_ONLY_EXNESS_DEMO_ACCOUNT_XAUUSD_METADATA_AND_UNADMITTED_TICK_SNAPSHOT__NO_4H_COHORT_OR_BROKER_ORDER_ACTIONS",
-    "d0_owner_approval_status": "NOT_GIVEN",
+    "d0_owner_approval_status": "APPROVED_EXACT_PR18_ONCE_THEN_BOOTSTRAP_PREATTACH_FAILED_AND_CONSUMED",
     "d0_vps_execute_now": false,
     "d0_private_path_recipe": "%LOCALAPPDATA%\\XAUUSD-v12-D0-PrivateEvidence\\ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534\\",
     "d0_existing_terminal_exe_path": null,
@@ -646,7 +646,59 @@
     "order_check_calc_margin_send_and_order_modification_allowed": false,
     "pcr3_gates_scheduler_and_old_failures_unchanged": true,
     "all_pr8_through_pr18_draft_unmerged": true,
-    "next_owner_action": "ONE_EXACT_OWNER_APPROVAL_OF_D0_SUPERVISED_READ_ONLY_SINGLE_METADATA_SNAPSHOT_AND_ISOLATED_SOURCE_STAGING_ONLY__NOT_4H_CAPTURE_NOT_TRADING",
+    "next_owner_action": "FRESH_EXACT_PR19_R2_OWNER_APPROVAL_ONLY_AFTER_ALL_SOURCE_BYTE_HASH_AND_NATIVE_WINDOWS_TESTS_PASS; NO_REUSE_OF_R1",
     "first_4h_run_registration_intentionally_unchanged": true
+  },
+  "v12_d0_r1_vps_bootstrap_incident_2026_10_20": {
+    "mode": "D0_R1_FIRST_APPROVED_BOOTSTRAP_ATTEMPT",
+    "approved_exact_pr18_head": "3ff100189349ada29331730af99459fecc4ea821",
+    "approved_registration_sha256": "ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534",
+    "owner_approval_provided": true,
+    "owner_approval_consumed_for_one_attempt": true,
+    "classification": "PREATTACH_FAIL_CLOSED_BOOTSTRAP_RESERVED_POWERSHELL_HOST_ASSIGNMENT",
+    "user_stdout_provenance": "Uploaded Pasted text(20261020-125238).txt; locally reported log not independently VPS-attested",
+    "reason": "Inline staging PowerShell assigned to built-in read-only $Host variable at line 127",
+    "error_class": "SessionStateUnauthorizedAccessException",
+    "run_observations": {
+      "isolated_stage_reserved": true,
+      "private_source_checkout_and_sha_verified_reported": true,
+      "preflight_proof_hashes": [
+        "914ae74caef38bd3a3b6f08cc9d18e8eaae161457d3d2a6f572ffd529f8d887b",
+        "1dac09c21c5ed2f7112d09abe662a7531d794f0189e254bfb9d6af2488a7f9a3"
+      ],
+      "isolated_stage_dir": "%LOCALAPPDATA%\\XAUUSD-v12-D0-IsolatedStage\\ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534",
+      "wrapper_invoked": false,
+      "python_import_or_mt5_initialize_in_log": false,
+      "private_d0_attempt_journal_reported": false,
+      "broker_read_reported": false,
+      "order_api_or_trading_reported": false,
+      "private_state_independently_verified": false
+    },
+    "conclusion": "NO_D0_RESULT_OR_BROKER_CAPTURE; NO_R1_RETRY_AND_PRESERVE_R1_STAGE",
+    "incident_file": "phase0/roadmap/DEMO_V12_D0_R1_BOOTSTRAP_PREATTACH_FAILURE_2026-10-20.md",
+    "r1_immutable_original_approved_files_and_pr18_unchanged": true
+  },
+  "v12_d0_r2_prospective_recovery_2026_10_20": {
+    "status": "PREPARED_REVISED_BOOTSTRAP_WITH_DISTINCT_REGISTRATION_NO_OWNER_APPROVAL_FOR_R2",
+    "new_draft_pr": 19,
+    "branch": "fix/demo-v12-d0-bootstrap-failclosed-recovery-20261020",
+    "parent_pr18_sha": "3ff100189349ada29331730af99459fecc4ea821",
+    "registration_file": "phase0/roadmap/DEMO_V12_D0_R2_FROZEN_REGISTRATION_2026-10-20.json",
+    "registration_sha256": "13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61",
+    "new_bootstrap_file": "demo_adapter/scripts/v12-d0-r2-attended-bootstrap.ps1",
+    "new_bootstrap_sha256": "91d493b5af205fcf964ee1d051d9bd0f505d17ea0fad9f1d0ca3e59678e31087",
+    "unchanged_ps51_wrapper_sha256": "adc226a7d21ca7eb296f100ad0a6c79d9554c76ca15ca260c3c82959f0312274",
+    "unchanged_python_host_sha256": "ea1496f715a6601f47098ee15a9d09645dc804a63ab9248fa60a4d36d3f52260",
+    "unchanged_attempt_journal_sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
+    "sha_manifest": "phase0/roadmap/DEMO_V12_D0_R2_SOURCE_SHA256_MANIFEST_2026-10-20.json",
+    "native_ps51_no_mt5_smoke_test_expected": true,
+    "new_owner_exact_head_approval_received": false,
+    "new_vps_attempt_executed": false,
+    "r1_registration_reuse_prohibited": true,
+    "private_r1_stage_must_remain_untouched": true,
+    "may_not_run_bootstrap_without_new_approval": true,
+    "four_hour_source_capture_permitted": false,
+    "policy_a_external_python_trading_order_actions_permitted": false,
+    "pcr3_and_all_historical_failures_immutable": true
   }
 }
