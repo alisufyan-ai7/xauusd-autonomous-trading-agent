@@ -75,19 +75,19 @@ def test_ps51_parse_shell_only_and_refuse_without_new_approval() -> None:
         "if($errors.Count -gt 0){$errors|Format-List;exit 18};"
         "'R3_A2_PS51_PARSE_PASS'"
     )
-    parsed = subprocess.run(
+    parsed = subprocess.run(  # noqa: S603 (native PS5.1 offline CI only)
         [str(shell), "-NoProfile", "-NonInteractive", "-Command", parser],
         capture_output=True, text=True, check=False, timeout=30,
     )
     assert parsed.returncode == 0, parsed.stdout + parsed.stderr
-    shell_only = subprocess.run(
+    shell_only = subprocess.run(  # noqa: S603 (native PS5.1 offline CI only)
         [str(shell), "-NoProfile", "-NonInteractive", "-File", str(SCRIPT),
          "-ShellOnlyTest"],
         capture_output=True, text=True, check=False, timeout=30,
     )
     assert shell_only.returncode == 0, shell_only.stdout + shell_only.stderr
     assert "R3_A2_SHELL_ONLY_TEST__NO_PYTHON_OR_MT5" in shell_only.stdout
-    rejected = subprocess.run(
+    rejected = subprocess.run(  # noqa: S603 (native PS5.1 offline CI only)
         [str(shell), "-NoProfile", "-NonInteractive", "-File", str(SCRIPT)],
         capture_output=True, text=True, check=False, timeout=30,
     )
@@ -112,7 +112,7 @@ def test_exact_a2_quote_free_python_c_via_native_ps51_with_ci_interpreter() -> N
         "if($LASTEXITCODE -ne 0){throw 'CI_PYTHON_ERROR'};"
         "$out"
     )
-    got = subprocess.run(
+    got = subprocess.run(  # noqa: S603 (native PS5.1 offline CI only)
         [str(shell), "-NoProfile", "-NonInteractive", "-Command", command],
         capture_output=True, text=True, check=False, timeout=30,
     )
