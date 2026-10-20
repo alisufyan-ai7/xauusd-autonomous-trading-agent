@@ -11,7 +11,7 @@ $ErrorActionPreference = 'Stop'
 $PythonExe = 'C:\Program Files\Python312\python.exe'
 $StageRoot = Join-Path $env:LOCALAPPDATA 'XAUUSD-APC-DEMO-CANARY-S2'
 $ExpectedTerminal = 'C:\Program Files\MetaTrader 5\terminal64.exe'
-$ExpectedStageScriptSHA = '809bd8a1dd243a4f0835764a785c70049749dd06e43c4d3fa25a0f80e2ac011a'
+$ExpectedStageScriptSHA = 'b9d2a6e09e7c4eb57633938bc7150ed2391feb5e4c6e8787a53004b853e1bbf5'
 
 if (-not [IO.File]::Exists($PythonExe)) {
     throw 'APC_STAGE_PINNED_PYTHON_NOT_FOUND__NO_STAGE'
