@@ -229,6 +229,9 @@ class DemoCanaryLifecycle:
         )
         if margin is None or calc_profit is None:
             raise DemoSafetyError("CANARY_BROKER_RISK_RECONCILIATION_FAILED")
+        stops_level = info.get("trade_stops_level")
+        if type(stops_level) is not int:
+            raise DemoSafetyError("CANARY_STOP_LEVEL_UNVERIFIED")
         ev = CanaryRiskEvidence(
             symbol=request.symbol, side=request.side.value,
             lots=request.volume_lots, stop=request.stop_loss,
@@ -242,7 +245,7 @@ class DemoCanaryLifecycle:
             volume_max=d(info.get("volume_max"), "volume_max"),
             volume_step=d(info.get("volume_step"), "volume_step"),
             point=d(info.get("point"), "point"),
-            stops_level=int(info.get("trade_stops_level")),
+            stops_level=stops_level,
             equity=d(a.get("equity"), "equity"),
             balance=d(a.get("balance"), "balance"),
             free_margin=d(a.get("margin_free"), "margin_free"),
