@@ -7,12 +7,12 @@ from __future__ import annotations
 
 import hashlib
 import sqlite3
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
 from .canary_policy import CanaryRiskDecision, CanaryRiskEvidence, d, evaluate_canary_risk
 from .control import DemoControlStore
