@@ -1,0 +1,64 @@
+{
+  "schema": "demo-v11-four-hour-run-window-candidate-v0",
+  "status": "CANDIDATE_ONLY_NOT_AN_APPROVED_RUN_REGISTRATION",
+  "method_amendment": "phase0/roadmap/DEMO_V11_RESTRICTED_SESSION_4H_BAND_OWNER_CLARIFICATION_2026-10-21.json",
+  "candidate_start_utc": "2026-10-22T13:30:00Z",
+  "candidate_end_utc": "2026-10-22T17:30:00Z",
+  "duration_minutes": 240,
+  "summer_overlap_utc": [
+    "13:30",
+    "16:30"
+  ],
+  "adjacent_single_centre_open_utc": [
+    "16:30",
+    "17:30"
+  ],
+  "broker_session_public_source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+  "planned_tick_pair_tolerance_ms": 100,
+  "pair_selection": "ALL_TRUE_MT5_TICKS_WITHIN_PLUS_MINUS_100MS_OF_1_5_30_SECOND_HORIZONS_USE_MAX_ADVERSE_NO_INTERPOLATION;INCOMPLETE_10MIN_BIN_FAIL_CLOSED",
+  "source_calendar_preliminary": [
+    {
+      "source": "https://www.bls.gov/schedule/2026/10_sched.htm",
+      "preliminary": "NO_BLS_RELEASE_LISTED_OCT22_IN_THIS_BLS_CALENDAR_NOT_ALL_EVENTS"
+    },
+    {
+      "source": "https://www.bea.gov/news/schedule/full",
+      "preliminary": "NO_BEА_MAJOR_REPORT_LISTED_OCT22"
+    },
+    {
+      "source": "https://www.newyorkfed.org/research/calendars/i-oct26.html",
+      "preliminary": "OCT22_0830_ET_WEEKLY_INITIAL_CLAIMS_BEFORE_CANDIDATE_BUT_1130_ET_WEEKLY_ECONOMIC_INDEX_INSIDE_CANDIDATE;MUST_CLASSIFY"
+    },
+    {
+      "source": "https://www.federalreserve.gov/newsevents.htm",
+      "preliminary": "ROUTINE_FED_DATA_RELEASES_MAY_FALL_INSIDE_WINDOW_MUST_RECONCILE"
+    },
+    {
+      "source": "https://www.census.gov/economic-indicators/2026-release-schedule-list-view.html",
+      "preliminary": "MUST_RECHECK_COMPLETE_CENSUS_CALENDAR_BEFORE_CAPTURE"
+    }
+  ],
+  "additional_events_not_yet_cleared": [
+    "CONFERENCE_BOARD_LEADING_ECONOMIC_INDEX_NEAR_14_UTC",
+    "OTHER_NON_BLS_US_RELEASES",
+    "EXNESS_INSTRUMENT_SPECIFIC_HOLIDAY_OR_MAINTENANCE",
+    "UNSCHEDULED_MACRO_OR_GOLD_SHOCK"
+  ],
+  "source_hashes_independently_frozen": false,
+  "run_specific_source_allowlist_sha256": null,
+  "terminal_current_pid": null,
+  "mt5_broker_session_xauusd_actual_date_verified": false,
+  "event_guard_health_future_verified": false,
+  "no_high_impact_event_blackout_verified": false,
+  "owner_can_attend_4h_session": "UNKNOWN",
+  "run_id": null,
+  "owner_capture_approval_id": null,
+  "exact_run_sha256": null,
+  "private_output_subfolder": "capture-20261022T133000Z",
+  "separate_mt5_readonly_capture_permission_granted": false,
+  "mt5_initialize_permission_granted": false,
+  "order_permission_granted": false,
+  "vps_staging_already_passed_true": true,
+  "no_restart_or_retry": true,
+  "note": "This is a conditional prospective candidate, NOT an admitted window. A final run registration must be independently source-hashed, approved and pinned BEFORE running. If event/session checks fail, fail closed and register a different future window BEFORE any data."
+}
