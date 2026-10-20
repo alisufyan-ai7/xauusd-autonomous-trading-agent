@@ -88,9 +88,18 @@ $required = @{
  "demo_adapter\scripts\v11_readonly_collector.py" = [string]$record.read_only_preflight_source_sha256
  "demo_adapter\scripts\v11_quote_coverage.py" = [string]$record.quote_protocol_source_sha256
  "demo_adapter\scripts\v11_windows_mt5_readonly_host.py" = [string]$record.mt5_bound_port_source_sha256
+ "demo_adapter\scripts\v12_attempt_journal.py" = [string]$record.attempt_journal_source_sha256
+ "demo_adapter\scripts\v12_journaled_readonly_port.py" = [string]$record.journaled_readonly_port_source_sha256
 }
 foreach ($relative in $required.Keys) {
     Assert-FileHash (Join-Path $repo $relative) $required[$relative] $relative
+}
+# Durable per-registration attempt is created by the Python host BEFORE
+# MT5.initialize. Reject a previously interrupted, failed or successful run.
+$attemptFile = Join-Path ([IO.Path]::GetDirectoryName($output)) (
+    "v12-attempt-" + $RegistrationSHA256 + ".jsonl")
+if ([IO.File]::Exists($attemptFile)) {
+    throw "EXISTING_ATTEMPT_IMMUTABLE_FAIL_CLOSED_NO_RERUN"
 }
 $python = Resolve-Existing (Join-Path $repo ".venv\Scripts\python.exe")
 $running = @(Get-Process -Name "terminal64" -ErrorAction SilentlyContinue |
