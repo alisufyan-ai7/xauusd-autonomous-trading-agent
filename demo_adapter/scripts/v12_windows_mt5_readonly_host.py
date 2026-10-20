@@ -81,6 +81,7 @@ def _preregistered(record: dict[str, Any], owner_run_id: str) -> WindowContract:
         "gap_proxy_sha256", "independent_source_origin_review_sha256",
         "collector_ps_sha256", "verifier_ps_sha256",
         "risk_source_sha256", "read_only_core_source_sha256",
+        "attempt_journal_source_sha256", "journaled_readonly_port_source_sha256",
     ):
         if not _hex(record.get(required)):
             raise CaptureSafetyError(
@@ -176,6 +177,12 @@ def main(argv: list[str] | None = None) -> int:
         raise CaptureSafetyError("exact already-open terminal path missing")
     if x.private_output.exists() or not x.private_output.parent.is_dir():
         raise CaptureSafetyError("immutable private destination precondition failed")
+    repo_root = Path(__file__).resolve().parents[2]
+    resolved_private = x.private_output.resolve()
+    if repo_root == resolved_private or repo_root in resolved_private.parents:
+        raise CaptureSafetyError("attempt/output cannot live inside GitHub worktree")
+    if attempt_path(resolved_private.parent, x.registration_sha256).exists():
+        raise CaptureSafetyError("attempt already registered: no retry or relabel")
     now = datetime.now(UTC)
     if not timedelta(0) <= contract.start_utc - now <= timedelta(minutes=5):
         raise CaptureSafetyError("run outside separately approved five-minute prewindow")
