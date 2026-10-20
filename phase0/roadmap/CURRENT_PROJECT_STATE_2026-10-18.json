@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
   "source_of_truth": "GITHUB",
-  "active_focus": "DEMO_V11_EARLIEST_OCT21_CAPTURE_RUN_DRAFT_AND_EXPLICIT_OS_PREFLIGHT_OWNER_BOUNDARY",
+  "active_focus": "OWNER_APPROVED_ATTENDED_V11_OS_ONLY_PREFLIGHT__AWAIT_CONSOLE_EVIDENCE",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Approved method and stage PASS are frozen. OS-only preflight source exists but cannot run without owner VPS authorization. Run it attended to pin current terminal PID and staged hash; classify source health and XAUUSD dynamic trading hours. Only then finalize and separately authorize a future 240min read-only MT5 capture.",
+  "next_substantive_action": "Owner executes existing OS-only PowerShell5.1 preflight once, returns full stdout/stderr; no MT5 or broker access. Then independently reconcile, finalize eligible future four-hour capture registration and request separate owner-approved read-only MT5 capture.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "OWNER APPROVE AND ATTEND EXACT ONE STRICT OS-ONLY VPS PREFLIGHT TO PIN TERMINAL PID/PATH AND STAGED MANIFEST; ALSO ATTEST DEMO-ONLY PROFILE; THEN FINALIZE EXACT RUN RECORD AND REQUEST SEPARATE READONLY MT5 INITIALIZE_AND_4H_CAPTURE PERMISSION",
+    "owner_next_action": "Owner run exactly one approved OS-only read-only preflight PowerShell5.1 block, paste complete output. No MT5 API. Evaluate results and freeze prospective source/terminal/event registration before distinct attended MT5 read-only capture approval.",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -368,7 +368,7 @@
       "new_staging_required": false
     },
     "os_only_source_preflight": {
-      "status": "SOURCE_PREPARED_OWNER_VPS_OS_READ_APPROVAL_NOT_YET_GIVEN",
+      "status": "OWNER_APPROVED_ONE_ATTENDED_OS_ONLY_VERIFICATION__RESULT_PENDING",
       "script": "phase0/ops/demo_v11_osonly_stage_preflight_20261021.ps1",
       "reads_only": [
         "UTC_SYSTEM_CLOCK",
@@ -387,7 +387,15 @@
         "CHANGE_TASKS_OR_SETTINGS"
       ],
       "owner_output_received": false,
-      "owner_approval_received": false
+      "owner_approval_received": true,
+      "approved_scope_exact": "Windows_PowerShell_5_1 UTC CLOCK, existing terminal64 process PID,path,start time, existing stage manifest SHA, five component SHA, execution-off marker, Python.exe presence; no modifications, MT5 or broker calls",
+      "exact_git_script_blob_sha": "75788efa3a3de3d05d815076ba3a312c8786c3fb",
+      "stage_root": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-DEMO-V11-READONLY",
+      "automation_or_repeat_authorized": false,
+      "mt5_initialize_authorized": false,
+      "broker_data_access_authorized": false,
+      "any_trading_authorized": false,
+      "expected_result": "WAIT_FOR_OWNER_COMPLETE_POWERSHELL_OUTPUT__DO_NOT_CLASSIFY_PASS_BEFORE_RECEIPT"
     }
   }
 }
