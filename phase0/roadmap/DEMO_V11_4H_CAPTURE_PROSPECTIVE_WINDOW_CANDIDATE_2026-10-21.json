@@ -1,0 +1,65 @@
+{
+  "schema": "demo-admit-v11-immediate-four-hour-candidate-v1",
+  "registered_as": "PROSPECTIVE_CANDIDATE_NOT_APPROVED_OR_ADMITTED",
+  "record_created_date": "2026-10-21",
+  "reason": "Owner requests earliest qualifying initial DEMO capture; use earliest approved 240min London/NY band instead of waiting a day without reason.",
+  "owner_approved_method_decision": "phase0/roadmap/DEMO_V11_RESTRICTED_SESSION_4H_BAND_OWNER_CLARIFICATION_2026-10-21.json",
+  "proposed_earliest_start_utc": "2026-10-21T12:30:00Z",
+  "proposed_earliest_end_utc": "2026-10-21T16:30:00Z",
+  "exact_minutes": 240,
+  "pakistan_local": "17:30–21:30 PKT",
+  "overlap_full_3h_utc": "13:30–16:30",
+  "adjacent_hour_utc": "12:30–13:30 (London open)",
+  "reference_exness": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+  "tentative_pair_tolerance_ms": 100,
+  "observations": "2880 scheduled read-only 5s observations plus true MT5 bid/ask ticks; no broker orders",
+  "events_in_window_to_classify_before_run": [
+    {
+      "time_utc": "2026-10-21T14:00:00Z",
+      "title": "BLS Usual Weekly Earnings Q3 2026",
+      "source": "https://www.bls.gov/schedule/2026/10_sched_list.htm",
+      "category": "BLS",
+      "impact_status": "NOT_YET_PROSPECTIVELY_CLASSIFIED",
+      "excluded_if_event_guard_high_impact": true
+    },
+    {
+      "time_utc": "2026-10-21T14:00:00Z",
+      "title": "NY Fed Outlook-at-Risk research release",
+      "source": "https://www.newyorkfed.org/research/calendars/i-oct26.html",
+      "category": "NYFED",
+      "impact_status": "NOT_YET_PROSPECTIVELY_CLASSIFIED",
+      "excluded_if_event_guard_high_impact": true
+    }
+  ],
+  "preliminary_fed_board_calendar": "https://www.federalreserve.gov/newsevents/2026-october.htm",
+  "preliminary_bea_calendar": "https://www.bea.gov/news/schedule/full",
+  "preliminary_census_calendar": "https://www.census.gov/economic-indicators/2026-release-schedule-list-view.html",
+  "event_guard_still_to_prove": [
+    "Official event list completeness and impact classification against frozen UTC Event Guard blackout rules",
+    "XAUUSD date-specific broker trading/quote availability and holiday schedule",
+    "Current terminal PID/exact process executable without MT5 broker action",
+    "Exact source SHA registrations for session/holiday/event allowlist checks",
+    "Independent static broker read-only allowlist evidence SHA and admission",
+    "Owner 4h attended availability and later separate exact read-only MT5 initialize+capture approval",
+    "No acute geopolitical shock/spread anomaly/stale ticks during window"
+  ],
+  "frozen_stage": {
+    "status": "PASS_EXECUTION_OFF_NO_CAPTURE",
+    "source_pr28_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+    "directory": "%LOCALAPPDATA%\\XAUUSD-DEMO-V11-READONLY",
+    "no_repeat": true
+  },
+  "forbidden": [
+    "No MT5 initialize/import without separate approval",
+    "No broker action/order",
+    "No external Python trading enablement",
+    "No retry/restart of staged copy",
+    "No mutable PCR3/Gate0/task changes",
+    "No real money"
+  ],
+  "owner_capture_authorized": false,
+  "completed_run_registration_sha256": null,
+  "owner_approval_id": null,
+  "ready_to_execute": false,
+  "explicit_outcome": "CONDITIONAL_ONLY__MUST_FAIL_CLOSED_ON_MISSING_SOURCE_OR_UNRESOLVED_EVENT_CLASSIFICATION"
+}
