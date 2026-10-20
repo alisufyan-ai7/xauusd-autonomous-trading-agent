@@ -153,6 +153,33 @@
     "new_s2_vps_stage_completed": false,
     "apc_demo_canary_owner_approval": false,
     "next_read_first": "phase0/roadmap/CROSS_CHAT_HANDOFF_APC_DEMO_CANARY_S2_2026-10-20.md",
-    "next_material_owner_boundary": "NEW_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_EXACT_HEAD_NATIVE_CI_AND_BUNDLE_HASH"
+    "next_material_owner_boundary": "NEW_S2_EXECUTION_OFF_STAGING_ONLY_AFTER_EXACT_HEAD_NATIVE_CI_AND_BUNDLE_HASH",
+    "successor_exact_code_ci_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+    "successor_pr": 24,
+    "successor_ci": {
+      "sealed_run": 39477519325,
+      "demo_admit_run": 39477519102,
+      "records_run": 39477518906,
+      "success": true,
+      "windows_passed": 53,
+      "linux_passed": 49,
+      "linux_skipped": 4
+    },
+    "successor_github_actions_artifact_id": 12289594320,
+    "successor_sealed_inner_sha256": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+    "successor_manifest_sha256": "70bf8637208772e91a64b7af2cc06997847dc557752b05d9225b735b30ff13be",
+    "successor_seven_component_sha_verified": true,
+    "new_stage_root": "%LOCALAPPDATA%\\XAUUSD-APC-DEMO-CANARY-S2",
+    "new_stage_script_ops_branch": "ops/apc-demo-canary-s2-pinned-execution-off-stage-20261020",
+    "new_stage_script_pinned_commit": "105a9e348659aa7431b7eff07ea6b3d3f787bba9",
+    "new_stage_script_sha256": "03685894ed2249daed63b5ba7bcb60ec5e9db44892b26fa3b1e9d5baf0508166",
+    "new_stage_embedded_python_sha256": "5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349",
+    "new_stage_owner_authorization": false,
+    "new_stage_vps_executed": false,
+    "apc_demo_canary_broker_execution_authorized": false,
+    "manual_external_python_toggle_authorized": false,
+    "live_account_race_risk_addressed_in_runbook": true,
+    "new_stage_next_approval": "ONE_NEW_S2_EXECUTION_OFF_VPS_STAGING_WITH_NO_MT5_OR_BROKER_ACTION",
+    "next_apc_after": "S2_STAGING_PASS_AND_DEDICATED_DEMO_TERMINAL_CONFIRMATION"
   }
 }
