@@ -283,7 +283,7 @@ class DemoCanaryLifecycle:
 
     def open_once(
         self, *, request: DemoOrderRequest, permit: DemoActivationPermit,
-        now: datetime, apc_token: str,
+        now: datetime, apc_token: str, approved_price_limit: Decimal,
     ) -> OpenCanaryResult:
         if apc_token != CANARY_APC_TOKEN:
             raise DemoSafetyError("CANARY_OWNER_APC_REQUIRED")
@@ -296,6 +296,19 @@ class DemoCanaryLifecycle:
             if ps or os:
                 raise DemoSafetyError("CANARY_NOT_STARTING_FLAT")
             risk, payload = self._risk(request, a, now)
+            info, _ = self._symbol_quote(now)
+            point = d(info.get("point"), "point")
+            if (type(approved_price_limit) is not Decimal or
+                    not approved_price_limit.is_finite() or approved_price_limit <= 0):
+                raise DemoSafetyError("CANARY_OWNER_PRICE_BOUND_MISSING")
+            checked_entry = d(payload["price"], "checked_entry")
+            # Order deviation points may worsen the actual execution fill.
+            deviation = Decimal(MAX_DEVIATION_POINTS) * point
+            if request.side.value == "BUY":
+                if checked_entry + deviation > approved_price_limit:
+                    raise DemoSafetyError("CANARY_BUY_ENTRY_ABOVE_OWNER_LIMIT")
+            elif checked_entry - deviation < approved_price_limit:
+                raise DemoSafetyError("CANARY_SELL_ENTRY_BELOW_OWNER_LIMIT")
             check = row(self._mt5.order_check(payload), "ORDER_CHECK")
             if int(check.get("retcode", -1)) != 0:
                 raise DemoSafetyError("CANARY_ORDER_CHECK_FAILED")
@@ -333,7 +346,13 @@ class DemoCanaryLifecycle:
                     d(p.get("sl"), "position_sl") != request.stop_loss or
                     abs(d(p.get("price_open"), "position_open_price")
                         - d(payload["price"], "requested_entry_price"))
-                    > Decimal("0.20")):
+                    > Decimal("0.20") or
+                    (request.side.value == "BUY" and
+                     d(p.get("price_open"), "confirmed_buy_fill")
+                     > approved_price_limit) or
+                    (request.side.value == "SELL" and
+                     d(p.get("price_open"), "confirmed_sell_fill")
+                     < approved_price_limit)):
                 raise DemoSafetyError("CANARY_POST_ENTRY_POSITION_MISMATCH")
             if type(p.get("ticket")) is not int or p["ticket"] <= 0:
                 raise DemoSafetyError("CANARY_POST_ENTRY_TICKET_UNKNOWN")
