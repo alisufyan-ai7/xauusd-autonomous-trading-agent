@@ -1,0 +1,47 @@
+{
+  "schema": "demo-v11-readonly-static-allowlist-verification-1",
+  "mode": "GITHUB_SOURCE_STATIC_AUDIT_ONLY_NOT_RUNTIME_MT5_ATTESTATION",
+  "source_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+  "verified_components": {
+    "v11_readonly_collector.py": "ca81f62362d56b74fb7f4b9ab5768f44913498da3a4dc861fbad0d8824d6833d",
+    "v11_windows_readonly_host.py": "5062645291bd2768d133c9b37fa2a469c3fdacbc30ae38987ebe30e148d55e7a",
+    "v11_windows_readonly_capture.ps1": "99d71cfbf7432817d320395e162d2793b2aa9c97863bf0701530704d5f89ee2c"
+  },
+  "mt5_allowed_read_methods": [
+    "terminal_info",
+    "account_info",
+    "symbol_info",
+    "symbol_info_tick",
+    "positions_get",
+    "orders_get",
+    "copy_ticks_range",
+    "history_deals_get"
+  ],
+  "mt5_lifecycle_methods_requiring_separate_owner_approval": [
+    "initialize",
+    "shutdown"
+  ],
+  "mt5_forbidden_order_or_mutating_methods": [
+    "order_send",
+    "order_check",
+    "order_calc_margin",
+    "order_calc_profit",
+    "login",
+    "symbol_select"
+  ],
+  "enforcement": {
+    "exact_windows_native_ps51_ast_and_synthetic_tests_passed": true,
+    "checked_ci_run": 39499813422,
+    "source_reviewed_without_importing_mt5": true,
+    "stage_execution_off_pass": true,
+    "initial_stage_marker": "EXECUTION_OFF__NO_CAPTURE_AUTHORIZED",
+    "mt5_import_allowed_now": false,
+    "mt5_initialize_allowed_now": false,
+    "broker_action_allowed_now": false,
+    "read_only_capture_approval_received": false,
+    "current_vps_terminal_identity_verified_today": false
+  },
+  "source_bounds": "STATIC_ONLY__runtime_must_reconcile_authoritative_demo_account_fingerprint_zero_positions_orders_and_tradeapi_disabled_before_each_read",
+  "future_check_required": "RECHECK_NATIVE_WINDOWS_STAGED_COMPONENT_HASHES_OS_PROCESS_PID_STORED_ACCOUNTS_AND_LIVE_EVENT_SOURCES_BEFORE_SEPARATELY_APPROVED_CAPTURE",
+  "real_money_allowed": false
+}
