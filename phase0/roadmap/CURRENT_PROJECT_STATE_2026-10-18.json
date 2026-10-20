@@ -768,6 +768,16 @@
     "r3_owner_approval_received": false,
     "vps_runtime_survey_executed_by_assistant": false,
     "pr8_to_pr20_all_draft_unmerged": true,
-    "freeze_approved_pr13_and_pcr3_preserved": true
+    "freeze_approved_pr13_and_pcr3_preserved": true,
+    "first_validated_exact_head": "539d7c1de326d9d8dc2f2c4dd701714e6ac81622",
+    "first_validated_windows_linux_workflow_run": 39431811443,
+    "first_validated_record_workflow_run": 39431811368,
+    "first_validated_windows_python312_pass": 293,
+    "first_validated_ubuntu_python312_pass": 287,
+    "first_validated_ubuntu_skips": 6,
+    "native_ps51_parser_and_actual_file_registry_survey_smoke": "PASS_WINDOWS_ACTIONS_READONLY_NO_PYTHON_MT5_BROKER",
+    "resolved_runtime_vps_path": null,
+    "owner_readonly_survey_result_returned": false,
+    "next_step": "REVIEW_OWNER_READ_ONLY_PYTHON_PATH_AND_PACKAGE_LOCATION_SURVEY__DO_NOT_RUN_R1_R2"
   }
 }
