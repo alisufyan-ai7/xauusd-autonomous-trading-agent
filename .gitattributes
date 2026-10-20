@@ -12,3 +12,4 @@ demo_adapter/scripts/v12_attempt_journal.py text eol=lf
 demo_adapter/scripts/v12_journaled_readonly_port.py text eol=lf
 demo_adapter/scripts/v12_d0_readonly_inventory.py text eol=lf
 demo_adapter/scripts/v12-d0-readonly-inventory.ps1 text eol=lf
+phase0/roadmap/DEMO_V12_D0_DIAGNOSTIC_NOT_CAPTURE_FROZEN_REGISTRATION_2026-10-20.json text eol=lf
