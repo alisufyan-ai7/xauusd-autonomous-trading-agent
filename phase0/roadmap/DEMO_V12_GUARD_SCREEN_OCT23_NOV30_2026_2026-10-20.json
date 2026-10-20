@@ -342,6 +342,86 @@
       "normalization_proven": null,
       "tentative_or_revision_state": "RECHECK_DATE_SPECIFIC_OFFICIAL_SOURCE_BEFORE_ANY_PROSPECTIVE_REGISTRATION",
       "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
+    },
+    {
+      "release_utc": "2026-10-29T12:30:00Z",
+      "authority": "DOL_ETA",
+      "name": "UI Weekly Claims",
+      "source_key": "dol_official_claims_release_schedule",
+      "source_original_2026_10_20_run39412951853_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+      "source_identity_verified_for_screening": true,
+      "full_source_set_coverage_proven": false,
+      "registered_tier": null,
+      "blackout_start_utc": null,
+      "blackout_end_utc": null,
+      "normalization_required": true,
+      "normalization_proven": null,
+      "tentative_or_revision_state": "THURSDAY_08_30_ET_RECURRING_EXPECTED_DO_NOT_ADMIT_WITHOUT_RELEASE_RECONFIRMATION",
+      "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
+    },
+    {
+      "release_utc": "2026-11-05T13:30:00Z",
+      "authority": "DOL_ETA",
+      "name": "UI Weekly Claims",
+      "source_key": "dol_official_claims_release_schedule",
+      "source_original_2026_10_20_run39412951853_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+      "source_identity_verified_for_screening": true,
+      "full_source_set_coverage_proven": false,
+      "registered_tier": null,
+      "blackout_start_utc": null,
+      "blackout_end_utc": null,
+      "normalization_required": true,
+      "normalization_proven": null,
+      "tentative_or_revision_state": "THURSDAY_08_30_ET_RECURRING_EXPECTED_DO_NOT_ADMIT_WITHOUT_RELEASE_RECONFIRMATION",
+      "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
+    },
+    {
+      "release_utc": "2026-11-12T13:30:00Z",
+      "authority": "DOL_ETA",
+      "name": "UI Weekly Claims",
+      "source_key": "dol_official_claims_release_schedule",
+      "source_original_2026_10_20_run39412951853_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+      "source_identity_verified_for_screening": true,
+      "full_source_set_coverage_proven": false,
+      "registered_tier": null,
+      "blackout_start_utc": null,
+      "blackout_end_utc": null,
+      "normalization_required": true,
+      "normalization_proven": null,
+      "tentative_or_revision_state": "THURSDAY_08_30_ET_RECURRING_EXPECTED_DO_NOT_ADMIT_WITHOUT_RELEASE_RECONFIRMATION",
+      "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
+    },
+    {
+      "release_utc": "2026-11-19T13:30:00Z",
+      "authority": "DOL_ETA",
+      "name": "UI Weekly Claims",
+      "source_key": "dol_official_claims_release_schedule",
+      "source_original_2026_10_20_run39412951853_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+      "source_identity_verified_for_screening": true,
+      "full_source_set_coverage_proven": false,
+      "registered_tier": null,
+      "blackout_start_utc": null,
+      "blackout_end_utc": null,
+      "normalization_required": true,
+      "normalization_proven": null,
+      "tentative_or_revision_state": "THURSDAY_08_30_ET_RECURRING_EXPECTED_DO_NOT_ADMIT_WITHOUT_RELEASE_RECONFIRMATION",
+      "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
+    },
+    {
+      "release_utc": "2026-11-25T13:30:00Z",
+      "authority": "DOL_ETA",
+      "name": "UI Weekly Claims",
+      "source_key": "dol_official_claims_release_schedule",
+      "source_original_2026_10_20_run39412951853_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+      "source_identity_verified_for_screening": true,
+      "full_source_set_coverage_proven": false,
+      "registered_tier": null,
+      "blackout_start_utc": null,
+      "blackout_end_utc": null,
+      "normalization_required": true,
+      "normalization_proven": null,
+      "tentative_or_revision_state": "NOV26_THANKSGIVING_WED_EXPLICIT_OFFICIAL_DOL_EXCEPTION_DO_NOT_ADMIT_WITHOUT_RELEASE_RECONFIRMATION",
+      "entry_eligibility": "UNKNOWN_FAIL_CLOSED"
     }
   ],
   "unscheduled_calendar_and_dol_claims_gap": {
@@ -421,7 +501,8 @@
       "date_utc": "2026-10-29",
       "known_screen_events_utc": [
         "2026-10-29T12:30:00Z BEA",
-        "2026-10-29T14:00:00Z BLS"
+        "2026-10-29T14:00:00Z BLS",
+        "2026-10-29T12:30:00Z DOL_ETA (release schedule screening, tier UNKNOWN)"
       ],
       "all_source_events_enumerated": false,
       "tier_classification_verified": false,
@@ -504,7 +585,8 @@
     {
       "date_utc": "2026-11-05",
       "known_screen_events_utc": [
-        "2026-11-05T13:30:00Z BLS"
+        "2026-11-05T13:30:00Z BLS",
+        "2026-11-05T13:30:00Z DOL_ETA (release schedule screening, tier UNKNOWN)"
       ],
       "all_source_events_enumerated": false,
       "tier_classification_verified": false,
@@ -584,7 +666,9 @@
     },
     {
       "date_utc": "2026-11-12",
-      "known_screen_events_utc": [],
+      "known_screen_events_utc": [
+        "2026-11-12T13:30:00Z DOL_ETA (release schedule screening, tier UNKNOWN)"
+      ],
       "all_source_events_enumerated": false,
       "tier_classification_verified": false,
       "all_4h_broker_eligibility_verified": false,
@@ -667,7 +751,9 @@
     },
     {
       "date_utc": "2026-11-19",
-      "known_screen_events_utc": [],
+      "known_screen_events_utc": [
+        "2026-11-19T13:30:00Z DOL_ETA (release schedule screening, tier UNKNOWN)"
+      ],
       "all_source_events_enumerated": false,
       "tier_classification_verified": false,
       "all_4h_broker_eligibility_verified": false,
@@ -731,7 +817,8 @@
       "date_utc": "2026-11-25",
       "known_screen_events_utc": [
         "2026-11-25T13:30:00Z BEA",
-        "2026-11-25T19:00:00Z FED"
+        "2026-11-25T19:00:00Z FED",
+        "2026-11-25T13:30:00Z DOL_ETA (release schedule screening, tier UNKNOWN)"
       ],
       "all_source_events_enumerated": false,
       "tier_classification_verified": false,
@@ -792,5 +879,11 @@
     }
   ],
   "admission_prohibition": "Calendar screening cannot create real capture registration or authorize trading",
-  "source_dates_may_change": true
+  "source_dates_may_change": true,
+  "dol_origin_source": "https://oui.doleta.gov/unemploy/archive.asp",
+  "dol_original_2026_10_20_source_bytes_sha256": "3adf9e071bc6cf1d87bfca6dd4abff253ca6c1237faada6d28b89e4aa84c4ed1",
+  "dol_source_retrieved_utc": "2026-10-20T11:09:38.265196+00:00",
+  "dol_scheduling_authority": "US_ETA_WEEKLY_THURSDAY_08_30_ET__2026_11_25_HOLIDAY_EXCEPTION_WED",
+  "dol_source_artifact_run": 39412951853,
+  "all_dates_unqualified": true
 }
