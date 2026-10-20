@@ -86,3 +86,27 @@ def test_native_ps51_preflight_wrapper_safe_rejection_and_parser() -> None:
     )
     assert denied.returncode != 0
     assert "REQUIRES_NEW_OWNER_APPROVAL" in (denied.stdout + denied.stderr)
+
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="native Windows PowerShell 5.1 only")
+def test_native_ps51_piped_python_stdin_execution_without_mt5() -> None:
+    """Prove PS5.1 stdin path using CI interpreter, not a VPS or MT5."""
+    shell = Path(r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
+    assert shell.is_file()
+    python = sys.executable.replace("'", "''")
+    script = (
+        "$ErrorActionPreference='Stop';"
+        "$python='" + python + "';"
+        "$source='import sys;print(chr(65)+chr(80)+chr(67)+chr(95)+"
+        "chr(83)+chr(84)+chr(68)+chr(73)+chr(78)+chr(95)+chr(79)+chr(75))';"
+        "$lines=@($source | & $python -B -I - 2>&1);"
+        "if($LASTEXITCODE -ne 0){throw 'PS51_PIPE_PYTHON_FAILED'};"
+        "$lines"
+    )
+    result = subprocess.run(  # noqa: S603 (offline Windows CI only)
+        [str(shell), "-NoProfile", "-NonInteractive", "-Command", script],
+        capture_output=True, text=True, check=False, timeout=30,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "APC_STDIN_OK" in result.stdout
