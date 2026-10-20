@@ -20,7 +20,7 @@ from pathlib import Path
 
 STAGE_NAME = "XAUUSD-APC-DEMO-CANARY-S2"
 OPERATOR_PATH = "source/demo_adapter/scripts/apc_demo_canary_attended_operator.py"
-OWNER_TOKEN = "APC-DEMO-CANARY-ONE-ENTRY-ONE-CLOSE"
+OWNER_TOKEN = "APC-DEMO-CANARY-ONE-ENTRY-ONE-CLOSE"  # noqa: S105 (nonsecret confirmation, not proof of authorization)
 
 
 def sha256(b: bytes) -> str:
