@@ -9,9 +9,7 @@ from dataclasses import dataclass
 from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR
 from typing import Any
 
-from xauusd_agent.risk.policy_a import (
-    ExposureKnowledge, PolicyAInput, evaluate_policy_a,
-)
+from xauusd_agent.risk.policy_a import ExposureKnowledge, PolicyAInput, evaluate_policy_a
 
 from .envelope import DemoSafetyError
 
