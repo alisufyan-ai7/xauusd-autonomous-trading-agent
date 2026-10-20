@@ -105,12 +105,12 @@ def test_native_windows_ps51_parser_and_execution_of_safe_branch() -> None:
         "if($errors.Count -gt 0){$errors|Out-String|Write-Host;exit 14};"
         "Write-Host 'R2_PS51_PARSER_PASS'"
     )
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603 (native Windows PS5.1 exact local binary only)
         [str(executable), "-NoProfile", "-NonInteractive", "-Command", parser_script],
         capture_output=True, text=True, check=False, timeout=25,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603 (native Windows PS5.1 exact local binary only)
         [
             str(executable), "-NoProfile", "-NonInteractive",
             "-File", str(SCRIPT),
@@ -138,7 +138,7 @@ def test_native_windows_ps51_requires_fresh_approval() -> None:
         "-WrapperSHA256", DIGEST, "-PythonHostSHA256", DIGEST,
         "-JournalSHA256", DIGEST,
     ]
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603 (native Windows PS5.1 exact local binary only)
         cmd, capture_output=True, text=True, check=False, timeout=25,
     )
     assert result.returncode != 0
