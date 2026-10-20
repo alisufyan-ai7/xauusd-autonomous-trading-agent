@@ -9,3 +9,25 @@
 **External Python toggle:** NEVER enabled in GitHub/offline tasks; future owner must explicitly approve temporary enable, one entry+known close, and manual disable confirmation. No CI or current preflight proves that this can be automatically toggled or that stop losses are guaranteed to fill at a fixed price. Human emergency detailed in S2 runbook.
 
 **NEXT:** finish all offline and native Windows tests, seal exact S2 artifact + source hashes/CI, prepare execution-off NEW stage procedure (no VPS action). Once S2 tested, **one meaningful new S2 execution-off staging approval is still necessary** because it is a different artifact and distinct path. Then only after stage PASS and exact price/side/stop + risk bounds, request a single APC-DEMO-CANARY broker action grant. Do not falsely claim immediate broker readiness while S2 not staged.
+
+
+## FINAL OFFLINE CODE/ARTIFACT PIN — EXACT PR24 AND SUCCESSOR OPS STAGING (2026-10-20)
+
+**Immutable validated S2 source**: draft PR24 `implementation/apc-demo-canary-s2-execution-closure-20261020` HEAD **`89711065a3a2d38fe02282fff3ad1782aabda0d2`** directly stacked on original PR23 `e32f6dda35b2f29f2f5c0d762d0d26846bc5f384`. All three final CI runs at this exact PR24 HEAD succeeded:
+- APC demo sealed offline wheel run **39477519325**: Windows Python3.12 **53 passed**, Linux **49 passed, 4 Windows-only skipped**, included real native PS5.1 parser and no-runtime tests, scenario stop-risk/adverse-loss/entry price/side/deal/close refusal/manifest-tamper tests, lint, strict typing and wheel build.
+- demo-admit **39477519102**: SUCCESS.
+- Validate records **39477518906**: SUCCESS.
+
+**One newly sealed S2 artifact:** GitHub Actions artifact **12289594320** in run 39477519325, outer ZIP `github-actions-artifact-12289594320.zip`, inner `apc-demo-canary-89711065a3a2d38fe02282fff3ad1782aabda0d2.zip` SHA256 **`6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e`**, inner manifest SHA256 **`70bf8637208772e91a64b7af2cc06997847dc557752b05d9225b735b30ff13be`**. Downloaded original GitHub artifact into isolated assistant container and independently SHA-verified both ZIP and all seven manifest components (5 source scripts + 2 wheels). S2 staged target is **NEW** `%LOCALAPPDATA%\XAUUSD-APC-DEMO-CANARY-S2`, NOT the previously PASS original root. The original stage must not be overwritten, restarted, or considered upgraded.
+
+**Exact seven components:**
+- S2 attended PS5.1 runner `59bcc2b329313120fb1421e0cd98697b24c6f7989ad5075f3ed10aaec6cac7a7`.
+- S2 attended operator `44279a0b806f131e73c6637d38943a1c1f9e34b1c8226281b0a886765ac75278`.
+- S2 isolated Python loader `70ae8a926015f3ebbdc22a64b5d7fe14d532539e09f244c62b3eed148f881bc0`.
+- Previously verified read-only Python preflight `484348e154e3072192b9a4b1fa8031b457355e6c46035bc1696ee22afcfabfc6` and PS5.1 wrapper `11db0ba0877f29ddf62ff0b626dc060d80393176f79d97f7e8dca32f20154519`.
+- New demo adapter wheel `d5ea615b7ddf9c508a3260408850b5177a3bc09006fdfae81b3708d58fb7433d`.
+- Pinned full Policy A dependency wheel `bb4bb2f95ac0e5f5b6537af0103d95cc0ab44bc2ffe99812578e220202ae03a1`.
+
+**New ops source — NOT RAN ON VPS:** branch `ops/apc-demo-canary-s2-pinned-execution-off-stage-20261020`, starting helper-code commit `105a9e348659aa7431b7eff07ea6b3d3f787bba9` contains `phase0/ops/apc-demo-canary-s2-execution-off-stage.ps1` exact SHA256 **`03685894ed2249daed63b5ba7bcb60ec5e9db44892b26fa3b1e9d5baf0508166`**. Its in-memory Python helper SHA256 **`5e720a128551351ebfb09bd7b18adfc3776764b0da43371c9a1818698039e349`**. It is identical in structural safety to the originally VPS-successful execution-off staging method but with the seven exact S2 component SHA pins, new root, and new bundle; exact Windows PowerShell source syntax and in-memory helper SHA tested on the S2 PR24 runner *before only these pins were retargeted*. The retargeting has been independently SHA checked; owner VPS stage not attempted. Any failure => consumed future approval FAIL_CLOSED, preserve partial state, no retry.
+
+**Remaining meaningful authorization boundaries:** (1) **one NEW OWNER-APPROVED EXECUTION-OFF S2 staging** of the exact separate artifact in a fresh private S2 root, external-Python trading remains disabled, KILLED/UNUSED; then (2) **one explicit APC-DEMO-CANARY** with one XAUUSD 0.01-lot entry, exact owner BUY/SELL side, SL and market-entry ceiling/floor, USD cash loss and M1 veto, dedicated demo-only terminal without live credentials, manual supervised external API enable then mandatory disable, at most one known-position close, no blind retry, unknown outcome QUARANTINED + human reconciliation and final broker flat/KILLED/trading-disabled evidence. **Do NOT request APC order authority yet:** S2 is not staged and terminal demo-only isolation/market-side/SL and future external API toggle have not been verified. Real money remains disabled. No order or MT5 action in Github/offline preparation.
