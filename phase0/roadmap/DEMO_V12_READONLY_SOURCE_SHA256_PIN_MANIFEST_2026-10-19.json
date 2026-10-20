@@ -64,18 +64,6 @@
       "git_blob_sha1": "be1aee0d1e009349b53dfa6e11daaab57b4fae90",
       "role": "FSYNC_EVERY_POLL_AND_TRUE_TICK_CHUNK_PARTIAL_FAILURE_EVIDENCE",
       "previous_pr15_sha256": "085d6d51c4634e8ca60c59f9b78c381c6b8d3a7231eebc16ac73843d35cd1cd9"
-    },
-    {
-      "path": "demo_adapter/scripts/v12_attempt_journal.py",
-      "sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
-      "git_blob_sha1": "cd572d8cfc6d3cec4aff2457fd0b8f68eaa880aa",
-      "role": "IMMUTABLE_FSYNC_PRIVATE_ATTEMPT_LEDGER_NO_RETRY"
-    },
-    {
-      "path": "demo_adapter/scripts/v12_journaled_readonly_port.py",
-      "sha256": "085d6d51c4634e8ca60c59f9b78c381c6b8d3a7231eebc16ac73843d35cd1cd9",
-      "git_blob_sha1": "be1aee0d1e009349b53dfa6e11daaab57b4fae90",
-      "role": "JOURNALED_XAUUSD_ONLY_READ_PORT_PARTIAL_POLL_AND_TICK_RECORDS"
     }
   ],
   "real_broker_and_official_sources_sha256_verified": false,
