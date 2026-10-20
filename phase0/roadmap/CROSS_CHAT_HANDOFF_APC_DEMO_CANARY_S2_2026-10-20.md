@@ -1,3 +1,11 @@
+# CROSS-PROGRAM HEADLINE — OCT 21 PR8/PR9 DEMO-ADMIT AUDIT (NO S2 REVERSAL)
+
+PR8 selected restricted-session v1.1 original HEAD `8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9` and PR9 offline pure Policy A math/scaffold original HEAD `6e5f32b771d511c670bbb348f0dd0fb427412fd5` remain draft/unmerged, original v1.0 blob `3e6e0d19e70da5a02002615160e3f0c0a0367b77` preserved. New **draft PR27** prospective missing NULL run-template contract fields, source review, tests **Windows46/Linux46 PASS** CI 39489951270, records 39489951352 SUCCESS. **READ FIRST** `phase0/roadmap/CROSS_CHAT_HANDOFF_DEMO_ADMIT_PR8_PR9_REVIEW_2026-10-21.md` on this evidence branch and [PR27 exact reviewed source](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/27#issuecomment-6300539958). No 4h real UTC run, cost calibration or broker capture has occurred in v1.1. PR9 older demo adapter still QUARANTINES before order_check/send; full runtime bridge missing. If later owner approves a merge, reconcile PR8->PR9->PR27, never infer demo broker permission.
+
+**Separately:** S2 one-shot DEMO_CANARY_ONLY second execution-OFF staging PASS/KILLED/UNUSED remains IMMUTABLE; failed attempt1 remains FAIL_CLOSED, and S2 credentials/owner side/SL/price parameters are unverified. The old v1.1 4-hour calibration need must not be retroactively added as a condition to already completed S2 staging; nor does S2 confer broader restricted-session autonomous DEMO-ADMIT admission. Production main unchanged and real money disabled.
+
+---
+
 # CURRENT FINAL PRE-APC REVIEW (2026-10-21) — NO ORDER PERMISSION
 
 Owner instructed: proceed through final APC-DEMO-CANARY **preparation only**, no order or external-Python enable. Live GitHub still has production main `ccaa8338aecee8bd3afbc358644410dff6c512e5`, PR23/24/25/26 draft/unmerged, S2 original sealed PR24 code `89711065a3a2d38fe02282fff3ad1782aabda0d2`, staging helper PR26 `ab98292dde5c6bda9fc63a85eb36aaac36ed605d`, distinct immutable attempt #1 FAIL_CLOSED / attempt #2 owner-reported S2 staging PASS with KILLED/UNUSED/no broker actions. Do not restage or alter old evidence.
