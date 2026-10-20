@@ -6,7 +6,6 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 
 import pytest
-
 from xauusd_agent.guards.event_guard import (
     EventGuardState,
     EventObservation,
