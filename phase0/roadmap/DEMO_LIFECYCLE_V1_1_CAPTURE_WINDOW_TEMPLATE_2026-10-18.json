@@ -32,5 +32,19 @@
   "approval_for_vps_capture": "REQUIRED_SEPARATELY",
   "permitted_mt5_action": "READ_ONLY",
   "failed_or_missing_fields": "REJECT_AND_DO_NOT_CAPTURE_UNTIL_PROSPECTIVELY_COMPLETE",
-  "contract_compatibility_note": "PROSPECTIVE_TEMPLATE_FIELDS_ONLY__NO_CAPTURE_AUTHORITY__TOLERANCE_NOT_ADMITTED"
+  "contract_compatibility_note": "PROSPECTIVE_TEMPLATE_FIELDS_ONLY__NO_CAPTURE_AUTHORITY__TOLERANCE_NOT_ADMITTED",
+  "classification": "DEMO_LIFECYCLE_ONLY_V1_1_READ_ONLY",
+  "owner_approved_read_only_capture": false,
+  "terminal_exe": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
+  "expected_terminal_pid": null,
+  "symbol": "XAUUSD",
+  "volume_max": "0.01",
+  "mt5_external_python_trading_must_be_disabled": true,
+  "exact_readonly_primitive_sha256": null,
+  "session_event_eligibility_prechecked": false,
+  "raw_evidence_private_local_only": true,
+  "prospective_capture_host_status": "SOURCE_PREPARATION_ONLY_NO_VPS_AUTHORIZATION",
+  "required_fee_history_scope": "90_DAYS_READ_ONLY_ACCOUNT_SPECIFIC_NO_MISSING_AS_ZERO",
+  "real_money_authorized": false,
+  "trading_authorized": false
 }
