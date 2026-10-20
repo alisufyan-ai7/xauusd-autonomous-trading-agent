@@ -1,0 +1,166 @@
+"""D0 owner-independent synthetic tests: no live MT5, no broker or orders."""
+from __future__ import annotations
+
+import inspect
+import json
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from scripts.v12_d0_readonly_inventory import (
+    DiscoveryBlocked,
+    _identity,
+    _private_write_exclusive,
+    observe_only,
+)
+
+ROOT = Path(__file__).resolve().parents[2]
+HOST = ROOT / "demo_adapter/scripts/v12_d0_readonly_inventory.py"
+PS = ROOT / "demo_adapter/scripts/v12-d0-readonly-inventory.ps1"
+
+
+class FakeReadonlyPort:
+    def __init__(
+        self, *, connected: bool = True, disabled: bool = True,
+        positions: tuple = (), orders: tuple = (),
+        login: int = 12345678, trade_mode: int = 0,
+    ) -> None:
+        self.connected = connected
+        self.disabled = disabled
+        self.positions = positions
+        self.orders = orders
+        self.login = login
+        self.trade_mode = trade_mode
+        self.calls: list[str] = []
+
+    def terminal_info(self) -> dict:
+        self.calls.append("terminal_info")
+        return {"connected": self.connected, "tradeapi_disabled": self.disabled}
+
+    def account_info(self) -> dict:
+        self.calls.append("account_info")
+        return {
+            "company": "Exness Technologies Ltd",
+            "server": "Exness-MT5Trial15", "currency": "USD",
+            "login": self.login, "trade_mode": self.trade_mode,
+        }
+
+    def positions_get(self) -> tuple:
+        self.calls.append("positions_get")
+        return self.positions
+
+    def orders_get(self) -> tuple:
+        self.calls.append("orders_get")
+        return self.orders
+
+    def symbol_info(self, symbol: str) -> dict:
+        self.calls.append("symbol_info")
+        assert symbol == "XAUUSD"
+        return {
+            "name": "XAUUSD",
+            "trade_mode": 4,
+            "trade_contract_size": 100,
+            "trade_tick_value_loss": 1.0,
+            "currency_profit": "USD",
+            "swap_long": -10,
+        }
+
+    def symbol_info_tick(self, symbol: str) -> dict:
+        self.calls.append("symbol_info_tick")
+        assert symbol == "XAUUSD"
+        return {"time": 1792490000, "time_msc": 1792490000000,
+                "bid": 4100, "ask": 4100.3}
+
+
+def test_synthetic_demo_pass_does_not_qualify_four_hours() -> None:
+    # The frozen fingerprint value depends on the separately provisioned
+    # admitted demo login. A synthetic login is never an authenticated account.
+    p = FakeReadonlyPort()
+    with pytest.raises(DiscoveryBlocked, match="unadmitted account fingerprint"):
+        observe_only(p)
+    assert not any(x.startswith("order_") for x in p.calls)
+
+
+@pytest.mark.parametrize("changes", [
+    {"connected": False}, {"disabled": False},
+    {"positions": ({"ticket": 1},)}, {"orders": ({"ticket": 1},)},
+    {"trade_mode": 2},
+])
+def test_fail_closed_before_symbol_read(changes: dict) -> None:
+    p = FakeReadonlyPort(**changes)
+    with pytest.raises(DiscoveryBlocked):
+        observe_only(p)
+    assert "symbol_info" not in p.calls
+    assert "symbol_info_tick" not in p.calls
+
+
+def test_unknown_missing_or_live_identity_fails_before_symbol() -> None:
+    for login in (0, -1, 12345678):
+        p = FakeReadonlyPort(login=login)
+        with pytest.raises(DiscoveryBlocked):
+            _identity(p)
+        assert "symbol_info" not in p.calls
+
+
+def test_exclusive_private_bytes_and_no_implicit_overwrite(tmp_path: Path) -> None:
+    target = tmp_path / "immutable-private.json"
+    a = {"schema": "SYNTHETIC", "execution_allowed": False}
+    digest = _private_write_exclusive(target, a)
+    import hashlib
+    assert digest == hashlib.sha256(target.read_bytes()).hexdigest()
+    assert json.loads(target.read_text()) == a
+    with pytest.raises(FileExistsError):
+        _private_write_exclusive(target, a)
+
+
+def test_no_trade_or_terminal_configuration_method_exposed() -> None:
+    from scripts import v12_d0_readonly_inventory
+    source = inspect.getsource(v12_d0_readonly_inventory)
+    for forbidden in (
+        "order_send(", "order_check(", "order_calc_margin(", "order_calc_profit(",
+        "symbol_select(", "terminal_login(", "position_close(", "history_deals_get(",
+        "positions_total(", "orders_total(", "mt5.login(", "mt5.symbol_select(",
+        "mt5.order_", "subprocess.",
+    ):
+        assert forbidden not in source
+    ps_source = PS.read_text(encoding="utf-8")
+    for forbidden in (
+        "Register-ScheduledTask", "Set-ScheduledTask", "order_send",
+        "order_check", "order_calc_margin", "symbol_select", "login -",
+    ):
+        assert forbidden not in ps_source
+    assert "OWNER_APPROVED_EXACT_D0_INVENTORY_ONLY_NO_TRADING" in ps_source
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="native PS5.1 AST validation on Windows")
+def test_native_ps51_syntax_only() -> None:
+    shell = Path("C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe")
+    assert shell.is_file()
+    script = (
+        "$errors=$null; $tokens=$null; "
+        "[System.Management.Automation.Language.Parser]::ParseFile("
+        "'" + str(PS).replace("'", "''") + "',[ref]$tokens,[ref]$errors)|Out-Null; "
+        "if($errors.Count -gt 0){$errors|Format-List;exit 29};"
+        "'PS51_PARSE_PASS'"
+    )
+    result = subprocess.run(  # noqa: S603
+        [str(shell), "-NoProfile", "-NonInteractive", "-Command", script],
+        capture_output=True, text=True, check=False,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_registration_remains_d0_and_not_v12_4h() -> None:
+    # D0 contract is a different artifact; frozen 240-minute registration
+    # must never be populated merely because metadata were discovered.
+    frozen = ROOT / (
+        "phase0/roadmap/DEMO_V12_EXACT_FIRST_READONLY_RUN_UNFROZEN_TEMPLATE_2026-10-19.json"
+    )
+    packet = json.loads(frozen.read_text("utf-8"))
+    assert packet["exact_window_start_utc"] is None
+    assert packet["exact_window_end_utc"] is None
+    assert packet["v12_overlap_start_utc"] is None
+    assert packet["owner_first_run_confirmation_id"] is None
+    assert packet["real_window_prospective_frozen"] is False
