@@ -50,7 +50,8 @@ foreach ($root in @('HKCU:\Software\Python\PythonCore',
         foreach ($version in @(Get-ChildItem -LiteralPath $root -ErrorAction SilentlyContinue)) {
             $install = Join-Path $version.PSPath 'InstallPath'
             if (Test-Path -LiteralPath $install) {
-                $dir = (Get-ItemProperty -LiteralPath $install -ErrorAction SilentlyContinue).'(default)'
+                $entry = Get-Item -LiteralPath $install -ErrorAction SilentlyContinue
+                $dir = if ($null -eq $entry) { $null } else { $entry.GetValue('') }
                 if (-not [string]::IsNullOrWhiteSpace($dir)) {
                     $exe = Join-Path $dir 'python.exe'
                     if ([IO.File]::Exists($exe)) {
