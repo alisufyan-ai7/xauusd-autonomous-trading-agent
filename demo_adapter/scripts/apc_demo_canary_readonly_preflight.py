@@ -97,6 +97,9 @@ def inspect(mt5: Any, observed_msec: int) -> dict[str, Any]:
     numbers = {name: _numeric(info.get(name), name) for name in numeric_keys}
     if any(value <= 0 for value in numbers.values()):
         raise ValueError("INVALID_SYMBOL_NUMERIC")
+    filling_flags = info.get("filling_mode")
+    if type(filling_flags) is not int or filling_flags & 3 == 0:
+        raise ValueError("UNSUPPORTED_FOK_IOC_FILLING_MODE")
     if numbers["volume_min"] > 0.01 or numbers["volume_max"] < 0.01:
         raise ValueError("BROKER_REJECTS_001_LOT")
     grid = (0.01 - numbers["volume_min"]) / numbers["volume_step"]
@@ -123,6 +126,7 @@ def inspect(mt5: Any, observed_msec: int) -> dict[str, Any]:
         "symbol_metadata": numbers,
         "trade_stops_level": info.get("trade_stops_level"),
         "trade_freeze_level": info.get("trade_freeze_level"),
+        "symbol_filling_mode_flags": filling_flags,
         "account_equity_usd": equity,
         "account_balance_usd": balance,
         "account_margin_used_usd": margin,
