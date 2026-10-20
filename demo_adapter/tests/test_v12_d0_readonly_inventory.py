@@ -217,3 +217,22 @@ def test_d0_prospective_contract_source_byte_pins() -> None:
     assert doc["owner_d0_confirmation"] is None
     assert doc["full_4h_observation_start_utc"] is None
     assert doc["actual_cost_admission_allowed"] is False
+
+
+def test_registered_d0_all_source_and_registration_sha256_byte_pins() -> None:
+    import hashlib
+
+    name = (
+        "phase0/roadmap/"
+        "DEMO_V12_D0_SOURCE_AND_REGISTRATION_SHA256_MANIFEST_2026-10-20.json"
+    )
+    manifest = json.loads((ROOT / name).read_text(encoding="utf-8"))
+    assert manifest["owner_approval_pending"] is True
+    assert manifest["actual_date_specific_4h_xauusd_registration_unchanged"]
+    assert manifest["source_nontrading"] is True
+    assert len(manifest["files"]) == 4
+    for pin in manifest["files"]:
+        raw = (ROOT / pin["path"]).read_bytes()
+        assert b"\r\n" not in raw
+        assert hashlib.sha256(raw).hexdigest() == pin["sha256"], pin["path"]
+    assert manifest["first_run_data_eligible_for_admission"] is False
