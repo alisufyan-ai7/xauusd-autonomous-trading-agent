@@ -168,6 +168,43 @@ def _tick_row(raw: Any) -> dict[str, Any]:
     return {"time_msc": stamp, "bid": str(bid), "ask": str(ask)}
 
 
+def _number(value: Any, key: str) -> str:
+    from decimal import Decimal
+
+    if value is None:
+        raise CaptureSafetyError(f"missing broker metadata {key}")
+    n = Decimal(str(value))
+    if not n.is_finite():
+        raise CaptureSafetyError(f"nonfinite broker metadata {key}")
+    return str(n)
+
+
+def account_risk_snapshot(port: TickPort) -> dict[str, str]:
+    account = _object(port.account_info(), "account_info")
+    values = {}
+    for key in ("balance", "equity", "margin", "margin_free"):
+        values[key] = _number(account.get(key), key)
+    if any(__import__("decimal").Decimal(values[key]) < 0
+           for key in ("balance", "equity", "margin", "margin_free")):
+        raise CaptureSafetyError("negative account risk fields")
+    return values
+
+
+def symbol_cash_snapshot(port: TickPort) -> dict[str, str]:
+    info = _object(port.symbol_info(SYMBOL), "symbol_info")
+    fields = (
+        "trade_tick_size", "trade_tick_value_loss", "trade_tick_value_profit",
+        "trade_contract_size", "volume_min", "volume_step", "point",
+        "trade_stops_level", "trade_freeze_level", "swap_long", "swap_short",
+        "swap_mode",
+    )
+    values = {key: _number(info.get(key), key) for key in fields}
+    for key in fields[:7]:
+        if __import__("decimal").Decimal(values[key]) <= 0:
+            raise CaptureSafetyError(f"nonpositive USD conversion metadata {key}")
+    return values
+
+
 def _fee_deal(raw: Any) -> dict[str, Any]:
     # No raw IDs, login, ticket, order ID, comment, client identity or secrets.
     from decimal import Decimal
@@ -198,6 +235,8 @@ def collect_window(
     if now_fn() > contract.start_utc or contract.start_utc - now_fn() > timedelta(minutes=5):
         raise CaptureSafetyError("not within five minutes before run window")
     _identity_and_zero(port, contract.expected_identity_sha256)
+    account_begin = account_risk_snapshot(port)
+    symbol_begin = symbol_cash_snapshot(port)
     observations: list[dict[str, Any]] = []
     for slot in range(SLOTS):
         target = contract.start_utc + timedelta(seconds=slot * SLOT_SECONDS)
@@ -242,8 +281,15 @@ def collect_window(
         if detail.get("symbol") == SYMBOL:
             fees.append(_fee_deal(detail))
     _identity_and_zero(port, contract.expected_identity_sha256)
+    account_end = account_risk_snapshot(port)
+    symbol_end = symbol_cash_snapshot(port)
+    if symbol_begin != symbol_end:
+        raise CaptureSafetyError("broker symbol cash metadata changed during capture")
     return {
         "schema": "DEMO_V11_PRIVATE_READONLY_CAPTURE_V1",
+        "account_before": account_begin,
+        "account_after": account_end,
+        "symbol_cash_metadata": symbol_begin,
         "calibration_admitted": False,
         "broker_orders_sent": 0,
         "start": contract.start_utc.isoformat(),
