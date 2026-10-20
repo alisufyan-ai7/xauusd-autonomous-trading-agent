@@ -200,6 +200,17 @@ class DemoCanaryLifecycle:
             raise DemoSafetyError("CANARY_QUOTE_STALE")
         return info, tick
 
+    def _filling(self, info: dict[str, Any]) -> int:
+        # SYMBOL_FILLING_MODE flags: FOK=1, IOC=2. Never guess RETURN.
+        flags = info.get("filling_mode")
+        if type(flags) is not int or flags < 0:
+            raise DemoSafetyError("CANARY_UNVERIFIED_FILLING_MODE")
+        if flags & 1:
+            return int(self._mt5.ORDER_FILLING_FOK)
+        if flags & 2:
+            return int(self._mt5.ORDER_FILLING_IOC)
+        raise DemoSafetyError("CANARY_UNSUPPORTED_MARKET_FILLING")
+
     def _risk(
         self, request: DemoOrderRequest, a: dict[str, Any],
         now: datetime,
@@ -248,6 +259,7 @@ class DemoCanaryLifecycle:
             "deviation": MAX_DEVIATION_POINTS,
             "magic": MAGIC, "comment": "ONE DEMO CANARY",
             "type_time": self._mt5.ORDER_TIME_GTC,
+            "type_filling": self._filling(info),
         }
         return decision, payload
 
@@ -332,7 +344,7 @@ class DemoCanaryLifecycle:
                 self._mt5.POSITION_TYPE_BUY, self._mt5.POSITION_TYPE_SELL
             ):
                 raise DemoSafetyError("CANARY_CLOSE_UNKNOWN_POSITION_SIDE")
-            _, tick = self._symbol_quote(now)
+            info, tick = self._symbol_quote(now)
             is_buy = pos["type"] == self._mt5.POSITION_TYPE_BUY
             close_type = (self._mt5.ORDER_TYPE_SELL if is_buy
                           else self._mt5.ORDER_TYPE_BUY)
@@ -344,6 +356,7 @@ class DemoCanaryLifecycle:
                 "deviation": MAX_DEVIATION_POINTS, "magic": MAGIC,
                 "comment": "CLOSE ONE DEMO CANARY",
                 "type_time": self._mt5.ORDER_TIME_GTC,
+                "type_filling": self._filling(info),
             }
             check = row(self._mt5.order_check(payload), "CLOSE_CHECK")
             if int(check.get("retcode", -1)) != 0:
