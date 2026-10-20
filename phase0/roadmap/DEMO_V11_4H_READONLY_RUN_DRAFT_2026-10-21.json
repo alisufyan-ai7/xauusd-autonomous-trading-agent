@@ -1,6 +1,6 @@
 {
   "schema_version": "demo-v11-prospective-run-register-draft-20261021",
-  "status": "PROSPECTIVE_RUN_CANDIDATE__NO_OWNER_CAPTURE_APPROVAL",
+  "status": "PROSPECTIVE_RUN_CANDIDATE__OWNER_DEMO_ONLY_AND_ATTENDANCE_ATTESTED__NO_CAPTURE_APPROVAL",
   "registration_commit_sha": null,
   "registration_sha256": null,
   "exact_owner_approval_id": null,
@@ -55,5 +55,18 @@
   "output_isolated_stage": "%LOCALAPPDATA%\\XAUUSD-DEMO-V11-READONLY\\capture-20261021T123000Z",
   "source_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
   "numeric_calibration_admitted": false,
-  "broker_execution_authorized": false
+  "broker_execution_authorized": false,
+  "owner_attestation_2026_10_21": {
+    "owner_confirmed_demo_only_terminal_and_profile": true,
+    "owner_confirmed_no_saved_live_account_credentials": true,
+    "owner_confirmed_no_other_operator_or_program_will_switch_mt5_accounts_during_capture": true,
+    "owner_confirmed_attendance_entire_utc_window": true,
+    "attendance_start_utc": "2026-10-21T12:30:00Z",
+    "attendance_end_utc": "2026-10-21T16:30:00Z",
+    "attendance_pakistan_time": "2026-10-21 17:30–21:30 PKT",
+    "evidence_kind": "EXPLICIT_OWNER_CHAT_ATTESTATION_NOT_INDEPENDENT_GUI_OR_VPS_PROOF",
+    "attestation_applies_to": "PROSPECTIVE_FOUR_HOUR_READ_ONLY_CAPTURE_PREPARATION_ONLY",
+    "not_a_capture_authorization": true,
+    "requires_runtime_account_demo_fingerprint_and_zero_exposure_checks": true
+  }
 }
