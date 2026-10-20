@@ -19,6 +19,7 @@ LOADER = ROOT / "scripts/apc_demo_canary_s2_isolated_loader.py"
 OPERATOR = ROOT / "scripts/apc_demo_canary_attended_operator.py"
 PREFLIGHT = ROOT / "scripts/apc_demo_canary_readonly_preflight.py"
 PREFLIGHT_PS = ROOT / "scripts/apc-demo-canary-readonly-preflight.ps1"
+LAUNCHER_PS = ROOT / "scripts/apc-demo-canary-s2-attended.ps1"
 
 
 def _zip(items: dict[str, bytes]) -> bytes:
@@ -54,6 +55,9 @@ def synthetic_stage(tmp_path: Path) -> tuple[Path, str, str]:
         ),
         "source/demo_adapter/scripts/apc_demo_canary_s2_isolated_loader.py": (
             LOADER.read_bytes()
+        ),
+        "source/demo_adapter/scripts/apc-demo-canary-s2-attended.ps1": (
+            LAUNCHER_PS.read_bytes()
         ),
     }
     for key, data in files.items():
