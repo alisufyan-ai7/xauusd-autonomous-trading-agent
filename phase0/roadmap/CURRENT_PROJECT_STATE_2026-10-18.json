@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prepare independently verified qualifying contiguous four-hour UTC London/NY overlap, Exness session/Event Guard source SHA, tick tolerance, account+terminal identity and exact immutable run approval record; do not access VPS/MT5 or request capture until reviewed.",
+  "next_substantive_action": "Owner approval for narrow 4h liquid London/NY session-band clarification after official Exness centre-hours contradiction; no capture permission. Then source-hash and event-calendar checked run-specific registration followed by separate MT5 read-only owner approval.",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "OWNER_REPORTED_V11_STAGE_ATTEMPT1_PASS_EXECUTION_OFF__NO_CAPTURE_NO_MT5",
+    "status": "STAGE_PASS_EXECUTION_OFF__PROSPECTIVE_4H_WINDOW_ELIGIBILITY_CONFLICT_HOLD",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -251,7 +251,7 @@
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
     "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "PREPARE PROSPECTIVE SOURCE_VERIFIED_4H_UTC_WINDOW_EVENT_SESSION_TOLERANCE_ACCOUNT_PID_RECORD; REQUEST DISTINCT READONLY_MT5_ATTACH_AND_CAPTURE APPROVAL; NO TRADING",
+    "owner_next_action": "OWNER_CLARIFY_STRICT_4H_OVERLAP_ELIGIBILITY_TO_4H_LIQUID_LONDON_NY_SESSION_BAND_OR_HOLD; THEN PROSPECTIVELY_REGISTER_DATE_AND_NEW_READONLY_VPS_CAPTURE_APPROVAL",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -293,6 +293,36 @@
       "capture_authorized": false,
       "broker_actions": 0,
       "no_repeat_approval": true
+    },
+    "window_eligibility_conflict": {
+      "status": "HOLD__OWNER_PROSPECTIVE_CLARIFICATION_REQUIRED",
+      "source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+      "official_public_centre_hours_utc": {
+        "summer": {
+          "london": "08:00-16:30",
+          "new_york": "13:30-20:00",
+          "strict_overlap_minutes": 180
+        },
+        "winter": {
+          "london": "08:00-16:30",
+          "new_york": "14:30-21:00",
+          "strict_overlap_minutes": 120
+        }
+      },
+      "existing_selected_method": "ONE_CONTIGUOUS_240MIN_WINDOW_IN_VERIFIED_LONDON_NEW_YORK_LIQUID_OVERLAP_ONLY",
+      "contradiction": "NO_240MIN_STRICT_CENTRE_OVERLAP_EXISTS_UNDER_OFFICIAL_EXNESS_TABLE",
+      "proposed_minimal_change": "ONE_240MIN_LIQUID_LONDON_NY_SESSION_BAND_WITH_FULL_3H_SUMMER_OVERLAP_PLUS_UP_TO_1H_ADJACENT_WITH_A_MAJOR_CENTRE_OPEN",
+      "proposed_change_owner_approved": false,
+      "proposed_date_or_window_registered": false,
+      "owner_capture_approval": false,
+      "unverified_conditions": [
+        "XAUUSD instrument date-specific schedule",
+        "holiday/reopen/rollover",
+        "BLS/BEA/Fed/Census and scheduled jobless claims",
+        "shocks/spread/live health",
+        "source SHA and prospective pairing tolerance"
+      ],
+      "github_receipt": "phase0/roadmap/DEMO_V11_READONLY_EXECUTION_OFF_STAGE_ATTEMPT1_2026-10-21.md"
     }
   }
 }
