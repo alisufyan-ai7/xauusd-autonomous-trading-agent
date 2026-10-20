@@ -1,0 +1,32 @@
+{
+  "schema_version": "demo-lifecycle-v1.1-prospective-run-window-template-1.0",
+  "status": "TEMPLATE_NOT_RUN_REGISTRATION",
+  "registration_commit_sha": null,
+  "run_id": null,
+  "expected_demo_identity_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "exact_window_start_utc": null,
+  "exact_window_end_utc": null,
+  "required_contiguous_duration_minutes": 240,
+  "daylight_saving_verification_source_sha256": null,
+  "broker_xauusd_session_source_sha256": null,
+  "official_event_guard_health_and_event_schedule_sha256": null,
+  "holiday_and_reopening_exclusion_source_sha256": null,
+  "permitted_session": "VERIFIED_LONDON_NEW_YORK_LIQUID_OVERLAP_ONLY",
+  "permitted_scope": "DEMO_LIFECYCLE_ONLY",
+  "polling_interval_seconds": "5",
+  "min_complete_poll_fraction": "0.99",
+  "every_1_minute_bin_required": true,
+  "true_mt5_tick_pair_coverage_10_minute_bins": true,
+  "horizons_seconds": [
+    1,
+    5,
+    30
+  ],
+  "tick_pair_tolerance_registration_required": true,
+  "exact_collector_source_sha256": null,
+  "exact_collector_static_allowlist_verification_sha256": null,
+  "quote_source_and_manifest_sha256": null,
+  "approval_for_vps_capture": "REQUIRED_SEPARATELY",
+  "permitted_mt5_action": "READ_ONLY",
+  "failed_or_missing_fields": "REJECT_AND_DO_NOT_CAPTURE_UNTIL_PROSPECTIVELY_COMPLETE"
+}

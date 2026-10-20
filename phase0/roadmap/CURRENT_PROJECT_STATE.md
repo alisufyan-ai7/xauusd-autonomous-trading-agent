@@ -2,7 +2,7 @@
 
 **As-of date:** 2026-10-18  
 **Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`  
-**Current merged `main`:** `33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf`
+**Reconciled merged `main` (2026-10-18):** `ccaa8338aecee8bd3afbc358644410dff6c512e5`
 
 ## 1. Source-of-truth rule
 
@@ -241,7 +241,7 @@ Exact approved base:
 
 `d87fab07af82aefb097841b4bd54832ddf3fa462`
 
-Merge commit / current main:
+PR #6 merge commit (historical main at that point):
 
 `33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf`
 
@@ -384,3 +384,45 @@ Also inspect PR #5 and PR #6 and all commits after this file's recorded main bef
 ---
 
 **Next substantive action:** prospectively register and obtain source-backed evidence for the demo-lifecycle-only adverse-cost calibration, while keeping broker execution disabled.
+
+## 17. 2026-10-18 GitHub reconciliation and prospective calibration handoff — PR #8
+
+- Reconciled actual `main` after PR #7 merge: `ccaa8338aecee8bd3afbc358644410dff6c512e5`. Compared against the prior `33b7ebb...` state: three commits ahead, only the two current-state files added; PRs #5, #6 and #7 merged. PR #7 head `e2e030c6e114bd3fb83c61b0908001df2834886c`; merge `ccaa8338aecee8bd3afbc358644410dff6c512e5`.
+- **Draft PR #8**: [DEMO-ADMIT preregistration and review](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/8), branch `research/demo-admit-adverse-cost-prereg-20261018`, base `ccaa8338...`. Unmerged and **not authority** for execution, VPS action or source acquisition.
+- Registered future `DEMO_LIFECYCLE_ONLY` read-only observation/Decimal derivation **method**, not cost numbers: `phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json` and `phase0/roadmap/DEMO_LIFECYCLE_ADVERSE_COST_METHOD_2026-10-18.md`. All current/stressed calibration values and source SHA remain **NOT_ADMITTED**. No new Exness source capture was executed.
+- Static gap review `phase0/roadmap/DEMO_ADMIT_RISK_GAP_REVIEW_2026-10-18.md` found the demo risk binding currently covers M1/V1 margin tests but does not compute USD entry-to-stop cash risk against full Policy A per-trade/period caps; also missing quote-freshness/calibrated-spread enforcement, missing-to-zero stops-level handling, source provenance admission verification, and accurate preflight control existence. These are **open pre-activation blockers**, not retrospective rejection of PRs #5/#6's 19 green tests.
+- Dukascopy R3 `FAIL_CLOSED` and earlier PCR-3 `QUARANTINED` remain preserved. PCR-3 execution-disabled release, shared VPS worktree, XAUUSD scheduled task, other tasks and all broker state were **not touched** in this GitHub preparation step.
+- **Next controlled action:** after owner exact-head review of PR #8, prepare and independently check a Windows PowerShell 5.1-compatible, statically allow-listed *read-only* XAUUSD collector in an isolated path, then request separate specific owner VPS-capture approval. No script/VPS run is authorized by PR #8; the numeric admission decision and successor implementation are later distinct gates.
+
+
+
+## 18. Critical review of PR #8 duration — recommendation only (2026-10-18)
+
+After a new exact GitHub reconciliation, draft PR #8's fixed `5 distinct market days + 3 rollover boundaries + 1 weekly reopening` was found to be a **candidate research-coverage choice**, not a frozen DEMO-ADMIT or Policy A entry criterion. A rigorous restricted-session DEMO-only alternative may reduce waiting by restricting trade entry to predeclared, liquid, owner-attended windows, not by assuming missing costs are zero or weakening Risk Governor limits.
+
+The complete comparative review is `phase0/roadmap/DEMO_ADMIT_CALIBRATION_DURATION_CRITICAL_REVIEW_2026-10-18.md` in draft PR #8. It recommends evaluating a `v1.1_RESTRICTED_SESSION_PROPOSED` registration with a prospectively defined contiguous 4-hour eligible window, explicit sampling/gap/fee/swap/source evidence, strict unknown/boundary bans and unchanged risk-buffer/Decimal/hash/provenance rules. This is a design recommendation **not selected, accepted, registered as the active replacement or admitted**. The original v1.0 five-day preregistration is preserved unchanged and remains the only currently written preregistration; no capture has begun.
+
+**Non-negotiable prerequisite:** correct the complete Policy A cash-risk binding for stop-loss USD planned loss, concurrent/daily/weekly/drawdown/streak, V1/M1, snapshot freshness and fail-closed unknown exposure **before any broker action**. A shorter quote sample cannot validate execution slippage or guarantee actual stop-loss fills. Position exposure may persist beyond an entry session, so supervised monitoring and explicitly authorized exit/emergency plans are required before any demo activation.
+
+**Status:** PR #8 draft and unmerged; `main` remains `ccaa8338aecee8bd3afbc358644410dff6c512e5`; no VPS access/changes, MT5 execution enablement, permit or broker action was made by this review.
+
+**Next owner decision needed (design only):** whether to select a prospectively frozen limited-session v1.1 method, or retain five-day/boundary coverage. Do **not request merge** until the method selection and revised exact-head review are completed. Each subsequent PR merge, VPS capture, staging and APC-DEMO action is independently gated.
+
+
+## 19. OWNER DECISION — adopt restricted-session DEMO-ADMIT calibration v1.1 (2026-10-18)
+
+**Authority: explicit owner design selection only.** Owner accepted the accelerated initial DEMO-ADMIT cost evidence method with one potentially qualifying four-hour contiguous liquid-session window. The four-hour threshold is an **engineering evidence gate** and carries no statistical-confidence claim. Any inadequate coverage or unsupported cost component fails closed and requires a new prospectively registered evidence window, with no favorable retuning.
+
+Durable owner decision: `phase0/roadmap/DEMO_LIFECYCLE_CALIBRATION_OWNER_DECISION_2026-10-18.json`. **Selected prospective methodology:** `phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json`; interpretation `phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md`; exact window registration template `phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json`.
+
+The original v1.0 `phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json`, **Git blob `3e6e0d19e70da5a02002615160e3f0c0a0367b77`**, is **IMMUTABLE, NOT SELECTED FOR INITIAL DEMO-ADMIT**. Its historical status, five-market-day/three-rollover/one-weekly-reopening protocol and all other failures remain preserved. Earlier §18 was an accurate *then-current* recommendation; this later owner decision supersedes §18's design-decision-pending state only, without changing its underlying historical record.
+
+**Still unresolved:** no actual v1.1 source capture or verified numeric `current_adverse_cost`/`stressed_adverse_cost`, no calibration/source hash, no verified run-specific exact UTC window, and no calibration admission. The full Policy A pre-demo-order USD protective-stop loss formula (including commission, swap, slippage and gap), 0.25% dynamically scaled per-trade cap, USD 50 concurrent, USD 75 daily, USD 150 weekly, USD 500 drawdown, 3R pause, V1 0.01 lot, M1 stressed/current margin/free-margin and same-snapshot normalized accounting **must be implemented and independently tested before any demo action**. No cash-risk or execution boundary is waived.
+
+Only evidence-supported liquid sessions may be used for *eventual* initial demo operations, excluding rollover, reopen, illiquid periods, high-impact events, shock/unknown states, unsupported guard conditions and holidays. A position may survive a permitted entry window; verified owner-attended position monitoring, planned-exit and human-only emergency protocol are mandatory before separate activation authority. Unknown exposure remains quarantined without automatic close.
+
+**Approvals NOT granted:** merge PR #8, VPS access/source capture/staging/task actions, MT5 external Python trading enablement, active permit, APC-DEMO activation, demo orders, live/tiny-live trading. Sealed execution-disabled PCR-3 is unchanged to the best of previously verified GitHub state; no VPS verification took place in this turn.
+
+**NEXT:** independently review v1.1 exact-head PR and continue offline-only preparation for read-only evidence collector, run-specific UTC window registration and full Policy A stop-loss USD-risk correction/tests. Obtain separate authorization before GitHub merge or any VPS evidence capture.
+
+**Full Policy A correction test gate, frozen prospectively:** `phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json` enumerates exact cash-risk formulas, fail-closed boundary cases and independent Windows/Linux offline tests. This registers engineering requirements; **the correction code is not yet implemented or validated**. In particular the old demo adapter remains blocked from demo orders. No calibration document alone can satisfy cash-risk admission.
