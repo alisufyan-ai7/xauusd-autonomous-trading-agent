@@ -11,6 +11,8 @@ param(
     [Parameter(Mandatory=$true)][string]$ExpectedCollectorSHA256,
     [Parameter(Mandatory=$true)][string]$ExpectedVerifierSHA256,
     [Parameter(Mandatory=$true)][string]$ExpectedHostSHA256,
+    [Parameter(Mandatory=$true)][string]$ExpectedAttemptJournalSHA256,
+    [Parameter(Mandatory=$true)][string]$ExpectedJournaledPortSHA256,
     [Parameter(Mandatory=$true)][string]$ExpectedJournalModuleSHA256,
     [Parameter(Mandatory=$true)][string]$PrivateRawPath,
     [Parameter(Mandatory=$true)][string]$ExpectedRawSHA256
@@ -39,6 +41,8 @@ $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot "..\.."))
 Assert-Pinned $script $ExpectedVerifierSHA256 "REVIEWED_VERIFIER"
 Assert-Pinned (Join-Path $PSScriptRoot "v12-readonly-collector.ps1") $ExpectedCollectorSHA256 "REVIEWED_COLLECTOR"
 Assert-Pinned (Join-Path $PSScriptRoot "v12_windows_mt5_readonly_host.py") $ExpectedHostSHA256 "REVIEWED_HOST"
+Assert-Pinned (Join-Path $PSScriptRoot "v12_attempt_journal.py") $ExpectedAttemptJournalSHA256 "REVIEWED_IMMUTABLE_ATTEMPT"
+Assert-Pinned (Join-Path $PSScriptRoot "v12_journaled_readonly_port.py") $ExpectedJournaledPortSHA256 "REVIEWED_READONLY_JOURNAL_PORT"
 Assert-Pinned $RegistrationPath $RegistrationSHA256 "APPROVED_REGISTRATION"
 Assert-Pinned (Join-Path $PSScriptRoot "v12_attempt_journal.py") $ExpectedJournalModuleSHA256 "IMMUTABLE_ATTEMPT_VERIFIER_MODULE"
 Assert-Pinned $PrivateRawPath $ExpectedRawSHA256 "PRIVATE_BROKER_RAW_EVIDENCE"
@@ -53,6 +57,8 @@ if ($r.approved_pr13_design_sha -cne "847829378956670e8936bf46c82e685de41145fd" 
     $r.approved_pr14_evidence_sha -cne "9d768fcfd160b3ccfc92ecef44fe040da6b77db6" -or
     $r.collector_ps_sha256 -cne $ExpectedCollectorSHA256 -or
     $r.verifier_ps_sha256 -cne $ExpectedVerifierSHA256 -or
+    $r.attempt_journal_source_sha256 -cne $ExpectedAttemptJournalSHA256 -or
+    $r.journaled_readonly_port_source_sha256 -cne $ExpectedJournaledPortSHA256 -or
     $r.attempt_journal_module_sha256 -cne $ExpectedJournalModuleSHA256 -or
     $e.registration_sha256 -cne $RegistrationSHA256 -or
     $e.host_sha256 -cne $ExpectedHostSHA256) {
@@ -132,6 +138,32 @@ finally {
 }
 Write-Output ("PRIVATE_ATTEMPT_JOURNAL_SHA256={0}" -f
     (Get-FileHash -LiteralPath $journal -Algorithm SHA256).Hash.ToLowerInvariant())
+# Independently inspect the private per-registration attempt log. It must
+# contain an exactly chained durable start and terminal success for THIS
+# frozen registration+RAW digest; FAIL_CLOSED/INCOMPLETE are never a PASS.
+$privateDirectory = [IO.Path]::GetDirectoryName([IO.Path]::GetFullPath($PrivateRawPath))
+$journalPath = Join-Path $privateDirectory ("v12-attempt-" + $RegistrationSHA256 + ".jsonl")
+if (-not [IO.File]::Exists($journalPath) -or
+    $e.attempt_journal_file -cne [IO.Path]::GetFileName($journalPath)) {
+    throw "MISSING_OR_MISMATCHED_DURABLE_ATTEMPT"
+}
+$python = Join-Path $root ".venv\Scripts\python.exe"
+if (-not [IO.File]::Exists($python)) { throw "REVIEWED_PYTHON_RUNTIME_MISSING" }
+$oldLocation = (Get-Location).Path
+$oldBytecode = $env:PYTHONDONTWRITEBYTECODE
+try {
+    Set-Location (Join-Path $root "demo_adapter")
+    $env:PYTHONDONTWRITEBYTECODE = "1"
+    & $python -B -m scripts.v12_attempt_journal --verify-only `
+        --journal $journalPath `
+        --registration-sha256 $RegistrationSHA256 `
+        --raw-sha256 $ExpectedRawSHA256
+    if ($LASTEXITCODE -ne 0) { throw "FAILED_OR_INCOMPLETE_ATTEMPT_NOT_ADMITTED" }
+}
+finally {
+    Set-Location $oldLocation
+    $env:PYTHONDONTWRITEBYTECODE = $oldBytecode
+}
 # No uploaded source is authentic merely because the record and hash agree.
 Write-Output ("PRIVATE_RAW_SHA256_VERIFIED={0}" -f $ExpectedRawSHA256)
 Write-Output ("TICKS_RETAINED={0} POLLS_RETAINED={1}" -f @($e.ticks).Count,@($e.polls).Count)
