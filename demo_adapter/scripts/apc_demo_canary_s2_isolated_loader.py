@@ -130,6 +130,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--expires-utc", default="")
     parser.add_argument("--side", choices=("BUY", "SELL"))
     parser.add_argument("--stop")
+    parser.add_argument("--price-limit")
     args = parser.parse_args(argv)
     if not sys.flags.isolated or not sys.dont_write_bytecode:
         raise RuntimeError("S2_PYTHON_REQUIRES_B_I")
@@ -157,9 +158,9 @@ def main(argv: list[str] | None = None) -> int:
     if not args.activation_id or not args.expires_utc:
         raise RuntimeError("S2_OWNER_ACTIVATION_PARAMETERS_REQUIRED")
     if args.mode == "entry":
-        if args.side is None or args.stop is None:
+        if args.side is None or args.stop is None or args.price_limit is None:
             raise RuntimeError("S2_EXACT_OWNER_SIDE_STOP_REQUIRED")
-    elif args.side is not None or args.stop is not None:
+    elif args.side is not None or args.stop is not None or args.price_limit is not None:
         raise RuntimeError("S2_CLOSE_CANNOT_CREATE_NEW_EXPOSURE")
     params = [
         "--mode", args.mode, "--owner-apc", OWNER_TOKEN,
@@ -167,7 +168,8 @@ def main(argv: list[str] | None = None) -> int:
         "--expires-utc", args.expires_utc,
     ]
     if args.mode == "entry":
-        params.extend(["--side", args.side or "", "--stop", args.stop or ""])
+        params.extend(["--side", args.side or "", "--stop", args.stop or "",
+                       "--price-limit", args.price_limit or ""])
     sys.path.insert(0, str(site))
     try:
         script = runpy.run_path(str(operator), run_name="apc_s2_owner_gated")
