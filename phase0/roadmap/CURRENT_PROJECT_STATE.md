@@ -1,5 +1,18 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT — V11 READ-ONLY EXECUTION-OFF STAGING PASS (2026-10-21)
+
+**Latest authoritative observed staging result: `DEMO_V11_READONLY_STAGE_ATTEMPT1_PASS_EXECUTION_OFF_NO_CAPTURE`**, following **ONE owner-approved attended VPS execution-OFF stage attempt**. Owner supplied Windows PowerShell 5.1 stdout with matching source-only helper `eb0b241dcac4f53d77dc00b5306c31edfb480867184aedad66da5225276d5cca`, GitHub Actions artifact ID `12300205161` outer SHA256 `10115fb5bd412a1df2ec4a80cac7d4e563f3276df3fe29ab2e1dde42b7d3c264`, sealed ZIP `987982e0a4585fe4c1283c5557d953162a1d0fcb0f4a62b0253b7488af13a938`, inner manifest `b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f`, **all five** source components checked. Exact frozen PR28 source HEAD `90c3e93330edeee58a0709a41e7393f7818f4ea8`, draft/unmerged; production main still `2848c98940def262459fd89d5897c6f63dd6aadb`.
+
+Stage root `C:\Users\Administrator\AppData\Local\XAUUSD-DEMO-V11-READONLY` exists per owner-reported output. Stage marker `EXECUTION_OFF__NO_CAPTURE_AUTHORIZED` verified; `capture_authorized=false`, `mt5_imported=false`, `broker_actions=0`; final marker `V11_EXECUTION_OFF_STAGE_VERIFIED__NO_MT5_NO_CAPTURE_NO_TRADING`. One staging approval **consumed**, no retry/reset/re-stage permitted. Complete exact stdout [PR28 evidence](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6302062782), immutable detailed receipt `phase0/roadmap/DEMO_V11_READONLY_EXECUTION_OFF_STAGE_ATTEMPT1_2026-10-21.md` on evidence branch `evidence/demo-v11-readonly-stage-pass-20261021`. This is owner's output, **not independently authenticated disk inspection**.
+
+**CURRENT BLOCKER is a new prospectively registered exact 4-hour UTC v1.1 read-only capture** and fresh, separate owner permission for MT5 `initialize` and broker **read-only** API. Before requesting permission, bind official Exness XAUUSD hours + DST/holiday/event exclusions, observed terminal PID/DEMO account fingerprint, SHA-pinned native host/static allowlist, actual UTC start/end, tick-pair tolerance, owner approval/run ID and hash. The template remains deliberately unapproved; no owner read-only capture consent has been given. No capture, fees/ticks or numerical calibration yet, hence no DEMO-ADMIT PASS, no APC-DEMO trading, no external Python trading enablement and no real-money permission. Broader weekend/reopening/multi-session evidence remains outside the first restricted-session admission.
+
+**HISTORICAL evidence preserved:** prior PR28 malformed PowerShell intermediate CI failure remains failed, subsequent exact-head CI success separate; earlier S2 failed and successful demo canary execution-OFF staging kept independent and untouched; PCR3/Gate0/tasks unaffected. No new review-only PR created.
+
+---
+
+
 **As-of date:** 2026-10-18  
 **Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`
 **CURRENT GitHub `main` after owner-approved sequential PR8→PR9→PR27 merges (2026-10-21):** `2848c98940def262459fd89d5897c6f63dd6aadb` (historical as-of-2026-10-18 snapshot below preserved).
