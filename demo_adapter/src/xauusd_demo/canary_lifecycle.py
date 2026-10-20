@@ -8,7 +8,7 @@ from __future__ import annotations
 import hashlib
 import sqlite3
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -21,7 +21,7 @@ BROKER = "Exness Technologies Ltd"
 SERVER = "Exness-MT5Trial15"
 CURRENCY = "USD"
 ACCOUNT_SHA256 = "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91"
-CANARY_APC_TOKEN = "APC-DEMO-CANARY-ONE-ENTRY-ONE-CLOSE"
+CANARY_APC_TOKEN = "APC-DEMO-CANARY-ONE-ENTRY-ONE-CLOSE"  # noqa: S105
 MAGIC = 261020
 MAX_DEVIATION_POINTS = 20
 
