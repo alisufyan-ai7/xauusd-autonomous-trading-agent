@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -143,3 +145,39 @@ def test_source_has_no_mt5_import_or_trade_methods() -> None:
     assert "order_check(" not in source
     assert "order_calc_margin(" not in source
     assert "order_calc_profit(" not in source
+
+
+def test_prospective_window_template_exact_contract_keys_and_fail_closed() -> None:
+    """New template has full collector contract, but no fabricated approval/data."""
+    template_path = (
+        Path(__file__).resolve().parents[2]
+        / "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json"
+    )
+    template = json.loads(template_path.read_text(encoding="utf-8"))
+    assert template["status"] == "TEMPLATE_NOT_RUN_REGISTRATION"
+    for field in (
+        "registration_commit_sha", "registration_sha256",
+        "exact_owner_approval_id",
+        "exact_window_start_utc", "exact_window_end_utc",
+        "exact_collector_source_sha256",
+        "exact_collector_static_allowlist_verification_sha256",
+        "broker_xauusd_session_source_sha256",
+        "official_event_guard_health_and_event_schedule_sha256",
+        "holiday_and_reopening_exclusion_source_sha256",
+        "tick_pair_tolerance_ms",
+    ):
+        assert field in template, field
+        assert template[field] is None, field
+    assert template["approval_for_vps_capture"] == "REQUIRED_SEPARATELY"
+    with pytest.raises(CaptureSafetyError, match="incomplete prospective"):
+        WindowContract.from_record(template)
+
+
+def test_quote_pair_tolerance_remains_unset_by_default() -> None:
+    """Do not silently assume zero-ms matching is an approved empirical rule."""
+    template = json.loads((
+        Path(__file__).resolve().parents[2]
+        / "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json"
+    ).read_text(encoding="utf-8"))
+    assert template["tick_pair_tolerance_registration_required"] is True
+    assert template["tick_pair_tolerance_ms"] is None

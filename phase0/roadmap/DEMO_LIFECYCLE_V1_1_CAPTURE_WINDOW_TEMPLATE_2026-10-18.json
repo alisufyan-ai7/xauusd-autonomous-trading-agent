@@ -2,6 +2,8 @@
   "schema_version": "demo-lifecycle-v1.1-prospective-run-window-template-1.0",
   "status": "TEMPLATE_NOT_RUN_REGISTRATION",
   "registration_commit_sha": null,
+  "registration_sha256": null,
+  "exact_owner_approval_id": null,
   "run_id": null,
   "expected_demo_identity_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
   "exact_window_start_utc": null,
@@ -23,10 +25,12 @@
     30
   ],
   "tick_pair_tolerance_registration_required": true,
+  "tick_pair_tolerance_ms": null,
   "exact_collector_source_sha256": null,
   "exact_collector_static_allowlist_verification_sha256": null,
   "quote_source_and_manifest_sha256": null,
   "approval_for_vps_capture": "REQUIRED_SEPARATELY",
   "permitted_mt5_action": "READ_ONLY",
-  "failed_or_missing_fields": "REJECT_AND_DO_NOT_CAPTURE_UNTIL_PROSPECTIVELY_COMPLETE"
+  "failed_or_missing_fields": "REJECT_AND_DO_NOT_CAPTURE_UNTIL_PROSPECTIVELY_COMPLETE",
+  "contract_compatibility_note": "PROSPECTIVE_TEMPLATE_FIELDS_ONLY__NO_CAPTURE_AUTHORITY__TOLERANCE_NOT_ADMITTED"
 }
