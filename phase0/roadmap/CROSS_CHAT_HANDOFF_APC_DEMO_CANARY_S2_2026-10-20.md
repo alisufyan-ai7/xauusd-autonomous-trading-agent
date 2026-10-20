@@ -1,3 +1,20 @@
+# CURRENT RECOVERY HEADLINE — SECOND S2 ATTENDED EXECUTION-OFF STAGING PASS (2026-10-21)
+
+**LATEST OBSERVED OUTCOME (owner-supplied Windows PowerShell transcript): `S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF`** after a **NEW separate owner approval**, not a retry under the consumed first attempt. Complete exact stdout / hashes and result preserved as a [PR26 evidence comment](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6299700345). Evidence is owner-reported, not independently inspected VPS filesystem.
+
+- Outer PR26 corrected wrapper SHA256: `fdb5624830b0741437b0a7e8697491db687c7e2d8af9b0ef494217d5556951e1` VERIFIED.
+- Canonical embedded Python SHA256: `3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648` VERIFIED.
+- Original PR24 Actions transport artifact 12289594320 SHA256: `596390ca92ec7cb94200a38f04a155ed5273f49bc84e9c9a16ebe48e5e05a160` VERIFIED.
+- Original PR24 **INNER sealed S2 ZIP** SHA256: `6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e` VERIFIED; source HEAD `89711065a3a2d38fe02282fff3ad1782aabda0d2`; stage source HEAD `ab98292dde5c6bda9fc63a85eb36aaac36ed605d`. Original S2 manifest + seven components were verified by audited stage source before PASS.
+- **NEW PRIVATE STAGE** `C:\Users\Administrator\AppData\Local\XAUUSD-APC-DEMO-CANARY-S2`; durable control `KILLED`, canary journal `UNUSED`, `APC_STAGE_METATRADER5_NOT_IMPORTED=True`, `APC_STAGE_BROKER_ACTIONS=0`, existing MT5 PID `6216` observed and validated unchanged in wrapper. Both final `APC_STAGE_SUCCESS_EXECUTION_OFF_NO_TRADING` + `APC_STAGE_VERIFIED__KILLED__UNUSED__MT5_UNTOUCHED` appear.
+- **HISTORICAL ATTEMPT #1 REMAINS IMMUTABLE `S2_STAGE_ATTEMPT1_FAIL_CLOSED_PRE_PYTHON_HASH`**, approved once and failed before Python. This is NOT repaired retroactively. Historical earlier original PR23 stage `XAUUSD-APC-DEMO-CANARY` remains a distinct KILLED/UNUSED PASS and untouched.
+- GitHub production `main ccaa8338aecee8bd3afbc358644410dff6c512e5` unchanged; PRs 23/24/25/26 still OPEN/DRAFT/UNMERGED. Original R1/R2/A1 FAIL_CLOSED immutable, A2 unexecuted. Neither stage approval is reusable for any VPS action.
+- **NEXT:** no staging repeat, broker order or Python trading toggle. Before any **separate one-shot APC-DEMO-CANARY broker-action authorization**, confirm the dedicated DEMO-only terminal contains **no live-account credentials**; bind exact side (BUY/SELL), protective SL, BUY price ceiling or SELL floor, short activation expiry; verify current market/exposure/risk/margin at authorized execution time; plan attended manual ENABLE -> one entry -> known-position close -> DISABLE with independent final flat/KILLED/external-Python-disabled confirmation. Unknown entry/close outcome means QUARANTINED and human broker reconciliation, **never blind retry**. Real-money stays prohibited.
+
+**All material stage outcomes are now stored in GitHub**; old lines below describe historical earlier checkpoints, not present staging status.
+
+---
+
 ## CURRENT STOP — FIRST OWNER-APPROVED S2 STAGING FAILED BEFORE PYTHON (2026-10-21)
 
 **Do not retry, delete, or overwrite either VPS stage; no further S2 staging or broker permission is authorized.** The first S2 owner approval has been **consumed**. Owner-pasted stdout from `C:\Users\Administrator\Downloads\apc-demo-canary-s2-execution-off-stage.ps1` showed outer SHA `2c80339280d11fa635f8f739a2f12ecacca7c147de2ad4cfd937f98521a646a0` VERIFIED, then **`APC_STAGE_HELPER_SHA256=3cf6ad71737766365874eef4d950fc93ae4169c60e1158ff1735e9dabf82a648`** and `APC_STAGE_HELPER_SHA256_MISMATCH__NOT_EXECUTED` at line 290. **Immutable outcome `S2_STAGE_ATTEMPT1_FAIL_CLOSED_PRE_PYTHON_HASH`**. The throw is before any Python invocation; no staging directory was created by this verified code path, no MT5 import/connection or broker action occurred. This is evidenced by source and owner output, not independent post-failure VPS inspection. The original PR23 stage PASS remains undisturbed.
