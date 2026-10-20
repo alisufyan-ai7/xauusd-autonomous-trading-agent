@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
   "source_of_truth": "GITHUB",
-  "active_focus": "DEMO_ADMIT",
+  "active_focus": "APC_DEMO_CANARY_S2_FINAL_PREAUTHORIZATION_ONLY",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -63,19 +63,23 @@
     ]
   },
   "current_blocker": {
-    "name": "DEMO_LIFECYCLE_ADVERSE_COST_CALIBRATION",
-    "status": "NOT_YET_ADMITTED",
+    "name": "DEMO_ONLY_TERMINAL_CREDENTIAL_ATTESTATION_AND_EXACT_CANARY_ORDER_BINDING",
+    "status": "BLOCKED_PENDING_OWNER_EVIDENCE",
     "required_fields": [
-      "current_adverse_cost",
-      "stressed_adverse_cost"
+      "DEMO_ONLY_TERMINAL_ATTESTED",
+      "OWNER_CHOSEN_BUY_OR_SELL",
+      "EXACT_PROTECTIVE_STOP",
+      "BUY_CEILING_OR_SELL_FLOOR",
+      "EXACT_APC_ACTIVATION_ID_AND_UTC_EXPIRY",
+      "ATTENDED_MANUAL_EXTERNAL_PYTHON_ENABLE_DISABLE_AND_EMERGENCY_CONFIRMATION"
     ],
     "constraints": [
-      "source-backed",
-      "prospectively registered",
-      "DEMO_LIFECYCLE_ONLY",
-      "hash-bound",
-      "no silent zero substitution",
-      "no promotion to real-money evidence"
+      "NO_MT5_BROKER_CALL_BEFORE_SEPARATE_APC",
+      "ZERO_STARTING_EXPOSURE_AT_EXECUTION",
+      "FULL_POLICY_A_LOSS_TO_STOP_AND_M1_GATE",
+      "UNKNOWN_RESULT_QUARANTINED_NO_RETRY",
+      "ORIGINAL_S2_STAGE_NOT_REPEATED",
+      "REAL_MONEY_FORBIDDEN"
     ]
   },
   "authorization": {
@@ -85,7 +89,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Prospectively register and obtain source-backed demo-lifecycle-only adverse-cost calibration evidence while broker execution remains disabled.",
+  "next_substantive_action": "Owner non-mutating Navigator Accounts/demo-only saved-credential attestation; then bind exact one-off XAUUSD side, stop and price limit from fresh broker data before a separate explicit APC-DEMO-CANARY authorization.",
   "apc_demo_canary_consolidation_2026_10_20": {
     "status": "GITHUB_OFFLINE_ONLY__NOT_STAGED_NOT_ADMITTED",
     "authoritative_consolidation_doc": "phase0/roadmap/APC_DEMO_CANARY_CONSOLIDATION_2026-10-20.md",
@@ -258,5 +262,57 @@
       }
     ],
     "new_stage_completed": true
+  },
+  "historical_broader_demo_operating_adverse_cost_blocker_as_of_prior_state": {
+    "name": "DEMO_LIFECYCLE_ADVERSE_COST_CALIBRATION",
+    "status": "NOT_YET_ADMITTED",
+    "required_fields": [
+      "current_adverse_cost",
+      "stressed_adverse_cost"
+    ],
+    "constraints": [
+      "source-backed",
+      "prospectively registered",
+      "DEMO_LIFECYCLE_ONLY",
+      "hash-bound",
+      "no silent zero substitution",
+      "no promotion to real-money evidence"
+    ]
+  },
+  "apc_demo_canary_final_preauthorization_2026_10_21": {
+    "document": "phase0/roadmap/APC_DEMO_CANARY_FINAL_PREAUTH_GATE_2026-10-21.md",
+    "stage_status": "OWNER_REPORTED_S2_ATTEMPT2_PASS_KILLED_UNUSED",
+    "first_attempt_preserved": "FAIL_CLOSED_PRE_PYTHON_HASH",
+    "broker_execution_authorized": false,
+    "terminal_active_account_historical_demo_preflight": true,
+    "terminal_exclusive_demo_no_live_saved_credentials": "UNVERIFIED",
+    "exact_side": null,
+    "exact_stop_loss": null,
+    "exact_buy_ceiling_or_sell_floor": null,
+    "utc_expiry": null,
+    "activation_id": null,
+    "source_artifact_id": 12289594320,
+    "source_pr24_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+    "stage_pr26_head": "ab98292dde5c6bda9fc63a85eb36aaac36ed605d",
+    "exact_fingerprint": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+    "volume_lots": "0.01",
+    "symbol": "XAUUSD",
+    "max_positions": 1,
+    "starting_positions": 0,
+    "starting_pending_orders": 0,
+    "demo_cost_envelope": {
+      "adverse_entry_usd_per_oz": "0.50",
+      "adverse_stop_gap_usd_per_oz": "2.00",
+      "commission_usd": "5.00",
+      "swap_usd": "2.00",
+      "is_real_money_calibration": false
+    },
+    "risk_cap": "min(25.00 USD, 0.25pct min(equity,balance,10000 USD), cent floor)",
+    "current_and_stressed_margin_min_percent": 1000,
+    "current_and_stressed_free_margin_to_equity_min_percent": 90,
+    "manual_external_python_api_trading_enable_allowed": false,
+    "broker_actions_performed_in_this_review": 0,
+    "no_live_account_guarantee_from_static_source": false,
+    "owner_human_assessment_required": true
   }
 }
