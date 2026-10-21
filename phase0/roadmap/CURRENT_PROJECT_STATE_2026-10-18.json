@@ -137,7 +137,15 @@
     },
     "original_head_sha": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
     "merge_sha": "29fe3786128cc2a19e8afdf241dbc3defa272282",
-    "current_deployed_or_broker_authority": false
+    "current_deployed_or_broker_authority": false,
+    "postmerge_owner_profile_isolation_attestation_2026_10_21": {
+      "classification": "OWNER_ATTESTATION_PROSPECTIVE_NOTE_DOES_NOT_MODIFY_PR8_PREREGISTRATION",
+      "file": "phase0/roadmap/DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md",
+      "comment": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/8#issuecomment-6318453695",
+      "applies_to": "DEMO_ACCOUNT_IDENTITY_AND_PROFILE_ONLY",
+      "broker_trading_permission": false,
+      "live_or_real_money_permission": false
+    }
   },
   "last_github_reconciliation": {
     "date_local": "2026-10-18",
