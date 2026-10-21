@@ -922,7 +922,21 @@
     ],
     "protected_runtime": "pcr3-execution-disabled-e0383a50e2cc",
     "latest_detail_document": "phase0/roadmap/APC_S2_ACCELERATED_OWNER_NAVIGATOR_AND_PRETRADE_STATUS_2026-10-21.md",
-    "owner_attestation_pr26_comment": 6316625083
+    "owner_attestation_pr26_comment": 6316625083,
+    "most_recent_owner_run": {
+      "classification": "READONLY_VERIFIER_INITIAL_SHA_LOOP_FAIL_CLOSED",
+      "operator_observed_error": "S2_SOURCE_OR_ARTIFACT_SHA_MISMATCH__STOP",
+      "no_s2_loader_or_mt5_prefight_invoked": true,
+      "observed_failed_component": "NOT_EMITTED_BY_SCRIPT",
+      "assistant_incorrect_expected_zip_sha256": "6c37704c7d2d661ccb2b8fd4bdf5340ec35fb210f1cf9528452bc89bd08c1a4e",
+      "correct_exact_s2_zip_sha256": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+      "corrected_script_next_step": "PRINT_LABELED_SHA_RESULTS_THEN_RUN_EXISTING_VERIFY_AND_READONLY_PREFLIGHT_IF_ALL_PASS",
+      "staged_files_changed": false,
+      "trade_enabled": false,
+      "current_stage_state": "UNKNOWN",
+      "broker_live_state": "UNKNOWN",
+      "pr26_comment": 6316893867
+    }
   },
   "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21"
 }
