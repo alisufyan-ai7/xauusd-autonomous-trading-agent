@@ -924,18 +924,26 @@
     "latest_detail_document": "phase0/roadmap/APC_S2_ACCELERATED_OWNER_NAVIGATOR_AND_PRETRADE_STATUS_2026-10-21.md",
     "owner_attestation_pr26_comment": 6316625083,
     "most_recent_owner_run": {
-      "classification": "READONLY_VERIFIER_INITIAL_SHA_LOOP_FAIL_CLOSED",
-      "operator_observed_error": "S2_SOURCE_OR_ARTIFACT_SHA_MISMATCH__STOP",
-      "no_s2_loader_or_mt5_prefight_invoked": true,
-      "observed_failed_component": "NOT_EMITTED_BY_SCRIPT",
-      "assistant_incorrect_expected_zip_sha256": "6c37704c7d2d661ccb2b8fd4bdf5340ec35fb210f1cf9528452bc89bd08c1a4e",
-      "correct_exact_s2_zip_sha256": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
-      "corrected_script_next_step": "PRINT_LABELED_SHA_RESULTS_THEN_RUN_EXISTING_VERIFY_AND_READONLY_PREFLIGHT_IF_ALL_PASS",
-      "staged_files_changed": false,
-      "trade_enabled": false,
-      "current_stage_state": "UNKNOWN",
-      "broker_live_state": "UNKNOWN",
-      "pr26_comment": 6316893867
+      "classification": "S2_READONLY_VERIFIER_ASSISTANT_EXPECTED_ZIP_HASH_TRUNCATED_60_HEX",
+      "component_hash_pass": [
+        "loader",
+        "readonly_python",
+        "readonly_ps"
+      ],
+      "sealed_zip_sha256_observed": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+      "sealed_zip_sha256_source_expected": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+      "erroneous_ps_expected_sha256": "6c37704c7d2d661ccb2b8fd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+      "expected_literal_length": 60,
+      "historical_preserved_verifier_failures": 2,
+      "manifest_hash_checked": false,
+      "s2_loader_verify_invoked": false,
+      "mt5_readonly_preflight_invoked": false,
+      "execution_enabled": false,
+      "orders_sent": 0,
+      "current_killed_unused_verified": false,
+      "current_broker_state": "UNKNOWN",
+      "no_new_staging_needed": true,
+      "pr26_comment": 6317140810
     }
   },
   "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21"
