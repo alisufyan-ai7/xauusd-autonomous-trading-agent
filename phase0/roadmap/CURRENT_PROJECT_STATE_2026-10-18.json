@@ -921,11 +921,12 @@
     "policy_a_and_cash_m1": "FULL_UNCHANGED_REQUIRE_FRESH_EXECUTION_SIDE_VERIFICATION",
     "exact_nonplaceholder_canary_authorization_ready": false,
     "current_blockers": [
+      "FRESH_MT5_H1_AND_M15_SETUP_AND_QUOTE",
+      "EXCLUSIVE_NO_ACCOUNT_SWITCH_ACTOR_SESSION_CONTROL_AT_EXECUTION",
       "OWNER_FRESH_SIDE_STOP_AND_ENTRY_BOUND",
       "SHORT_ACTIVATION_ID_AND_EXACT_UTC_EXPIRY",
       "EXECUTION_SIDE_FULL_CASH_POLICY_A_M1_ORDER_CALC_AND_ORDER_CHECK",
-      "EXPLICIT_ONE_TRADE_PYTHON_API_ENABLE_KNOWN_CLOSE_DISABLE_APC",
-      "EXCLUSIVE_NO_ACCOUNT_SWITCH_ACTOR_SESSION_CONTROL_AT_EXECUTION"
+      "EXPLICIT_ONE_TRADE_PYTHON_API_ENABLE_KNOWN_CLOSE_DISABLE_APC"
     ],
     "protected_runtime": "pcr3-execution-disabled-e0383a50e2cc",
     "latest_detail_document": "phase0/roadmap/APC_S2_ACCELERATED_OWNER_NAVIGATOR_AND_PRETRADE_STATUS_2026-10-21.md",
@@ -995,9 +996,43 @@
     },
     "owner_attestation_pr8_comment": 6318453695,
     "owner_profile_isolation_evidence_file": "phase0/roadmap/DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md",
-    "owner_profile_isolation_claim_status": "ATTESTED_SELF_REPORTED_FOR_PROJECT_MT5_PROFILE"
+    "owner_profile_isolation_claim_status": "ATTESTED_SELF_REPORTED_FOR_PROJECT_MT5_PROFILE",
+    "next_step_candidate_selection": {
+      "status": "AWAIT_FRESH_OWNER_MT5_H1_M15_CHART__NO_DIRECTION_BOUND__NO_TRADE",
+      "owner_request": "PROCEED_WITH_NEXT_STEP",
+      "method": "ONE_OFF_OPERATOR_DECISION_SUPPORT_H1_STRUCTURE_AND_M15_CONFIRMATION__NOT_VALIDATED_PROFIT_STRATEGY",
+      "fresh_chart_required": true,
+      "chart_timeframes": [
+        "H1",
+        "M15"
+      ],
+      "screenshot_must_redact_raw_account_identifiers": true,
+      "selection": "NO_TRADE_UNLESS_CLEAR_H1_M15_CONFIRMED_DIRECTION_AND_STOP_STRUCTURE",
+      "existing_preflight_quote_is_stale": true,
+      "frozen_canary_not_autonomous_signal_generator": true,
+      "direction": null,
+      "protective_stop": null,
+      "owner_price_limit": null,
+      "actual_cash_margin_policy_a_preorder_verification": "REQUIRED_ON_FUTURE_SPECIFIC_APC",
+      "live_event_session_and_broker_market_check": "REQUIRED_AT_TRADE_TIME",
+      "illustration_only": {
+        "volume_lot": "0.01",
+        "contract_ounces": "100",
+        "eligible_account_usd": "10000",
+        "planned_usd_loss_cap": "25",
+        "illustrative_entry_stop_price_distance": "8",
+        "illustrative_buffered_loss_usd": "17.50",
+        "never_a_live_risk_pass": true
+      },
+      "requires_explicit_broker_trade_grant": true,
+      "broker_action_authorized": false,
+      "exact_future_approval_text_ready": false,
+      "incident_preservation": true,
+      "github_document": "phase0/roadmap/APC_S2_FIRST_ATTENDED_DEMO_CANARY_CANDIDATE_SELECTION_2026-10-21.md",
+      "pr26_comment": 6318947529
+    }
   },
-  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21",
+  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21.next_step_candidate_selection",
   "demo_account_profile_isolation_owner_attestation_2026_10_21": {
     "schema": "XAUUSD_DEMO_PROFILE_ACCOUNT_ISOLATION_OWNER_ATTESTATION_V1",
     "date_utc": "2026-10-21",
