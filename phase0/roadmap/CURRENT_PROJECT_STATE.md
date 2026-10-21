@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## MOST RECENT UPDATE: PR30 MERGED + PRO V2 SPEC PR31 (2026-10-22)
+
+**RECONCILED authoritative `main=51a7f7de395767a9ae1f9904f752bd74b3cdc010`: owner-approved docs PR30 is MERGED.** The owner's permanent [ADR-2026-10-21-001](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/blob/51a7f7de395767a9ae1f9904f752bd74b3cdc010/phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md) and GitHub decision-memory protocol are on main; any older section below saying PR30 remains draft is historical/stale, superseded by this confirmed update.
+
+**New isolated DRAFT PR31** [Autonomous XAUUSD Pro v2 spec, owner options, 32 pending acceptance cases](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/31), exact review HEAD `dc2919ea0c961de52c9a0e080804532208295faa` based on main above. Five documentation/state files only: new architecture, proposed owner decision packet, machine matrix `32 PENDING / NOT_RUN`, read-first state MD + JSON. PR31 is NOT merged; no V2 code implemented or trading authorized. Official source-of-truth for future sessions is **main + PR31**, not this evidence branch alone.
+
+**Current authority unchanged:** Broker DEMO and LIVE orders, external Python trading, new AI production calls, numeric Policy A modification, staged S2/PCR3 upgrade, VPS tasks and account funding are NOT AUTHORIZED. Existing prior Gate0 FAILs remain immutable. Next action: owner reviews PR31 scope and proposed choices, then separately authorizes isolated execution-disabled code/test slices if appropriate. No LIVE timeline or profitability guarantee.
+
+
 ## LATEST: OWNER 2026-10-21 PRO-ONLY AUTONOMOUS INTELLIGENCE DECISIONS
 
 **New documentation-only draft PR #30** (`governance/autonomous-pro-trader-decisions-20261021`, head `0c3edac8e576dadfc6019f25b67e5875913f689b`) holds the [complete dated ADR](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/blob/0c3edac8e576dadfc6019f25b67e5875913f689b/phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md), [decision-memory protocol](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/blob/0c3edac8e576dadfc6019f25b67e5875913f689b/phase0/roadmap/PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md) and append-only decision-log index. **PR #30 is DRAFT and NOT MERGED; production main is still `2848c98940def262459fd89d5897c6f63dd6aadb`.** This note intentionally links a distinct isolated docs PR instead of importing the 105-commit mixed evidence branch into `main`.
