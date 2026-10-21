@@ -1,5 +1,12 @@
 # APC-S2 accelerated supervised DEMO-only canary — October 21, 2026
 
+## MOST RECENT OWNER PROFILE-ISOLATION DECLARATION — 2026-10-21
+
+Explicit new owner statement: the approved Exness MT5 DEMO account is dedicated exclusively to this XAUUSD project, not shared with unrelated projects or manual trading, and **no LIVE/real-account credentials have ever been stored or used in this project's MT5 profile/configuration**; none were historically saved or provided through this demo profile. This is accepted as a **self-reported owner DEMO-ADMIT account-isolation attestation**, not independent forensic/Windows credential evidence. Only the broker/server/DEMO identity and SHA fingerprint may be stored. The earlier visible-only Navigator attestation remains a distinct, narrower historical observation. Owner has NOT explicitly attested that no other actor can switch accounts mid-session; this remains a future supervisory control, while automatic broker rechecks must fail closed on mismatched identity. [Canonical sanitized owner declaration](./DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md); [prospective post-merge PR8 record](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/8#issuecomment-6318453695).
+
+**No trade or execution API permission** from this declaration. The most recent S2 staged-runtime and read-only broker preflight PASS remain separately recorded at [PR26 read-only PASS](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6317356391). This historical 2026-10-21 owner snapshot does not remain perpetually fresh; at any later order must revalidate exact DEMO mode/fingerprint, exposure, quote and Policy A. Exact BUY/SELL side, SL, entry ceiling/floor, short expiry and explicit one-lifecycle APC remain missing. Real-money capability prohibited. Old paragraphs below that describe account history as unknown are superseded by this current owner declaration but preserved as prior status.
+
+
 Status: OWNER_VISIBLE_DEMO_ONLY_ATTESTATION_RECORDED; CURRENT_RUNTIME_AND_BROKER_UNVERIFIED; TRADING_NOT_AUTHORIZED.
 
 ## Owner attestation and authority
