@@ -1,5 +1,9 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## LATEST S2 READ-ONLY CHECK FAILURE — ASSISTANT WRONG SHA PIN — 2026-10-21
+
+The owner invoked the prior one-block S2 verification. It printed **S2_SOURCE_OR_ARTIFACT_SHA_MISMATCH__STOP** from the initial five-file hash loop, before calling the existing S2 loader VERIFY or MT5 broker read-only preflight. The assistant had mistyped the expected sealed S2 ZIP SHA: its script used 6c37704c7d2d661ccb2b8fd4bdf5340ec35fb210f1cf9528452bc89bd08c1a4e; **correct GitHub-recorded SHA is 6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e**. The original loop did not identify the mismatching file, so do **NOT** claim staged bundle corrupted or proven good. Safest next step is original-files-only labeled SHA audit with correctly pinned values, then unchanged sealed loader VERIFY -> KILLED/UNUSED, then if clean pinned MT5 read-only preflight. The user-approved scope does not include orders or Python-trading enablement. No files/tasks/PCR3 changed and earlier S2 staging PASS preserved. [Exact failure evidence PR26](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/26#issuecomment-6316893867).
+
 ## NEWEST OWNER PRIORITY — S2 SUPERVISED DEMO CANARY — 2026-10-21
 
 Owner confirms that the visible MT5 Navigator Accounts list contains only Exness Demo-Pro under Exness-MT5Trial15 with no live account visible. This is an owner-reported GUI fact, not evidence of full credential-store history or other actor account-switch exclusion. No account number or raw screenshot published.
