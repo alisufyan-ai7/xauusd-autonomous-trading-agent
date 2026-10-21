@@ -2,7 +2,7 @@
   "schema_version": "current-project-state-1.0",
   "as_of_date": "2026-10-21",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
-  "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
+  "authoritative_main_sha": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
   "source_of_truth": "GITHUB",
   "active_focus": "APPROVED_OCT21_4H_READONLY_CAPTURE_PACK_PS51_PREP_PASS__AWAIT_EXACT_1225_TO_1230_UTC_ATTENDED_EXECUTION",
   "pcr3": {
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_REVIEW_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_SPEC__NO_IMPLEMENTATION_OR_TRADE",
+  "next_substantive_action": "REVIEW_DRAFT_PR31_SPEC_NO_IMPLEMENTATION_OR_EXECUTION",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -1032,7 +1032,7 @@
       "pr26_comment": 6318947529
     }
   },
-  "latest_current_task_pointer": "owner_autonomous_pro_vision_2026_10_21",
+  "latest_current_task_pointer": "owner_pro_v2_spec_progress_2026_10_22",
   "demo_account_profile_isolation_owner_attestation_2026_10_21": {
     "schema": "XAUUSD_DEMO_PROFILE_ACCOUNT_ISOLATION_OWNER_ATTESTATION_V1",
     "date_utc": "2026-10-21",
@@ -1169,5 +1169,23 @@
     "latest_main_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb",
     "authorized_to_trade_demo": false,
     "authorized_to_trade_live": false
+  },
+  "owner_pro_v2_spec_progress_2026_10_22": {
+    "pr30_merged": true,
+    "pr30_merge_sha": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
+    "pr31": 31,
+    "pr31_draft_unmerged": true,
+    "pr31_head": "dc2919ea0c961de52c9a0e080804532208295faa",
+    "proposed_spec_files": [
+      "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md",
+      "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_OWNER_DECISION_PACKET_2026-10-22.md",
+      "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ACCEPTANCE_MATRIX_2026-10-22.json"
+    ],
+    "proposed_tests": 32,
+    "tests_executed": 0,
+    "tests_passed": 0,
+    "policy_a_changed": false,
+    "trading_authority_effect": "NONE",
+    "next_action": "OWNER_REVIEW_PR31_V2_SPEC_BEFORE_CODE_OR_BROKER_ACTION"
   }
 }
