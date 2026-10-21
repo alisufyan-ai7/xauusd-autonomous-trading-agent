@@ -774,14 +774,17 @@
         "os_only_current_pid_preflight_pass"
       ],
       "in_progress": [
-        "one_attended_oct21_12_30_to_16_30_UTC_READONLY_CAPTURE_PENDING",
-        "fresh_authoritative_event_holiday_shock_checks_required_immediately_before_run"
+        "independent_read_only_attestation_postmortem",
+        "native_windows_ps51_behavioral_regression_design",
+        "new_prospective_qualifying_capture_window_pending_fresh_owner_approval"
       ],
       "blocked": [
         "numeric_current_adverse_cost_stressed_adverse_cost_not_admitted",
         "live_same_snapshot_broker_and_period_cashflow_Policy_A_source_binding_not_admitted",
         "no_demo_admit_pass",
-        "no_current_live_broker_exposure_attestation_after_OS_ONLY_PREFLIGHT"
+        "no_current_live_broker_exposure_attestation_after_OS_ONLY_PREFLIGHT",
+        "oct21_capture_failed_closed_before_collector_no_4h_market_evidence",
+        "string_attestation_mismatch_cause_undetermined"
       ],
       "not_authorized": [
         "tradeapi_enable",
@@ -817,16 +820,43 @@
       "owner_reported_pack_prepare_and_PS_AST_PASS": true,
       "manual_ELIGIBLE_only_if_sources_healthy": true,
       "no_retries": true,
-      "official_source_receipts_limit": "CURATED_CONDITIONAL_SUMMARIES_NOT_HASHES_OF_RAW_ORIGINAL_AGENCY_WEBPAGE_BYTES"
+      "official_source_receipts_limit": "CURATED_CONDITIONAL_SUMMARIES_NOT_HASHES_OF_RAW_ORIGINAL_AGENCY_WEBPAGE_BYTES",
+      "owner_wrapper_invocation_count": 1,
+      "oct21_prestart_expired": true,
+      "reuse_prohibited": true,
+      "attestation_fail_closed_pre_marker": true
     },
-    "exact_next_action": "BEFORE 12:25 UTC OCT21: no operator MT5 access. At 12:25 <= now <12:30 UTC ONLY if all final official event/holiday and shock checks succeed, owner executes exact SHA-verified prepared PS5.1 wrapper ONCE and types ELIGIBLE truthfully; preserves full stdout/failure. If window missed or unhealthy, abort and prospectively register new future trial with new owner approval. After run, assess private manifest; do not declare DEMO_ADMIT_PASS until independently admitted Policy A/costs.",
-    "vps_actions_by_handoff_assistant": "NONE",
+    "exact_next_action": "DO NOT RUN THE ORIGINAL OCT21 CAPTURE WRAPPER AGAIN. Preserve immutable incident. Inspect unchanged original wrapper definitions/read-only input handling, perform separately isolated PS5.1 input behavior diagnostics if owner runs them, make prospective controlled correction with native behavioral tests; select a new future eligible 4h window, freeze new hashes and obtain fresh explicit owner capture approval. No MT5/broker or trading action authorized.",
+    "vps_actions_by_handoff_assistant": "NONE; OWNER RAN ORIGINAL WRAPPER ONCE, OWNER DIAGNOSTIC OS-ONLY",
     "repository_mutation_scope": "DOCUMENTATION_ONLY_ON_EXISTING_EVIDENCE_BRANCH",
     "durability_limits": [
       "Original owner Exness screenshot PNG is not stored in GitHub, SHA/metadata only.",
       "Exact approved 4-member capture ZIP and wrapper bytes are not tracked in GitHub; owner VPS Downloads holds reported original files and hashes/paths preserved. No fabricated reconstruction.",
       "Read-only broker capture not yet run; source health live classification remains external/conditional.",
       "Older historical headings and legacy JSON fields may be stale; this canonical object is authoritative after live GitHub reconciliation."
-    ]
+    ],
+    "latest_incident": {
+      "utc_date": "2026-10-21",
+      "status": "OCT21_V11_ATTESTATION_PRE_MARKER_FAIL_CLOSED__NO_CAPTURE",
+      "source": "OWNER_SCREENSHOT_AND_READ_ONLY_POWER_SHELL_STDOUT",
+      "original_wrapper_sha256": "172c362232481766a281bf503e99519f5e4ccf1baa91124ca234054d05475960",
+      "owner_invoked_original_wrapper_once": true,
+      "attestation_screen_echo": "ELIGIBLE",
+      "actual_read_host_string_bytes_observed": false,
+      "error": "V11_OWNER_DID_NOT_ATTEST_LIVE_EVENT_HOLIDAY_SHOCK_HEALTH",
+      "throw_line": 77,
+      "marker_creation_line": 82,
+      "collector_invocation_line": 90,
+      "execution_reached_marker_or_collector": false,
+      "searched_two_directories_no_attempt_capture_manifest": true,
+      "exact_marker_path_reviewed": false,
+      "root_cause": "UNDETERMINED",
+      "source_health_live_verified": false,
+      "broker_live_state_verified": false,
+      "retry_under_oct21_approval": false,
+      "new_owner_specific_future_approval_required": true,
+      "incident_doc": "phase0/roadmap/DEMO_V11_OCT21_ATTESTATION_PREMARKER_FAIL_CLOSED_2026-10-21.md",
+      "pr28_comment": "6315973328"
+    }
   }
 }
