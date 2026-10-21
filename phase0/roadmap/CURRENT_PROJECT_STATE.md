@@ -1,5 +1,9 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## PR29 CURRENT EXACT HEAD/CI UPDATE (2026-10-21)
+
+Pure H1/M15 automated **advisory-only** draft PR29 advanced from initial HEAD `c8c0f2f939803d73727e1df2cb3fa92c0a577baf` to corrected HEAD **`d90d464528c7e32d28710178f8b3573fc1a10be7`** for Python3.12 lint-friendly `zip(...,strict=False)` without changing the algorithm. Disposable local Python3.13 mock-schema synthetic tests **6 PASS**; NOT a source-tree or Windows CI pass. Exact-head production-candidate Actions run `39624431300` and Validate records run `39624431413` **FAILED before jobs exposed steps/logs**; actual failure cause **UNKNOWN**, possibly GitHub/runner/billing but unverified. Treat CI as **NOT ACCEPTED** and DO NOT merge or deploy. [Preserved PR29 CI evidence](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/29#issuecomment-6319566372). Production broker execution remains disabled. PR29 is experimental only and does not implement a scheduler or position manager.
+
 ## LATEST OWNER DIRECTIVE — AUTOMATE XAUUSD DEMO STRATEGY, ORDERING AND MONITORING (2026-10-21)
 
 **Owner explicitly requests autonomous Exness MT5 DEMO-only trading on the already connected Windows VPS, generated BUY/SELL decisions without owner-sent screenshots, order/position management and continuous monitoring, followed by *separately gated* live-money consideration.** This supersedes the **manual screenshot candidate-selection workflow** as the preferred next operational deliverable; it does NOT rewrite older recorded decisions or provide a bound broker-order grant for nonexistent new software. Prior broad no-trade/no-toggle execution controls remain valid until a separately reviewed implementation and specific owner order permit.
