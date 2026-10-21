@@ -1,5 +1,19 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## NEXT PROPOSED PRODUCT SPEC — Autonomous XAUUSD Pro v2 (2026-10-22)
+
+**PR30 MERGED + V2 SPEC DRAFT:** Owner approved docs-only PR30 and GitHub confirmed merge to authoritative `main=51a7f7de395767a9ae1f9904f752bd74b3cdc010` (October21 UTC / October22 Pakistan time); original owner Pro-only and autonomous trading vision now permanently on main. This read-first note belongs to a **separate unmerged v2 specification proposal branch**, not an execution, strategy, trading or risk-policy grant.
+
+Three initial V2 design artifacts, all **PROPOSED/UNAPPROVED**:
+- [V2 architecture and admission specification](AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md): Exness Pro only, W1/D1/H4/H1/M15/M5/M1 causal structure, strategy champion/shadow challengers, AI bounded non-authoritative research/analysis, broker-bound full Policy A risk, known-position early exit/BE/trailing successor research, 48h DEMO operational requirements, independent later Pro LIVE admission.
+- [V2 owner decision packet](AUTONOMOUS_XAUUSD_PRO_V2_OWNER_DECISION_PACKET_2026-10-22.md): proposed strategy/position-exit priorities and **illustrative**, not approved, account-aware risk options ($300/$500/$1000/$10000), exact separation between owner's confirmed design vision and missing permission.
+- [V2 proposed acceptance matrix](AUTONOMOUS_XAUUSD_PRO_V2_ACCEPTANCE_MATRIX_2026-10-22.json): 32 `PENDING/NOT_RUN` adversarial/data/strategy/AI/risk/position/recovery/trial/LIVE isolation cases. Nothing accepted or implemented by merely writing the matrix.
+
+**Safeguards/authorities unchanged:** frozen current Policy A `0.25%` planned per trade with 0.01 max, period loss/drawdown, M1 limits; no accepted change for small account, no Standard Cent; no automatic stop-widening, position doubling, LIVE conversion or continuous live prompt self-retraining. Existing PCR3 shadow task remains execution-disabled; PR24/S2 remains attended one-lifecycle and PR29 remains a draft speculative advisory with unknown-cause failed CI. All Gate0 historical failures preserved. No additional DEMO order, MT5 external Python trading enable, LIVE order, OpenAI production call, VPS task, source merger or deployment is authorized.
+
+**NEXT owner action:** review V2 *specification* and proposed choices. Once scoped and explicitly approved for implementation, work proceeds as separate, isolated code/test PRs with independent frozen release acceptance; only a later exact-bound owner permit may activate DEMO. PR31 remains **DRAFT** until approved. We must not infer product-ready or profitable system from documenting architecture.
+
+
 ## Prospective owner product requirements, 2026-10-21 — DOCS PR ONLY
 
 **New dated ADR, not yet merged to authoritative main:** [ADR-2026-10-21-001 — Autonomous Pro Trading Vision](../decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md); [Decision Memory Protocol](PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md). This adds the owner's requirement to **use Exness Pro exclusively (never Standard Cent)**, automatically analyze weekly/D1/H4/H1/M15/M5/M1 gold and choose trade directions, monitor and manage **known** positions, and continuously investigate/learn with safe strategy/prompt versioning. The owner favors a **48h automated DEMO operations milestone**, with potential **>USD300 initial LIVE balance** only as a tentative funding idea, not funding or trading permission. Owner desires flexible risk policy and a later Pro LIVE trial; **numeric risk limits and LIVE gating are not changed**. Stop widening from human psychology was an example, **not an approved capability**.
