@@ -884,7 +884,7 @@
     "status": "OWNER_REPORTED_FRESH_S2_STAGED_VERIFY_AND_DEMO_READONLY_PREFLIGHT_PASS__BROKER_EXECUTION_DISABLED",
     "priority": "S2_SUPERVISED_DEMO_CANARY_ONE_ENTRY_ONE_KNOWN_CLOSE",
     "owner_visible_accounts_description": "Only approved Exness Demo-Pro under Exness-MT5Trial15; no live account visible",
-    "owner_credential_history_never_saved_live_confirmed": false,
+    "owner_credential_history_never_saved_live_confirmed": true,
     "owner_no_switch_actor_confirmed": false,
     "raw_account_number_stored": false,
     "raw_screenshot_stored": false,
@@ -913,11 +913,11 @@
     "policy_a_and_cash_m1": "FULL_UNCHANGED_REQUIRE_FRESH_EXECUTION_SIDE_VERIFICATION",
     "exact_nonplaceholder_canary_authorization_ready": false,
     "current_blockers": [
-      "FULL_CREDENTIAL_HISTORY_AND_NO_SWITCH_ACTOR_ATTESTATION",
       "OWNER_FRESH_SIDE_STOP_AND_ENTRY_BOUND",
       "SHORT_ACTIVATION_ID_AND_EXACT_UTC_EXPIRY",
       "EXECUTION_SIDE_FULL_CASH_POLICY_A_M1_ORDER_CALC_AND_ORDER_CHECK",
-      "EXPLICIT_ONE_TRADE_PYTHON_API_ENABLE_KNOWN_CLOSE_DISABLE_APC"
+      "EXPLICIT_ONE_TRADE_PYTHON_API_ENABLE_KNOWN_CLOSE_DISABLE_APC",
+      "EXCLUSIVE_NO_ACCOUNT_SWITCH_ACTOR_SESSION_CONTROL_AT_EXECUTION"
     ],
     "protected_runtime": "pcr3-execution-disabled-e0383a50e2cc",
     "latest_detail_document": "phase0/roadmap/APC_S2_ACCELERATED_OWNER_NAVIGATOR_AND_PRETRADE_STATUS_2026-10-21.md",
@@ -984,7 +984,43 @@
       "execution_side_cash_policy_a_and_order_calc_margin_unproven": true,
       "broker_trade_permission_granted": false,
       "source_comment_pr26": 6317356391
-    }
+    },
+    "owner_attestation_pr8_comment": 6318453695,
+    "owner_profile_isolation_evidence_file": "phase0/roadmap/DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md",
+    "owner_profile_isolation_claim_status": "ATTESTED_SELF_REPORTED_FOR_PROJECT_MT5_PROFILE"
   },
-  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21"
+  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21",
+  "demo_account_profile_isolation_owner_attestation_2026_10_21": {
+    "schema": "XAUUSD_DEMO_PROFILE_ACCOUNT_ISOLATION_OWNER_ATTESTATION_V1",
+    "date_utc": "2026-10-21",
+    "classification": "OWNER_DECLARED_DEMO_ACCOUNT_PROJECT_PROFILE_ISOLATION",
+    "source": "OWNER_EXPLICIT_CHAT_DECLARATION_SANITIZED",
+    "nature_of_evidence": "OWNER_SELF_ATTESTATION_NOT_FORENSIC_OR_BROKER_RUNTIME_PROOF",
+    "dedicated_exness_demo_account_exclusive_to_project": true,
+    "excludes_unrelated_projects_and_manual_trading": true,
+    "historical_live_account_credentials_ever_stored_in_project_mt5_profile": false,
+    "historical_live_account_credentials_ever_used_in_project_mt5_profile": false,
+    "historical_live_credentials_saved_for_project": false,
+    "project_ever_given_live_account_login_through_demo_profile": false,
+    "existing_navigator_visible_only_demo_attestation": true,
+    "no_other_actor_can_switch_during_attended_session": "NOT_EXPLICITLY_ATTESTED_NEEDS_LIVE_SUPERVISION",
+    "broker": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "currency": "USD",
+    "mode": "DEMO",
+    "symbol": "XAUUSD",
+    "fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+    "raw_account_number_saved": false,
+    "passwords_or_api_secrets_saved": false,
+    "navigator_screenshot_saved": false,
+    "postmerge_pr8_owner_comment": 6318453695,
+    "original_pr8_head_sha": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+    "original_pr8_merge_sha": "29fe3786128cc2a19e8afdf241dbc3defa272282",
+    "historical_method_decision_rewritten": false,
+    "broker_order_permission_granted": false,
+    "external_python_trading_activation_permission_granted": false,
+    "live_or_real_money_permission_granted": false,
+    "identity_and_policy_a_fail_closed_unchanged": true,
+    "documentation": "phase0/roadmap/DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md"
+  }
 }
