@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Owner-run attended existing verified PS51 capture wrapper once at 12:25-12:30 UTC Oct21 after authentic live Exness/official Event Guard source health and shock checks. Preserve failure/no retry. No broker order permission.",
+  "next_substantive_action": "OWNER_REVIEW_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_SPEC__NO_IMPLEMENTATION_OR_TRADE",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -1032,7 +1032,7 @@
       "pr26_comment": 6318947529
     }
   },
-  "latest_current_task_pointer": "autonomous_demo_owner_directive_2026_10_21",
+  "latest_current_task_pointer": "owner_autonomous_pro_vision_2026_10_21",
   "demo_account_profile_isolation_owner_attestation_2026_10_21": {
     "schema": "XAUUSD_DEMO_PROFILE_ACCOUNT_ISOLATION_OWNER_ATTESTATION_V1",
     "date_utc": "2026-10-21",
@@ -1123,5 +1123,51 @@
     "rollout_doc": "phase0/roadmap/AUTONOMOUS_DEMO_RUNTIME_PROSPECTIVE_TRACK_2026-10-21.md",
     "experimental_initial_head_sha": "c8c0f2f939803d73727e1df2cb3fa92c0a577baf",
     "experiment_pr_draft_unmerged": true
+  },
+  "owner_autonomous_pro_vision_2026_10_21": {
+    "decision_id": "ADR-2026-10-21-001",
+    "document_status": "OWNER_PRODUCT_DIRECTION_ATTESTED_RISK_AND_TRADING_AMENDMENTS_PROPOSED_ONLY",
+    "source_pr": 30,
+    "source_pr_draft": true,
+    "source_pr_head": "0c3edac8e576dadfc6019f25b67e5875913f689b",
+    "source_pr_branch": "governance/autonomous-pro-trader-decisions-20261021",
+    "source_doc": "phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md",
+    "source_protocol": "phase0/roadmap/PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md",
+    "owner_broker_account_exness_pro_only": true,
+    "standard_cent_permitted": false,
+    "future_live_balance_proposed": "ABOVE_USD_300_UNFIXED_NOT_FUNDED",
+    "fully_autonomous_market_direction_goal": true,
+    "owner_screenshot_based_selection_required": false,
+    "desired_timeframe_roles": [
+      "W1",
+      "D1",
+      "H4",
+      "H1",
+      "M15",
+      "M5",
+      "M1"
+    ],
+    "wanted_known_position_management_research": [
+      "EARLY_KNOWN_CLOSE",
+      "BREAKEVEN",
+      "TIGHTENING_TRAILING_STOPS",
+      "RESEARCH_TP_MANAGEMENT"
+    ],
+    "existing_stop_widening_rule_unchanged": "PROHIBITED",
+    "proposed_account_aware_risk_policy_change_status": "NO_NEW_NUMERIC_RULE_SELECTED",
+    "current_fixed_policy_a_unchanged": true,
+    "proposed_48_hour_demo_operational_trial": true,
+    "demo_48_hour_profitability_pass": false,
+    "demo_to_live_automatic_activation": false,
+    "desired_live_scope": "SEPARATE_EXNESS_PRO_LIVE_RELEASE_ACCOUNT_AND_OWNER_APPROVAL",
+    "ai_learning_design": "CONTINUOUS_RESEARCH_AND_ATTRIBUTION_WITH_OFFLINE_OR_SHADOW_CHALLENGERS",
+    "production_self_modified_by_ai": false,
+    "prior_owner_demo_attestation_pr8_comment": 6318453695,
+    "experimental_pr29_head": "d90d464528c7e32d28710178f8b3573fc1a10be7",
+    "experimental_pr29_ci": "FAILED_UNKNOWN_CAUSE",
+    "next_action": "OWNER_REVIEW_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_SPEC_BEFORE_CODE_OR_BROKER_ACTION",
+    "latest_main_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb",
+    "authorized_to_trade_demo": false,
+    "authorized_to_trade_live": false
   }
 }
