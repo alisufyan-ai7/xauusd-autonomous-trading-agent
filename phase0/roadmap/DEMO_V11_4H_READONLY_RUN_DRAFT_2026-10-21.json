@@ -1,6 +1,6 @@
 {
   "schema_version": "demo-v11-prospective-run-register-draft-20261021",
-  "status": "DATE_SPECIFIC_XAUUSD_OPEN_WINDOW_VERIFIED_BY_OWNER_SCREENSHOT__AWAIT_EVENT_GUARD_AND_CAPTURE_APPROVAL",
+  "status": "PRECAPTURE_PREREG_CANDIDATE_XAUUSD_OPEN_AND_STATIC_SOURCE_SHAS_BOUND__EVENT_HEALTH_OWNER_APPROVAL_OUTSTANDING",
   "registration_commit_sha": null,
   "registration_sha256": null,
   "exact_owner_approval_id": null,
@@ -11,7 +11,7 @@
   "required_contiguous_duration_minutes": 240,
   "daylight_saving_verification_source_sha256": null,
   "broker_xauusd_session_source_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46",
-  "official_event_guard_health_and_event_schedule_sha256": null,
+  "official_event_guard_health_and_event_schedule_sha256": "b282d79d9d07092c098962e4390a40a3b787692339bc869ca8b67e2f2c9d0497",
   "holiday_and_reopening_exclusion_source_sha256": null,
   "permitted_session": "VERIFIED_240MIN_LIQUID_LONDON_NY_SUMMER_SESSION_BAND",
   "permitted_scope": "DEMO_LIFECYCLE_ONLY",
@@ -27,7 +27,7 @@
   "tick_pair_tolerance_registration_required": true,
   "tick_pair_tolerance_ms": 100,
   "exact_collector_source_sha256": "5062645291bd2768d133c9b37fa2a469c3fdacbc30ae38987ebe30e148d55e7a",
-  "exact_collector_static_allowlist_verification_sha256": null,
+  "exact_collector_static_allowlist_verification_sha256": "5bc28e731df5632f5de59891a841b4b3c0fc222cfc8351bc727563844828ffbb",
   "quote_source_and_manifest_sha256": null,
   "approval_for_vps_capture": "REQUIRED_SEPARATELY",
   "permitted_mt5_action": "READ_ONLY",
@@ -80,5 +80,9 @@
     "20:58-22:00 No trade",
     "22:00-22:02 Close only"
   ],
-  "date_specific_screenshot_known_schedule_change_possible": true
+  "date_specific_screenshot_known_schedule_change_possible": true,
+  "event_guard_receipt_status": "PROVISIONAL_OFFICIAL_CALENDAR_EVIDENCE_SHA_BOUND__FRESH_SOURCE_HEALTH_AND_CLASSIFICATION_NOT_YET_ADMITTED",
+  "static_allowlist_sha256_source_path": "phase0/roadmap/DEMO_V11_STATIC_READONLY_ALLOWLIST_VERIFICATION_2026-10-21.json",
+  "event_calendar_sha256_source_path": "phase0/roadmap/DEMO_V11_2026-10-21_EVENT_SESSION_SOURCE_GATE.md",
+  "original_exness_screenshot_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46"
 }
