@@ -1,0 +1,71 @@
+{
+  "schema": "demo-v11-owner-provided-broker-specific-session-screen-evidence-v1",
+  "as_of_date_utc": "2026-10-21",
+  "reported_screenshot_capture_local": "2026-10-21T12:41:43+05:00",
+  "source_kind": "OWNER_SUPPLIED_SCREENSHOT_OF_EXNESS_DYNAMIC_INSTRUMENT_SELECTOR_NOT_INDEPENDENT_API_DOWNLOAD",
+  "source_public_url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+  "source_instrument_selection": "Specific instrument",
+  "selected_symbol": "XAUUSD",
+  "selected_date_range": "18 Oct 2026 – 24 Oct 2026",
+  "selected_timezone": "(GMT+00:00) Reykjavik",
+  "original_uploaded_png_filename": "screencapture-get-exness-help-hc-en-us-articles-4405235684498-Instrument-trading-hours-2026-10-21-12_41_43.png",
+  "original_uploaded_png_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46",
+  "original_uploaded_png_size_bytes": 489973,
+  "png_stored_in_git_repo": false,
+  "png_retained_in_conversation": true,
+  "visible_schedule_utc": {
+    "2026-10-19_to_2026-10-22": [
+      {
+        "period": "00:00-20:58",
+        "trade_mode": "Open"
+      },
+      {
+        "period": "20:58-22:00",
+        "trade_mode": "No trade"
+      },
+      {
+        "period": "22:00-22:02",
+        "trade_mode": "Close only"
+      },
+      {
+        "period": "22:02-23:59",
+        "trade_mode": "Open"
+      }
+    ],
+    "2026-10-23": [
+      {
+        "period": "00:00-20:58",
+        "trade_mode": "Open"
+      },
+      {
+        "period": "20:58-23:59",
+        "trade_mode": "No trade"
+      }
+    ],
+    "2026-10-24": [
+      {
+        "period": "00:00-23:59",
+        "trade_mode": "No trade"
+      }
+    ]
+  },
+  "proposed_run_start_utc": "2026-10-21T12:30:00Z",
+  "proposed_run_end_utc": "2026-10-21T16:30:00Z",
+  "verified_candidate_wholly_inside_published_XAUUSD_Open_period": true,
+  "instrument_specific_schedule_requirement_status": "SATISFIED_FROM_OWNER_PROVIDED_SCREENSHOT_SUBJECT_TO_LIVE_BROKER_SESSION_CHANGES",
+  "website_notice": "This week's schedule subject to potential adjustments, clients informed by email; holiday schedules separately emailed.",
+  "not_proven": [
+    "No unannounced or emailed update after screenshot",
+    "Live MT5 account/exposure/quote state",
+    "Fresh Event Guard source health",
+    "No market shock or spread anomaly",
+    "MT5 trade API execution permission",
+    "Read-only capture owner authorization"
+  ],
+  "owner_attendance_and_demo_profile_confirmed": true,
+  "v11_execution_off_staging_preserved": true,
+  "explicit_capture_permission_granted": false,
+  "broker_order_authorized": false,
+  "real_money_authorized": false,
+  "evidence_note": "Preserve SHA of original user-uploaded 1497x2048 PNG; do not misrepresent its bytes as stored in GitHub. This prospective source receipt establishes instrument open schedule during proposed band only, no action until distinct owner-approved read-only capture."
+}
