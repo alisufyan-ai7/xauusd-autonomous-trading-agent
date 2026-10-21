@@ -1,0 +1,102 @@
+{
+  "schema": "v11-oct21-4h-readonly-prospective-preregistration-20261021-v1",
+  "registration_status": "PROSPECTIVELY_FROZEN_METHOD_AND_SOURCE_INPUTS__NO_CAPTURE_AUTHORITY",
+  "created_utc_date": "2026-10-21",
+  "owner_method_amendment": "phase0/roadmap/DEMO_V11_RESTRICTED_SESSION_4H_BAND_OWNER_CLARIFICATION_2026-10-21.json",
+  "trading_scope": "DEMO_LIFECYCLE_ONLY",
+  "broker_identity": {
+    "company": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "currency": "USD",
+    "mode": "DEMO",
+    "fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91"
+  },
+  "market": "XAUUSD",
+  "volume_cap_lots": "0.01",
+  "one_concurrent_position": true,
+  "required_zero_positions_and_orders": true,
+  "external_python_trading_disabled": true,
+  "max_utc_start": "2026-10-21T12:30:00Z",
+  "exact_utc_end": "2026-10-21T16:30:00Z",
+  "duration_seconds": 14400,
+  "owner_attended_pakistan_local": "17:30–21:30 PKT",
+  "session_band": "12:30–13:30 London only + full 13:30–16:30 London/New York simultaneous overlap",
+  "exness_specific_xauusd_open_mode": {
+    "observed_date_range_utc": "October 19-22, 2026",
+    "published_open": "00:00–20:58 UTC",
+    "source_url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+    "owner_uploaded_screenshot_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46",
+    "source_receipt_sha256": "418f68633d86ea6f7899f9b2b80d44efef6934010d7ae0fcaf7212be597d1ccc",
+    "subject_to_email_update_or_special_holiday": true
+  },
+  "frozen_stage": {
+    "source_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+    "stage_dir": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-DEMO-V11-READONLY",
+    "stage_manifest_sha256": "b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f",
+    "collector_sha256": "5062645291bd2768d133c9b37fa2a469c3fdacbc30ae38987ebe30e148d55e7a",
+    "primitive_sha256": "ca81f62362d56b74fb7f4b9ab5768f44913498da3a4dc861fbad0d8824d6833d",
+    "powershell_launcher_sha256": "99d71cfbf7432817d320395e162d2793b2aa9c97863bf0701530704d5f89ee2c",
+    "static_readonly_allowlist_receipt_sha256": "5bc28e731df5632f5de59891a841b4b3c0fc222cfc8351bc727563844828ffbb",
+    "authorized_order_methods": [],
+    "exact_readonly_calls": [
+      "initialize",
+      "shutdown",
+      "terminal_info",
+      "account_info",
+      "symbol_info",
+      "symbol_info_tick",
+      "positions_get",
+      "orders_get",
+      "copy_ticks_range",
+      "history_deals_get"
+    ],
+    "history_deals_get_scope": "Only existing historical XAUUSD deals within prior 90 calendar days for fee/swap evidence. Read-only account history, not 90-day quote calibration. REQUIRES FUTURE EXPLICIT CAPTURE AUTHORIZATION."
+  },
+  "timing": {
+    "poll_interval_seconds": 5,
+    "expected_complete_poll_count": 2880,
+    "tick_pair_horizons_seconds": [
+      1,
+      5,
+      30
+    ],
+    "tick_pair_tolerance_ms": 100,
+    "pair_selection": "all true bid/ask ticks within +/-100 ms, retain worst adverse quote move, no interpolation"
+  },
+  "os_only_evidence": {
+    "pid": 6216,
+    "exe": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
+    "start_utc": "2026-10-06T07:31:09Z",
+    "checked_at_utc": "2026-10-20T22:14:52Z",
+    "must_recheck_immediately_before_capture": true
+  },
+  "calendar_evidence": {
+    "source_gate_sha256": "b282d79d9d07092c098962e4390a40a3b787692339bc869ca8b67e2f2c9d0497",
+    "bls_oct21_1400_utc": "usual weekly earnings Q3, WATCH_ONLY under frozen Tier1/2 classification",
+    "nyfed_oct21_1400_utc": "Outlook-at-Risk, WATCH_ONLY under frozen Tier1/2 classification",
+    "bea_pce_gdp_oct21": "not listed on checked calendar",
+    "calendar_source_health_and_concurrence_admitted": false,
+    "holiday_email_updates_verified": false,
+    "fresh_shock_spread_and_quote_checks_pending": true
+  },
+  "permissions": {
+    "one_vps_stage_already_consumed": true,
+    "one_osonly_preflight_already_consumed": true,
+    "mt5_initialize_for_readonly_capture_approved": false,
+    "broker_data_read_for_4h_approved": false,
+    "history_deals_get_approved": false,
+    "external_python_trading_enable_approved": false,
+    "order_send_approved": false,
+    "any_real_money_approved": false,
+    "run_record_approved": false
+  },
+  "missing_final_proofs": [
+    "Exness schedule changes or special holiday bulletin check immediately before run",
+    "Event Guard source-health/consistency/freshness at run",
+    "Current exact MT5 DEMO account fingerprint, fresh quote, zero open positions/orders",
+    "Conclusive owner exact attended read-only MT5 initialize/capture permission",
+    "Final canonical run-record SHA, owner approval ID, registration digest, preregistration source receipts"
+  ],
+  "operator_fail_closed_if": "any required field missing, start UTC missed, shock/news blackout, MT5 process/account changed, trading API unexpectedly enabled, unknown broker exposure, bad tick/fee data, any unexpected broker action",
+  "execution_status": "KILLED_EXECUTION_OFF__NOT_RUN"
+}
