@@ -45,3 +45,24 @@ Original v1.1 `sources_and_capture.read_only_functions_allowed` lists `initializ
 ## Result and next boundary
 
 `EARLIEST_OCT21_4H_CANDIDATE_PREPARED; NOT_CAPTURE_AUTHORIZED`. Missing date-specific Exness XAUUSD schedule raw source hash/attestation, live full Event Guard source health, current terminal OS identity and **separate owner MT5 read-only approval**. No further staging or redesign, no multi-day or week-reopen calibration, no live/demonstration broker order. If a critical missing source cannot be proved before 12:30 UTC, choose another future date **prospectively**; never start late or backfill. Real money permanently prohibited.
+
+## 2026-10-21 instrument-specific official Exness selector evidence — NOW VERIFIED FROM OWNER SCREENSHOT
+
+Owner furnished full screenshot of Exness Help Center **Specific instrument XAUUSD**, date range **18–24 October 2026**, timezone **(GMT+00:00) Reykjavik**, source `https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours`, original capture filename `screencapture-get-exness-help-hc-en-us-articles-4405235684498-Instrument-trading-hours-2026-10-21-12_41_43.png`, image SHA-256 **`aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46`** (489973 bytes, 1497x2048). Source data is an **owner-submitted rendered official selector screenshot**, not a signed broker API result. Full extracted hours and caveats are in `DEMO_V11_XAUUSD_EXNESS_DYNAMIC_OCT21_SCREENSHOT_EVIDENCE.json` on the evidence branch. Raw PNG is retained in the chat attachment rather than committed to repo; its exact SHA is durable.
+
+For Mon Oct 19–Thu Oct 22 inclusive:
+- **00:00–20:58 UTC: Open**
+- **20:58–22:00 UTC: No trade**
+- **22:00–22:02 UTC: Close only**
+- **22:02–23:59 UTC: Open**
+
+Thus planned Wed Oct 21 **12:30–16:30 UTC** fits **entirely inside the instrument-specific published Open interval** and avoids the known Exness maintenance/no-trade period by over 4h. The rendered page warns current week's schedule may be adjusted by email and holiday changes emailed separately. This is **static broker session-source proof PASS subject to updated hours/holiday and actual live quote/exposure verification at run**, not broker-runtime or Event Guard PASS.
+
+Independent official public schedule review as of Oct 21:
+- [BLS October releases](https://www.bls.gov/schedule/2026/10_sched_list.htm): Wed Oct21 Usual Weekly Earnings Q3 at 10:00 ET=14:00 UTC. Frozen BLS NFP/CPI Tier1 and initial claims Tier2 are not this event; classify **WATCH_ONLY** under existing frozen taxonomy.
+- [NY Fed economic indicators October 2026](https://www.newyorkfed.org/research/calendars/i-oct26.html): Oct21 Outlook-at-Risk at 10:00 ET=14:00 UTC; **WATCH_ONLY**, not frozen Tier1/2. Live shock/spread exclusion remains.
+- [BEA release schedule](https://www.bea.gov/news/schedule/full): next scheduled PCE / GDP at Oct29 08:30 ET, not in Wed Oct21 candidate.
+- [Fed news and events](https://www.federalreserve.gov/newsevents.htm): calendar shows CP/H.15 routine tables Oct21; full named Fed communication/speech schedule and live source-health concurrence **must still be checked**.
+Static check found no enumerated Tier1/2 event intersecting target, but source revision, acute unscheduled shock, holidays and source health are **not fully proven**. Do not mark `session_event_eligibility_prechecked=true` solely from webpage and screenshot.
+
+Owner separately confirmed no saved live credentials/account switch and attendance 17:30–21:30 Pakistan; earlier exact one-time OS-only VPS preflight PASS (PID6216, staged SHA). These do not authorize `mt5.initialize` or `history_deals_get` or the collector. Before runtime, the owner must explicitly authorize read-only capture and the final canonical SHA-pinned one-run record must contain a documented **actual fresh event/holiday and DEMO/terminal-source gate**. Any unverified condition or late start fails closed; never rerun under consumed staging approval.
