@@ -1,6 +1,6 @@
 {
   "schema_version": "demo-v11-prospective-run-register-draft-20261021",
-  "status": "PROSPECTIVE_RUN_CANDIDATE__OWNER_DEMO_ONLY_AND_ATTENDANCE_ATTESTED__NO_CAPTURE_APPROVAL",
+  "status": "DATE_SPECIFIC_XAUUSD_OPEN_WINDOW_VERIFIED_BY_OWNER_SCREENSHOT__AWAIT_EVENT_GUARD_AND_CAPTURE_APPROVAL",
   "registration_commit_sha": null,
   "registration_sha256": null,
   "exact_owner_approval_id": null,
@@ -10,10 +10,10 @@
   "exact_window_end_utc": "2026-10-21T16:30:00Z",
   "required_contiguous_duration_minutes": 240,
   "daylight_saving_verification_source_sha256": null,
-  "broker_xauusd_session_source_sha256": null,
+  "broker_xauusd_session_source_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46",
   "official_event_guard_health_and_event_schedule_sha256": null,
   "holiday_and_reopening_exclusion_source_sha256": null,
-  "permitted_session": "VERIFIED_LONDON_NEW_YORK_LIQUID_OVERLAP_ONLY",
+  "permitted_session": "VERIFIED_240MIN_LIQUID_LONDON_NY_SUMMER_SESSION_BAND",
   "permitted_scope": "DEMO_LIFECYCLE_ONLY",
   "polling_interval_seconds": "5",
   "min_complete_poll_fraction": "0.99",
@@ -36,7 +36,7 @@
   "classification": "DEMO_LIFECYCLE_ONLY_V1_1_READ_ONLY",
   "owner_approved_read_only_capture": false,
   "terminal_exe": "C:\\Program Files\\MetaTrader 5\\terminal64.exe",
-  "expected_terminal_pid": null,
+  "expected_terminal_pid": 6216,
   "symbol": "XAUUSD",
   "volume_max": "0.01",
   "mt5_external_python_trading_must_be_disabled": true,
@@ -68,5 +68,17 @@
     "attestation_applies_to": "PROSPECTIVE_FOUR_HOUR_READ_ONLY_CAPTURE_PREPARATION_ONLY",
     "not_a_capture_authorization": true,
     "requires_runtime_account_demo_fingerprint_and_zero_exposure_checks": true
-  }
+  },
+  "terminal_pid_observed_at_utc": "2026-10-20T22:14:52Z",
+  "instrument_specific_xauusd_schedule_verified_from_owner_screenshot": true,
+  "instrument_specific_source_evidence": "phase0/roadmap/DEMO_V11_XAUUSD_EXNESS_DYNAMIC_OCT21_SCREENSHOT_EVIDENCE.json",
+  "symbol_open_utc_on_2026_10_21": [
+    "00:00-20:58",
+    "22:02-23:59"
+  ],
+  "closed_and_close_only_utc": [
+    "20:58-22:00 No trade",
+    "22:00-22:02 Close only"
+  ],
+  "date_specific_screenshot_known_schedule_change_possible": true
 }
