@@ -1032,7 +1032,7 @@
       "pr26_comment": 6318947529
     }
   },
-  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21.next_step_candidate_selection",
+  "latest_current_task_pointer": "autonomous_demo_owner_directive_2026_10_21",
   "demo_account_profile_isolation_owner_attestation_2026_10_21": {
     "schema": "XAUUSD_DEMO_PROFILE_ACCOUNT_ISOLATION_OWNER_ATTESTATION_V1",
     "date_utc": "2026-10-21",
@@ -1065,5 +1065,57 @@
     "live_or_real_money_permission_granted": false,
     "identity_and_policy_a_fail_closed_unchanged": true,
     "documentation": "phase0/roadmap/DEMO_ACCOUNT_ISOLATION_OWNER_ATTESTATION_2026-10-21.md"
+  },
+  "autonomous_demo_owner_directive_2026_10_21": {
+    "priority": "AUTONOMOUS_EXNESS_DEMO_SIGNAL_TO_ORDER_AND_POSITION_MONITORING",
+    "requires_manual_screenshots": false,
+    "owner_requested_vps_broker_connection_and_automated_demo_trading": true,
+    "current_code_ready_to_place_autonomous_orders": false,
+    "vps_direct_access_available_to_chat": false,
+    "source_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
+    "existing_pcr3_release_id": "pcr3-execution-disabled-e0383a50e2cc",
+    "existing_pcr3_execution_disabled": true,
+    "existing_s2_pr24_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+    "existing_s2_only_attended_one_entry_one_known_close": true,
+    "experimental_autonomous_advisory_pr": 29,
+    "experimental_branch": "implementation/autonomous-demo-advisory-v0-1-20261021",
+    "experimental_head_sha": "c8c0f2f939803d73727e1df2cb3fa92c0a577baf",
+    "experimental_signal_method": "H1_EMA20_EMA50_TREND_PLUS_M15_CLOSED_BAR_EXTREME_BREAK_SHADOW_HYPOTHESIS_ONLY",
+    "experimental_signal_execution_permitted": false,
+    "local_synthetic_tests": {
+      "pass": 6,
+      "python": "3.13",
+      "exact_repo_python312_ci_pass": false
+    },
+    "github_actions": {
+      "production_candidate_run": 39623779364,
+      "validate_records_run": 39623779418,
+      "outcome": "FAILED_WITHOUT_STEPS_OR_ACCESSIBLE_LOGS_UNDIAGNOSED",
+      "pr29_comment": 6319500529
+    },
+    "demo_monitoring_policy_prospective": {
+      "burn_in_hours": 48,
+      "min_automated_demo_calendar_days": 30,
+      "planning_observation_days": 60,
+      "preferred_independent_closed_trades": 100,
+      "extend_to_days_if_insufficient": 90,
+      "results_guaranteed": false,
+      "live_automatic_promote": false
+    },
+    "broker_integration": "NOT_STARTED_NO_ORDER_ACTIVATION",
+    "missing_components": [
+      "ADMITTED_AUTONOMOUS_SIGNAL_AND_BACKTEST",
+      "SOURCE_HEALTHY_OFFICIAL_EVENT_GUARD_AND_SESSION_SHOCK",
+      "ACTUAL_ANALYST_RUNTIME_TRANSPORT",
+      "COMPLETE_BROKER_CALIBRATED_CASH_POLICY_A",
+      "PERSISTENT_DEDUP_AND_KNOWN_EXPOSURE_RECONCILIATION",
+      "NEW_ISOLATED_DEMO_ONLY_EXECUTION_RELEASE",
+      "REAL_TIME_POSITION_WATCHDOG_ALERTS_AND_RECOVERY",
+      "SIGNED_OWNER_APPROVAL_AND_NATIVE_WINDOWS_TESTS",
+      "VPS_DEPLOYMENT_APPROVAL"
+    ],
+    "demo_order_enabled_or_authorized": false,
+    "real_money_authorized": false,
+    "rollout_doc": "phase0/roadmap/AUTONOMOUS_DEMO_RUNTIME_PROSPECTIVE_TRACK_2026-10-21.md"
   }
 }
