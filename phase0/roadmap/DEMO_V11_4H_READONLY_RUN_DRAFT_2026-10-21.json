@@ -1,8 +1,8 @@
 {
   "schema_version": "demo-v11-prospective-run-register-draft-20261021",
-  "status": "PRECAPTURE_PREREG_CANDIDATE_XAUUSD_OPEN_AND_STATIC_SOURCE_SHAS_BOUND__EVENT_HEALTH_OWNER_APPROVAL_OUTSTANDING",
-  "registration_commit_sha": null,
-  "registration_sha256": null,
+  "status": "PROSPECTIVE_IMMUTABLE_4H_PREREG_SOURCE_HASH_BOUND__OWNER_CAPTURE_APPROVAL_AND_FRESH_GUARDS_MISSING",
+  "registration_commit_sha": "67ba1ad89294047c3b0cc4dd7cb01576c9b1f3a1",
+  "registration_sha256": "d86fd33b13baacdb03ea56e3e11beaeecfd5b60f4bf78c214a97dfdec472662e",
   "exact_owner_approval_id": null,
   "run_id": null,
   "expected_demo_identity_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
@@ -84,5 +84,7 @@
   "event_guard_receipt_status": "PROVISIONAL_OFFICIAL_CALENDAR_EVIDENCE_SHA_BOUND__FRESH_SOURCE_HEALTH_AND_CLASSIFICATION_NOT_YET_ADMITTED",
   "static_allowlist_sha256_source_path": "phase0/roadmap/DEMO_V11_STATIC_READONLY_ALLOWLIST_VERIFICATION_2026-10-21.json",
   "event_calendar_sha256_source_path": "phase0/roadmap/DEMO_V11_2026-10-21_EVENT_SESSION_SOURCE_GATE.md",
-  "original_exness_screenshot_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46"
+  "original_exness_screenshot_sha256": "aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46",
+  "immutable_preregistration_path": "phase0/roadmap/DEMO_V11_4H_READONLY_PREREGISTRATION_OCT21_2026.json",
+  "hash_semantics": "registration_sha256 is exact UTF8 source bytes of separately frozen Oct21 preregistration, not self-hash of owner approved run record. Final --run-record-sha256 will independently pin canonical compact JSON run record after separate exact owner approval."
 }
