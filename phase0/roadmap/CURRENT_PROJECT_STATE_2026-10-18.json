@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "Review and separately approve exact-head draft PR8 selected v1.1 design. Offline-only engineering next: implement and independently test complete Policy A USD stop-loss and period risk, and prepare hash-audited read-only collector. Before any VPS evidence capture register exact UTC run window and obtain separate permission; no merge, deployment or broker action is inferred.",
+  "next_substantive_action": "OWNER_REVIEW_AUTONOMOUS_PRO_V2_ARCHITECTURE_ACCEPTANCE_SPEC_BEFORE_IMPLEMENTATION",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -177,5 +177,43 @@
     "broker_actions": 0,
     "full_policy_a_cash_risk_correction_test_registration": "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json",
     "full_policy_a_cash_risk_correction_current_status": "PRE_REGISTERED_OFFLINE_IMPLEMENTATION_AND_INDEPENDENT_TESTS_PENDING"
-  }
+  },
+  "prospective_autonomous_pro_design_owner_2026_10_21": {
+    "status": "PRODUCT_DIRECTION_ATTESTED_IMPLEMENTATION_AND_RISK_REVISIONS_NOT_APPROVED",
+    "owner_requires_exness_pro_only": true,
+    "never_standard_cent": true,
+    "suggested_future_live_balance_usd": "ABOVE_300_APPROXIMATE_NOT_FINAL",
+    "autonomous_multitimeframe": [
+      "W1",
+      "D1",
+      "H4",
+      "H1",
+      "M15",
+      "M5",
+      "M1"
+    ],
+    "autonomous_setup_side_selection": true,
+    "known_position_dynamic_management_target": [
+      "EARLY_CLOSE",
+      "BREAKEVEN",
+      "TIGHTENING_TRAILING_STOP",
+      "RESEARCH_TP_CHANGES"
+    ],
+    "current_v1_stop_widen_permitted": false,
+    "owner_48h_demo_goal": true,
+    "owner_48h_demo_is_proven_profitable": false,
+    "owner_live_after_48h_autopromotion": false,
+    "risk_policy_replacement_status": "PROPOSAL_ONLY_OLD_POLICY_A_UNCHANGED",
+    "assistant_recommendations": [
+      "ONE_ADMITTED_CHAMPION_STRATEGY_WITH_SHADOW_CHALLENGERS",
+      "BOUNDED_AI_ANALYST_AND_LIFECYCLE_RESEARCH",
+      "SEPARATELY_TESTED_EXIT_MANAGER",
+      "PROSPECTIVE_SMALL_ACCOUNT_RISK_OPTIONS"
+    ],
+    "adr_file": "phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md",
+    "protocol_file": "phase0/roadmap/PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md",
+    "authorization_effect": "NONE",
+    "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
+  },
+  "latest_current_task_pointer": "prospective_autonomous_pro_design_owner_2026_10_21"
 }
