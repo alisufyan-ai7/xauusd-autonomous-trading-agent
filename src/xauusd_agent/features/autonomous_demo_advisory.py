@@ -55,14 +55,14 @@ def _valid_bars(bars: Sequence[Bar], timeframe: Timeframe, now: datetime) -> boo
         return False
     if any(not bar.is_completed_at(now) for bar in bars):
         return False
-    if any(a.open_time >= b.open_time for a, b in zip(bars, bars[1:])):
+    if any(a.open_time >= b.open_time for a, b in zip(bars, bars[1:], strict=False)):
         return False
     # Last windows must be continuous: do not trade into reopened/stale gaps.
     window = 5 if timeframe is Timeframe.H1 else 16
     if len(bars) < window:
         return False
     if any(b.open_time - a.open_time != timeframe.duration
-           for a, b in zip(bars[-window:], bars[-window + 1:])):
+           for a, b in zip(bars[-window:], bars[-window + 1:], strict=False)):
         return False
     return now - bars[-1].close_time <= timeframe.duration
 
