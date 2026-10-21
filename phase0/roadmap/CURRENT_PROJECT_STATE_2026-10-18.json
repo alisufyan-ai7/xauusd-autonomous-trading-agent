@@ -879,5 +879,50 @@
       "original_attempt_marker_definition": "Join-Path $Stage 'V11_CAPTURE_20261021T123000Z_ATTEMPT_CONSUMED.txt'",
       "attempt_marker_stage_location_now_identified": true
     }
-  }
+  },
+  "apc_s2_accelerated_owner_attestation_2026_10_21": {
+    "status": "OWNER_VISIBLE_DEMO_ONLY_ATTESTATION__CURRENT_S2_AND_BROKER_UNKNOWN__EXECUTION_DISABLED",
+    "priority": "S2_SUPERVISED_DEMO_CANARY_ONE_ENTRY_ONE_KNOWN_CLOSE",
+    "owner_visible_accounts_description": "Only approved Exness Demo-Pro under Exness-MT5Trial15; no live account visible",
+    "owner_credential_history_never_saved_live_confirmed": false,
+    "owner_no_switch_actor_confirmed": false,
+    "raw_account_number_stored": false,
+    "raw_screenshot_stored": false,
+    "github_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
+    "s2_source_pr24_head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+    "s2_stage_helper_pr26_head": "ab98292dde5c6bda9fc63a85eb36aaac36ed605d",
+    "s2_inner_archive_sha256": "6c37704c7d2d661ccb2b8fd4fbd5340ec35fb210f1cf9528452bc89bd08c1a4e",
+    "s2_manifest_sha256": "70bf8637208772e91a64b7af2cc06997847dc557752b05d9225b735b30ff13be",
+    "s2_stage_last_reported": "S2_STAGE_ATTEMPT2_PASS_EXECUTION_OFF_KILLED_UNUSED",
+    "current_s2_stage_seal_and_state": "UNVERIFIED_CURRENT_AWAIT_OWNER_OUTPUT",
+    "current_readonly_demo_broker_preflight": "UNVERIFIED_CURRENT_AWAIT_OWNER_OUTPUT",
+    "owner_authorized_fresh_readonly_checks": true,
+    "demo_symbol": "XAUUSD",
+    "maximum_lot": "0.01",
+    "maximum_positions": 1,
+    "mandatory_stop": true,
+    "side": null,
+    "stop_price": null,
+    "entry_price_limit": null,
+    "activation_id": null,
+    "expires_utc": null,
+    "broker_order_calc_and_check_authorized": false,
+    "external_python_trading_enable_authorized": false,
+    "broker_order_authorized": false,
+    "four_hour_capture_prerequisite_to_narrow_canary": false,
+    "policy_a_and_cash_m1": "FULL_UNCHANGED_REQUIRE_FRESH_EXECUTION_SIDE_VERIFICATION",
+    "exact_nonplaceholder_canary_authorization_ready": false,
+    "current_blockers": [
+      "FRESH_S2_STAGE_VERIFY",
+      "FRESH_READONLY_MT5_DEMO_FLAT_QUOTES_AND_MARGIN",
+      "FULL_CREDENTIAL_HISTORY_AND_NO_SWITCH_ACTOR_ATTESTATION",
+      "OWNER_SIDE_STOP_AND_ENTRY_BOUND",
+      "SHORT_ACTIVATION_WINDOW_AND_SUPERVISED_CLOSE_COMMITMENT",
+      "LATER_SEPARATE_EXACT_APC"
+    ],
+    "protected_runtime": "pcr3-execution-disabled-e0383a50e2cc",
+    "latest_detail_document": "phase0/roadmap/APC_S2_ACCELERATED_OWNER_NAVIGATOR_AND_PRETRADE_STATUS_2026-10-21.md",
+    "owner_attestation_pr26_comment": 6316625083
+  },
+  "latest_current_task_pointer": "apc_s2_accelerated_owner_attestation_2026_10_21"
 }
