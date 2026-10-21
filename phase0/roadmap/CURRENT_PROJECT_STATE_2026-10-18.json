@@ -826,7 +826,7 @@
       "reuse_prohibited": true,
       "attestation_fail_closed_pre_marker": true
     },
-    "exact_next_action": "DO NOT RUN THE ORIGINAL OCT21 CAPTURE WRAPPER AGAIN. Preserve immutable incident. Inspect unchanged original wrapper definitions/read-only input handling, perform separately isolated PS5.1 input behavior diagnostics if owner runs them, make prospective controlled correction with native behavioral tests; select a new future eligible 4h window, freeze new hashes and obtain fresh explicit owner capture approval. No MT5/broker or trading action authorized.",
+    "exact_next_action": "Oct21 run failed closed before marker/collector; DO NOT retry or reuse expired grant. Independent PS5.1 Read-Host test with exact 8 ASCII chars PASS. Keep original wrapper untouched; add prospective input behavioral test/defect observation, prepare freshly hashed new future qualifying run and request fresh explicit owner read-only capture approval. No broker actions or demo/live trading.",
     "vps_actions_by_handoff_assistant": "NONE; OWNER RAN ORIGINAL WRAPPER ONCE, OWNER DIAGNOSTIC OS-ONLY",
     "repository_mutation_scope": "DOCUMENTATION_ONLY_ON_EXISTING_EVIDENCE_BRANCH",
     "durability_limits": [
@@ -849,14 +849,35 @@
       "collector_invocation_line": 90,
       "execution_reached_marker_or_collector": false,
       "searched_two_directories_no_attempt_capture_manifest": true,
-      "exact_marker_path_reviewed": false,
-      "root_cause": "UNDETERMINED",
+      "exact_marker_path_reviewed": true,
+      "root_cause": "UNDETERMINED_AFTER_NEW_INDEPENDENT_READ_HOST_PASS",
       "source_health_live_verified": false,
       "broker_live_state_verified": false,
       "retry_under_oct21_approval": false,
       "new_owner_specific_future_approval_required": true,
       "incident_doc": "phase0/roadmap/DEMO_V11_OCT21_ATTESTATION_PREMARKER_FAIL_CLOSED_2026-10-21.md",
-      "pr28_comment": "6315973328"
+      "pr28_comment": "6315973328",
+      "followup_isolated_read_host_test": {
+        "result": "PASS",
+        "input_length": 8,
+        "input_codepoints": [
+          "U+0045",
+          "U+004C",
+          "U+0049",
+          "U+0047",
+          "U+0049",
+          "U+0042",
+          "U+004C",
+          "U+0045"
+        ],
+        "exact_match": true,
+        "original_failed_input_codepoints": "NOT_RECORDED",
+        "test_does_not_establish_original_cause": true,
+        "source": "OWNER_OS_ONLY_POWERSHELL_STDOUT",
+        "pr28_comment_id": 6316103160
+      },
+      "original_attempt_marker_definition": "Join-Path $Stage 'V11_CAPTURE_20261021T123000Z_ATTEMPT_CONSUMED.txt'",
+      "attempt_marker_stage_location_now_identified": true
     }
   }
 }
