@@ -1,5 +1,16 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## Prospective owner product requirements, 2026-10-21 — DOCS PR ONLY
+
+**New dated ADR, not yet merged to authoritative main:** [ADR-2026-10-21-001 — Autonomous Pro Trading Vision](../decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md); [Decision Memory Protocol](PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md). This adds the owner's requirement to **use Exness Pro exclusively (never Standard Cent)**, automatically analyze weekly/D1/H4/H1/M15/M5/M1 gold and choose trade directions, monitor and manage **known** positions, and continuously investigate/learn with safe strategy/prompt versioning. The owner favors a **48h automated DEMO operations milestone**, with potential **>USD300 initial LIVE balance** only as a tentative funding idea, not funding or trading permission. Owner desires flexible risk policy and a later Pro LIVE trial; **numeric risk limits and LIVE gating are not changed**. Stop widening from human psychology was an example, **not an approved capability**.
+
+**Why no broker action:** project-approved Policy A (including 0.25% of eligible capital, daily/weekly/drawdown and M1), Exness demo account fingerprint, unknown-exposure quarantine, human E1/P1, Gate0/replay/operational failures and trading-authority flags remain unchanged. Draft PR29 (experimental automatic advisory HEAD `d90d464528c7e32d28710178f8b3573fc1a10be7`) is NOT CI accepted; PCR3 remains execution-disabled. S2 only proves the previously observed one-lifecycle read-only stage, not autonomous execution. No current DEMO order, external Python trading enable, funded LIVE account, real-money order or 48h broker-run proof exists.
+
+**NEXT OWNER REVIEW:** authorize only a new versioned **autonomous Pro architecture & acceptance specification**: market-timeframe/context model, one champion strategy plus shadow challengers, AI analyst/learning promotion, early-close/BE/trailing rules tested without stop widening, full broker-bound risk governor and small-account risk-budget alternatives, events/news, position reconciliation/watchdog, explicit 48h DEMO entry/monitoring gates and separate later Pro LIVE admission. Code/deployment/risk-policy changes remain separate.
+
+**Recover cross-chat context:** `GOVERNANCE.md` and `phase0/DECISION_LOG.md` → latest `phase0/decisions/ADR-*` → `CURRENT_PROJECT_STATE.md` and paired JSON → open PRs/evidence branch. No code, VPS or trade scope is authorized by this read-first note.
+
+
 **As-of date:** 2026-10-18  
 **Authoritative code base:** private GitHub repository `alisufyan-ai7/xauusd-autonomous-trading-agent`  
 **Reconciled merged `main` (2026-10-18):** `ccaa8338aecee8bd3afbc358644410dff6c512e5`
