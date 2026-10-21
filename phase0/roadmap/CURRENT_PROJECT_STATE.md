@@ -1,5 +1,16 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## VERIFIED OWNER XAUUSD 21 OCT UTC+0 SESSION IMAGE — CAPTURE STILL NOT AUTHORIZED
+
+The owner provided official Exness Specific Instrument **XAUUSD** selector with date range **18–24 Oct 2026**, timezone **GMT+00:00 Reykjavik**. Rendered full image SHA256 `aa969664f5af6ac2e167b84272b32146e2c42515f791ab051ee8e6828d624c46`, 489973 bytes. The **Mon Oct19 through Thu Oct22 schedule is 00:00–20:58 UTC Open**, 20:58–22:00 No trade, 22:00–22:02 Close only, 22:02–23:59 Open. So current proposed Wed 2026-10-21 **12:30–16:30 UTC is confirmed within published OPEN interval**. The screenshot warns weekly hours may change and holidays may be separately emailed; any late change is fail-closed. Durable structured evidence `phase0/roadmap/DEMO_V11_XAUUSD_EXNESS_DYNAMIC_OCT21_SCREENSHOT_EVIDENCE.json`. Original PNG is a conversation upload, not falsely claimed uploaded to private GitHub.
+
+**Immutable prospective prereg for one 240-minute capture:** `phase0/roadmap/DEMO_V11_4H_READONLY_PREREGISTRATION_OCT21_2026.json`, SHA256 **`d86fd33b13baacdb03ea56e3e11beaeecfd5b60f4bf78c214a97dfdec472662e`**, first committed at `67ba1ad89294047c3b0cc4dd7cb01576c9b1f3a1`. Planned true tick 1/5/30s matching tolerance 100ms; staged frozen PR28 5-component source hashes and static read allowlist digest pinned, OS PID 6216 as of previously reported preflight. Latest one-run draft `phase0/roadmap/DEMO_V11_4H_READONLY_RUN_DRAFT_2026-10-21.json` has `registration_sha256` of immutable prereg distinct from uncreated future canonical executable run record hash. **No separate owner authorization for MT5.initialize, read-only quote/history calls or 4h capture has been given**; `owner_approved_read_only_capture=false`, Event Guard live health and holiday late-update checks unadmitted, owner approval ID missing. No broker orders, trading enable or real money.
+
+**NEXT genuine owner boundary:** Approve **one attended read-only MT5 attachment and 12:30–16:30 UTC XAUUSD four-hour observation**, including read-only `history_deals_get` scoped to pre-existing 90d XAUUSD fee/swap history. Execution must fail closed if time missed, source/event/holiday health or DEMO fingerprint/exposure fail, or if exact canonical run record and code hash cannot be reconciled BEFORE start. Explicit owner permit is **not** APC-DEMO trading permit. Keep all 5 stage files immutable and no staging retry.
+
+---
+
+
 ## OWNER DEMO-ONLY PROFILE AND 4H ATTENDANCE ATTESTED (2026-10-21)
 
 Owner explicitly confirms BOTH requested assumptions: **(1)** existing MT5 installation/profile is dedicated to admitted Exness DEMO, has no saved live-account credentials, and no other operator/program will switch accounts during collection; **(2)** owner can remain attended **2026-10-21 17:30–21:30 Pakistan time = 12:30–16:30 UTC**. These are **owner chat attestations**, NOT independently observed MT5 account/session/credential or authorizations to call `mt5.initialize`. Immutable run-specific draft `phase0/roadmap/DEMO_V11_4H_READONLY_RUN_DRAFT_2026-10-21.json` contains owner statements but still `owner_approved_read_only_capture=false`, `approval_for_vps_capture=REQUIRED_SEPARATELY`, no filled owner capture ID or admission SHA. The source contract will still reject live trading/non-DEMO/unknown exposure.
