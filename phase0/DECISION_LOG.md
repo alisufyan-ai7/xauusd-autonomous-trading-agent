@@ -91,3 +91,11 @@
 ## Change procedure
 
 Each new entry must state date, status, decision, evidence/rationale, and consequence. A change to an accepted safety, risk, model, broker, data, execution, validation, or deployment decision requires a new entry and a new specification version/hash. Existing entries are never edited to erase history; factual corrections are appended and linked.
+
+## Additive modern decision index — 2026-10-21 onward
+
+Existing historic `D-*` decision IDs and their statuses are immutable. This new `ADR-YYYY-MM-DD-NNN` namespace avoids collision with D-series IDs recorded across Gate 0 evidence that postdate this file's last table row. It does **not** retroactively supersede or amend an accepted frozen Policy A, Gate, risk, or trading authorization. See the [GitHub decision-memory protocol](roadmap/PROJECT_DECISION_MEMORY_PROTOCOL_2026-10-21.md).
+
+| ADR ID | Date (UTC) | Status | Owner requirement / plan | Why and next action |
+|---|---|---|---|---|
+| [ADR-2026-10-21-001](decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md) | 2026-10-21 | **Owner product directions accepted; implementation/risk/live policy changes proposed only** | Exness **Pro only**; 48h DEMO as quick operating milestone; autonomous multi-timeframe XAUUSD entries and active known-position management; continuous AI research/learning; possible >USD300 future Pro LIVE capital. | Owner repeatedly clarified the target system and requested all decisions be durable. Next: owner review of an additive architecture+strategy champion/position-governor acceptance packet, including risk-policy options without changing currently accepted Policy A. No DEMO or LIVE broker authority. |
