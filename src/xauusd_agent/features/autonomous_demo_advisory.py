@@ -85,7 +85,8 @@ def advise_h1_m15(
     M15 12-bar extreme break; stop at six-bar adverse extreme with 2-tick buffer.
     No broker quote, cost, policy-A, shock or event admission is performed here.
     """
-    blocked = lambda reason: AutonomousDemoAdvisory(AdvisoryDisposition.NO_TRADE, reason)
+    def blocked(reason: str) -> AutonomousDemoAdvisory:
+        return AutonomousDemoAdvisory(AdvisoryDisposition.NO_TRADE, reason)
     if observed_at.tzinfo is None or observed_at.utcoffset() != timedelta(0):
         return blocked("DECISION_TIME_NOT_UTC")
     if tick_size <= 0 or not tick_size.is_finite():
