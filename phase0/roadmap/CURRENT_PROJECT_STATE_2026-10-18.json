@@ -1079,19 +1079,23 @@
     "existing_s2_only_attended_one_entry_one_known_close": true,
     "experimental_autonomous_advisory_pr": 29,
     "experimental_branch": "implementation/autonomous-demo-advisory-v0-1-20261021",
-    "experimental_head_sha": "c8c0f2f939803d73727e1df2cb3fa92c0a577baf",
+    "experimental_head_sha": "d90d464528c7e32d28710178f8b3573fc1a10be7",
     "experimental_signal_method": "H1_EMA20_EMA50_TREND_PLUS_M15_CLOSED_BAR_EXTREME_BREAK_SHADOW_HYPOTHESIS_ONLY",
     "experimental_signal_execution_permitted": false,
     "local_synthetic_tests": {
       "pass": 6,
       "python": "3.13",
-      "exact_repo_python312_ci_pass": false
+      "exact_repo_python312_ci_pass": false,
+      "syntax_compileall": true
     },
     "github_actions": {
-      "production_candidate_run": 39623779364,
-      "validate_records_run": 39623779418,
-      "outcome": "FAILED_WITHOUT_STEPS_OR_ACCESSIBLE_LOGS_UNDIAGNOSED",
-      "pr29_comment": 6319500529
+      "production_candidate_run": 39624431300,
+      "validate_records_run": 39624431413,
+      "outcome": "FAILED_BEFORE_JOB_STEPS_AND_LOGS_AVAILABLE_UNKNOWN_CAUSE",
+      "pr29_comment": 6319566372,
+      "proven_code_error": false,
+      "proven_infrastructure_error": false,
+      "exact_head_ci_accepted": false
     },
     "demo_monitoring_policy_prospective": {
       "burn_in_hours": 48,
@@ -1116,6 +1120,8 @@
     ],
     "demo_order_enabled_or_authorized": false,
     "real_money_authorized": false,
-    "rollout_doc": "phase0/roadmap/AUTONOMOUS_DEMO_RUNTIME_PROSPECTIVE_TRACK_2026-10-21.md"
+    "rollout_doc": "phase0/roadmap/AUTONOMOUS_DEMO_RUNTIME_PROSPECTIVE_TRACK_2026-10-21.md",
+    "experimental_initial_head_sha": "c8c0f2f939803d73727e1df2cb3fa92c0a577baf",
+    "experiment_pr_draft_unmerged": true
   }
 }
