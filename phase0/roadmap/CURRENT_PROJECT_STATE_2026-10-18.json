@@ -102,7 +102,7 @@
   },
   "pr8": {
     "number": 8,
-    "status": "DRAFT_UNMERGED",
+    "status": "MERGED",
     "branch": "research/demo-admit-adverse-cost-prereg-20261018",
     "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
     "scope": "SELECTED_V1_1_PREREGISTRATION_PLUS_PRESERVED_V1_0_AND_OPEN_RISK_GAPS",
@@ -116,7 +116,28 @@
       "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md",
       "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json",
       "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json"
-    ]
+    ],
+    "historical_as_of_2026_10_18": {
+      "number": 8,
+      "status": "DRAFT_UNMERGED",
+      "branch": "research/demo-admit-adverse-cost-prereg-20261018",
+      "base_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+      "scope": "SELECTED_V1_1_PREREGISTRATION_PLUS_PRESERVED_V1_0_AND_OPEN_RISK_GAPS",
+      "authorization": "DESIGN_ACCEPTED_ONLY_NO_MERGE_NO_VPS_NO_BROKER",
+      "files": [
+        "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_2026-10-18.json",
+        "phase0/roadmap/DEMO_LIFECYCLE_ADVERSE_COST_METHOD_2026-10-18.md",
+        "phase0/roadmap/DEMO_ADMIT_RISK_GAP_REVIEW_2026-10-18.md",
+        "phase0/roadmap/DEMO_LIFECYCLE_CALIBRATION_OWNER_DECISION_2026-10-18.json",
+        "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+        "phase0/roadmap/DEMO_LIFECYCLE_COST_METHOD_V1_1_RESTRICTED_SESSION_2026-10-18.md",
+        "phase0/roadmap/DEMO_LIFECYCLE_V1_1_CAPTURE_WINDOW_TEMPLATE_2026-10-18.json",
+        "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json"
+      ]
+    },
+    "original_head_sha": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+    "merge_sha": "29fe3786128cc2a19e8afdf241dbc3defa272282",
+    "current_deployed_or_broker_authority": false
   },
   "last_github_reconciliation": {
     "date_local": "2026-10-18",
@@ -168,15 +189,16 @@
       "SHOCK",
       "UNSUPPORTED_OR_UNKNOWN"
     ],
-    "status": "DESIGN_PREREGISTERED_NO_NEW_BROKER_EVIDENCE",
+    "status": "OWNER_SELECTED_V11_4H_METHOD_AND_SESSION_BAND_FROZEN__READONLY_CAPTURE_APPROVED_BUT_NOT_RUN__NUMERIC_CALIBRATION_NOT_ADMITTED",
     "numeric_calibration_status": "NOT_ADMITTED",
-    "run_specific_utc_window_status": "NOT_REGISTERED",
+    "run_specific_utc_window_status": "FROZEN_2026_10_21_4H_PREREGISTRATION_WITH_OWNER_APPROVED_READ_ONLY_CANONICAL_RUN_RECORD__CAPTURE_NOT_STARTED",
     "collector_test_status": "NATIVE_WINDOWS_PS51_PARSER_OFFLINE_CI_66_PASS_LINUX_65_PASS_ONE_SKIP_ON_SOURCE_COMMIT_E0B6EE70__NO_VPS_CAPTURE",
     "full_policy_a_cash_risk_implementation": "PURE_EXACT_DECIMAL_MATH_MERGED__AUTHENTIC_RUNTIME_INPUT_BINDING_STILL_BLOCKED",
     "demo_admit_decision": "BLOCKED",
     "broker_actions": 0,
     "full_policy_a_cash_risk_correction_test_registration": "phase0/roadmap/DEMO_ADMIT_FULL_POLICY_A_CORRECTION_TEST_REGISTRATION_2026-10-18.json",
-    "full_policy_a_cash_risk_correction_current_status": "OFFLINE_MATH_PASS_RUNTIME_BROKER_CASHFLOW_SOURCE_PROVENANCE_NOT_ADMITTED"
+    "full_policy_a_cash_risk_correction_current_status": "OFFLINE_MATH_PASS_RUNTIME_BROKER_CASHFLOW_SOURCE_PROVENANCE_NOT_ADMITTED",
+    "historical_run_specific_utc_window_status_prior_to_oct21": "NOT_REGISTERED"
   },
   "demo_admit_sequential_owner_approved_merges_2026_10_21": [
     {
@@ -532,6 +554,279 @@
       "broker_orders_authorized": false,
       "real_money_authorized": false,
       "immutable_pr28_evidence_url": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6311538279"
-    }
+    },
+    "prospective_preregistration_frozen": true,
+    "prospective_preregistration_sha256": "d86fd33b13baacdb03ea56e3e11beaeecfd5b60f4bf78c214a97dfdec472662e",
+    "approved_canonical_run_json_sha256": "9f0fb7760181e1fc2754fcd1fd6cfa079976dbf0032d6f0405dcff715fb29e77",
+    "prospective_utc_window_registered_note": "Legacy false denotes runtime / live source eligibility NOT ADMITTED, not denial of immutable Oct21 prereg and canonical approved run-record bytes.",
+    "owner_readonly_capture_approval_20261021_already_received": true,
+    "one_readonly_capture_attempt_consumed": false,
+    "authorized_time_gate_utc": [
+      "2026-10-21T12:25:00Z",
+      "2026-10-21T12:30:00Z_EXCLUSIVE"
+    ],
+    "owner_run_attempt_observed": false,
+    "selected_current_lane": "V11_4H_READONLY_CAPTURE_PENDING_IN_OWNER_PREPARED_DOWNLOADS",
+    "latest_user_screenshots_status": "CAPTURE_PACKAGE_PREPARATION_PASS__NOT_STARTED__NO_MT5"
+  },
+  "canonical_cross_chat_state_2026_10_21": {
+    "read_first": "phase0/roadmap/CURRENT_PROJECT_STATE.md#canonical-cross-chat-read-first--2026-10-21",
+    "verified_from": "LIVE_GITHUB_RECONCILIATION_AFTER_LAST_OWNER_CAPTURE_PACK_PREPARATION_PASS",
+    "github_branch": "evidence/demo-v11-readonly-stage-pass-20261021",
+    "github_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
+    "pr_status_source": "LIVE_GITHUB_PULLS_API",
+    "merged_lineage": [
+      {
+        "pr": 5,
+        "head": "32ef6dbb937ba09315350a7259feae5acfe20be7",
+        "merge": "d87fab07af82aefb097841b4bd54832ddf3fa462"
+      },
+      {
+        "pr": 6,
+        "head": "0f75511d06ee7a803711c6ac28afb8553bf42a7a",
+        "merge": "33b7ebb664d4c343dd6d8dc77544cfdb17bab6bf"
+      },
+      {
+        "pr": 7,
+        "head": "e2e030c6e114bd3fb83c61b0908001df2834886c",
+        "merge": "ccaa8338aecee8bd3afbc358644410dff6c512e5"
+      },
+      {
+        "pr": 8,
+        "head": "8c3b83ba5edf83a8d4e5cc18096070fadf5c52e9",
+        "merge": "29fe3786128cc2a19e8afdf241dbc3defa272282"
+      },
+      {
+        "pr": 9,
+        "head": "6e5f32b771d511c670bbb348f0dd0fb427412fd5",
+        "merge": "5872ad5755777b1c75432ff301981f227c34a287"
+      },
+      {
+        "pr": 27,
+        "head": "d4091aaa759952f6867165f2c71c0d61317f181c",
+        "merge": "2848c98940def262459fd89d5897c6f63dd6aadb"
+      }
+    ],
+    "open_draft_active": {
+      "number": 28,
+      "head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+      "base": "2848c98940def262459fd89d5897c6f63dd6aadb",
+      "state": "OPEN_DRAFT_UNMERGED",
+      "v11_exact_source": true
+    },
+    "open_draft_historical_research": [
+      {
+        "number": 10,
+        "head": "81ee6286fd2a3da528bed5c397ed816a103c1566",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 11,
+        "head": "5da628e9410c08467009cff1a8cdfe4440f0f414",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 12,
+        "head": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 13,
+        "head": "847829378956670e8936bf46c82e685de41145fd",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 14,
+        "head": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 15,
+        "head": "cbb8f3bf0fc0e46fb187f62a3e849341756a4f80",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 16,
+        "head": "1f60b8f0f15c6c73f4ea77297252dc6178a490cd",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 17,
+        "head": "6ac06d365214f1a0146b3669a529d14a127ca5de",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 18,
+        "head": "3ff100189349ada29331730af99459fecc4ea821",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 19,
+        "head": "ccee77501f74de7f59c457945a42609adf4bc6e5",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 20,
+        "head": "f255f59b401310a5acf2b3b0fc6169ac5635acc9",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 21,
+        "head": "f0423f40ae1cb51c01b915d6cd5b7d7e799ce1e",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      },
+      {
+        "number": 22,
+        "head": "41a3088a04dd3cef9793148c2a1ed324389d6cd4",
+        "status": "OPEN_DRAFT_UNMERGED_HISTORICAL_ALT_LINEAGE"
+      }
+    ],
+    "open_draft_apc_s2": [
+      {
+        "number": 23,
+        "head": "e32f6dda35b2f29f2f5c0d762d0d26846bc5f384",
+        "status": "OPEN_DRAFT_UNMERGED_S2_DISTINCT"
+      },
+      {
+        "number": 24,
+        "head": "89711065a3a2d38fe02282fff3ad1782aabda0d2",
+        "status": "OPEN_DRAFT_UNMERGED_S2_DISTINCT"
+      },
+      {
+        "number": 25,
+        "head": "8cd5fada8c78eabf9f725a6fefb68e786be9f342",
+        "status": "OPEN_DRAFT_UNMERGED_S2_DISTINCT"
+      },
+      {
+        "number": 26,
+        "head": "ab98292dde5c6bda9fc63a85eb36aaac36ed605d",
+        "status": "OPEN_DRAFT_UNMERGED_S2_DISTINCT"
+      }
+    ],
+    "latest_exact_ci": {
+      "pr28_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+      "demo_admit": {
+        "run_id": 39499813422,
+        "conclusion": "SUCCESS",
+        "win_pass": 66,
+        "linux_pass": 65,
+        "linux_skip": 1
+      },
+      "validate_records": {
+        "run_id": 39499813467,
+        "conclusion": "SUCCESS"
+      },
+      "seal": {
+        "run_id": 39499813418,
+        "conclusion": "SUCCESS"
+      },
+      "historical_malformed_ps51_AST_failure_run": 39496459205
+    },
+    "pcr3": {
+      "release": "pcr3-execution-disabled-e0383a50e2cc",
+      "source": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
+      "task": "XAUUSD Execution-Disabled Shadow",
+      "last_verified_running": true,
+      "not_freshly_inspected_now": true,
+      "execution_capability": "ABSENT",
+      "broker_actions_last_verified": 0,
+      "exposure_last_verified": "ZERO_AT_OLD_SNAPSHOT_NOT_LIVE_RECONFIRMED",
+      "soak_57_173_hours_all_quarantined": true,
+      "first_48_hours_accelerated_demo_duration_satisfied": true,
+      "formal_gate_4_pass": false
+    },
+    "other_stage_lineages": {
+      "demo_r2": {
+        "status": "PASS_EXECUTION_OFF_PR5_ONLY",
+        "release": "demo-admit-d87fab07af82-r2"
+      },
+      "v11_staged": {
+        "status": "OWNER_REPORTED_PASS_EXECUTION_OFF",
+        "source_pr28_head": "90c3e93330edeee58a0709a41e7393f7818f4ea8",
+        "root": "C:\\Users\\Administrator\\AppData\\Local\\XAUUSD-DEMO-V11-READONLY",
+        "manifest_sha256": "b0abedcf7fd86dd93ee2ea959f279453bbf80f19d96de619a385f8799edf5b7f",
+        "capture_authorized_by_stage": false
+      },
+      "s2": {
+        "status": "ATTEMPT1_IMMUTABLE_FAIL_CLOSED_ATTEMPT2_PASS_EXECUTION_OFF",
+        "control": "KILLED_UNUSED",
+        "broker_actions": 0
+      }
+    },
+    "demo_id": {
+      "company": "Exness Technologies Ltd",
+      "server": "Exness-MT5Trial15",
+      "mode": "DEMO",
+      "currency": "USD",
+      "fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+      "owner_attests_no_live_saved_credentials": true,
+      "current_broker_snapshot_verified": false
+    },
+    "status": {
+      "done": [
+        "v11_selected_and_owner_approved_four_hour_summer_liquid_band",
+        "immutable_oct21_preregistration_source_hash_frozen",
+        "specific_xauusd_oct21_open_schedule_screenshot_evidence",
+        "owner_oct21_exact_readonly_MT5_capture_approval",
+        "SHA_pinned_four_member_capture_pack_prepared_on_VPS",
+        "owner_PS51_AST_PARSER_ONLY_PASS",
+        "v11_five_component_EXECUTION_OFF_stage_pass",
+        "os_only_current_pid_preflight_pass"
+      ],
+      "in_progress": [
+        "one_attended_oct21_12_30_to_16_30_UTC_READONLY_CAPTURE_PENDING",
+        "fresh_authoritative_event_holiday_shock_checks_required_immediately_before_run"
+      ],
+      "blocked": [
+        "numeric_current_adverse_cost_stressed_adverse_cost_not_admitted",
+        "live_same_snapshot_broker_and_period_cashflow_Policy_A_source_binding_not_admitted",
+        "no_demo_admit_pass",
+        "no_current_live_broker_exposure_attestation_after_OS_ONLY_PREFLIGHT"
+      ],
+      "not_authorized": [
+        "tradeapi_enable",
+        "order_check",
+        "order_send",
+        "demo_broker_order_or_close",
+        "live_broker_action",
+        "real_money",
+        "other_VPS_services_scheduled_tasks_mutation",
+        "repeat_capture_if_failed_or_missed"
+      ]
+    },
+    "capture_grant": {
+      "owner_approval_id": "PR28-COMMENT-6311121581-20261021T1230Z-1630Z",
+      "exact_readonly_window_utc": [
+        "2026-10-21T12:30:00Z",
+        "2026-10-21T16:30:00Z"
+      ],
+      "permitted_single_prestart_utc": [
+        "2026-10-21T12:25:00Z",
+        "2026-10-21T12:30:00Z_EXCLUSIVE"
+      ],
+      "captured": false,
+      "attempt_consumed": false,
+      "operator_extract_dir": "C:\\Users\\Administrator\\Downloads\\demo_v11_oct21_approved_run",
+      "approved_wrapper_file": "demo_v11_oct21_ATTENDED_READONLY_CAPTURE.ps1",
+      "approved_wrapper_sha256": "172c362232481766a281bf503e99519f5e4ccf1baa91124ca234054d05475960",
+      "outer_zip_sha256": "a10eeb21ff305d152bbbbec90fb7d46b17ca0e1a0093f122c2179439908ae466",
+      "canonical_run_sha256": "9f0fb7760181e1fc2754fcd1fd6cfa079976dbf0032d6f0405dcff715fb29e77",
+      "calendar_receipt_sha256": "0a36ee3c86c16a769a26e27c5a785830f22319d0e08288c0435b5c7867da3db7",
+      "holiday_receipt_sha256": "69b0931611d5f0a140ddf3301756bc2162962ad518f675a324e9dcf872ee5a47",
+      "preregistration_sha256": "d86fd33b13baacdb03ea56e3e11beaeecfd5b60f4bf78c214a97dfdec472662e",
+      "owner_reported_pack_prepare_and_PS_AST_PASS": true,
+      "manual_ELIGIBLE_only_if_sources_healthy": true,
+      "no_retries": true,
+      "official_source_receipts_limit": "CURATED_CONDITIONAL_SUMMARIES_NOT_HASHES_OF_RAW_ORIGINAL_AGENCY_WEBPAGE_BYTES"
+    },
+    "exact_next_action": "BEFORE 12:25 UTC OCT21: no operator MT5 access. At 12:25 <= now <12:30 UTC ONLY if all final official event/holiday and shock checks succeed, owner executes exact SHA-verified prepared PS5.1 wrapper ONCE and types ELIGIBLE truthfully; preserves full stdout/failure. If window missed or unhealthy, abort and prospectively register new future trial with new owner approval. After run, assess private manifest; do not declare DEMO_ADMIT_PASS until independently admitted Policy A/costs.",
+    "vps_actions_by_handoff_assistant": "NONE",
+    "repository_mutation_scope": "DOCUMENTATION_ONLY_ON_EXISTING_EVIDENCE_BRANCH",
+    "durability_limits": [
+      "Original owner Exness screenshot PNG is not stored in GitHub, SHA/metadata only.",
+      "Exact approved 4-member capture ZIP and wrapper bytes are not tracked in GitHub; owner VPS Downloads holds reported original files and hashes/paths preserved. No fabricated reconstruction.",
+      "Read-only broker capture not yet run; source health live classification remains external/conditional.",
+      "Older historical headings and legacy JSON fields may be stale; this canonical object is authoritative after live GitHub reconciliation."
+    ]
   }
 }
