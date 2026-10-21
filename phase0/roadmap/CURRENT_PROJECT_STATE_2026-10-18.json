@@ -4,7 +4,7 @@
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "2848c98940def262459fd89d5897c6f63dd6aadb",
   "source_of_truth": "GITHUB",
-  "active_focus": "V11_20261021_1230UTC_CAPTURE_PREREG_FROZEN__OWNER_READONLY_MT5_APPROVAL_PENDING",
+  "active_focus": "DEMO_V11_OWNER_APPROVED_ATTENDED_READONLY_4H_CAPTURE_NOT_YET_STARTED",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -201,7 +201,7 @@
   "demo_admit_v11_minimum_collector_preparation": {
     "branch": "implementation/demo-v11-minimal-readonly-windows-capture-20261021",
     "pr": 28,
-    "status": "V11_STAGED_AND_OS_PREFLIGHT_PASS__XAUUSD_SPECIFIC_OPEN_CONFIRMED__EXACT_PREREG_FROZEN__SEPARATE_CAPTURE_AUTHORITY_OUTSTANDING",
+    "status": "OWNER_APPROVED_ONE_4H_READONLY_CAPTURE__NOT_STARTED__TIME_GUARD_AND_LIVE_EVENTS_PENDING",
     "active_code_source": "demo_adapter/scripts/v11_windows_readonly_host.py",
     "attended_launcher": "demo_adapter/scripts/v11_windows_readonly_capture.ps1",
     "source_seal": "demo_adapter/scripts/seal_v11_readonly_capture.py",
@@ -212,7 +212,7 @@
     "numeric_demo_calibration_admitted": false,
     "separate_staging_owner_approval_received": true,
     "staged_on_vps": true,
-    "separate_read_only_vps_capture_approved": false,
+    "separate_read_only_vps_capture_approved": true,
     "mt5_import_or_attach_performed": false,
     "broker_action_count": 0,
     "external_python_trading_enabled": false,
@@ -250,8 +250,8 @@
     "private_partial_failure_journal": true,
     "staging_attempts": 1,
     "staging_owner_approval_received": true,
-    "vps_mt5_initialize_authorized": false,
-    "owner_next_action": "OWNER MUST EXPRESSLY APPROVE ONE ATTENDED MT5 READ_ONLY initialize/shutdown and exact 2026-10-21T12:30-16:30Z 4h capture, including explicit history_deals_get up to 90d existing deal history. Before execution reconcile live official event/holiday schedule health and fully hash final canonical run record. No trading.",
+    "vps_mt5_initialize_authorized": true,
+    "owner_next_action": "Owner privately download exact SHA-pinned four-file pack, native PowerShell5.1 parser-only check, and run at 2026-10-21 12:25-12:30 UTC only if official macro and Exness holiday email/no-shock checks truly healthy; preserve full output; no retry.",
     "final_reviewed_source_snapshot": {
       "exact_commit": "e0b6ee70d6cb9eeef6a9af1e646088161cfadcb1",
       "windows_demo_admit_run": 39499426617,
@@ -471,6 +471,38 @@
       "live_event_and_holiday_source_health_admitted": false,
       "separate_readonly_mt5_initialize_capture_approval_received": false,
       "actual_capture_occurred": false
+    },
+    "capture_approval_oct21": {
+      "status": "EXPLICIT_OWNER_APPROVAL_RECEIVED_RUN_NOT_STARTED",
+      "utc_window": [
+        "2026-10-21T12:30:00Z",
+        "2026-10-21T16:30:00Z"
+      ],
+      "owner_permission_comment": "https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/28#issuecomment-6311121581",
+      "operator_bundle_sha256": "a10eeb21ff305d152bbbbec90fb7d46b17ca0e1a0093f122c2179439908ae466",
+      "canonical_run_sha256": "9f0fb7760181e1fc2754fcd1fd6cfa079976dbf0032d6f0405dcff715fb29e77",
+      "static_calendar_receipt_sha256": "0a36ee3c86c16a769a26e27c5a785830f22319d0e08288c0435b5c7867da3db7",
+      "holiday_receipt_sha256": "69b0931611d5f0a140ddf3301756bc2162962ad518f675a324e9dcf872ee5a47",
+      "attended_wrapper_sha256": "172c362232481766a281bf503e99519f5e4ccf1baa91124ca234054d05475960",
+      "guard": "FRESH_OFFICIAL_SOURCE_BROKER_HOLIDAY_EMAIL_AND_SHOCK_RECHECK_REQUIRED_AT_START",
+      "read_only_methods": [
+        "initialize",
+        "shutdown",
+        "terminal_info",
+        "account_info",
+        "symbol_info",
+        "symbol_info_tick",
+        "positions_get",
+        "orders_get",
+        "copy_ticks_range",
+        "history_deals_get"
+      ],
+      "mt5_started": false,
+      "capture_started": false,
+      "operator_output_received": false,
+      "broker_trading_authorized": false,
+      "external_python_trading_enable_authorized": false,
+      "real_money_authorized": false
     }
   }
 }
