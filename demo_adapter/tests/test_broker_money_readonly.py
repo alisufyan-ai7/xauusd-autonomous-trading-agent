@@ -144,3 +144,57 @@ def test_reference_is_not_a_strategy_or_real_policy_a_authorization() -> None:
     assert r["event_guard_live_source_admitted"] is False
     assert r["history_cashflow_and_loss_streak_reconciled"] is False
     assert r["order_send_calls"] == 0
+
+
+
+def test_probe_cli_requires_manual_readonly_confirmation(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    import runpy
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).resolve().parents[1] / "scripts/real_demo_money_readonly.py"
+    module = runpy.run_path(str(script), run_name="test_import_only")
+    monkeypatch.setattr(sys, "argv", ["read-only-money-probe"])
+    assert module["main"]() == 2
+    assert "REQUIRES_EXPLICIT_READ_ONLY_CONFIRMATION" in capsys.readouterr().out
+
+
+def test_owner_vps_powershell_script_static_safety_and_parser() -> None:
+    import ast
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    script = root / "phase0/ops/v2_demo_real_broker_money_attended_20261022.ps1"
+    content = script.read_text(encoding="utf-8")
+    assert "414f6d1fd339dd6466b793adf2bd87f328804425" in content
+    assert "--confirm-readonly" in content
+    for forbidden in ("order_send(", "order_check(", "schtasks", "Set-ScheduledTask"):
+        assert forbidden not in content
+    tree = ast.parse((root / "demo_adapter/src/xauusd_demo/broker_money_readonly.py").read_text(encoding="utf-8"))
+    method_names = {
+        node.func.attr
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    }
+    assert not method_names.intersection({
+        "order_send", "order_check", "symbol_select", "login",
+    })
+    if sys.platform == "win32":
+        path = str(script).replace("'", "''")
+        command = (
+            "$tokens=$null; $errors=$null; "
+            "$null=[System.Management.Automation.Language.Parser]::ParseFile("
+            f"'{path}',[ref]$tokens,[ref]$errors);"
+            "if($errors.Count -ne 0){exit 1}"
+        )
+        subprocess.run(  # noqa: S603
+            [
+                r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                "-NoProfile", "-NonInteractive", "-Command", command,
+            ],
+            check=True, capture_output=True, text=True,
+        )
