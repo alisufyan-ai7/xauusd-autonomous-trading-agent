@@ -90,12 +90,13 @@ def classify_sampled_sparse_slots(
                     reasons.add("MALFORMED_UTC_SLOT")
                     unknown += 1
                     continue
+                utc_offset = start.utcoffset()
                 if (
                     calendar is None
                     or not calendar.source_verified
                     or not calendar.session_coverage_complete
-                    or start.utcoffset() is None
-                    or start.utcoffset().total_seconds() != 0
+                    or utc_offset is None
+                    or utc_offset.total_seconds() != 0
                     or start < calendar.coverage_start_utc
                     or end > calendar.coverage_end_utc
                 ):
