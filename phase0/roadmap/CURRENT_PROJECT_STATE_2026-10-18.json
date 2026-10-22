@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "NATIVE_CI_PY312_AND_V2_EXTENDED_MT5_SOURCE_VERIFICATION__NO_BROKER_ORDERS",
+  "next_substantive_action": "PR33_AND_PARENT_PR32_PY312_NATIVE_CI_ROOT_CAUSE__THEN_BROKER_READONLY_EVIDENCE",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -329,7 +329,7 @@
     "priority_2": "SOURCE_WRITTEN_FOR_GUARDED_M1_M5_D1_W1_PLUS_EXISTING_H4_H1_M15__UNTESTED_WITH_REAL_MT5",
     "priority_3": "PARTIAL_ZONE_A_TPB_CAUSAL_TECHNICAL_RESEARCH_UNQUALIFIED_NO_VALIDATED_EDGE",
     "priority_4": "FROZEN_EVENT_GUARD_PLUS_DEFAULT_DISABLED_ANALYST_SHADOW_BRIDGE_NO_CLOUD",
-    "priority_5": "PAPER_ONLY_KNOWN_POSITION_FINITE_STATE_MACHINE_NO_BROKER_EXECUTOR",
+    "priority_5": "PAPER_POSITION_LIFECYCLE_AND_PURE_BROKER_SOURCED_POLICY_A_CASH_PRECHECK__NO_REAL_EXECUTOR",
     "files": [
       "src/xauusd_agent/broker/v2_mt5_context_readonly.py",
       "src/xauusd_agent/features/v2_tpb_research.py",
@@ -339,9 +339,11 @@
       "tests/unit/features/test_v2_tpb_event_shadow.py",
       "tests/unit/ops/test_v2_demo_paper_lifecycle.py",
       "phase0/roadmap/AUTONOMOUS_PRO_V2_PRIORITIES_2_TO_5_IMPLEMENTATION_2026-10-22.md",
-      "phase0/decisions/ADR-2026-10-22-002-V2-ENGINEERING-PRIORITIES.md"
+      "phase0/decisions/ADR-2026-10-22-002-V2-ENGINEERING-PRIORITIES.md",
+      "src/xauusd_agent/risk/v2_cash_preflight.py",
+      "tests/unit/risk/test_v2_cash_preflight.py"
     ],
-    "new_tests_authored": 21,
+    "new_tests_authored": 26,
     "new_tests_verified_python312": 0,
     "new_tests_accepted_pass": 0,
     "demo_order_api_in_new_source": false,
@@ -352,6 +354,14 @@
     "trade_demo_authorized": false,
     "trade_live_authorized": false,
     "no_status_erasure": true,
-    "next_gate": "INDEPENDENT_PY312_TESTING_AND_READONLY_EXTENDED_MARKET_SOURCE_PROOF"
+    "next_gate": "INDEPENDENT_PY312_TESTING_AND_READONLY_EXTENDED_MARKET_SOURCE_PROOF",
+    "pr33": 33,
+    "pr33_stacked_on_pr32": true,
+    "pr33_initial_ci": {
+      "production_candidate_run": 39761671235,
+      "validate_records_run": 39761671259,
+      "conclusion": "FAILED_UNVERIFIED_PY312_NO_ROOT_CAUSE_PROVEN"
+    },
+    "risk_preflight_source": "PURE_NO_BROKER_CALLS_NOR_EXECUTION_PERMISSION"
   }
 }
