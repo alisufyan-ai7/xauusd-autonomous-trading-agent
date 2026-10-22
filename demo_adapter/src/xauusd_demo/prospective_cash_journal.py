@@ -125,8 +125,8 @@ class ProspectiveDemoCashJournal:
         )
         self.conn.execute(
             """CREATE TABLE IF NOT EXISTS seen_cash_deals (
-             deal_id TEXT PRIMARY KEY, kind TEXT NOT NULL,
-             amount TEXT NOT NULL, magic INTEGER NOT NULL
+             deal_id TEXT PRIMARY KEY, time_utc TEXT NOT NULL,
+             kind TEXT NOT NULL, amount TEXT NOT NULL, magic INTEGER NOT NULL
             ) STRICT"""
         )
 
@@ -172,7 +172,7 @@ class ProspectiveDemoCashJournal:
                     raise DemoSafetyError("nonflat unrealized cash baseline")
                 self.conn.execute(
                     """INSERT INTO cash_campaign VALUES (
-                       1,?,?,?,?,?,?,?,?,?,?,?,?,?,0,0)""",
+                       1,?,?,?,?,?,?,?,?,?,?,?,?,0,0)""",
                     (
                         o.account_fingerprint, str(o.balance), str(o.equity),
                         _utc(o.observed_utc), _utc(o.observed_utc),
@@ -184,8 +184,8 @@ class ProspectiveDemoCashJournal:
                 )
                 for d in o.broker_deals:
                     self.conn.execute(
-                        "INSERT INTO seen_cash_deals VALUES (?,?,?,?)",
-                        (d.deal_id, d.kind, str(d.amount), d.magic),
+                        "INSERT INTO seen_cash_deals VALUES (?,?,?,?,?)",
+                        (d.deal_id, _utc(d.time_utc), d.kind, str(d.amount), d.magic),
                     )
                 self.conn.execute("COMMIT")
                 return CashRiskBaseline(
@@ -208,18 +208,20 @@ class ProspectiveDemoCashJournal:
             if o.observed_utc < datetime.fromisoformat(last_utc):
                 raise DemoSafetyError("broker cash clock rollback")
             seen = {
-                d_id: (kind, amount, magic)
-                for d_id, kind, amount, magic in self.conn.execute(
-                    "SELECT deal_id,kind,amount,magic FROM seen_cash_deals"
+                d_id: (when, kind, amount, magic)
+                for d_id, when, kind, amount, magic in self.conn.execute(
+                    "SELECT deal_id,time_utc,kind,amount,magic FROM seen_cash_deals"
                 )
             }
             fresh: list[CashDeal] = []
             for d in o.broker_deals:
                 if d.deal_id in seen:
-                    if seen[d.deal_id] != (d.kind, str(d.amount), d.magic):
+                    if seen[d.deal_id] != (_utc(d.time_utc), d.kind, str(d.amount), d.magic):
                         raise DemoSafetyError("broker history deal mutated")
                 else:
                     fresh.append(d)
+            if not fresh and _digest(o.broker_deals) != old_digest:
+                raise DemoSafetyError("broker cash history digest changed")
             if len(o.broker_deals) != len(seen) + len(fresh):
                 raise DemoSafetyError("previously seen broker deal disappeared")
             if any(d.kind not in DEAL_TRADES for d in fresh):
@@ -248,8 +250,8 @@ class ProspectiveDemoCashJournal:
                 raise DemoSafetyError("a losing trade requires human campaign review")
             for d in fresh:
                 self.conn.execute(
-                    "INSERT INTO seen_cash_deals VALUES (?,?,?,?)",
-                    (d.deal_id, d.kind, str(d.amount), d.magic),
+                    "INSERT INTO seen_cash_deals VALUES (?,?,?,?,?)",
+                    (d.deal_id, _utc(d.time_utc), d.kind, str(d.amount), d.magic),
                 )
             self.conn.execute(
                 """UPDATE cash_campaign SET last_utc=?, last_balance=?,
