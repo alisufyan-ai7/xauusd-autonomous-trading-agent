@@ -12,13 +12,14 @@ from xauusd_agent.features.v2_market_context import (
     ContextStatus,
     ContextTimeframe,
     review_market_context,
+    from_existing_core_bar,
 )
 from xauusd_agent.features.v2_shadow_selector import (
     ChampionPolicy,
     ShadowDisposition,
     select_shadow_champion,
 )
-from xauusd_agent.market.models import Quote
+from xauusd_agent.market.models import Bar, Quote, Timeframe
 
 NOW = datetime(2026, 10, 22, 12, tzinfo=UTC)
 PRICE = Decimal("3000")
@@ -196,3 +197,27 @@ def test_reject_invalid_policy_version_and_immutable_execution_gate() -> None:
         ChampionPolicy(SetupFamily.TPB, " ")
     with pytest.raises(ValueError, match="never authorize"):
         replace(review(), execution_permitted=True)
+
+
+
+def test_core_h4_h1_m15_conversion_preserves_exact_data() -> None:
+    mapping = (
+        (Timeframe.H4, ContextTimeframe.H4),
+        (Timeframe.H1, ContextTimeframe.H1),
+        (Timeframe.M15, ContextTimeframe.M15),
+    )
+    for original, expected in mapping:
+        bar = Bar(
+            symbol="XAUUSD", timeframe=original,
+            open_time=NOW - original.duration,
+            open=PRICE, high=PRICE + Decimal("1"),
+            low=PRICE - Decimal("1"), close=PRICE,
+            tick_volume=123,
+        )
+        converted = from_existing_core_bar(bar)
+        assert converted.timeframe is expected
+        assert converted.open_time == bar.open_time
+        assert converted.close_time == bar.close_time
+        assert converted.close == bar.close
+        assert converted.tick_volume == 123
+        assert converted.symbol == "XAUUSD"
