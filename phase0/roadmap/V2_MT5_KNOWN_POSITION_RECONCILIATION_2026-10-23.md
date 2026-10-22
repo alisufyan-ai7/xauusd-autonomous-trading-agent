@@ -22,3 +22,13 @@
 4. Lifecycle loss/streak and boundary accounting, E1/P1 recovery, tested alerts and watchdog, native Win/Ubuntu and real broker owner-attended acceptance, then one exact pinned actual launch command.
 
 No VPS modification, broker order, trading-setting change, main merge or real-money LIVE trading. Existing Gate0 failure evidence is untouched.
+
+
+## Native CI proof (new source)
+
+Source + read-first-state HEAD `5e27aca09a72afc6e29cc71e5d3ace276331d33e`:
+- [DEMO first order offline validation 39862179555](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862179555), native Python3.12 Windows 136 passed, Ubuntu 136 passed; Ruff PASS; MyPy 11 DEMO source files PASS; static `PASS_STATIC_STOP_PRESENT__FIRST_DEMO_ORDER_NOT_ADMITTED`.
+- [DEMO admit 39862179472](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862179472): both native Windows and Ubuntu PASS.
+- [Validate records 39862179475](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862179475): PASS.
+
+These are **synthetic fake MT5 and static native-CI proof only**. No on-VPS broker journal, no order-check/send, no actual Exness position verified.
