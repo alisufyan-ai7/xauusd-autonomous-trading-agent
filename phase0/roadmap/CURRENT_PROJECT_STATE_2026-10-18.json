@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_CROSSFRAME_UTC_BUCKET_FORENSICS__VERIFY_EXNESS_XAUUSD_ROLLOVER_HOLIDAY_OPEN_CLOSED_GAPS__NO_TRADING",
+  "next_substantive_action": "VERIFY_NATIVE_CI_EXHAUSTIVE_READONLY_SPARSE_SAMPLE_THEN_OWNER_CAPTURE_ALL_MISSING_UTC_SLOTS_AND_EXNESS_SOURCE_PINNED_SESSION_HISTORY",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -676,10 +676,10 @@
     "machine_gates": "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
     "next_gate": "REAL_EXNESS_SESSION_HOLIDAY_W1_PARITY_SOURCE_PROOF__PLUS_REGISTER_NEW_PROTECTED_V2_HOLDOUT_AND_OFFICIAL_EVENT_FEED_AND_DEMO_BROKER_BOUND_RUNTIME",
     "owner_attended_real_crossframe_probe": {
-      "status": "OWNER_ATTENDED_STRICT_CROSSFRAME_FAIL_CLOSED__NEW_FORENSIC_NOT_RUN",
+      "status": "SECOND_OWNER_ATTENDED_FORENSIC_SNAPSHOT_FAIL_CLOSED__SESSION_HOURS_NOT_INDEPENDENTLY_CLASSIFIED",
       "python_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
       "ps_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
-      "pinned_source_sha": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
+      "pinned_source_sha": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
       "source_sha_in_native_ci": "a7114eff0649fb843095300042a0114933cd7033",
       "screenshot_or_terminal_evidence_received": false,
       "available_frames": [
@@ -735,7 +735,7 @@
       "strict_parity_admitted": false,
       "source_session_admission": false,
       "native_ci_verified_wrapper_commit": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
-      "utf_bucket_forensics_state": "PREPARED_TESTED_NOT_OWNER_RUN",
+      "utf_bucket_forensics_state": "OWNER_SAMPLED_SIX_OF_NINE_AND_SIX_OF_TWENTY_SIX__EXHAUSTIVE_SIXTY_FOUR_SAMPLE_DIAGNOSTIC_PREPARED_NOT_RUN",
       "native_ci": {
         "production_run": 39788798969,
         "validate_records_run": 39788798973,
@@ -752,7 +752,54 @@
         "mypy": "PASS_68_FILES",
         "execution_disabled_scan": "PASS",
         "package_build": "PASS"
-      }
+      },
+      "owner_observation_2026_10_22_second": {
+        "status": "OWNER_ATTENDED_FORENSICS_STRICT_CROSSFRAME_FAIL_CLOSED",
+        "observed_utc": "2026-10-22T13:54:02.001273+00:00",
+        "wrapper_review_sha": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+        "probe_source_sha": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
+        "symbol": "XAUUSD",
+        "server": "Exness-MT5Trial15",
+        "mode": "DEMO",
+        "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+        "external_python_trading_disabled": true,
+        "order_api_calls": 0,
+        "compared_complete_parent_bars": 563,
+        "partial_parent_bars": 35,
+        "nominal_missing_child_slots": 83,
+        "D1_H4": {
+          "fully_compared": 48,
+          "sparse_parents": 9,
+          "nominal_missing_H4": 45,
+          "partial_aggregate_matches": 9,
+          "aggregate_disagreements": 0,
+          "malformed_child_slots": 0,
+          "sampled_parent_count": 6
+        },
+        "H4_H1": {
+          "fully_compared": 108,
+          "sparse_parents": 26,
+          "nominal_missing_H1": 38,
+          "partial_aggregate_matches": 26,
+          "aggregate_disagreements": 0,
+          "malformed_child_slots": 0,
+          "sampled_parent_count": 6
+        },
+        "H1_M15_full": 249,
+        "M15_M5_full": 99,
+        "M5_M1_full": 59,
+        "weekend_rollover_gap_hypothesis_supported": true,
+        "official_exact_historical_closed_slots_proven": false,
+        "crossframe_parity_accepted": false,
+        "full_chronology_admitted": false,
+        "evidence": "phase0/evidence/V2_PR34_CROSSFRAME_SPARSE_BUCKET_FORENSICS_2026-10-22.json",
+        "earlier_2026_10_22_owner_fail_preserved": true
+      },
+      "exhaustive_sample_wrapper_source_written": true,
+      "exhaustive_sample_owner_run": false,
+      "sparse_session_reconciliation_source_written": true,
+      "sparse_session_reconciliation_verified_against_real_calendar": false,
+      "session_source_evidence_sha256_verified": false
     },
     "actual_price_crossframe_parity_admitted": false
   }
