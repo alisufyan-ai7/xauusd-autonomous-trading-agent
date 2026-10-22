@@ -102,3 +102,33 @@ def test_completely_observed_h4_children_are_recorded_as_full():
     ).results[0]
     assert result.fully_covered_parent_buckets == 1
     assert result.partial_parent_buckets == 0
+
+
+
+def test_twenty_six_hourly_sparse_parents_are_not_truncated():
+    # Matches the observed PR34 bucket count, with synthetic placeholder bars.
+    start = datetime(2026, 9, 1, 20, tzinfo=UTC)
+    h4 = tuple(
+        bar(ContextTimeframe.H4, start + timedelta(days=i), volume=3)
+        for i in range(26)
+    )
+    h1 = tuple(
+        bar(
+            ContextTimeframe.H1,
+            start + timedelta(days=i, hours=hour),
+        )
+        for i in range(26)
+        for hour in (0, 2, 3)
+    )
+    report = describe_crossframe_gaps(
+        frames={ContextTimeframe.H4: h4, ContextTimeframe.H1: h1},
+        as_of=start + timedelta(days=27),
+    )
+    pair = next(r for r in report.results if r.pair == "H4_H1")
+    assert pair.partial_parent_buckets == 26
+    assert pair.missing_child_slot_count == 26
+    assert pair.partial_aggregate_match_count == 26
+    assert len(pair.samples) == 26
+    assert pair.misaligned_child_slot_count == 0
+    assert all(len(sample.missing_child_open_utc) == 1 for sample in pair.samples)
+    assert report.execution_permitted is False
