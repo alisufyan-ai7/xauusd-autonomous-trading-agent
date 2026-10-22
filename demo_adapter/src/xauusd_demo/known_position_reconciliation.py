@@ -237,7 +237,7 @@ class KnownMT5PositionPort:
         # account/entry/position binding; no ticket-only promotion.
         if (
             receipt.position_id != self.binding.position_id
-            or receipt.entry_order != self.binding.entry_order
+            or receipt.order_ticket != self.binding.entry_order
             or receipt.entry_deal_ticket != self.binding.entry_deal
             or receipt.account_fingerprint != self.binding.account_fingerprint
             or receipt.side != self.binding.side
