@@ -15,6 +15,7 @@ from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any, Literal
 
+from .continuous_coordinator import QualifiedBrokerAck
 from .envelope import DemoSafetyError
 from .mt5_demo import _decimal, _record
 
@@ -229,8 +230,22 @@ class KnownMT5PositionPort:
         self.mt5 = mt5
         self.binding = binding
 
-    def known_position_state(self, ticket: str, now: datetime) -> KnownState:
-        if ticket != str(self.binding.position_id):
+    def known_position_state(
+        self, receipt: QualifiedBrokerAck, now: datetime
+    ) -> KnownState:
+        # The durable coordinator ACK must correspond to this exact
+        # account/entry/position binding; no ticket-only promotion.
+        if (
+            receipt.position_id != self.binding.position_id
+            or receipt.entry_order != self.binding.entry_order
+            or receipt.entry_deal_ticket != self.binding.entry_deal
+            or receipt.account_fingerprint != self.binding.account_fingerprint
+            or receipt.side != self.binding.side
+            or receipt.volume_lots != self.binding.volume
+            or receipt.stop_loss != self.binding.protective_sl
+            or receipt.take_profit != self.binding.protective_tp
+            or receipt.tick_size != self.binding.tick_size
+        ):
             return "UNKNOWN"
         return observe_known_mt5_position(
             self.mt5, binding=self.binding, now=now
