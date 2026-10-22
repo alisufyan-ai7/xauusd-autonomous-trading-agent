@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_READONLY_EXHAUSTIVE_UTC_GAP_INVENTORY__DATE_SPECIFIC_EXNESS_XAUUSD_SESSION_SCHEDULE_EXTERNAL_PROVENANCE__NO_TRADING",
+  "next_substantive_action": "BUILD_NARROW_REAL_DEMO_BROKER_LIFECYCLE_FROM_EXISTING_S2_PROVEN_MECHANICS_PLUS_ONE_OBJECTIVE_TPB_STRATEGY__NO_MORE_HISTORIC_GAP_PROBES__NO_TRADING_UNTIL_EXACT_OWNER_APPROVAL",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "v2_five_priority_eng_2026_10_22",
+  "latest_current_task_pointer": "demo_fast_track_owner_priority_2026_10_22",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -796,14 +796,65 @@
         "earlier_2026_10_22_owner_fail_preserved": true
       },
       "exhaustive_sample_wrapper_source_written": true,
-      "exhaustive_sample_owner_run": false,
+      "exhaustive_sample_owner_run": true,
       "sparse_session_reconciliation_source_written": true,
       "sparse_session_reconciliation_verified_against_real_calendar": false,
       "session_source_evidence_sha256_verified": false,
       "new_exhaustive_probe_verified_wrapper_sha": "8ba7468c60a28357e61a1e5fad9e8eed5491903c",
       "new_exhaustive_probe_native_tests_pass": true,
-      "new_exhaustive_probe_owner_execution_confirmed": false
+      "new_exhaustive_probe_owner_execution_confirmed": false,
+      "owner_observation_2026_10_22_third": {
+        "timestamp_utc": "2026-10-22T14:20:06.510718+00:00",
+        "status": "READ_ONLY_CROSSFRAME_OR_HISTORY_REJECTED",
+        "complete_parent_comparisons": 564,
+        "partial_parent_comparisons": 35,
+        "partial_matched": 35,
+        "missing_nominal_slots_fully_inventoried": 83,
+        "probe_source_sha": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
+        "order_api_calls": 0,
+        "session_admitted": false,
+        "immutable": true
+      }
     },
     "actual_price_crossframe_parity_admitted": false
+  },
+  "demo_fast_track_owner_priority_2026_10_22": {
+    "status": "PREPARATION_ONLY_NO_BROKER_ORDER_AUTHORIZATION",
+    "owner_priority": "FASTEST_SAFE_48H_AUTONOMOUS_EXNESS_PRO_DEMO_PILOT_NO_MORE_REPEAT_HISTORY_GAP_PROBES",
+    "decision": "phase0/decisions/ADR-2026-10-22-004-FAST-TRACK-DEMO-PILOT.md",
+    "owner_latest_evidence": "phase0/evidence/V2_PR34_EXHAUSTIVE_DEMO_READONLY_SPARSE_BUCKETS_2026-10-22.json",
+    "owner_observed_at_utc": "2026-10-22T14:20:06.510718+00:00",
+    "source_wrapper_sha": "8ba7468c60a28357e61a1e5fad9e8eed5491903c",
+    "source_probe_sha": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
+    "full_parent_buckets": 564,
+    "partial_parent_buckets": 35,
+    "partial_ohlc_volume_matched": 35,
+    "nominal_missing_child_slots": 83,
+    "missing_child_slots_fully_inventoried": true,
+    "crossframe_strict_parity_admitted": false,
+    "dated_broker_holiday_session_source_admitted": false,
+    "historic_sparse_candle_review": "DEFERRED_AS_STANDALONE_RESEARCH_NOT_TRADE_ADMISSION",
+    "limited_demo_entry_gate_revised": false,
+    "risk_policy_numeric_change": false,
+    "single_strategy_family": "TPB_ONLY_PROSPECTIVE_DEMO_EXPERIMENT",
+    "auto_direction_generation_implemented": false,
+    "full_objective_setup_source_admitted": false,
+    "real_broker_order_adapter_existing_reference": "PR24_S2_OPERATOR_ONLY_NOT_AUTONOMOUS",
+    "real_broker_executor_built": false,
+    "actual_broker_monetary_risk_implemented_and_tested": false,
+    "durable_known_position_broker_reconciliation_implemented": false,
+    "alerts_watchdog_execution_drill_pass": false,
+    "first_attended_demo_order_executed": false,
+    "autonomous_48h_demo_started": false,
+    "live_account_permission": false,
+    "no_more_owner_gap_captures_needed_for_engineering_preparation": true,
+    "required_next_engineering": "REUSE_S2_PROVEN_BROKER_MECHANICS_AND_FULL_POLICY_A__ONE_DETERMINISTIC_TPB_COMPLETE_SETUP__DEMO_ORDER_LIFECYCLE_WITH_JOURNAL_ALERTS",
+    "activation_sequence": [
+      "SOURCE_NATIVE_TESTS",
+      "OWNER_APPROVE_EXACT_FIRST_ATTENDED_DEMO_ORDER",
+      "REAL_BROKER_FILL_STOP_RECONCILIATION",
+      "OWNER_APPROVE_48H_AUTONOMOUS_DEMO_RUN"
+    ],
+    "trading_permissions_all_remain_disabled": true
   }
 }
