@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_VPS_READONLY_EXNESS_PRO_DEMO_SEVEN_FRAME_DATA_PROOF__STILL_NO_TRADING_AUTHORITY",
+  "next_substantive_action": "OWNER_ATTENDED_READONLY_EXNESS_PRO_W1_D1_M5_M1_M15_H1_H4_OBSERVATION_ON_VPS",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -404,33 +404,28 @@
     "offline_tests_prove_real_market_data": false,
     "attended_readonly_mt5_probe": {
       "status": "PREPARED_NOT_RUN",
-      "code_script": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
-      "ps_wrapper": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
-      "source_pin": "a8945c68397ce06f527f9317c0f7560ad7f73d6b",
-      "verifies": [
-        "EXACT_SANITIZED_DEMO_FINGERPRINT",
-        "TRADE_MODE_DEMO_RAW_0",
-        "EXTERNAL_PYTHON_TRADING_DISABLED",
-        "W1_D1_H4_H1_M15_M5_M1",
-        "FRESH_QUOTE",
-        "HISTORY_REQUEST_COUNTS"
-      ],
-      "owner_vps_execution_occurred": false,
-      "broker_write_calls": 0
+      "python": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
+      "powershell": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
+      "pinned_source_sha": "a8945c68397ce06f527f9317c0f7560ad7f73d6b",
+      "requires_existing_demo_profile": true,
+      "requires_external_python_trading_disabled": true,
+      "source_history_observed": false,
+      "exact_fingerprint_match_observed": false
     },
     "final_source_python312_ci": {
-      "source_sha": "549db58a48de73a91e458e97f25df3311b47ac7c",
-      "production_run": 39771566444,
-      "validate_run": 39771566382,
+      "source_sha": "1848c7c7fd850bb24203d65f830453e2e3b0c975",
+      "production_run": 39772152774,
+      "validate_run": 39772152748,
       "windows": {
-        "passed": 304,
+        "tests_passed": 305,
         "skipped": 0,
         "coverage_percent": 88.23,
-        "pass": true
+        "pass": true,
+        "powershell_5_1_parser_test": "PASS"
       },
       "ubuntu": {
-        "passed": 303,
-        "skipped": 1,
+        "tests_passed": 303,
+        "skipped": 2,
         "coverage_percent": 88.2,
         "pass": true
       },
