@@ -119,7 +119,7 @@ class ContinuousDemoCoordinator:
                 (account_fingerprint,),
             )
         elif row[1] != account_fingerprint:
-            raise DemoSafetyError("persistent supervisor account identity mismatch")
+            raise DemoSafetyError("persistent supervisor account fingerprint mismatch")
 
     def close(self) -> None:
         self.conn.close()
