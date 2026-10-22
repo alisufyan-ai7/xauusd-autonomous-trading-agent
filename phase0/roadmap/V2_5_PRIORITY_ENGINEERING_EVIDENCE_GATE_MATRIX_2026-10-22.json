@@ -10,22 +10,22 @@
   "stacked_on_pr": 33,
   "requires_pr32_acceptance": true,
   "source_code_ci": {
-    "commit_before_evidence_docs": "a7114eff0649fb843095300042a0114933cd7033",
-    "production_candidate_run": 39783484834,
-    "record_validation_run": 39783484790,
+    "commit_before_evidence_docs": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+    "production_candidate_run": 39788798969,
+    "record_validation_run": 39788798973,
     "windows_python312": {
       "verdict": "PASS",
-      "tests_passed": 362,
-      "coverage_percent": 88.56
+      "tests_passed": 367,
+      "coverage_percent": 88.73
     },
     "ubuntu_python312": {
       "verdict": "PASS",
-      "tests_passed": 358,
+      "tests_passed": 363,
       "tests_skipped": 4,
-      "coverage_percent": 88.54
+      "coverage_percent": 88.71
     },
     "ruff": "PASS",
-    "mypy": "PASS_67_SOURCE_FILES",
+    "mypy": "PASS_68_SOURCE_FILES",
     "disabled_capability_scan": "PASS",
     "source_and_wheel_build": "PASS",
     "tests_are_synthetic_not_historical_performance": true
@@ -48,7 +48,7 @@
       "broker_calendar_source_sha_verified": false,
       "session_holidays_gap_coverage_verified": false,
       "w1_sunday_bucket_vs_trading_close_verified": false,
-      "actual_broker_crossframe_parity_evaluated": false,
+      "actual_broker_crossframe_parity_evaluated": true,
       "admitted": false,
       "read_only_real_crossframe_probe": {
         "source_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
@@ -59,8 +59,26 @@
         "python_trading_disabled_required": true,
         "all_actual_ohlc_broker_parity_observed": false,
         "official_calendar_admission": false,
-        "order_api_calls": 0
-      }
+        "order_api_calls": 0,
+        "owner_attended_original_source_pin": "48128c83130aa767b047d382f113d4510cb3ac4d",
+        "owner_attended_failure": "READ_ONLY_CROSSFRAME_OR_HISTORY_REJECTED",
+        "owner_observed_utc": "2026-10-22T13:32:33.856256+00:00",
+        "owner_compared_full_parent_buckets": 564,
+        "owner_missing_parent_child_pairs": [
+          "D1_H4_MISSING_OR_MISALIGNED_CHILD_BARS",
+          "H4_H1_MISSING_OR_MISALIGNED_CHILD_BARS"
+        ],
+        "owner_no_ohlc_disagreement_reason_reported": true,
+        "session_calendar_admitted": false,
+        "exact_absent_child_utc_slots_captured": false,
+        "new_forensic_source_sha": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
+        "new_forensic_review_commit": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+        "new_forensic_status": "CI_PASS_NOT_RUN_ON_VPS",
+        "full_parity_and_chronology_admitted": false,
+        "owner_broker_orders": 0,
+        "evidence_file": "phase0/evidence/V2_PR34_CROSSFRAME_READONLY_FAIL_CLOSED_2026-10-22.json"
+      },
+      "actual_broker_crossframe_parity_accepted": false
     },
     "2_tpb": {
       "engineering": "ZONE_A_B_TOUCH_REJECTION_CONFIRMATION_EXPIRY_AND_SAFETY_SYNTHETIC_TESTS_PASS",
@@ -125,6 +143,7 @@
     "real_funds_transfer": false
   },
   "next_dependencies": [
+    "Owner-attended non-writing bucket forensics: identify exact D1/H4 H4/H1 missing UTC slots, then verify scheduled closure vs live data loss using current dated Exness XAUUSD UTC+0 official hours/holiday revisions",
     "Independent Exness Pro session/holiday revision hash and UTC W1 weekday source proof",
     "Fresh private raw 7frame/bar/tick/quote export allowing crossframe parity without publishing credentials",
     "Frozen full TPB predicates plus oracle/golden vectors and registered trial count",
