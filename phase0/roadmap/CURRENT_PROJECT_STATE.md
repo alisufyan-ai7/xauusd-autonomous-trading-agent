@@ -1,5 +1,10 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## 2026-10-23 — Durable broker ACK / known-position recovery contract native CI PASS
+
+PR38 source/test HEAD `97d1ea609f3e58551b54b3d1b533cba219264788`: added atomic account-bound `QualifiedBrokerAck` transaction in `continuous_coordinator.py` and exact MT5 `DEAL_POSITION_ID` read-only `KnownMT5PositionPort`. Corrupt/missing ACK cannot re-open or mark closed; no repeat on ambiguous order. [Native Windows+Ubuntu CI 39862977328](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977328): **140 passed per platform**, Ruff PASS, MyPy 11 files PASS. [DEMO-ADMIT 39862977399](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977399) PASS, [record validation 39862977348](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977348) PASS. **Engineering complete only for this read-only/recovery slice**. Actual broker order sender, frozen full Policy A source binding, final TPB, live Event Guard, alerts/watchdog and VPS installation remain MISSING. No DEMO orders, LIVE or deployment. [Details](V2_MT5_KNOWN_POSITION_RECONCILIATION_2026-10-23.md).
+
+
 ## NEW 2026-10-23 — PR38 broker known-position observer added (NOT trading release)
 
 The read-only MT5 broker known-position component and adversarial fake-MT5 tests are now authored on PR38 (see [implementation checkpoint](V2_MT5_KNOWN_POSITION_RECONCILIATION_2026-10-23.md)). It binds a known position ID to actual broker opening and exit DEAL_POSITION_ID records, known SL+TP, 0.01 lot, account fingerprint, no foreign exposure; unresolved state is UNKNOWN, not CLOSED. Its coordinator-compatible `known_position_state` method **does not** provide `submit_qualified`. An order/deal ticket is **not** an MT5 position identifier. Existing S2 full Policy A broker-order stop remains unaltered. Native CI MUST be checked at this new tip before claiming PASS. Main remains `95875ccf1bddc43491ced1dd4358057b62b7800e`; LIVE remains disabled; no VPS/MT5 order action.

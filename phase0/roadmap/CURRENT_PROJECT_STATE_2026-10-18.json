@@ -11,7 +11,13 @@
     "vps_deployed": false,
     "demo_orders_placed": false,
     "production_main_changed": false,
-    "native_ci_for_latest_changes": "PASS_136_PER_PLATFORM_AT_5e27aca09a72afc6e29cc71e5d3ace276331d33e"
+    "native_ci_for_latest_changes": "PASS_140_PER_PLATFORM_AT_97d1ea609f3e58551b54b3d1b533cba219264788",
+    "durable_ack_receipt_implemented": true,
+    "account_bound_known_position_reconciliation_implemented": true,
+    "ack_receipt_crash_quarantine_validated_synthetic": true,
+    "mt5_order_sender_qualified": false,
+    "native_ci_run": 39862977328,
+    "native_demo_admit_ci_run": 39862977399
   },
   "schema_version": "current-project-state-1.0",
   "as_of_date": "2026-10-18",

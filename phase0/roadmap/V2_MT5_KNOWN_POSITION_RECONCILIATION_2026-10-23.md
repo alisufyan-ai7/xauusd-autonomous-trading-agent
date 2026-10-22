@@ -32,3 +32,11 @@ Source + read-first-state HEAD `5e27aca09a72afc6e29cc71e5d3ace276331d33e`:
 - [Validate records 39862179475](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862179475): PASS.
 
 These are **synthetic fake MT5 and static native-CI proof only**. No on-VPS broker journal, no order-check/send, no actual Exness position verified.
+
+## Subsequent crash-safe ACK-to-position receipt milestone
+
+At exact source/test head `97d1ea609f3e58551b54b3d1b533cba219264788`, the broker-neutral `continuous_coordinator.py` now defines a strictly typed `QualifiedBrokerAck` containing `DEAL_POSITION_ID`, opening order/deal, fingerprint, side, entry/SL/TP/tick-size and 0.01 volume. It persists the canonical receipt and ACK status in a single SQLite transaction after the broker port independently supplies that evidence. A crash before commit leaves PREPARING; old ACKs without a receipt, mismatched/corrupted receipt, wrong account or failed known-position verification quarantine and NEVER retry submission automatically. The read-only `KnownMT5PositionPort` cross-checks that persisted receipt before checking historical deals. **No complete order-sending broker port exists yet.**
+
+Native corrected code CI: [39862977328](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977328) Windows Python 3.12 **140 passed**, Ubuntu Python3.12 **140 passed**, Ruff PASS, MyPy 11 source files PASS, still `PASS_STATIC_STOP_PRESENT__FIRST_DEMO_ORDER_NOT_ADMITTED`. [39862977399](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977399) Windows/Ubuntu DEMO-ADMIT PASS. [39862977348](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39862977348) Validate records PASS. Earlier CI failures and correction remain visible in Actions history, including wrong ACK field-name MyPy failure.
+
+**Unclosed**: qualified MT5 order submission, complete order-fill economics, valid TPB, live official event health, alert delivery and actual MT5/VPS behavior. Real-money LIVE disabled; main unmodified.
