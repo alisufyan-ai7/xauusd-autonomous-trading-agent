@@ -42,14 +42,18 @@ def capture() -> dict[str, object]:
         admitted_server=ADMITTED_SERVER,
         admitted_company=ADMITTED_COMPANY,
     ) as reader:
-        frames = reader.read_seven_frames(as_of=as_of, limits=READ_COUNTS)
+        # Capture the quote first. Reading seven historical series can take
+        # seconds, so sampling tick LAST against the earlier as_of would
+        # wrongly reject healthy active-market data as future-dated.
         quote = reader.read_latest_quote(symbol="XAUUSD", as_of=as_of)
-        # Identity and disabled trading are rechecked after observation.
-        reader._guard_demo_identity()
         if quote is None:
             raise RuntimeError("XAUUSD quote unavailable; source proof incomplete")
-        if quote.broker_time > as_of or quote.received_time > datetime.now(UTC):
-            raise RuntimeError("quote clock is future-dated")
+        quote_age = (as_of - quote.broker_time).total_seconds()
+        if quote_age < -0.25 or quote_age > 5:
+            raise RuntimeError("quote timestamp unavailable, stale or future-dated")
+        frames = reader.read_seven_frames(as_of=as_of, limits=READ_COUNTS)
+        # Identity and disabled trading are rechecked after observation.
+        reader._guard_demo_identity()
         out: dict[str, object] = {
             "status": "READ_ONLY_EXTENDED_MARKET_CAPTURE_ONLY_NOT_TRADING_ADMISSION",
             "symbol": "XAUUSD",
