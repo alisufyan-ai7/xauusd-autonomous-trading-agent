@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import hashlib
-from dataclasses import replace
 from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
@@ -121,7 +120,7 @@ def test_untrusted_account_or_broker_cash_source_rejected(change: dict) -> None:
     assert "order_send" not in fake.calls
 
 
-def test_unowned_broker_history_and_unknown_cash_deal_rejected() -> None:
+def test_unowned_broker_history_and_unknown_cash_deal_rejected(tmp_path: Path) -> None:
     fake = FakeCashMT5()
     fake.extra_deal = {
         "ticket": 33,
@@ -135,3 +134,6 @@ def test_unowned_broker_history_and_unknown_cash_deal_rejected() -> None:
     obs = source.read_mt5_pro_demo_cash(fake, now=NOW)
     assert obs.broker_deals[-1].magic == 17
     assert obs.balance == Decimal("9995")
+    with ProspectiveDemoCashJournal(tmp_path / "foreign.sqlite") as journal:
+        with pytest.raises(DemoSafetyError, match="prior account trading"):
+            journal.observe(obs)
