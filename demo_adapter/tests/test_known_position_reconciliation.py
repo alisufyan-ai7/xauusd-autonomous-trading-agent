@@ -8,6 +8,7 @@ from decimal import Decimal as D
 
 import pytest
 
+from xauusd_demo.continuous_coordinator import QualifiedBrokerAck
 from xauusd_demo.envelope import DemoSafetyError
 from xauusd_demo.known_position_reconciliation import (
     KnownMT5PositionPort,
@@ -209,10 +210,18 @@ def test_binding_rejects_unqualified_ack_metadata(change):
 def test_read_port_accepts_exact_persisted_position_identifier_only():
     port = FakeMT5()
     observer = KnownMT5PositionPort(port, binding=binding())
-    assert observer.known_position_state("101", NOW) == "UNKNOWN"
-    assert observer.known_position_state("700", NOW) == "OPEN"
+    receipt = QualifiedBrokerAck(
+        setup_key="a" * 64, account_fingerprint=FP,
+        position_id=700, order_ticket=101, entry_deal_ticket=201,
+        side="BUY", volume_lots=D("0.01"), entry_price=D("2710"),
+        stop_loss=D("2700"), take_profit=D("2720"), tick_size=D("0.01"),
+    )
+    assert observer.known_position_state(
+        replace(receipt, order_ticket=999), NOW
+    ) == "UNKNOWN"
+    assert observer.known_position_state(receipt, NOW) == "OPEN"
     port.open_position = None
     port.deals.append(exit_deal())
-    assert observer.known_position_state("700", NOW) == "CLOSED"
+    assert observer.known_position_state(receipt, NOW) == "CLOSED"
     assert not hasattr(observer, "submit_qualified")
     assert not hasattr(observer, "order_send")
