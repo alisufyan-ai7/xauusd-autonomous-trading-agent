@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """Offline first-DEMO-order release denial contract; NEVER an order launcher.
 
 The real S2 source remains intentionally blocked until the *whole* Policy A
