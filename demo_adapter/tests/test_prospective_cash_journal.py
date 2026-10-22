@@ -18,6 +18,7 @@ from xauusd_demo.prospective_cash_journal import (
 
 DAY = datetime(2026, 10, 23, 12, tzinfo=UTC)
 D = Decimal
+START_CASH = D("10000")
 FP = "9" * 64
 
 
@@ -29,7 +30,7 @@ def deposit() -> CashDeal:
 
 
 def observation(
-    *, now: datetime = DAY, cash: Decimal = D("10000"),
+    *, now: datetime = DAY, cash: Decimal = START_CASH,
     deals: tuple[CashDeal, ...] | None = None,
 ) -> CashObservation:
     return CashObservation(
@@ -43,9 +44,9 @@ def test_clean_prospective_demo_campaign_and_reopen_are_durable(tmp_path: Path) 
     with ProspectiveDemoCashJournal(path) as journal:
         first = journal.observe(observation())
         assert first.admitted
-        assert first.initial_equity == D("10000")
-        assert first.day_start_equity == D("10000")
-        assert first.normalized_high_water == D("10000")
+        assert first.initial_equity == START_CASH
+        assert first.day_start_equity == START_CASH
+        assert first.normalized_high_water == START_CASH
         assert first.no_order_authority
     with ProspectiveDemoCashJournal(path) as journal:
         second = journal.observe(observation(now=DAY + timedelta(seconds=10)))
@@ -83,7 +84,7 @@ def test_known_profitable_broker_closed_deal_is_cash_reconciled(tmp_path: Path) 
         )
         result = journal.observe(after)
         assert result.admitted
-        assert result.initial_equity == D("10000")
+        assert result.initial_equity == START_CASH
         assert result.normalized_high_water == D("10004")
         assert result.observed_drawdown == 0
         assert result.no_order_authority
@@ -104,7 +105,10 @@ def test_negative_realized_cash_trade_quarantines_persistently(tmp_path: Path) -
             journal.observe(observation(now=DAY + timedelta(minutes=5)))
 
 
-@pytest.mark.parametrize("scenario", ["different_balance", "unowned", "funding", "missing_history", "timestamp_changed"])
+@pytest.mark.parametrize(
+    "scenario", ["different_balance", "unowned", "funding", "missing_history",
+                 "timestamp_changed"]
+)
 def test_unreconciled_mutated_or_foreign_history_halts(
     tmp_path: Path, scenario: str
 ) -> None:
