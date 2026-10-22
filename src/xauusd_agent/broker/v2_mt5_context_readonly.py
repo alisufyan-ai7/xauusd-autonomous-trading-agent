@@ -30,6 +30,39 @@ from xauusd_agent.market.models import Timeframe, _require_utc
 class MT5ExtendedReadOnlyAdapter(MT5ReadOnlyAdapter):
     """Seven-frame read-only bar data with explicit closure/identity checks."""
 
+    def __init__(
+        self,
+        *,
+        admitted_fingerprint_sha256: str,
+        admitted_server: str,
+        admitted_company: str,
+        module: Any | None = None,
+    ) -> None:
+        super().__init__(module)
+        if (
+            len(admitted_fingerprint_sha256) != 64
+            or any(c not in "0123456789abcdef" for c in admitted_fingerprint_sha256)
+            or not admitted_server
+            or not admitted_company
+        ):
+            raise ValueError("exact sanitized admitted DEMO identity is required")
+        self._admitted_fingerprint = admitted_fingerprint_sha256
+        self._admitted_server = admitted_server
+        self._admitted_company = admitted_company
+
+    def _guard_demo_identity(self) -> None:
+        self._guard()
+        account = self.observe_account()
+        fp = account.fingerprint
+        if (
+            fp.account_id_sha256 != self._admitted_fingerprint
+            or fp.server != self._admitted_server
+            or fp.broker != self._admitted_company
+            or fp.currency != "USD"
+            or fp.account_mode not in {"0", "DEMO"}
+        ):
+            raise MT5ReadOnlyError("DEMO account identity mismatch; fail closed")
+
     _additional: Mapping[ContextTimeframe, str] = MappingProxyType(
         {
             ContextTimeframe.W1: "TIMEFRAME_W1",
@@ -52,7 +85,7 @@ class MT5ExtendedReadOnlyAdapter(MT5ReadOnlyAdapter):
         _require_utc(as_of, "as_of")
         if limit < 1 or limit > 20_000:
             raise MT5ReadOnlyError("context bar limit outside fixed safe range")
-        self._guard()  # Connected terminal + external Python trading DISABLED.
+        self._guard_demo_identity()  # Account + API protection rechecked.
         if timeframe in self._existing:
             converted = tuple(
                 from_existing_core_bar(bar)
@@ -93,7 +126,7 @@ class MT5ExtendedReadOnlyAdapter(MT5ReadOnlyAdapter):
             )
         # Account can change externally during read. The second guard verifies
         # disabled trading again; identity binding requires a separate check.
-        self._guard()
+        self._guard_demo_identity()
         if any(bar.close_time > as_of for bar in converted):
             raise MT5ReadOnlyError("context data contains incomplete or future candles")
         if any(a.open_time >= z.open_time for a, z in zip(
@@ -114,5 +147,5 @@ class MT5ExtendedReadOnlyAdapter(MT5ReadOnlyAdapter):
             )
             for timeframe in ContextTimeframe
         }
-        self._guard()
+        self._guard_demo_identity()
         return MappingProxyType(batch)
