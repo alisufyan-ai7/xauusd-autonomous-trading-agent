@@ -32,7 +32,7 @@ def _row(value: Any, label: str) -> dict[str, Any]:
     if hasattr(value, "_asdict"):
         return dict(value._asdict())
     if hasattr(value, "__dict__"):
-        return vars(value)
+        return dict(vars(value))
     raise DemoSafetyError(f"{label} unrecognized")
 
 
