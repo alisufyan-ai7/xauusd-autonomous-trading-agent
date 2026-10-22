@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_REVIEW_DRAFT_PR34_AND_REAL_SOURCE_CHRONOLOGY_OFFICIAL_EVENT_AND_NEW_TPB_REPLAY_ADMISSION__NO_VPS_TRADING",
+  "next_substantive_action": "REVIEW_DRAFT_PR34_AND_OWNER_ATTENDED_EXNESS_DEMO_READONLY_CROSSFRAME_PARITY_WITH_W1_WEEKLY_SESSION_STILL_UNADMITTED",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -612,17 +612,19 @@
     "parent_head_at_registration": "c452d90abf915761f0443be807e40cbe9784051d",
     "main_unmodified": "95875ccf1bddc43491ced1dd4358057b62b7800e",
     "code_test_proof": {
-      "exact_sha": "b769468d30bea4f9a9324556b2f15006cceed80e",
-      "ci_run": 39782217155,
+      "exact_sha": "a7114eff0649fb843095300042a0114933cd7033",
+      "ci_run": 39783484834,
+      "record_run": 39783484790,
       "windows_py312": {
         "status": "PASS",
-        "tests": 358,
-        "coverage_pct": 88.56
+        "tests": 362,
+        "coverage_pct": 88.56,
+        "pr34_ps_parser": "PASS"
       },
       "ubuntu_py312": {
         "status": "PASS",
-        "tests": 355,
-        "skipped": 3,
+        "tests": 358,
+        "skipped": 4,
         "coverage_pct": 88.54
       },
       "ruff": "PASS",
@@ -646,7 +648,10 @@
       "tests/unit/ops/test_v2_durable_paper_ledger.py",
       "pyproject.toml",
       "phase0/roadmap/V2_CHRONOLOGY_TPB_OOS_EVENT_PAPER_ENGINEERING_2026-10-22.md",
-      "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json"
+      "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
+      "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
+      "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
+      "tests/unit/ops/test_v2_pr34_readonly_source_probe.py"
     ],
     "chronology_real_source_w1_weekend_holidays_admitted": false,
     "actual_price_crossframe_parity_run": false,
@@ -666,6 +671,28 @@
     "trading_authority": false,
     "source_document": "phase0/roadmap/V2_CHRONOLOGY_TPB_OOS_EVENT_PAPER_ENGINEERING_2026-10-22.md",
     "machine_gates": "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
-    "next_gate": "REAL_EXNESS_SESSION_HOLIDAY_W1_PARITY_SOURCE_PROOF__PLUS_REGISTER_NEW_PROTECTED_V2_HOLDOUT_AND_OFFICIAL_EVENT_FEED_AND_DEMO_BROKER_BOUND_RUNTIME"
+    "next_gate": "REAL_EXNESS_SESSION_HOLIDAY_W1_PARITY_SOURCE_PROOF__PLUS_REGISTER_NEW_PROTECTED_V2_HOLDOUT_AND_OFFICIAL_EVENT_FEED_AND_DEMO_BROKER_BOUND_RUNTIME",
+    "owner_attended_real_crossframe_probe": {
+      "status": "SOURCE_WRITTEN_NATIVE_PY312_CI_PASS_NOT_EXECUTED_ON_VPS",
+      "python_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
+      "ps_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
+      "pinned_source_sha": "48128c83130aa767b047d382f113d4510cb3ac4d",
+      "source_sha_in_native_ci": "a7114eff0649fb843095300042a0114933cd7033",
+      "screenshot_or_terminal_evidence_received": false,
+      "available_frames": [
+        "W1",
+        "D1",
+        "H4",
+        "H1",
+        "M15",
+        "M5",
+        "M1"
+      ],
+      "actual_ohlc_crossframe_parity_checked": false,
+      "actual_session_calendar_admitted": false,
+      "order_api_calls_observed": 0,
+      "broker_write_capability": false,
+      "trading_authority": false
+    }
   }
 }
