@@ -154,3 +154,19 @@ def test_user_kill_persists_across_restart_and_wrong_account_rejected(tmp_path: 
         assert c.cycle(FakeQualifiedBroker(), now=NOW).action == "NO_ORDER"
     with pytest.raises(DemoSafetyError, match="fingerprint"):
         ContinuousDemoCoordinator(path, account_fingerprint="e" * 64)
+
+
+
+def test_single_continuous_runner_lease_survives_crash_and_blocks_second_process(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "lease.sqlite"
+    with ContinuousDemoCoordinator(path, account_fingerprint=FP) as c:
+        c.arm_attended(confirmation=ARM, broker_flat_confirmed=True)
+        c._acquire_runner_lease()
+        with pytest.raises(DemoSafetyError, match="runner already active"):
+            c._acquire_runner_lease()
+    # In actual VPS a second process must not resume after an ambiguous crash.
+    with ContinuousDemoCoordinator(path, account_fingerprint=FP) as c:
+        with pytest.raises(DemoSafetyError, match="runner already active"):
+            c._acquire_runner_lease()
