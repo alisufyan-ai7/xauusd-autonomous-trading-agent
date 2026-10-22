@@ -120,3 +120,45 @@ def test_attended_readonly_python_version_guard_executes_under_windows_powershel
         capture_output=True, text=True, check=True,
     )
     assert "PY312_NATIVE_ARG_VERSION_PASS" in result.stdout
+
+
+
+@pytest.mark.parametrize(
+    ("message", "expected"),
+    [
+        ("XAUUSD quote unavailable; source proof incomplete", "QUOTE_UNAVAILABLE"),
+        ("QUOTE_TIMESTAMP_FUTURE", "QUOTE_TIMESTAMP_FUTURE"),
+        ("QUOTE_TIMESTAMP_STALE", "QUOTE_TIMESTAMP_STALE"),
+        ("W1 empty broker result", "W1_EMPTY_BROKER_HISTORY"),
+        ("M1 empty broker result", "M1_EMPTY_BROKER_HISTORY"),
+        ("H4 contains a forming candle", "H4_FORMING_BAR"),
+        ("M5 contains a forming candle", "M5_FORMING_BAR"),
+    ],
+)
+def test_sanitized_probe_reason_codes_never_reveal_raw_exception_details(
+    message: str, expected: str
+) -> None:
+    mapping = _load()["_public_failure_reason"]
+    assert mapping(RuntimeError(message)) == expected
+    private_detail = "SYNTHETIC_SECRET_DO_NOT_PRINT"
+    assert private_detail not in mapping(RuntimeError(private_detail))
+    assert mapping(RuntimeError(private_detail)) == "UNCLASSIFIED_RUNTIME_ERROR"
+    assert mapping(ValueError(private_detail)) == "UNCLASSIFIED_READONLY_FAILURE"
+
+
+def test_probe_failure_output_includes_only_fixed_sanitized_code(
+    monkeypatch, capsys
+) -> None:
+    data = _load()
+    main = data["main"]
+
+    def fail_as_stale_quote():
+        raise RuntimeError("QUOTE_TIMESTAMP_STALE")
+
+    main.__globals__["capture"] = fail_as_stale_quote
+    monkeypatch.setattr(sys, "argv", ["probe", "--confirm-readonly"])
+    assert main() == 1
+    output = capsys.readouterr().out
+    assert '"reason_code": "QUOTE_TIMESTAMP_STALE"' in output
+    assert '"order_api_calls": 0' in output
+    assert "login" not in output.casefold()
