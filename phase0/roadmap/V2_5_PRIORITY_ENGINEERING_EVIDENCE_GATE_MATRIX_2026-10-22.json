@@ -10,17 +10,18 @@
   "stacked_on_pr": 33,
   "requires_pr32_acceptance": true,
   "source_code_ci": {
-    "commit_before_evidence_docs": "b769468d30bea4f9a9324556b2f15006cceed80e",
-    "production_candidate_run": 39782217155,
+    "commit_before_evidence_docs": "a7114eff0649fb843095300042a0114933cd7033",
+    "production_candidate_run": 39783484834,
+    "record_validation_run": 39783484790,
     "windows_python312": {
       "verdict": "PASS",
-      "tests_passed": 358,
+      "tests_passed": 362,
       "coverage_percent": 88.56
     },
     "ubuntu_python312": {
       "verdict": "PASS",
-      "tests_passed": 355,
-      "tests_skipped": 3,
+      "tests_passed": 358,
+      "tests_skipped": 4,
       "coverage_percent": 88.54
     },
     "ruff": "PASS",
@@ -48,7 +49,18 @@
       "session_holidays_gap_coverage_verified": false,
       "w1_sunday_bucket_vs_trading_close_verified": false,
       "actual_broker_crossframe_parity_evaluated": false,
-      "admitted": false
+      "admitted": false,
+      "read_only_real_crossframe_probe": {
+        "source_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
+        "wrapper_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
+        "pinned_source": "48128c83130aa767b047d382f113d4510cb3ac4d",
+        "status": "PREPARED_NATIVE_CI_PASS_NOT_EXECUTED_ON_VPS",
+        "demo_identity_required": true,
+        "python_trading_disabled_required": true,
+        "all_actual_ohlc_broker_parity_observed": false,
+        "official_calendar_admission": false,
+        "order_api_calls": 0
+      }
     },
     "2_tpb": {
       "engineering": "ZONE_A_B_TOUCH_REJECTION_CONFIRMATION_EXPIRY_AND_SAFETY_SYNTHETIC_TESTS_PASS",
