@@ -12,7 +12,7 @@ import hashlib
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import Decimal, ROUND_HALF_EVEN
+from decimal import ROUND_HALF_EVEN, Decimal
 
 from xauusd_agent.market.models import _require_utc
 
