@@ -82,6 +82,15 @@ def capture() -> dict[str, object]:
                 "latest_age_seconds": int((as_of - series[-1].close_time).total_seconds()),
             }
         out["bars"] = result
+        complete = all(
+            len(frames[timeframe]) == READ_COUNTS[timeframe]
+            for timeframe in ContextTimeframe
+        )
+        out["all_requested_history_available"] = complete
+        out["status"] = (
+            "READ_ONLY_EXTENDED_MARKET_CAPTURE_COMPLETE_NOT_TRADING_ADMISSION"
+            if complete else "READ_ONLY_HISTORY_SHORTFALL_FAIL_CLOSED"
+        )
         return out
 
 
@@ -109,7 +118,7 @@ def main() -> int:
         }, sort_keys=True))
         return 1
     print(json.dumps(result, sort_keys=True))
-    return 0
+    return 0 if result["all_requested_history_available"] is True else 1
 
 
 if __name__ == "__main__":
