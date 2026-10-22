@@ -1,5 +1,16 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT VERIFIED WORK — V2 SPEC APPROVED/MERGED; SLICE01 EXECUTION-DISABLED (2026-10-22)
+
+Owner approved draft v2 specification as design and authorized proceeding with the first **execution-disabled engineering slice** (not DEMO/LIVE orders or risk changes). PR31 was merged at **`main=95875ccf1bddc43491ced1dd4358057b62b7800e`** after exact-five-doc scope check, preserving owner Pro-only and AI/multi-timeframe requirements. The accepted `phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md` is an architectural baseline, **not** a filled-in profit proof, runtime admission, strategy approval, new Policy A rate or broker authorization.
+
+**NEW isolated implementation branch:** `implementation/autonomous-pro-v2-execution-disabled-context-20261022`, born from exact main above. Files: `src/xauusd_agent/features/v2_market_context.py` (W1/D1/H4/H1/M15/M5/M1 completed-bar, healthy-source and fresh-quote validation), `src/xauusd_agent/features/v2_shadow_selector.py` (single unambiguous independently admitted champion **SHADOW** only), `tests/unit/features/test_v2_shadow_context.py` (**13 tests authored but native CI has NOT been proved PASS**), and [slice01 explanation](AUTONOMOUS_XAUUSD_PRO_V2_EXECUTION_DISABLED_SLICE01_2026-10-22.md). Source static scan found **no order_send, MetaTrader5 import or external Python trading enable path**; runtime and VPS unchanged. Context deliberately fails NO_TRADE until W1/D1/M5/M1 real read-only broker bars, official session/Event Guard/shock gate, strategy evidence and complete stable quotes are sourced. No strategy predicates are faked; `research_admitted` defaults false. Selection output `execution_permitted=False` even if shadow setup exists.
+
+**Historical snapshot only:** existing owner Exness Pro DEMO staged S2 hash/deep KILLED+UNUSED preflight PASS remains historical; previous PCR3 installed `XAUUSD Execution-Disabled Shadow` stays untouched. Draft PR24/26/29 and all historic Gate0/CI failures untouched and unmerged. Fixed numeric Policy A 0.25%, 0.01 lot, M1/free-margin/current+stress and period stops remain accepted; proposal to adapt to small Pro capital is NOT granted. No MT5 Python toggle, OpenAI production calls, broker read/write, autonomous DEMO activation or LIVE funding/order/activation authorized.
+
+**NEXT work after review:** verify exact-head native Python3.12/Windows tests/CI (GitHub Actions PR29 had immediate failures of undetermined cause), then build *new* read-only W1/D1/M5/M1 bar adapter and independently source-backed Event Guard/strategy predicate pipeline behind a null execution sink. Always update both human-readable and JSON state and the ADR log when substantive decisions change. The earlier below 'PR31 draft pending' text is historical and superseded by this section.
+
+
 ## NEXT PROPOSED PRODUCT SPEC — Autonomous XAUUSD Pro v2 (2026-10-22)
 
 **PR30 MERGED + V2 SPEC DRAFT:** Owner approved docs-only PR30 and GitHub confirmed merge to authoritative `main=51a7f7de395767a9ae1f9904f752bd74b3cdc010` (October21 UTC / October22 Pakistan time); original owner Pro-only and autonomous trading vision now permanently on main. This read-first note belongs to a **separate unmerged v2 specification proposal branch**, not an execution, strategy, trading or risk-policy grant.
