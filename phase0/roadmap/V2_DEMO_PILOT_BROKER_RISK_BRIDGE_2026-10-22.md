@@ -17,3 +17,7 @@ Existing S2 `demo_adapter/src/xauusd_demo/mt5_demo.py` has broker mechanics for 
 Unit tests are synthetic: they validate mismatched server/live account, malformed quote, unverified history/event, monetary mismatch, stop/margin and frozen Policy A. They are NOT a measured cash result from Exness or an OOS P/L result, and are not proof 48h trading will be profitable.
 
 All records durable in this branch; no changes on VPS, no broker orders, no Python trade enable, no live account, no Gate0 failure rewrite, no merges or production deployments.
+
+## Exact native test verdict
+
+Exact tested source SHA `a3691e618b80f5fe01c16cab0551c2fd9b52b13e`; GitHub Actions [production-candidate run 39799012582](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39799012582) PASS: Windows Python 3.12 **381 tests passed, 88.94% coverage**; Ubuntu Python 3.12 **377 passed, 4 skipped, 88.91% coverage**. Ruff PASS, MyPy 70 source files PASS, disabled trading capability scan PASS and both wheel and sdist builds PASS. [Validate records 39799012581](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39799012581) PASS. Earlier initial Ruff test E501 failure corrected without changing safety logic; it remains available in Actions history. **Actual broker `order_calc_profit`/`order_calc_margin` not yet invoked by this code or observed from Exness**. All execution permissions remain off.
