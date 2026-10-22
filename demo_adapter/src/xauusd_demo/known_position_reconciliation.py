@@ -215,3 +215,23 @@ def observe_known_mt5_position(
     # Exact opening and closing broker deals plus flat account: never infer a
     # closure just from a missing position or an order_send DONE retcode.
     return "CLOSED" if closed > 0 and remaining == 0 else "UNKNOWN"
+
+
+class KnownMT5PositionPort:
+    """Read-only implementation of coordinator's known_position_state method.
+
+    The full future broker port must durably persist a matching binding
+    BEFORE reporting ACK; reconstructing it from only an order ticket is
+    prohibited. This class implements no submission method.
+    """
+
+    def __init__(self, mt5: Any, *, binding: KnownPositionBinding) -> None:
+        self.mt5 = mt5
+        self.binding = binding
+
+    def known_position_state(self, ticket: str, now: datetime) -> KnownState:
+        if ticket != str(self.binding.position_id):
+            return "UNKNOWN"
+        return observe_known_mt5_position(
+            self.mt5, binding=self.binding, now=now
+        )
