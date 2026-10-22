@@ -132,6 +132,7 @@ class DurablePaperLedger:
             old = self.inspect()
             if old.revision != expected_revision:
                 raise ValueError("stale writer revision / duplicate intent")
+            next_state: str | None
             if event == "SIMULATE_AMBIGUOUS_OR_UNKNOWN_EXPOSURE":
                 next_state = "QUARANTINED"
             else:
