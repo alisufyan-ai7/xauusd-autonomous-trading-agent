@@ -13,6 +13,7 @@ import argparse
 import json
 from datetime import UTC, datetime
 
+from xauusd_agent.broker.mt5_readonly import MT5ReadOnlyError
 from xauusd_agent.broker.v2_mt5_context_readonly import MT5ExtendedReadOnlyAdapter
 from xauusd_agent.features.v2_market_context import ContextTimeframe
 
@@ -105,6 +106,21 @@ def _public_failure_reason(exc: Exception) -> str:
     Broker exceptions can contain credentials or account identifiers. Never
     put exception string, traceback, MT5 last_error, or raw login in output.
     """
+    if type(exc) is MT5ReadOnlyError:
+        detail = str(exc)
+        safe_guard_codes = {
+            "DEMO account identity mismatch; fail closed": "DEMO_IDENTITY_MISMATCH",
+            "MT5 external-Python trading protection is not enabled": (
+                "PYTHON_TRADING_PROTECTION_NOT_ENABLED"
+            ),
+            "MT5 terminal is not connected": "MT5_TERMINAL_DISCONNECTED",
+            "MT5 adapter is not initialized": "MT5_ADAPTER_NOT_INITIALIZED",
+            "context data contains incomplete or future candles": (
+                "BROKER_INCOMPLETE_OR_FUTURE_BARS"
+            ),
+            "context data not monotonically ordered": "BROKER_BAR_ORDER_INVALID",
+        }
+        return safe_guard_codes.get(detail, "UNCLASSIFIED_READONLY_FAILURE")
     if type(exc) is not RuntimeError:
         return "UNCLASSIFIED_READONLY_FAILURE"
     detail = str(exc)
