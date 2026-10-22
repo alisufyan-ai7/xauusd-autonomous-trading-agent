@@ -101,6 +101,15 @@ class ContinuousDemoCoordinator:
              side TEXT NOT NULL, bar_utc TEXT NOT NULL, ticket TEXT
             ) STRICT"""
         )
+        self.conn.execute(
+            """CREATE TABLE IF NOT EXISTS supervisor_runner_lease (
+             id INTEGER PRIMARY KEY CHECK(id=1),
+             acquired INTEGER NOT NULL CHECK(acquired IN (0,1))
+            ) STRICT"""
+        )
+        self.conn.execute(
+            "INSERT OR IGNORE INTO supervisor_runner_lease VALUES(1,0)"
+        )
         row = self.conn.execute(
             "SELECT state, fingerprint FROM agent_control WHERE id=1"
         ).fetchone()
@@ -230,11 +239,34 @@ class ContinuousDemoCoordinator:
         )
         return CycleResult("ACTIVE", "BROKER_ORDER_ACKNOWLEDGED", str(ticket))
 
+    def _acquire_runner_lease(self) -> None:
+        """Persistent single-owner fence; crash needs attended P1 recovery."""
+        self.conn.execute("BEGIN IMMEDIATE")
+        try:
+            acquired = self.conn.execute(
+                "SELECT acquired FROM supervisor_runner_lease WHERE id=1"
+            ).fetchone()
+            if acquired is None or int(acquired[0]) != 0:
+                raise DemoSafetyError("runner already active or requires P1 review")
+            if self.status() != "ACTIVE":
+                raise DemoSafetyError("runner cannot start while KILLED")
+            self.conn.execute(
+                "UPDATE supervisor_runner_lease SET acquired=1 WHERE id=1"
+            )
+            self.conn.execute("COMMIT")
+        except Exception:
+            if self.conn.in_transaction:
+                self.conn.execute("ROLLBACK")
+            raise
+
     def run_forever(
         self, port: QualifiedDemoBrokerPort, *, interval_seconds: float = 5.0
     ) -> None:
         if not (1.0 <= interval_seconds <= 60.0):
             raise DemoSafetyError("supervisor polling interval out of bounds")
+        self._acquire_runner_lease()
+        # Deliberately never release the persistent lease on process crash,
+        # SIGINT or exception. P1 recovery requires human broker reconciliation.
         while True:
             result = self.cycle(port, now=datetime.now(UTC))
             if result.state != "ACTIVE":
