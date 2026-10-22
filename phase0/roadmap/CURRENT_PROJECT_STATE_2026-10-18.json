@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "BUILD_NARROW_REAL_DEMO_BROKER_LIFECYCLE_FROM_EXISTING_S2_PROVEN_MECHANICS_PLUS_ONE_OBJECTIVE_TPB_STRATEGY__NO_MORE_HISTORIC_GAP_PROBES__NO_TRADING_UNTIL_EXACT_OWNER_APPROVAL",
+  "next_substantive_action": "BUILD_REAL_EXNESS_DEMO_BROKER_PROFIT_MARGIN_ORDER_CHECK_PERIOD_LEDGER_BINDING_AND_ONE_STRATEGY_AUTONOMOUS_SAFE_RUNTIME__NO_BROKER_SEND_UNTIL_EXACT_OWNER_PERMISSION",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "demo_fast_track_owner_priority_2026_10_22",
+  "latest_current_task_pointer": "v2_demo_money_risk_bridge_2026_10_22",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -856,5 +856,54 @@
       "OWNER_APPROVE_48H_AUTONOMOUS_DEMO_RUN"
     ],
     "trading_permissions_all_remain_disabled": true
+  },
+  "v2_demo_money_risk_bridge_2026_10_22": {
+    "phase": "OWNER_AUTHORIZED_OFFLINE_DEMO_ENGINEERING_ONLY",
+    "review_pr": 35,
+    "stacked_base_pr": 34,
+    "parent_sha": "6ca2966855ce36e8ddc91dd99b7c22bdf22683e2",
+    "source_and_tests_sha": "a3691e618b80f5fe01c16cab0551c2fd9b52b13e",
+    "production_ci_run": 39799012582,
+    "validate_records_run": 39799012581,
+    "windows_py312": {
+      "status": "PASS",
+      "tests_passed": 381,
+      "coverage_percent": 88.94
+    },
+    "ubuntu_py312": {
+      "status": "PASS",
+      "tests_passed": 377,
+      "tests_skipped": 4,
+      "coverage_percent": 88.91
+    },
+    "ruff": "PASS",
+    "mypy": "PASS_70_SOURCE_FILES",
+    "disabled_capability": "PASS",
+    "wheel_sdist": "PASS",
+    "implementation": "src/xauusd_agent/risk/v2_demo_pilot_broker_risk.py",
+    "unit_tests": "tests/unit/risk/test_v2_demo_pilot_broker_risk.py",
+    "record": "phase0/roadmap/V2_DEMO_PILOT_BROKER_RISK_BRIDGE_2026-10-22.md",
+    "review_only_result": "MATH_RECONCILED_REVIEW_ONLY",
+    "execution_permitted": false,
+    "real_mt5_broker_calc_invoked": false,
+    "actual_authenticated_broker_receipt_collector_ready": false,
+    "policy_a_mathematical_consistency_tests": "PASS_SYNTHETIC_ONLY",
+    "source_authority_missing": true,
+    "first_real_demo_order_authorized": false,
+    "first_real_demo_order_submitted": false,
+    "python_trade_toggle_authorized": false,
+    "vps_deployment_authorized": false,
+    "autonomous_demo_48h_authorized": false,
+    "live_trading_authorized": false,
+    "one_strategy_tp_b_full_source_qualified": false,
+    "official_event_guard_live_source_admitted": false,
+    "existing_s2_runtime": "KILLED_UNUSED__OWNER_COMMAND_ONLY_NOT_AUTONOMOUS",
+    "next_engineering": [
+      "MT5 READ_ONLY SAME-EPOCH CALC_PROFIT/MARGIN RECEIPT COLLECTOR",
+      "INTEGRATED FULL TPB CANDIDATE + EVENT GUARD + AI VETO",
+      "BROKER-SOURCED PERIOD CASHFLOWS + SAFE DURABLE ORDER/DEAL POSITION MANAGER",
+      "NATIVE WINDOWS FAULT/RESTART ALERT EVIDENCE",
+      "SEPARATE EXACT FIRST ATTENDED DEMO ORDER AUTHORIZATION"
+    ]
   }
 }
