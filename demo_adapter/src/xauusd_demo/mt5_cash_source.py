@@ -87,7 +87,8 @@ def _deal_to_cash(mt5: Any, deal: Any, observed_utc: datetime) -> CashDeal:
 
 def read_mt5_pro_demo_cash(mt5: Any, *, now: datetime) -> CashObservation:
     """Use solely actual MT5 account and history values; never submit."""
-    if now.tzinfo is None or now.utcoffset() is None or now.utcoffset().total_seconds() != 0:
+    offset = now.utcoffset()
+    if now.tzinfo is None or offset is None or offset.total_seconds() != 0:
         raise DemoSafetyError("exact UTC now required")
     terminal = _row(mt5.terminal_info(), "terminal")
     account = _row(mt5.account_info(), "account")
