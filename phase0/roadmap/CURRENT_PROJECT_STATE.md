@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## EXACT VERIFIED NATIVE CI — EXHAUSTIVE FORENSICS STILL OWNER-UNRUN (2026-10-22)
+
+**Code and tests SHA `8ba7468c60a28357e61a1e5fad9e8eed5491903c`:** GitHub Actions [`production-candidate 39792777998`](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39792777998) native **Windows Python3.12 374 passed/88.74%**, **Ubuntu Python3.12 370 passed/4 Windows-only skipped/88.72%**, Ruff PASS, MyPy 69 source files PASS, `PASS_EXECUTION_DISABLED_CAPABILITY_SCAN` PASS, wheel/source builds PASS; `Validate records 39792778039` PASS. Earlier first iteration of classifier failed MyPy on an optional UTC-offset expression; fixed before final native PASS. Failures preserved as historical CI attempts.
+
+**New forensic source status:** instrument `v2_crossframe_forensics.py` bounded UTC-parent-sample cap increased to **64** (versus earlier 6); regressions exercise 26 synthetic H4/H1 sparse buckets and exact sample coverage. `v2_sparse_session_reconciliation.py` requires trustworthy independent dated broker session calendar, complete UTC gap inventory, and rejects market-OPEN overlapped absent candles. Its results are never able to set `official_session_admitted`, `crossframe_parity_admitted` or `execution_permitted` true. The owner-attended PowerShell script still has exact code pin **`78b1a3c105bdab50f2b4d46eddc8c915db5dfc96`** from review commit **`8ba7468c60a28357e61a1e5fad9e8eed5491903c`**. **No fourth owner VPS run has occurred; all 83 missing nominal child slots remain UNCLASSIFIED.**
+
+Owner evidence and original strict rejections preserved above; independent Exness XAUUSD detailed per-date official schedule for Aug–Oct2026 is NOT in GitHub and the general official 2026-09-29 help article alone is not sufficient to prove closure during each exact UTC absent candle. PR32/33/34 DRAFT and unmerged, production main unchanged, no broker/demo/live trading or Python toggle, all risk controls unchanged.
+
+
 ## PR34 SECOND OWNER SPARSE-SESSION FORENSIC EVIDENCE (2026-10-22)
 
 **New owner-attended diagnostic at `2026-10-22T13:54:02.001273Z`: STILL `READ_ONLY_CROSSFRAME_OR_HISTORY_REJECTED`, `FAIL_CLOSED`, NOT a full chronology pass.** Owner ran exact reviewed wrapper SHA `4734330f8cf29321387eeff2ebd0f77c9eccb2d4`, Python source `dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a`, with exact dedicated Exness XAUUSD DEMO fingerprint/server verified, external Python trading disabled, no broker orders. Sanitized machine-readable original aggregate and six-sample-per-pair UTC evidence: [`phase0/evidence/V2_PR34_CROSSFRAME_SPARSE_BUCKET_FORENSICS_2026-10-22.json`](../evidence/V2_PR34_CROSSFRAME_SPARSE_BUCKET_FORENSICS_2026-10-22.json).
