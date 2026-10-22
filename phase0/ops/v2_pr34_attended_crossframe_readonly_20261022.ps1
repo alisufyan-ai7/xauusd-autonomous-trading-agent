@@ -5,7 +5,7 @@
 $ErrorActionPreference = 'Stop'
 $Repo = 'C:\Users\Administrator\Desktop\xauusd-autonomous-trading-agent'
 $Branch = 'implementation/pro-v2-chronology-replay-event-ledger-20261022'
-$PinnedSource = '48128c83130aa767b047d382f113d4510cb3ac4d'
+$PinnedSource = 'dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a'
 $Python = 'C:\Program Files\Python312\python.exe'
 if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
     throw 'Expected Git worktree missing'
