@@ -146,6 +146,37 @@ def test_sanitized_probe_reason_codes_never_reveal_raw_exception_details(
     assert mapping(ValueError(private_detail)) == "UNCLASSIFIED_READONLY_FAILURE"
 
 
+
+
+@pytest.mark.parametrize(
+    ("internal_message", "expected"),
+    [
+        ("DEMO account identity mismatch; fail closed", "DEMO_IDENTITY_MISMATCH"),
+        (
+            "MT5 external-Python trading protection is not enabled",
+            "PYTHON_TRADING_PROTECTION_NOT_ENABLED",
+        ),
+        ("MT5 terminal is not connected", "MT5_TERMINAL_DISCONNECTED"),
+        ("MT5 adapter is not initialized", "MT5_ADAPTER_NOT_INITIALIZED"),
+        (
+            "context data contains incomplete or future candles",
+            "BROKER_INCOMPLETE_OR_FUTURE_BARS",
+        ),
+        ("context data not monotonically ordered", "BROKER_BAR_ORDER_INVALID"),
+    ],
+)
+def test_guard_failure_codes_are_fixed_and_do_not_expose_broker_errors(
+    internal_message: str, expected: str
+) -> None:
+    data = _load()
+    mapping = data["_public_failure_reason"]
+    err = data["MT5ReadOnlyError"]
+    assert mapping(err(internal_message)) == expected
+    secret = "SYNTHETIC_PRIVATE_LOGIN_TOKEN"
+    assert mapping(err(secret)) == "UNCLASSIFIED_READONLY_FAILURE"
+    assert secret not in mapping(err(secret))
+
+
 def test_probe_failure_output_includes_only_fixed_sanitized_code(
     monkeypatch, capsys
 ) -> None:
