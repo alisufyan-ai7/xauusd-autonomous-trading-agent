@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import ast
 import runpy
+import subprocess
 import sys
 from pathlib import Path
+
+import pytest
 
 PROBE = (
     Path(__file__).resolve().parents[3]
@@ -56,3 +59,24 @@ def test_probe_reports_synthetic_history_shortfall_as_failure(
     output = capsys.readouterr().out
     assert "READ_ONLY_HISTORY_SHORTFALL_FAIL_CLOSED" in output
     assert "order_api_calls" in output
+
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="PowerShell 5.1 parser is Windows-only")
+def test_attended_readonly_powershell_wrapper_syntax() -> None:
+    script = (
+        Path(__file__).resolve().parents[3]
+        / "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1"
+    )
+    path = str(script).replace("'", "''")
+    parse = (
+        "$tokens = $null; $errorsFound = $null; "
+        "$null = [System.Management.Automation.Language.Parser]::ParseFile("
+        f"'{path}', [ref]$tokens, [ref]$errorsFound); "
+        "if ($errorsFound.Count -ne 0) {"
+        " $errorsFound | Out-String | Write-Error; exit 1 }"
+    )
+    subprocess.run(
+        ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", parse],
+        capture_output=True, text=True, check=True,
+    )
