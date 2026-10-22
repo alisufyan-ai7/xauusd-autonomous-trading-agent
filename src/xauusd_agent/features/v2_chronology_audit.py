@@ -36,6 +36,7 @@ class SessionCalendarEvidence:
     coverage_end_utc: datetime
     open_intervals: tuple[SessionInterval, ...]
     source_verified: bool
+    session_coverage_complete: bool
     weekly_sunday_utc_anchor_verified: bool
 
     def __post_init__(self) -> None:
@@ -43,6 +44,8 @@ class SessionCalendarEvidence:
         _require_utc(self.coverage_end_utc, "coverage_end_utc")
         if self.coverage_end_utc <= self.coverage_start_utc:
             raise ValueError("calendar coverage invalid")
+        if self.source_verified and not self.open_intervals:
+            raise ValueError("verified market session source cannot be empty")
         if not self.revision.strip():
             raise ValueError("calendar revision required")
         if (
@@ -92,6 +95,8 @@ def audit_seven_frame_chronology(
     reasons: set[str] = set()
     if calendar is None or not calendar.source_verified:
         reasons.add("OFFICIAL_BROKER_SESSION_SOURCE_UNVERIFIED")
+    if calendar is None or not calendar.session_coverage_complete:
+        reasons.add("SESSION_OPEN_CLOSED_CLASSIFICATION_INCOMPLETE")
     if calendar is None or not calendar.weekly_sunday_utc_anchor_verified:
         reasons.add("W1_ANCHOR_UNVERIFIED")
     if set(frames) != set(ContextTimeframe):
