@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "PR32_CI_ROOT_CAUSE_OR_INDEPENDENT_NATIVE_PY312_TESTS__THEN_READONLY_EXTENDED_TIMEFRAMES",
+  "next_substantive_action": "NATIVE_CI_PY312_AND_V2_EXTENDED_MT5_SOURCE_VERIFICATION__NO_BROKER_ORDERS",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "v2_approved_execution_disabled_slice01_2026_10_22",
+  "latest_current_task_pointer": "v2_engineering_priorities_2026_10_22",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -313,5 +313,45 @@
       "pr32_comment": 6337815142,
       "accepted_test_results": false
     }
+  },
+  "v2_engineering_priorities_2026_10_22": {
+    "owner_intent": "PROCEED_CI_READONLY_EXTENDED_MARKET_DATA_OBJECTIVE_STRATEGY_AI_EVENT_GUARD_AND_DEMO_LIFECYCLE_ENGINEERING",
+    "source_decision": "phase0/decisions/ADR-2026-10-22-002-V2-ENGINEERING-PRIORITIES.md",
+    "parent_pr": 32,
+    "parent_exact_head_at_branch": "527b631c3a37bf1574266edb8e7b5b6e225e65ad",
+    "child_branch": "implementation/pro-v2-readonly-data-and-tpb-shadow-20261022",
+    "canonical_main": "95875ccf1bddc43491ced1dd4358057b62b7800e",
+    "priority_1_ci": "FAILED_PRE_STEPS_UNKNOWN_ROOT_CAUSE_PY312_NOT_AVAILABLE_LOCALLY",
+    "priority_1_runs": [
+      39758170391,
+      39758170378
+    ],
+    "priority_2": "SOURCE_WRITTEN_FOR_GUARDED_M1_M5_D1_W1_PLUS_EXISTING_H4_H1_M15__UNTESTED_WITH_REAL_MT5",
+    "priority_3": "PARTIAL_ZONE_A_TPB_CAUSAL_TECHNICAL_RESEARCH_UNQUALIFIED_NO_VALIDATED_EDGE",
+    "priority_4": "FROZEN_EVENT_GUARD_PLUS_DEFAULT_DISABLED_ANALYST_SHADOW_BRIDGE_NO_CLOUD",
+    "priority_5": "PAPER_ONLY_KNOWN_POSITION_FINITE_STATE_MACHINE_NO_BROKER_EXECUTOR",
+    "files": [
+      "src/xauusd_agent/broker/v2_mt5_context_readonly.py",
+      "src/xauusd_agent/features/v2_tpb_research.py",
+      "src/xauusd_agent/features/v2_shadow_analyst_event.py",
+      "src/xauusd_agent/ops/v2_demo_paper_lifecycle.py",
+      "tests/unit/broker/test_v2_mt5_extended_readonly.py",
+      "tests/unit/features/test_v2_tpb_event_shadow.py",
+      "tests/unit/ops/test_v2_demo_paper_lifecycle.py",
+      "phase0/roadmap/AUTONOMOUS_PRO_V2_PRIORITIES_2_TO_5_IMPLEMENTATION_2026-10-22.md",
+      "phase0/decisions/ADR-2026-10-22-002-V2-ENGINEERING-PRIORITIES.md"
+    ],
+    "new_tests_authored": 21,
+    "new_tests_verified_python312": 0,
+    "new_tests_accepted_pass": 0,
+    "demo_order_api_in_new_source": false,
+    "actual_broker_data_observed": false,
+    "broker_execution_runtime_validated": false,
+    "demo_48h_started": false,
+    "separate_openai_cloud_approved": false,
+    "trade_demo_authorized": false,
+    "trade_live_authorized": false,
+    "no_status_erasure": true,
+    "next_gate": "INDEPENDENT_PY312_TESTING_AND_READONLY_EXTENDED_MARKET_SOURCE_PROOF"
   }
 }
