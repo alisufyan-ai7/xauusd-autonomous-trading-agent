@@ -22,7 +22,7 @@ _PAIRS = (
     (ContextTimeframe.M15, ContextTimeframe.M5),
     (ContextTimeframe.M5, ContextTimeframe.M1),
 )
-_SAMPLE_LIMIT = 6
+_SAMPLE_LIMIT = 64
 
 
 @dataclass(frozen=True, slots=True)
