@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_RETRY_CORRECTED_PINNED_READONLY_PY312_DEMO_XAUUSD_SEVEN_TIMEFRAME_DIAGNOSTIC_NO_BROKER_ORDERS",
+  "next_substantive_action": "CI_VERIFY_SANITIZED_READONLY_RUNTIME_REASON_CODES_THEN_OWNER_ATTENDED_DEMO_PROBE_V3_NO_TRADING",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -403,10 +403,10 @@
     ],
     "offline_tests_prove_real_market_data": false,
     "attended_readonly_mt5_probe": {
-      "status": "FIRST_OWNER_ATTEMPT_FAIL_CLOSED_PRE_MT5__CORRECTED_WRAPPER_READY_FOR_NEW_ATTENDED_RUN",
+      "status": "SECOND_OWNER_ATTEMPT_FAIL_CLOSED_RUNTIME_ERROR_UNCLASSIFIED__SAFE_REASON_CODE_CORRECTION_PREPARED",
       "python": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
       "powershell": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
-      "pinned_source_sha": "a8945c68397ce06f527f9317c0f7560ad7f73d6b",
+      "pinned_source_sha": "783cce55a09706cc59017202336da77d69ed8ec4",
       "requires_existing_demo_profile": true,
       "requires_external_python_trading_disabled": true,
       "source_history_observed": false,
@@ -452,6 +452,25 @@
         "source_pr": 33,
         "evidence_pr_comment": 6340077026,
         "append_only": true
+      },
+      {
+        "kind": "RUNTIME_ERROR_NO_REASON_CODE_20261022",
+        "wrapper_tested_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
+        "probe_source_sha": "a8945c68397ce06f527f9317c0f7560ad7f73d6b",
+        "result": "FAIL_CLOSED_NO_ORDER",
+        "observed_error_type": "RuntimeError",
+        "reported_reason_code": null,
+        "reason": "UNDETERMINED_FROM_CLASS_ONLY_OUTPUT",
+        "passed_version_guard": true,
+        "source_archive_completed": true,
+        "python_probe_invoked": true,
+        "mt5_connected_verified": false,
+        "demo_account_verified": false,
+        "actual_frames_observed_verified": false,
+        "order_api_calls_reported": 0,
+        "broker_exposure_changed_observed": false,
+        "evidence_pr33_comment": 6340238980,
+        "immutable": true
       }
     ],
     "corrected_python_version_wrapper": {
@@ -474,6 +493,25 @@
       },
       "runtime_ran_on_vps": false,
       "order_permission": false
+    },
+    "sanitized_probe_reason_code_fix": {
+      "status": "PREPARED_CI_VERIFICATION_PENDING",
+      "probe_source_sha": "783cce55a09706cc59017202336da77d69ed8ec4",
+      "wrapper_pin": "783cce55a09706cc59017202336da77d69ed8ec4",
+      "allowlisted_reasons": [
+        "QUOTE_UNAVAILABLE",
+        "QUOTE_TIMESTAMP_FUTURE",
+        "QUOTE_TIMESTAMP_STALE",
+        "W1/D1/H4/H1/M15/M5/M1_EMPTY_BROKER_HISTORY",
+        "W1/D1/H4/H1/M15/M5/M1_FORMING_BAR",
+        "UNCLASSIFIED_RUNTIME_ERROR",
+        "UNCLASSIFIED_READONLY_FAILURE"
+      ],
+      "raw_exception_string_output": false,
+      "identity_guard_before_quote": true,
+      "five_second_tick_limit_unchanged": true,
+      "run_on_vps": false,
+      "broker_actions_authorized": false
     }
   }
 }
