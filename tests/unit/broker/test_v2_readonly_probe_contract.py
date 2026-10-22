@@ -88,7 +88,10 @@ def test_attended_readonly_powershell_wrapper_syntax() -> None:
 
 
 
-@pytest.mark.skipif(sys.platform != "win32", reason="PowerShell native argument parsing is Windows-only")
+@pytest.mark.skipif(
+    sys.platform != "win32",
+    reason="PowerShell native argument parsing is Windows-only",
+)
 def test_attended_readonly_python_version_guard_executes_under_windows_powershell() -> None:
     """Regression for user-observed stripped quotes in PowerShell -c f-strings."""
     script = (
