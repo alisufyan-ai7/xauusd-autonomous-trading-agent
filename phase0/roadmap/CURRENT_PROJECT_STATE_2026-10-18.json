@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "REVIEW_SAFE_V2_SLICE01_AND_EXACT_SHA_NATIVE_CI__NO_BROKER_OR_DEPLOYMENT",
+  "next_substantive_action": "PR32_CI_ROOT_CAUSE_OR_INDEPENDENT_NATIVE_PY312_TESTS__THEN_READONLY_EXTENDED_TIMEFRAMES",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -298,6 +298,20 @@
     "broker_orders_authorized": false,
     "external_python_trading_enable_authorized": false,
     "ai_production_calls_authorized": false,
-    "release_deployed_to_vps": false
+    "release_deployed_to_vps": false,
+    "review_pr_number": 32,
+    "review_pr_head": "358f0181966ed9891fc14e19d6724cb872187557",
+    "review_pr_draft_unmerged": true,
+    "ci": {
+      "status": "FAILED_WITHOUT_JOB_STEPS_OR_ACCESSIBLE_LOGS__ROOT_CAUSE_UNDETERMINED",
+      "production_candidate_run": 39758170391,
+      "windows_job": 119755375230,
+      "ubuntu_job": 119755375652,
+      "validate_records_run": 39758170378,
+      "validate_job": 119755375608,
+      "logs_url_404_blobnotfound": true,
+      "pr32_comment": 6337815142,
+      "accepted_test_results": false
+    }
   }
 }
