@@ -38,6 +38,12 @@
 - 5 read-only adapter + 9 AI/Event/TPB reject + 7 lifecycle = **21 authored tests** in three new files (in addition to PR32's 13 unverified tests), all presently NOT VERIFIED PASS.
 - this decision/evidence document, plus read-first human/machine state updates.
 
+## Additional cash-risk engineering (post-first draft, 2026-10-22)
+
+- Added `src/xauusd_agent/risk/v2_cash_preflight.py`: PURE nonexecuting check requiring explicit source-verification booleans and finite Decimal broker stop-loss, commission, swap, slippage and gap reserves; enforces current frozen 0.25% eligible-capital planned loss, only 0.01 lots, USD50 concurrent, USD75 daily, USD150 weekly, USD500 drawdown, streak >=3 pause and calls the existing deterministic current+2x stressed M1 margin/free-equity governor. Even a passing result carries `execution_permitted=False`; no `order_calc_profit` or `order_calc_margin` is invoked here and supplied 'broker-derived' values have **not** been obtained from Exness.
+- Added five synthetic tests `tests/unit/risk/test_v2_cash_preflight.py`, including $300 Pro account min-lot infeasibility, unknown costs, period limits and M1 guard; **tests are authored but Python3.12 evidence remains NOT VERIFIED**. Total child tests authored is now **26 (5+9+7+5)**, all 0 verified native pass. Parent PR32 separately has 13 authored tests.
+- New PR33 GitHub Actions exact prior head `e38dd91a62673dbda7ce5f6d657759963d14b5da` runs `39761671235` production-candidate and `39761671259` Validate records both immediately reported `FAILURE`. No Python3.12 test PASS; do not claim PR33 quality gate solved. Billing/runner entitlement are possible hypotheses per GitHub official troubleshooting docs, not a verified root cause for this private account.
+- The cash-risk preflight and paper lifecycle are not wired to a real order-capable MT5 adapter or persistent broker ledger. This is a preexecution simulation aid, **not** a full admissible DEMO trading system. The frozen Policy A is not modified.
 ## Immediate next engineering gate
 
 1. Confirm root cause of pre-test GitHub Actions failures through repo Actions UI/account settings or an independent native Python3.12 environment. Collect exact logs; do not mark any current source PASS.
