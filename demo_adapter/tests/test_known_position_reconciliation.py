@@ -10,6 +10,7 @@ import pytest
 
 from xauusd_demo.envelope import DemoSafetyError
 from xauusd_demo.known_position_reconciliation import (
+    KnownMT5PositionPort,
     KnownPositionBinding,
     observe_known_mt5_position,
 )
@@ -203,3 +204,15 @@ def test_disconnected_broker_and_naive_clock_not_admitted():
 def test_binding_rejects_unqualified_ack_metadata(change):
     with pytest.raises(DemoSafetyError):
         replace(binding(), **change)
+
+
+def test_read_port_accepts_exact_persisted_position_identifier_only():
+    port = FakeMT5()
+    observer = KnownMT5PositionPort(port, binding=binding())
+    assert observer.known_position_state("101", NOW) == "UNKNOWN"
+    assert observer.known_position_state("700", NOW) == "OPEN"
+    port.open_position = None
+    port.deals.append(exit_deal())
+    assert observer.known_position_state("700", NOW) == "CLOSED"
+    assert not hasattr(observer, "submit_qualified")
+    assert not hasattr(observer, "order_send")
