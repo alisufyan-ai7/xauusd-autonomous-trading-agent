@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "CONNECT_AUTHENTICATED_BROKER_PERIOD_CASHFLOW_FULL_POLICY_A_AND_ONE_TPB_LIVE_EVENT_GUARD_TO_EXISTING_S2_ORDER_ADAPTER_THEN_ONE_PINNED_WINDOWS_VPS_LOCAL_INSTALLER__NO_DIRECT_VPS_ACCESS",
+  "next_substantive_action": "CONFIRM_DEMO_VS_REAL_MONEY_LIVE_SCOPE_THEN_BUILD_TEST_AND_PACKAGE_ONE_CONTINUOUS_AUTONOMOUS_RUNTIME__NO_FAKE_TRADING_LAUNCH_COMMAND",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "v2_demo_real_mt5_money_source_2026_10_22",
+  "latest_current_task_pointer": "owner_continuous_live_scope_question_2026_10_23",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -1007,5 +1007,26 @@
     "real_broker_order_sent": false,
     "execution_permitted": false,
     "owner_only_future_hand_off_action": "EXACT_LOCAL_DEPLOY_AND_BROKER_BIND_COMMAND__NOT_REPEAT_HISTORIC_GAP_PROBE"
+  },
+  "owner_continuous_live_scope_question_2026_10_23": {
+    "request": "ONE_COMMAND_CONTINUOUS_AUTONOMOUS_VPS_TRADING",
+    "account_type_scope": "AMBIGUOUS_CURRENT_ACCOUNT_DEMO_VS_REAL_MONEY_LIVE",
+    "prior_connected_broker": "EXNESS_PRO_MT5_DEMO",
+    "owner_last_message_says": "REAL_LIVE_TRADING_ON_VPS",
+    "essential_question": "DOES_LIVE_MEAN_REAL_TIME_TRADES_ON_EXISTING_DEMO_OR_REAL_MONEY_LIVE_ACCOUNT",
+    "native_python_312_version_check_bug": "FIXED_POWERSHELL_NATIVE_QUOTE_STRIPPING",
+    "fix_sha": "33aa3ce5cf4f4e08a02a6ce04a4ae414ec111664",
+    "demo_release_ci_run": 39852877181,
+    "demo_admit_ci_run": 39852877183,
+    "validate_records_run": 39852877173,
+    "windows_py312": "PASS",
+    "ubuntu_py312": "PASS",
+    "fixed_wrapper": "phase0/ops/v2_demo_real_broker_money_attended_20261022.ps1",
+    "auto_broker_order_loop_integrated": false,
+    "real_mt5_order_sent": false,
+    "direct_windows_vps_terminal_available": false,
+    "one_command_auto_trader_currently_deployable": false,
+    "old_operator_canary_cash_gate_still_fail_closed": true,
+    "operational_activation_ready": false
   }
 }
