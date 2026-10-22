@@ -1,4 +1,18 @@
 {
+  "latest_2026_10_23_known_position_engineering": {
+    "status": "DRAFT_SOURCE_ONLY_NOT_ORDER_READY",
+    "active_pr": 38,
+    "module": "demo_adapter/src/xauusd_demo/known_position_reconciliation.py",
+    "read_only_known_position_state": true,
+    "concrete_qualified_order_sender": false,
+    "full_policy_a_execution_binding": false,
+    "objective_tpb_order_qualified": false,
+    "official_live_event_guard_operational": false,
+    "vps_deployed": false,
+    "demo_orders_placed": false,
+    "production_main_changed": false,
+    "native_ci_for_latest_changes": "PENDING_VALIDATION"
+  },
   "schema_version": "current-project-state-1.0",
   "as_of_date": "2026-10-18",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
