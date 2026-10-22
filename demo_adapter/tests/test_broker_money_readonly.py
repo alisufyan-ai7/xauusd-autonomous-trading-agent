@@ -172,6 +172,10 @@ def test_owner_vps_powershell_script_static_safety_and_parser() -> None:
     content = script.read_text(encoding="utf-8")
     assert "414f6d1fd339dd6466b793adf2bd87f328804425" in content
     assert "--confirm-readonly" in content
+    # Regression: PowerShell 5.1 mangles quotes embedded inside python -c.
+    assert "& $Python --version 2>&1" in content
+    assert "-notmatch '^Python 3[.]12([.]|$)'" in content
+    assert "& $Python -c" not in content
     for forbidden in ("order_send(", "order_check(", "schtasks", "Set-ScheduledTask"):
         assert forbidden not in content
     code_path = root / "demo_adapter/src/xauusd_demo/broker_money_readonly.py"
