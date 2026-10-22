@@ -87,9 +87,9 @@ def test_duplicate_overlap_future_and_nonmonotonic_rejected():
 
 
 def test_invalid_costs_initial_risk_and_dates_raise():
-    with pytest.raises(ValueError, match="cash"):
+    with pytest.raises(ValueError, match="loss/cost"):
         replace(trade(), spread_cash=Decimal("-1"))
-    with pytest.raises(ValueError, match="cash"):
+    with pytest.raises(ValueError, match="loss/cost"):
         replace(trade(), initial_risk_cash=Decimal("0"))
     with pytest.raises(ValueError, match="chronology"):
         replace(trade(), closed_utc=BASE)
