@@ -1,5 +1,11 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## CURRENT CI FINDING — PR32 EXACT HEAD (2026-10-22)
+
+New safe execution-disabled implementation [draft PR32](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/32) at HEAD `358f0181966ed9891fc14e19d6724cb872187557` (from merged specification main `95875ccf1bddc43491ced1dd4358057b62b7800e`). Exactly **six** paths differ: 2 pure code, 1 thirteen-test synthetic unit suite, 1 detail handoff, 2 state files. Source static inspection: no MetaTrader5 import or order submission/position-management methods in new modules. No live market data port or AI production transport has been connected; 48h DEMO clock NOT started.
+
+GitHub Actions exact-head `production-candidate` run **39758170391**, Windows job `119755375230`, Ubuntu job `119755375652`, and `Validate records` run **39758170378**, job `119755375608`, all reported **FAILURE with `steps: null`**. Ubuntu logs returned 404 `BlobNotFound`. Therefore **13 tests are authored but 0 exact-head tests verified PASS**; root cause undetermined, not assumed Python code failure nor assumed account/runner quota issue. [PR32 CI evidence](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/32#issuecomment-6337815142). Do not merge, deploy or claim production-ready. Next is CI account/runner diagnostic OR native Windows Python3.12 exact-source tests, followed by read-only additional timeframe connector and real setup predicates.
+
 ## CURRENT VERIFIED WORK — V2 SPEC APPROVED/MERGED; SLICE01 EXECUTION-DISABLED (2026-10-22)
 
 Owner approved draft v2 specification as design and authorized proceeding with the first **execution-disabled engineering slice** (not DEMO/LIVE orders or risk changes). PR31 was merged at **`main=95875ccf1bddc43491ced1dd4358057b62b7800e`** after exact-five-doc scope check, preserving owner Pro-only and AI/multi-timeframe requirements. The accepted `phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md` is an architectural baseline, **not** a filled-in profit proof, runtime admission, strategy approval, new Policy A rate or broker authorization.
