@@ -76,7 +76,12 @@ def test_attended_readonly_powershell_wrapper_syntax() -> None:
         "if ($errorsFound.Count -ne 0) {"
         " $errorsFound | Out-String | Write-Error; exit 1 }"
     )
-    subprocess.run(
-        ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", parse],
+    # Windows-hosted CI only; executable path is absolute and the quoted
+    # parse target is this repository's known script, never external input.
+    subprocess.run(  # noqa: S603
+        [
+            r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+            "-NoProfile", "-NonInteractive", "-Command", parse,
+        ],
         capture_output=True, text=True, check=True,
     )
