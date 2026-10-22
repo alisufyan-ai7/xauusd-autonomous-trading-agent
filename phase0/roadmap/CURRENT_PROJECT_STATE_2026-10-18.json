@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "CONFIRM_DEMO_VS_REAL_MONEY_LIVE_SCOPE_THEN_BUILD_TEST_AND_PACKAGE_ONE_CONTINUOUS_AUTONOMOUS_RUNTIME__NO_FAKE_TRADING_LAUNCH_COMMAND",
+  "next_substantive_action": "FINISH_REAL_CONTINUOUS_EXNESS_DEMO_ORDER_PORT_QUALIFIED_TPB_OFFICIAL_EVENTS_FULL_BROKER_POLICY_A_AND_MITIGATIONS__NO_FAKE_ONE_COMMAND_LAUNCH",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "owner_continuous_live_scope_question_2026_10_23",
+  "latest_current_task_pointer": "v2_continuous_demo_build_2026_10_23",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -1028,5 +1028,58 @@
     "one_command_auto_trader_currently_deployable": false,
     "old_operator_canary_cash_gate_still_fail_closed": true,
     "operational_activation_ready": false
+  },
+  "v2_continuous_demo_build_2026_10_23": {
+    "user_scope": "EXISTING_EXNESS_PRO_MT5_DEMO_XAUUSD_ONLY",
+    "user_instruction": "BUILD_TEST_PACKAGE_GENUINELY_CONTINUOUS_AUTONOMOUS_ORDER_SENDING_RUNTIME_ONE_VPS_COMMAND",
+    "status": "FOUNDATIONAL_REAL_BROKER_CASH_AND_PERSISTENT_COORDINATOR_NATIVE_TESTS_PASS__ACTUAL_ORDER_PORT_NOT_YET_IMPLEMENTED",
+    "branch": "implementation/demo-continuous-supervisor-20261023",
+    "review_pr": 38,
+    "parent_pr": 37,
+    "tested_source_sha": "e68bf4aa6b88f528867baab7520d443f9e7d8889",
+    "native_ci": {
+      "run_demo_first_order_release_offline": 39858340991,
+      "run_demo_admit": 39858341094,
+      "run_validate_records": 39858340908,
+      "windows_py312": {
+        "status": "PASS",
+        "tests": 100,
+        "mypy_source_files": 10
+      },
+      "ubuntu_py312": {
+        "status": "PASS",
+        "tests": 100,
+        "mypy_source_files": 10
+      },
+      "ruff": "PASS",
+      "mypy": "PASS",
+      "package_boundaries": "PASS",
+      "wheel_and_sdist": "PASS",
+      "original_s2_static_stop": "PASS_STATIC_STOP_PRESENT__FIRST_DEMO_ORDER_NOT_ADMITTED"
+    },
+    "implemented": {
+      "demobroker_authenticated_cash_observation": "demo_adapter/src/xauusd_demo/mt5_cash_source.py",
+      "prospective_cash_reconciliation": "demo_adapter/src/xauusd_demo/prospective_cash_journal.py",
+      "continuous_single_worker_protocol_coordinator": "demo_adapter/src/xauusd_demo/continuous_coordinator.py",
+      "known_ticket_sequence_and_quarantine_in_fake_tests": true,
+      "multi_order_in_fake_simulation": true,
+      "real_mt5_cash_port_independently_tested_against_actual_vps": false,
+      "concrete_continuous_mt5_order_port": false,
+      "complete_objective_tpb_signal": false,
+      "verified_live_multiagency_official_event_guard": false,
+      "full_policy_a_real_cost_calibration_and_order_check": false,
+      "real_automatic_alert_watchdog_recovery_tests": false,
+      "one_command_vps_live_demo_launcher": false
+    },
+    "owner_demo_scope_confirmed": true,
+    "real_money_live_scope_confirmed": false,
+    "actual_order_send_calls": 0,
+    "actual_positions_opened": 0,
+    "installed_windows_vps_runtime_changed": false,
+    "external_python_trade_setting_changed": false,
+    "immediate_engineering": "WIRE_CONCRETE_EXNESS_MT5_ACCOUNT_BOUND_ORDER_PORT_FULL_SOURCE_POLICY_A_TPB_OFFICIAL_CALENDAR_AND_KNOWN_POSITION_DEAL_RISK_BEFORE_RELEASE",
+    "release_decision": "NOT_READY__DO_NOT_GIVE_FAKE_TRADING_LAUNCHER",
+    "owner_next_action_requested_now": false,
+    "main_unchanged": "95875ccf1bddc43491ced1dd4358057b62b7800e"
   }
 }
