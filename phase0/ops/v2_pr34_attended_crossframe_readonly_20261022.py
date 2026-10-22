@@ -10,10 +10,12 @@ from __future__ import annotations
 
 import argparse
 import json
+from dataclasses import asdict
 from datetime import UTC, datetime
 
 from xauusd_agent.broker.v2_mt5_context_readonly import MT5ExtendedReadOnlyAdapter
 from xauusd_agent.features.v2_chronology_audit import audit_seven_frame_chronology
+from xauusd_agent.features.v2_crossframe_forensics import describe_crossframe_gaps
 from xauusd_agent.features.v2_crossframe_oracle import audit_crossframe_aggregates
 from xauusd_agent.features.v2_market_context import ContextTimeframe
 
@@ -42,6 +44,7 @@ def inspect_readonly_crossframe() -> dict[str, object]:
         frames = adapter.read_seven_frames(as_of=as_of, limits=LIMITS)
         adapter._guard_demo_identity()
         cross = audit_crossframe_aggregates(frames=frames, as_of=as_of)
+        gap_forensics = describe_crossframe_gaps(frames=frames, as_of=as_of)
         # Full chronology cannot PASS until independently verified official
         # Exness market-hours/holiday/session source is admitted.
         full = audit_seven_frame_chronology(
@@ -81,6 +84,12 @@ def inspect_readonly_crossframe() -> dict[str, object]:
             "crossframe_parity_accepted": cross.accepted,
             "crossframe_compared_parent_bars": cross.compared_parent_bars,
             "crossframe_reason_codes": list(cross.reasons),
+            # Missing UTC buckets and observed-child aggregate comparisons
+            # are forensic hints only, never a session-closure exemption.
+            "crossframe_gap_forensics": [
+                asdict(item) for item in gap_forensics.results
+            ],
+            "sparse_gap_session_classification_admitted": False,
             "w1_nominal_sunday_utc_open_observed": sunday_anchor,
             "timeframe_gap_counts_unclassified": gaps,
             "all_requested_bar_counts_available": complete,
