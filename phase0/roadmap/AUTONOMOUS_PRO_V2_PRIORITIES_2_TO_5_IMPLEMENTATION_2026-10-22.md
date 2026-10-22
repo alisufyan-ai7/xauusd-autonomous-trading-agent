@@ -55,3 +55,14 @@ Added [`phase0/ops/v2_pr33_isolated_py312_source_tests_20261022.ps1`](../ops/v2_
 4. Implement a separate broker-bound, tested full Policy A/cash-risk + durable lifecycle with source checks, no unknown-exposure auto close, rollback, watchdog and human E1/P1. Seek a **new explicit** DEMO enable/order APC only once the executable release is verified.
 
 **Never interpret owner's general 'proceed with engineering priorities' as account funding, broker order/API-toggle, paid OpenAI transport, relaxing fixed 0.25%/0.01 caps or live-money consent.** No Standard Cent; original PCR3, S2 stage and all historical Gate0 failures preserved.
+
+## Latest 2026-10-22 CI recovery, source safety review and next read-only broker proof
+
+Owner reported billing issue resolved. Native GitHub Actions CI **PASSED**:
+- Parent PR32 exact HEAD `527b631c3a37bf1574266edb8e7b5b6e225e65ad`: `39758546890` (Windows 274 passed 90.82%, Ubuntu 273 passed/1 skipped 90.78%); Validate records `39758546916` PASS.
+- Child PR33 exact source/test snapshot `b3dc25e0533f47468fc33959dba99decc3c4bfe4`: `39770548463` (Windows and Ubuntu Python3.12 PASS, Ruff, MyPy, full test suite, execution-disabled scan and build); Validate records `39770548527` PASS. Earlier `08375a43...` CI `39769961073` Windows 301 passed 88.23%, Ubuntu 300 passed/1 skipped 88.20%. Later code fixes preserved by source SHA.
+- Old infrastructure failures still historical; post-runner true source defects discovered and fixed: import order and paper BE stop; renamed preflight cash risk field to `broker_stop_loss_cash_usd`. No Policy A change.
+
+Added **two unrun, sanitized read-only Pro DEMO proof scripts** in `phase0/ops`: `v2_pr33_readonly_mt5_seven_frames_probe_20261022.py` and `v2_pr33_attended_readonly_mt5_probe_20261022.ps1`. The wrapper archives pinned source `b3dc25...` to TEMP; broker MT5 already opened DEMO, external-Python trade protection remains ON. Verifies W1/D1/H4/H1/M15/M5/M1 completed candles, exact fingerprint/server/company raw DEMO=0; output excludes raw account login. **NOT RUN on VPS**. Fingerprint algorithm mismatch is possible; fail closed, do not bypass. Actual broker observation proof remains pending.
+
+**Status unchanged:** No real DEMO executor, order checks/submits/closures, real official event ingestion, production OpenAI calls, profitable strategy evidence, VPS changes or LIVE account approval; no 48h trial started. Both PR32 and PR33 remain DRAFT/UNMERGED, PR33 stacked on PR32.
