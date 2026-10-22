@@ -12,10 +12,12 @@ position sequencing, crash/unknown-ack quarantine and human restart gates.
 
 from __future__ import annotations
 
+import json
 import sqlite3
 import time
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
+from decimal import Decimal
 from enum import StrEnum
 from pathlib import Path
 from typing import Protocol
@@ -54,6 +56,96 @@ class VerifiedProposal:
             raise DemoSafetyError("unqualified or expired DEMO setup key")
 
 
+
+@dataclass(frozen=True, slots=True)
+class QualifiedBrokerAck:
+    """Exact, immutable broker fill receipt; durable before ACK state change.
+
+    position_id is DEAL_POSITION_ID / POSITION_IDENTIFIER, NOT order/deal.
+    This type is only a broker port *contract*, never admission to send.
+    """
+    setup_key: str
+    account_fingerprint: str
+    position_id: int
+    order_ticket: int
+    entry_deal_ticket: int
+    side: str
+    volume_lots: Decimal
+    entry_price: Decimal
+    stop_loss: Decimal
+    take_profit: Decimal
+    tick_size: Decimal
+
+    def validate(self, *, setup_key: str, account_fingerprint: str, side: str) -> None:
+        if (
+            self.setup_key != setup_key
+            or self.account_fingerprint != account_fingerprint
+            or self.side != side
+            or any(
+                type(x) is not int or x <= 0
+                for x in (
+                    self.position_id, self.order_ticket,
+                    self.entry_deal_ticket,
+                )
+            )
+            or any(
+                type(x) is not Decimal or not x.is_finite() or x <= 0
+                for x in (
+                    self.volume_lots, self.entry_price, self.stop_loss,
+                    self.take_profit, self.tick_size,
+                )
+            )
+            or self.volume_lots != Decimal("0.01")
+            or (
+                self.side == "BUY"
+                and not (self.stop_loss < self.entry_price < self.take_profit)
+            )
+            or (
+                self.side == "SELL"
+                and not (self.take_profit < self.entry_price < self.stop_loss)
+            )
+        ):
+            raise DemoSafetyError("broker acknowledgment lacks exact owned stop/TP fill")
+
+    def encode(self) -> str:
+        """Canonical text for SQLite; no account number or credential."""
+        return json.dumps(
+            {
+                "setup_key": self.setup_key,
+                "account_fingerprint": self.account_fingerprint,
+                "position_id": self.position_id,
+                "order_ticket": self.order_ticket,
+                "entry_deal_ticket": self.entry_deal_ticket,
+                "side": self.side,
+                "volume_lots": str(self.volume_lots),
+                "entry_price": str(self.entry_price),
+                "stop_loss": str(self.stop_loss),
+                "take_profit": str(self.take_profit),
+                "tick_size": str(self.tick_size),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+    @classmethod
+    def decode(cls, serialized: str) -> QualifiedBrokerAck:
+        raw = json.loads(serialized)
+        if type(raw) is not dict:
+            raise DemoSafetyError("malformed broker receipt")
+        return cls(
+            setup_key=raw["setup_key"],
+            account_fingerprint=raw["account_fingerprint"],
+            position_id=raw["position_id"],
+            order_ticket=raw["order_ticket"],
+            entry_deal_ticket=raw["entry_deal_ticket"],
+            side=raw["side"],
+            volume_lots=Decimal(raw["volume_lots"]),
+            entry_price=Decimal(raw["entry_price"]),
+            stop_loss=Decimal(raw["stop_loss"]),
+            take_profit=Decimal(raw["take_profit"]),
+            tick_size=Decimal(raw["tick_size"]),
+        )
+
 @dataclass(frozen=True)
 class CycleResult:
     state: str
@@ -67,14 +159,14 @@ class QualifiedDemoBrokerPort(Protocol):
     def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
         """Query actual seven-frame source, complete TPB, verified events and risk."""
 
-    def submit_qualified(self, proposal: VerifiedProposal, now: datetime) -> str:
+    def submit_qualified(self, proposal: VerifiedProposal, now: datetime) -> QualifiedBrokerAck:
         """Internally recheck account/stop/cash/period/M1/event/position, send once.
 
         Must *never* trust a proposal to assert broker cash or risk approval.
-        Return exact ticket only on definitive broker fill acknowledgment.
+        Return an exact source-confirmed receipt on definitive fill acknowledgment.
         """
 
-    def known_position_state(self, ticket: str, now: datetime) -> str:
+    def known_position_state(self, receipt: QualifiedBrokerAck, now: datetime) -> str:
         """Return OPEN, CLOSED or UNKNOWN using authoritative broker deals."""
 
 
@@ -84,6 +176,7 @@ class ContinuousDemoCoordinator:
     def __init__(self, path: Path, *, account_fingerprint: str) -> None:
         if len(account_fingerprint) != 64:
             raise DemoSafetyError("exact SHA256 account fingerprint required")
+        self._fingerprint = account_fingerprint
         path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(path, isolation_level=None)
         self.conn.execute("PRAGMA journal_mode=WAL")
@@ -99,6 +192,12 @@ class ContinuousDemoCoordinator:
             """CREATE TABLE IF NOT EXISTS agent_cycles (
              setup_key TEXT PRIMARY KEY, stage TEXT NOT NULL,
              side TEXT NOT NULL, bar_utc TEXT NOT NULL, ticket TEXT
+            ) STRICT"""
+        )
+        self.conn.execute(
+            """CREATE TABLE IF NOT EXISTS agent_broker_receipts (
+             setup_key TEXT PRIMARY KEY, receipt_json TEXT NOT NULL,
+             FOREIGN KEY(setup_key) REFERENCES agent_cycles(setup_key)
             ) STRICT"""
         )
         self.conn.execute(
@@ -165,7 +264,7 @@ class ContinuousDemoCoordinator:
         )
 
     def cycle(self, port: QualifiedDemoBrokerPort, *, now: datetime) -> CycleResult:
-        if now.tzinfo is None or now.utcoffset() is None:
+        if now.tzinfo is None or now.utcoffset() != timedelta(0):
             raise DemoSafetyError("exact UTC clock required")
         if self.status() != "ACTIVE":
             return CycleResult(self.status(), "NO_ORDER", "SUPERVISOR_NOT_ARMED")
@@ -181,7 +280,23 @@ class ContinuousDemoCoordinator:
                 self._quarantine("UNCERTAIN_OR_PENDING_BROKER_SUBMISSION")
                 return CycleResult("QUARANTINED", "NO_ORDER", "AMBIGUOUS_SUBMISSION")
             try:
-                observed = port.known_position_state(str(ticket), now)
+                saved = self.conn.execute(
+                    "SELECT receipt_json FROM agent_broker_receipts WHERE setup_key=?",
+                    (key,),
+                ).fetchone()
+                if saved is None:
+                    raise DemoSafetyError("prior ACK receipt not persisted")
+                receipt = QualifiedBrokerAck.decode(str(saved[0]))
+                receipt.validate(
+                    setup_key=str(key), account_fingerprint=self._fingerprint,
+                    side=str(self.conn.execute(
+                        "SELECT side FROM agent_cycles WHERE setup_key=?",
+                        (key,),
+                    ).fetchone()[0]),
+                )
+                if str(receipt.position_id) != str(ticket):
+                    raise DemoSafetyError("broker position identifier changed")
+                observed = port.known_position_state(receipt, now)
             except Exception:
                 observed = "UNKNOWN"
             if observed == "OPEN":
@@ -223,21 +338,39 @@ class ContinuousDemoCoordinator:
         # CRITICAL: durable PREPARING must survive process termination before
         # attempting an external action. No automatic resubmission on restart.
         try:
-            ticket = port.submit_qualified(proposal, now)
-            if not ticket or not str(ticket).strip():
-                raise DemoSafetyError("broker outcome not a definitive known ticket")
+            receipt = port.submit_qualified(proposal, now)
+            if not isinstance(receipt, QualifiedBrokerAck):
+                raise DemoSafetyError("broker port lacks exact verified fill receipt")
+            receipt.validate(
+                setup_key=proposal.setup_key, side=proposal.side,
+                account_fingerprint=self._fingerprint,
+            )
+            # Commit exact receipt and ACK stage in one SQLite transaction.
+            # If the broker filled but this process crashes BEFORE the commit,
+            # PREPARING survives and forces human reconciliation without retry.
+            self.conn.execute("BEGIN IMMEDIATE")
+            self.conn.execute(
+                "INSERT INTO agent_broker_receipts VALUES (?,?)",
+                (proposal.setup_key, receipt.encode()),
+            )
+            self.conn.execute(
+                "UPDATE agent_cycles SET stage='ACKNOWLEDGED',ticket=? "
+                "WHERE setup_key=?",
+                (str(receipt.position_id), proposal.setup_key),
+            )
+            self.conn.execute("COMMIT")
         except Exception:
+            if self.conn.in_transaction:
+                self.conn.execute("ROLLBACK")
             self.conn.execute(
                 "UPDATE agent_cycles SET stage='UNCERTAIN' WHERE setup_key=?",
                 (proposal.setup_key,),
             )
             self._quarantine("FAILED_OR_UNCERTAIN_BROKER_SUBMISSION")
             return CycleResult("QUARANTINED", "NO_RETRY", "BROKER_ACK_UNKNOWN")
-        self.conn.execute(
-            "UPDATE agent_cycles SET stage='ACKNOWLEDGED',ticket=? WHERE setup_key=?",
-            (str(ticket), proposal.setup_key),
+        return CycleResult(
+            "ACTIVE", "BROKER_ORDER_ACKNOWLEDGED", str(receipt.position_id)
         )
-        return CycleResult("ACTIVE", "BROKER_ORDER_ACKNOWLEDGED", str(ticket))
 
     def _acquire_runner_lease(self) -> None:
         """Persistent single-owner fence; crash needs attended P1 recovery."""
