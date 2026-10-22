@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from xauusd_agent.features.v2_market_context import ContextBar, ContextTimeframe
 from xauusd_agent.market.models import _require_utc
