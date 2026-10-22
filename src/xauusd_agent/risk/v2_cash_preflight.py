@@ -9,7 +9,7 @@ NOT a broker or execution permit.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from decimal import Decimal, ROUND_DOWN
+from decimal import ROUND_DOWN, Decimal
 from enum import StrEnum
 
 from xauusd_agent.risk.policy_a import (
