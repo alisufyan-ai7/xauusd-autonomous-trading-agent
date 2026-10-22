@@ -30,7 +30,7 @@ def _identity(port: Any) -> dict[str, Any]:
     account = _record(port.account_info(), "account_info")
     if term.get("connected") is not True or term.get("tradeapi_disabled") is not True:
         raise DemoSafetyError("terminal disconnected or external Python trading not disabled")
-    if account.get("trade_mode") != 0:
+    if type(account.get("trade_mode")) is not int or account["trade_mode"] != 0:
         raise DemoSafetyError("MT5 account is not DEMO")
     if (
         account.get("company") != EXPECTED_COMPANY
@@ -117,7 +117,8 @@ def inspect_real_demo_money(port: Any, *, now: datetime) -> dict[str, object]:
     _flat(port)
     info = _record(port.symbol_info("XAUUSD"), "symbol_info")
     tick = _record(port.symbol_info_tick("XAUUSD"), "symbol_info_tick")
-    if info.get("trade_mode") != getattr(port, "SYMBOL_TRADE_MODE_FULL", None):
+    full_mode = getattr(port, "SYMBOL_TRADE_MODE_FULL", None)
+    if full_mode is None or info.get("trade_mode") is None or info["trade_mode"] != full_mode:
         raise DemoSafetyError("XAUUSD instrument is not in full trading mode")
     tick_size = _decimal(info.get("trade_tick_size"), "trade_tick_size")
     tick_loss = _decimal(info.get("trade_tick_value_loss"), "trade_tick_value_loss")
