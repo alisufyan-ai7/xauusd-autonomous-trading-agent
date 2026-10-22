@@ -42,25 +42,34 @@ class PaperPosition:
     stop: Decimal
     target: Decimal
     lots: Decimal
+    # Preserve the original broker-protected entry risk when paper stops
+    # tighten toward/through breakeven. No loss-expanding revision permitted.
+    initial_stop: Decimal | None = None
 
     def __post_init__(self) -> None:
+        if self.initial_stop is None:
+            object.__setattr__(self, "initial_stop", self.stop)
+        origin = self.initial_stop
         if (
             not self.synthetic_id.startswith("SYNTHETIC-")
             or self.direction not in {"BUY", "SELL"}
             or self.lots != Decimal("0.01")
+            or origin is None
             or any(not x.is_finite() or x <= 0 for x in (
-                self.entry, self.stop, self.target,
+                self.entry, self.stop, self.target, origin,
             ))
         ):
             raise ValueError("synthetic 0.01-lot position required")
         if self.direction == "BUY" and not (
-            self.stop < self.entry < self.target
+            origin < self.entry < self.target
+            and origin <= self.stop < self.target
         ):
-            raise ValueError("BUY protective stop/target must surround entry")
+            raise ValueError("BUY protective stop/target must preserve initial risk")
         if self.direction == "SELL" and not (
-            self.target < self.entry < self.stop
+            self.target < self.entry < origin
+            and self.target < self.stop <= origin
         ):
-            raise ValueError("SELL protective stop/target must surround entry")
+            raise ValueError("SELL protective stop/target must preserve initial risk")
 
 
 @dataclass(frozen=True, slots=True)
