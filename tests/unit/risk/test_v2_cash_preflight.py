@@ -21,7 +21,7 @@ def inputs() -> BrokerCashRiskInputs:
         free_margin_usd=Decimal("10000"),
         used_margin_usd=Decimal("0"),
         broker_incremental_margin_usd=Decimal("10"),
-        stop_loss_price_usd=Decimal("8"),
+        broker_stop_loss_cash_usd=Decimal("8"),
         commission_usd=Decimal("3"),
         swap_usd=Decimal("0"),
         slippage_usd=Decimal("0"),
