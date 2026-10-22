@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "REVIEW_DRAFT_PR34_AND_OWNER_ATTENDED_EXNESS_DEMO_READONLY_CROSSFRAME_PARITY_WITH_W1_WEEKLY_SESSION_STILL_UNADMITTED",
+  "next_substantive_action": "OWNER_ATTENDED_CROSSFRAME_UTC_BUCKET_FORENSICS__VERIFY_EXNESS_XAUUSD_ROLLOVER_HOLIDAY_OPEN_CLOSED_GAPS__NO_TRADING",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -612,23 +612,22 @@
     "parent_head_at_registration": "c452d90abf915761f0443be807e40cbe9784051d",
     "main_unmodified": "95875ccf1bddc43491ced1dd4358057b62b7800e",
     "code_test_proof": {
-      "exact_sha": "a7114eff0649fb843095300042a0114933cd7033",
-      "ci_run": 39783484834,
-      "record_run": 39783484790,
+      "exact_sha": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+      "ci_run": 39788798969,
+      "record_run": 39788798973,
       "windows_py312": {
         "status": "PASS",
-        "tests": 362,
-        "coverage_pct": 88.56,
-        "pr34_ps_parser": "PASS"
+        "tests": 367,
+        "coverage_pct": 88.73
       },
       "ubuntu_py312": {
         "status": "PASS",
-        "tests": 358,
+        "tests": 363,
         "skipped": 4,
-        "coverage_pct": 88.54
+        "coverage_pct": 88.71
       },
       "ruff": "PASS",
-      "mypy": "PASS_67_FILES",
+      "mypy": "PASS_68_FILES",
       "execution_disabled_scan": "PASS",
       "wheel_and_sdist_build": "PASS",
       "real_broker_or_production_admission": false
@@ -651,10 +650,14 @@
       "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
       "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
       "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
-      "tests/unit/ops/test_v2_pr34_readonly_source_probe.py"
+      "tests/unit/ops/test_v2_pr34_readonly_source_probe.py",
+      "src/xauusd_agent/features/v2_crossframe_forensics.py",
+      "tests/unit/features/test_v2_crossframe_forensics.py",
+      "phase0/evidence/V2_PR34_CROSSFRAME_READONLY_FAIL_CLOSED_2026-10-22.json",
+      "phase0/decisions/ADR-2026-10-22-003-CROSSFRAME-SPARSE-BUCKETS.md"
     ],
     "chronology_real_source_w1_weekend_holidays_admitted": false,
-    "actual_price_crossframe_parity_run": false,
+    "actual_price_crossframe_parity_run": true,
     "full_frozen_tpb_candidate_generator_admitted": false,
     "economic_out_of_sample_result": "INSUFFICIENT_EVIDENCE",
     "older_dukascopy_private_bundle_hashes_preserved": true,
@@ -673,10 +676,10 @@
     "machine_gates": "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
     "next_gate": "REAL_EXNESS_SESSION_HOLIDAY_W1_PARITY_SOURCE_PROOF__PLUS_REGISTER_NEW_PROTECTED_V2_HOLDOUT_AND_OFFICIAL_EVENT_FEED_AND_DEMO_BROKER_BOUND_RUNTIME",
     "owner_attended_real_crossframe_probe": {
-      "status": "SOURCE_WRITTEN_NATIVE_PY312_CI_PASS_NOT_EXECUTED_ON_VPS",
+      "status": "OWNER_ATTENDED_STRICT_CROSSFRAME_FAIL_CLOSED__NEW_FORENSIC_NOT_RUN",
       "python_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.py",
       "ps_script": "phase0/ops/v2_pr34_attended_crossframe_readonly_20261022.ps1",
-      "pinned_source_sha": "48128c83130aa767b047d382f113d4510cb3ac4d",
+      "pinned_source_sha": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
       "source_sha_in_native_ci": "a7114eff0649fb843095300042a0114933cd7033",
       "screenshot_or_terminal_evidence_received": false,
       "available_frames": [
@@ -688,11 +691,69 @@
         "M5",
         "M1"
       ],
-      "actual_ohlc_crossframe_parity_checked": false,
+      "actual_ohlc_crossframe_parity_checked": true,
       "actual_session_calendar_admitted": false,
       "order_api_calls_observed": 0,
       "broker_write_capability": false,
-      "trading_authority": false
-    }
+      "trading_authority": false,
+      "owner_observation_2026_10_22": {
+        "status": "OWNER_ATTENDED_STRICT_CROSSFRAME_PARITY_FAIL_CLOSED",
+        "observed_utc": "2026-10-22T13:32:33.856256+00:00",
+        "review_wrapper_sha": "a7114eff0649fb843095300042a0114933cd7033",
+        "probe_source_sha": "48128c83130aa767b047d382f113d4510cb3ac4d",
+        "symbol": "XAUUSD",
+        "server": "Exness-MT5Trial15",
+        "broker": "Exness Technologies Ltd",
+        "mode": "DEMO",
+        "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+        "external_python_trading_disabled": true,
+        "order_api_calls": 0,
+        "all_requested_history_bar_counts": true,
+        "nominal_weekly_sunday_open_observed": true,
+        "strict_parity": false,
+        "complete_parent_child_bucket_comparisons": 564,
+        "no_price_or_volume_disagreement_reasons_reported": true,
+        "failure_reason_codes": [
+          "D1_H4_MISSING_OR_MISALIGNED_CHILD_BARS",
+          "H4_H1_MISSING_OR_MISALIGNED_CHILD_BARS"
+        ],
+        "unclassified_gap_counts": {
+          "D1": 30,
+          "H1": 22,
+          "H4": 9,
+          "M15": 11,
+          "M5": 1,
+          "M1": 0,
+          "W1": 0
+        },
+        "official_calendar_proof": false,
+        "chronology_admitted": false,
+        "missing_children_root_cause": "UNKNOWN_POSSIBLE_SCHEDULED_ROLLOVER_OR_HOLIDAY_BUT_UNVERIFIED",
+        "evidence": "phase0/evidence/V2_PR34_CROSSFRAME_READONLY_FAIL_CLOSED_2026-10-22.json",
+        "immutable_fail": true
+      },
+      "strict_parity_admitted": false,
+      "source_session_admission": false,
+      "native_ci_verified_wrapper_commit": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+      "utf_bucket_forensics_state": "PREPARED_TESTED_NOT_OWNER_RUN",
+      "native_ci": {
+        "production_run": 39788798969,
+        "validate_records_run": 39788798973,
+        "windows": {
+          "passed": 367,
+          "coverage_percent": 88.73
+        },
+        "ubuntu": {
+          "passed": 363,
+          "skipped": 4,
+          "coverage_percent": 88.71
+        },
+        "ruff": "PASS",
+        "mypy": "PASS_68_FILES",
+        "execution_disabled_scan": "PASS",
+        "package_build": "PASS"
+      }
+    },
+    "actual_price_crossframe_parity_admitted": false
   }
 }
