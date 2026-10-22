@@ -174,7 +174,8 @@ def test_owner_vps_powershell_script_static_safety_and_parser() -> None:
     assert "--confirm-readonly" in content
     for forbidden in ("order_send(", "order_check(", "schtasks", "Set-ScheduledTask"):
         assert forbidden not in content
-    tree = ast.parse((root / "demo_adapter/src/xauusd_demo/broker_money_readonly.py").read_text(encoding="utf-8"))
+    code_path = root / "demo_adapter/src/xauusd_demo/broker_money_readonly.py"
+    tree = ast.parse(code_path.read_text(encoding="utf-8"))
     method_names = {
         node.func.attr
         for node in ast.walk(tree)
