@@ -11,8 +11,8 @@ from xauusd_agent.features.v2_market_context import (
     ContextBar,
     ContextStatus,
     ContextTimeframe,
-    review_market_context,
     from_existing_core_bar,
+    review_market_context,
 )
 from xauusd_agent.features.v2_shadow_selector import (
     ChampionPolicy,
