@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "NATIVE_PYTHON312_ISOLATED_TEST_OUTPUT_OR_GITHUB_ACTIONS_ACCOUNT_BILLING_RUNNER_EVIDENCE__NO_BROKER_ORDER",
+  "next_substantive_action": "OWNER_ATTENDED_EXNESS_PRO_DEMO_READONLY_SEVEN_FRAME_PROBE__NO_TRADING_TOGGLE_OR_ORDERS",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -321,7 +321,7 @@
     "parent_exact_head_at_branch": "527b631c3a37bf1574266edb8e7b5b6e225e65ad",
     "child_branch": "implementation/pro-v2-readonly-data-and-tpb-shadow-20261022",
     "canonical_main": "95875ccf1bddc43491ced1dd4358057b62b7800e",
-    "priority_1_ci": "FAILED_PRE_STEPS_UNKNOWN_ROOT_CAUSE_PY312_NOT_AVAILABLE_LOCALLY",
+    "priority_1_ci": "RESOLVED_NATIVE_PYTHON312_WINDOWS_AND_UBUNTU_VERIFIED_FOR_EXACT_CODE_SHAS",
     "priority_1_runs": [
       39758170391,
       39758170378
@@ -344,8 +344,8 @@
       "tests/unit/risk/test_v2_cash_preflight.py"
     ],
     "new_tests_authored": 26,
-    "new_tests_verified_python312": 0,
-    "new_tests_accepted_pass": 0,
+    "new_tests_verified_python312": 27,
+    "new_tests_accepted_pass": 27,
     "demo_order_api_in_new_source": false,
     "actual_broker_data_observed": false,
     "broker_execution_runtime_validated": false,
@@ -372,6 +372,44 @@
       "write_behavior": "TEMP_ARCHIVE_AND_GIT_FETCH_ONLY_NO_MT5_OR_TASK_MUTATION",
       "owner_vps_execution_occurred": false
     },
-    "pr33_draft_unmerged": true
+    "pr33_draft_unmerged": true,
+    "owner_reported_actions_billing_resolved": true,
+    "parent_pr32_ci": {
+      "source_sha": "527b631c3a37bf1574266edb8e7b5b6e225e65ad",
+      "run": 39758546890,
+      "validate_run": 39758546916,
+      "windows": "PASS_274_90_82_PCT",
+      "ubuntu": "PASS_273_ONE_SKIPPED_90_78_PCT",
+      "lint_mypy_capability_build": "PASS"
+    },
+    "pr33_verified_source_ci": {
+      "sha": "b3dc25e0533f47468fc33959dba99decc3c4bfe4",
+      "production_run": 39770548463,
+      "validate_run": 39770548527,
+      "windows": "PASS",
+      "ubuntu": "PASS",
+      "lint_mypy_capability_build": "PASS",
+      "test_suite": "PASS"
+    },
+    "initial_pr33_actual_defects_found_and_fixed": [
+      "RUFF_I001_IMPORT_ORDER",
+      "PAPER_KNOWN_STOP_MOVEMENT_TO_BREAKEVEN_REJECTED",
+      "RISK_LOSS_CASH_FIELD_AMBIGUOUS_NAME"
+    ],
+    "code_review_tests_verified_native_python312": true,
+    "tests_verified_platforms": [
+      "WINDOWS_PY312",
+      "UBUNTU_PY312"
+    ],
+    "offline_tests_prove_real_market_data": false,
+    "attended_readonly_mt5_probe": {
+      "status": "PREPARED_NOT_RUN",
+      "code_script": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
+      "ps_wrapper": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
+      "pinned_tested_code_sha": "b3dc25e0533f47468fc33959dba99decc3c4bfe4",
+      "all_seven_bars_observed": false,
+      "api_trading_enabled": false,
+      "broker_orders_sent": false
+    }
   }
 }
