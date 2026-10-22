@@ -78,7 +78,55 @@
         "owner_broker_orders": 0,
         "evidence_file": "phase0/evidence/V2_PR34_CROSSFRAME_READONLY_FAIL_CLOSED_2026-10-22.json"
       },
-      "actual_broker_crossframe_parity_accepted": false
+      "actual_broker_crossframe_parity_accepted": false,
+      "owner_2026_10_22_followup_forensics": {
+        "observed_utc": "2026-10-22T13:54:02.001273+00:00",
+        "source_wrapper": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+        "source_probe": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
+        "status": "STRICT_CROSSFRAME_FAIL_CLOSED",
+        "complete_parent_count": 563,
+        "partial_parent_count": 35,
+        "partial_matching_aggregate_count": 35,
+        "missing_h4_nominal_slots": 45,
+        "missing_h1_nominal_slots": 38,
+        "malformed_child_timestamps_reported": 0,
+        "partial_aggregate_mismatches_reported": 0,
+        "D1_H4": {
+          "full": 48,
+          "partial": 9,
+          "missing": 45,
+          "samples_returned": 6
+        },
+        "H4_H1": {
+          "full": 108,
+          "partial": 26,
+          "missing": 38,
+          "samples_returned": 6
+        },
+        "H1_M15_full": 249,
+        "M15_M5_full": 99,
+        "M5_M1_full": 59,
+        "synthetic_calendar_classification": "NOT_PERMITTED",
+        "source_verified_closed_slots": 0,
+        "exhaustive_parent_samples_observed": false,
+        "sanitized_immutable_evidence": "phase0/evidence/V2_PR34_CROSSFRAME_SPARSE_BUCKET_FORENSICS_2026-10-22.json",
+        "trading_authority": false
+      },
+      "session_classifier": {
+        "source": "src/xauusd_agent/features/v2_sparse_session_reconciliation.py",
+        "tested_real_exness_calendar": false,
+        "requires_complete_missing_slot_inventory": true,
+        "requires_broker_calendar_coverage_issuer_hash": true,
+        "ever_grants_trading_permission": false
+      },
+      "proposed_next_exhaustive_probe": {
+        "source_pin": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
+        "owner_vps_executed": false,
+        "sample_limit": 64,
+        "expected_partial_parent_buckets_to_inventory": 35,
+        "expected_nominal_missing_slots_to_inventory": 83,
+        "no_execution_capability": true
+      }
     },
     "2_tpb": {
       "engineering": "ZONE_A_B_TOUCH_REJECTION_CONFIRMATION_EXPIRY_AND_SAFETY_SYNTHETIC_TESTS_PASS",
@@ -143,6 +191,7 @@
     "real_funds_transfer": false
   },
   "next_dependencies": [
+    "Owner evidence: 2026-10-22T13:54Z 563 full +35 sparse parent buckets; report all 83 missing nominal children, validate each against independently hashed date-specific Exness XAUUSD trading schedule, do not infer closed sessions from samples alone",
     "Owner-attended non-writing bucket forensics: identify exact D1/H4 H4/H1 missing UTC slots, then verify scheduled closure vs live data loss using current dated Exness XAUUSD UTC+0 official hours/holiday revisions",
     "Independent Exness Pro session/holiday revision hash and UTC W1 weekday source proof",
     "Fresh private raw 7frame/bar/tick/quote export allowing crossframe parity without publishing credentials",
