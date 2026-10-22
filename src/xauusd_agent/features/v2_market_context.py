@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import StrEnum
 
-from xauusd_agent.market.models import Quote, _require_utc
+from xauusd_agent.market.models import Bar, Quote, Timeframe, _require_utc
 
 
 class ContextTimeframe(StrEnum):
@@ -90,6 +90,29 @@ class ContextBar:
     @property
     def close_time(self) -> datetime:
         return self.open_time + self.timeframe.duration
+
+
+def from_existing_core_bar(bar: Bar) -> ContextBar:
+    """Convert the existing H4/H1/M15 read-only model without re-fetching data.
+
+    W1/D1/M5/M1 are intentionally not invented: a new independently verified
+    broker observation adapter must supply those exact completed bars later.
+    """
+    equivalents = {
+        Timeframe.H4: ContextTimeframe.H4,
+        Timeframe.H1: ContextTimeframe.H1,
+        Timeframe.M15: ContextTimeframe.M15,
+    }
+    return ContextBar(
+        timeframe=equivalents[bar.timeframe],
+        open_time=bar.open_time,
+        open=bar.open,
+        high=bar.high,
+        low=bar.low,
+        close=bar.close,
+        tick_volume=bar.tick_volume,
+        symbol=bar.symbol,
+    )
 
 
 class ContextStatus(StrEnum):
