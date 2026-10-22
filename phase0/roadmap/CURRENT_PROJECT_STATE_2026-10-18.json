@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "CI_VERIFY_SANITIZED_READONLY_RUNTIME_REASON_CODES_THEN_OWNER_ATTENDED_DEMO_PROBE_V3_NO_TRADING",
+  "next_substantive_action": "OWNER_ATTENDED_SANITIZED_THIRD_DEMO_READONLY_PROBE__NO_ORDER_TRADING_TOGGLE_OR_PR_MERGE",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -403,16 +403,16 @@
     ],
     "offline_tests_prove_real_market_data": false,
     "attended_readonly_mt5_probe": {
-      "status": "SECOND_OWNER_ATTEMPT_FAIL_CLOSED_RUNTIME_ERROR_UNCLASSIFIED__SAFE_REASON_CODE_CORRECTION_PREPARED",
+      "status": "SECOND_OWNER_FAILURE_PRESERVED__CLASSIFIED_WRAPPER_CI_PASS_NEEDS_THIRD_READONLY_RUN",
       "python": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
       "powershell": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
-      "pinned_source_sha": "783cce55a09706cc59017202336da77d69ed8ec4",
+      "pinned_source_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
       "requires_existing_demo_profile": true,
       "requires_external_python_trading_disabled": true,
       "source_history_observed": false,
       "exact_fingerprint_match_observed": false,
       "broker_real_data_captured": false,
-      "wrapper_verified_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
+      "wrapper_verified_sha": "e1ab534c1fd99c82f86b258173fb687fa1c64533",
       "next_attended_attempt_executed": false
     },
     "final_source_python312_ci": {
@@ -495,23 +495,43 @@
       "order_permission": false
     },
     "sanitized_probe_reason_code_fix": {
-      "status": "PREPARED_CI_VERIFICATION_PENDING",
-      "probe_source_sha": "783cce55a09706cc59017202336da77d69ed8ec4",
-      "wrapper_pin": "783cce55a09706cc59017202336da77d69ed8ec4",
-      "allowlisted_reasons": [
+      "status": "FULL_NATIVE_CI_PASS_BUT_NO_BROKER_RERUN_YET",
+      "probe_source_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
+      "wrapper_verified_commit": "e1ab534c1fd99c82f86b258173fb687fa1c64533",
+      "wrapper_pin": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
+      "production_ci_run": 39776184003,
+      "validate_records_run": 39776184125,
+      "windows": {
+        "passed": 320,
+        "coverage_pct": 88.23,
+        "success": true
+      },
+      "ubuntu": {
+        "passed": 317,
+        "skipped": 3,
+        "coverage_pct": 88.2,
+        "success": true
+      },
+      "ruff_mypy_disabled_capability_build": "PASS",
+      "failure_code_allowlist": [
         "QUOTE_UNAVAILABLE",
-        "QUOTE_TIMESTAMP_FUTURE",
         "QUOTE_TIMESTAMP_STALE",
-        "W1/D1/H4/H1/M15/M5/M1_EMPTY_BROKER_HISTORY",
-        "W1/D1/H4/H1/M15/M5/M1_FORMING_BAR",
-        "UNCLASSIFIED_RUNTIME_ERROR",
-        "UNCLASSIFIED_READONLY_FAILURE"
+        "QUOTE_TIMESTAMP_FUTURE",
+        "<TF>_EMPTY_BROKER_HISTORY",
+        "<TF>_FORMING_BAR",
+        "DEMO_IDENTITY_MISMATCH",
+        "PYTHON_TRADING_PROTECTION_NOT_ENABLED",
+        "MT5_TERMINAL_DISCONNECTED",
+        "MT5_ADAPTER_NOT_INITIALIZED",
+        "BROKER_INCOMPLETE_OR_FUTURE_BARS",
+        "BROKER_BAR_ORDER_INVALID"
       ],
-      "raw_exception_string_output": false,
-      "identity_guard_before_quote": true,
-      "five_second_tick_limit_unchanged": true,
-      "run_on_vps": false,
-      "broker_actions_authorized": false
+      "unknown_errors": "UNCLASSIFIED_*_FAIL_CLOSED",
+      "suppress_raw_exception_text": true,
+      "authenticated_demo_guard_before_quote": true,
+      "owner_third_readonly_capture_executed": false,
+      "verified_actual_broker_data": false,
+      "authorization_effect": "NONE"
     }
   }
 }
