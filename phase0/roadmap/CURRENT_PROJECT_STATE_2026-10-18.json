@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "BUILD_REAL_EXNESS_DEMO_BROKER_PROFIT_MARGIN_ORDER_CHECK_PERIOD_LEDGER_BINDING_AND_ONE_STRATEGY_AUTONOMOUS_SAFE_RUNTIME__NO_BROKER_SEND_UNTIL_EXACT_OWNER_PERMISSION",
+  "next_substantive_action": "DO_NOT_SUBMIT_DEMO_ORDER_BUILD_BROKER_AUTHENTICATED_FULL_POLICY_A_CASH_MARGIN_PERIOD_RECEIPT_AND_TPB_EVENT_GUARD_INTEGRATED_CANARY_THEN_REPEAT_NO_ORDER_TEST",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "v2_demo_money_risk_bridge_2026_10_22",
+  "latest_current_task_pointer": "v2_first_demo_order_release_test_2026_10_22",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -904,6 +904,56 @@
       "BROKER-SOURCED PERIOD CASHFLOWS + SAFE DURABLE ORDER/DEAL POSITION MANAGER",
       "NATIVE WINDOWS FAULT/RESTART ALERT EVIDENCE",
       "SEPARATE EXACT FIRST ATTENDED DEMO ORDER AUTHORIZATION"
+    ]
+  },
+  "v2_first_demo_order_release_test_2026_10_22": {
+    "requested": "TEST_FIRST_DEMO_ORDER_RELEASE",
+    "scope": "OFFLINE_RELEASE_TEST_WITH_FAKE_MT5_ONLY",
+    "release_decision": "FIRST_REAL_DEMO_ORDER_NO_GO",
+    "reason": "FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED",
+    "review_pr": 36,
+    "parent_pr": 35,
+    "tested_source_sha": "6e9b1b380c4eaa1a0c76d5c0b58d29b3a5ec1873",
+    "main_unchanged": "95875ccf1bddc43491ced1dd4358057b62b7800e",
+    "workflow_demo_release": 39804914839,
+    "workflow_demo_admit": 39804915037,
+    "workflow_validate_records": 39804915061,
+    "windows_native_py312": {
+      "status": "PASS",
+      "demo_tests": 49,
+      "skips": 0,
+      "ruff": "PASS",
+      "mypy": "PASS_6_FILES",
+      "demobuild": "PASS"
+    },
+    "ubuntu_native_py312": {
+      "status": "PASS",
+      "demo_tests": 49,
+      "skips": 0,
+      "ruff": "PASS",
+      "mypy": "PASS_6_FILES",
+      "demobuild": "PASS"
+    },
+    "static_gate": "PASS_STATIC_STOP_PRESENT__FIRST_DEMO_ORDER_NOT_ADMITTED",
+    "real_mt5_connected": false,
+    "synthetic_fake_broker_check_calls": 0,
+    "synthetic_fake_broker_send_calls": 0,
+    "real_broker_check_calls": 0,
+    "real_broker_send_calls": 0,
+    "synthetic_quarantine_after_restart": "PASS",
+    "synthetic_request_not_queued": true,
+    "real_demo_order_submitted": false,
+    "vps_deployed": false,
+    "external_python_trading_setting_changed": false,
+    "real_first_order_approved": false,
+    "human_evidence": "phase0/decisions/ADR-2026-10-22-005-FIRST-DEMO-ORDER-RELEASE-TEST-NO_GO.md",
+    "machine_evidence": "phase0/evidence/V2_FIRST_DEMO_ORDER_RELEASE_TEST_2026-10-22.json",
+    "next_release_gates": [
+      "Broker authenticated full Policy A cash-stop margin and period cashflow receipt",
+      "One fully objective TPB candidate and current source/quote/event qualification",
+      "Durable real known-position deal/fill stop monitoring and failure/restart alert tests",
+      "Exact separate owner approval for one attended DEMO order",
+      "Separate owner approval for bounded 48h autonomous DEMO"
     ]
   }
 }
