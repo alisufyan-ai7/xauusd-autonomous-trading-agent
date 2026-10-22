@@ -66,3 +66,9 @@ Owner reported billing issue resolved. Native GitHub Actions CI **PASSED**:
 Added **two unrun, sanitized read-only Pro DEMO proof scripts** in `phase0/ops`: `v2_pr33_readonly_mt5_seven_frames_probe_20261022.py` and `v2_pr33_attended_readonly_mt5_probe_20261022.ps1`. The wrapper archives pinned source `b3dc25...` to TEMP; broker MT5 already opened DEMO, external-Python trade protection remains ON. Verifies W1/D1/H4/H1/M15/M5/M1 completed candles, exact fingerprint/server/company raw DEMO=0; output excludes raw account login. **NOT RUN on VPS**. Fingerprint algorithm mismatch is possible; fail closed, do not bypass. Actual broker observation proof remains pending.
 
 **Status unchanged:** No real DEMO executor, order checks/submits/closures, real official event ingestion, production OpenAI calls, profitable strategy evidence, VPS changes or LIVE account approval; no 48h trial started. Both PR32 and PR33 remain DRAFT/UNMERGED, PR33 stacked on PR32.
+
+## Final native CI after Windows parser hardening
+
+Exact corrected source and test commit **`1848c7c7fd850bb24203d65f830453e2e3b0c975`**: production-candidate Actions `39772152774` **PASS**, Windows Python3.12 **305 passed, 88.23%**, Ubuntu **303 passed, 2 skipped, 88.20%**. Ruff/Mypy/execution-disabled capability and both builds **PASS**; Validate records `39772152748` **PASS**. Added Windows PowerShell parser test for the owner-attended read-only probe; corrected static path and Ruff S603/S607. No broker operation occurred. Prior failing runs remain historical, corrected code is passing.
+
+**Broker proof is still missing:** the sanitized Python/PS source in `phase0/ops` is reviewed and syntactically tested but has never been run with Exness MT5. It explicitly fails on old/mismatched fingerprint, stale quote, incomplete historical window, or missing disabled-trading guard. Next owner-attended read-only step is required before a production data-admission claim.
