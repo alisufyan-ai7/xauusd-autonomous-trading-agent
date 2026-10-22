@@ -6,7 +6,7 @@
 $ErrorActionPreference = 'Stop'
 $Repo = 'C:\Users\Administrator\Desktop\xauusd-autonomous-trading-agent'
 $Branch = 'implementation/pro-v2-readonly-data-and-tpb-shadow-20261022'
-$PinnedCode = '783cce55a09706cc59017202336da77d69ed8ec4'
+$PinnedCode = '833abb905c11883d9154c5ad8e789fcfae5fb1f9'
 $Python = 'C:\Program Files\Python312\python.exe'
 
 if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
