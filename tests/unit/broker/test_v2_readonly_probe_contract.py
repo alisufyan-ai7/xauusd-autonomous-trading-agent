@@ -85,3 +85,35 @@ def test_attended_readonly_powershell_wrapper_syntax() -> None:
         ],
         capture_output=True, text=True, check=True,
     )
+
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="PowerShell native argument parsing is Windows-only")
+def test_attended_readonly_python_version_guard_executes_under_windows_powershell() -> None:
+    """Regression for user-observed stripped quotes in PowerShell -c f-strings."""
+    script = (
+        Path(__file__).resolve().parents[3]
+        / "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1"
+    )
+    version_line = next(
+        line.strip()
+        for line in script.read_text(encoding="utf-8-sig").splitlines()
+        if line.startswith("$pyver = ")
+    )
+    python_exe = str(Path(sys.executable)).replace("'", "''")
+    check = (
+        f"$Python = '{python_exe}'; "
+        f"{version_line}; "
+        "if ($LASTEXITCODE -ne 0 -or $pyver.Trim() -ne '312') { "
+        "throw 'Invalid Python3.12 version probe'; }; "
+        "Write-Output 'PY312_NATIVE_ARG_VERSION_PASS'"
+    )
+    # Fixed executable and code from the checked-out project, no user input.
+    result = subprocess.run(  # noqa: S603
+        [
+            r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+            "-NoProfile", "-NonInteractive", "-Command", check,
+        ],
+        capture_output=True, text=True, check=True,
+    )
+    assert "PY312_NATIVE_ARG_VERSION_PASS" in result.stdout
