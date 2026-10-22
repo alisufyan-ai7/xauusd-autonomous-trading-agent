@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_READONLY_EXNESS_PRO_W1_D1_M5_M1_M15_H1_H4_OBSERVATION_ON_VPS",
+  "next_substantive_action": "OWNER_ATTENDED_RETRY_CORRECTED_PINNED_READONLY_PY312_DEMO_XAUUSD_SEVEN_TIMEFRAME_DIAGNOSTIC_NO_BROKER_ORDERS",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -403,29 +403,32 @@
     ],
     "offline_tests_prove_real_market_data": false,
     "attended_readonly_mt5_probe": {
-      "status": "PREPARED_NOT_RUN",
+      "status": "FIRST_OWNER_ATTEMPT_FAIL_CLOSED_PRE_MT5__CORRECTED_WRAPPER_READY_FOR_NEW_ATTENDED_RUN",
       "python": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
       "powershell": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
       "pinned_source_sha": "a8945c68397ce06f527f9317c0f7560ad7f73d6b",
       "requires_existing_demo_profile": true,
       "requires_external_python_trading_disabled": true,
       "source_history_observed": false,
-      "exact_fingerprint_match_observed": false
+      "exact_fingerprint_match_observed": false,
+      "broker_real_data_captured": false,
+      "wrapper_verified_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
+      "next_attended_attempt_executed": false
     },
     "final_source_python312_ci": {
-      "source_sha": "1848c7c7fd850bb24203d65f830453e2e3b0c975",
-      "production_run": 39772152774,
-      "validate_run": 39772152748,
+      "source_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
+      "production_run": 39773857672,
+      "validate_run": 39773857831,
       "windows": {
-        "tests_passed": 305,
+        "tests_passed": 306,
         "skipped": 0,
         "coverage_percent": 88.23,
         "pass": true,
-        "powershell_5_1_parser_test": "PASS"
+        "regression_version_check": "PASS"
       },
       "ubuntu": {
         "tests_passed": 303,
-        "skipped": 2,
+        "skipped": 3,
         "coverage_percent": 88.2,
         "pass": true
       },
@@ -434,6 +437,43 @@
       "execution_disabled_scan": "PASS",
       "package_build": "PASS"
     },
-    "native_python312_ci_resolved": true
+    "native_python312_ci_resolved": true,
+    "owner_attended_probe_attempts": [
+      {
+        "kind": "PYTHON_POWERSHELL_QUOTING_FAILURE_20261022",
+        "old_wrapper_review_head": "9aaf178aba5133e6d5c89edb4325be0dc0a9f691",
+        "result": "FAIL_CLOSED_BEFORE_MT5_CONNECTION",
+        "observation": "Git fetch and archive succeeded; PowerShell stripped embedded f-string quotes, Python emitted SyntaxError; version fallback guard halted.",
+        "python312_missing_proven": false,
+        "broker_initialized": false,
+        "real_market_data_observed": false,
+        "broker_orders_sent": 0,
+        "external_python_trading_enabled": false,
+        "source_pr": 33,
+        "evidence_pr_comment": 6340077026,
+        "append_only": true
+      }
+    ],
+    "corrected_python_version_wrapper": {
+      "source_and_test_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
+      "result": "VERIFIED_WINDOWS_POWERSHELL_5_1_NATIVE_PYTHON3_12_QUOTE_FREE_VERSION_CHECK",
+      "specific_fix": "Quote-free numeric Python sys.version_info code outputs 312; no embedded f-string quotes.",
+      "ps_script": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
+      "direct_native_windows_test_added": true,
+      "production_ci_run": 39773857672,
+      "records_ci_run": 39773857831,
+      "windows": {
+        "passed": 306,
+        "coverage_percent": 88.23,
+        "skipped": 0
+      },
+      "ubuntu": {
+        "passed": 303,
+        "skipped": 3,
+        "coverage_percent": 88.2
+      },
+      "runtime_ran_on_vps": false,
+      "order_permission": false
+    }
   }
 }
