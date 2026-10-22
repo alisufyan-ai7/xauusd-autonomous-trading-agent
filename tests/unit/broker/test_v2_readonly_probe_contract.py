@@ -172,9 +172,9 @@ def test_guard_failure_codes_are_fixed_and_do_not_expose_broker_errors(
     mapping = data["_public_failure_reason"]
     err = data["MT5ReadOnlyError"]
     assert mapping(err(internal_message)) == expected
-    secret = "SYNTHETIC_PRIVATE_LOGIN_TOKEN"
-    assert mapping(err(secret)) == "UNCLASSIFIED_READONLY_FAILURE"
-    assert secret not in mapping(err(secret))
+    synthetic_private_detail = "SYNTHETIC_PRIVATE_LOGIN_TOKEN"
+    assert mapping(err(synthetic_private_detail)) == "UNCLASSIFIED_READONLY_FAILURE"
+    assert synthetic_private_detail not in mapping(err(synthetic_private_detail))
 
 
 def test_probe_failure_output_includes_only_fixed_sanitized_code(
