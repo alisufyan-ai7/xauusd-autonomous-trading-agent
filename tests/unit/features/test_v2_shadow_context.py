@@ -124,7 +124,12 @@ def test_missing_session_news_or_health_cannot_be_defaulted_clear() -> None:
 def test_missing_microstructure_bar_or_ordering_fails_closed() -> None:
     bars = sample_bars()
     series = list(bars[ContextTimeframe.M5])
-    series[-2] = replace(series[-2], open_time=series[-2].open_time - timedelta(minutes=1))
+    # Shift the older contiguous segment back, leaving a genuine gap just
+    # before the final two bars without creating overlapping intervals.
+    series = [
+        replace(bar, open_time=bar.open_time - timedelta(minutes=5))
+        for bar in series[:-2]
+    ] + series[-2:]
     bars[ContextTimeframe.M5] = tuple(series)
     assert "M5_RECENT_GAP" in review(bars=bars).reasons
     unsorted = sample_bars()
