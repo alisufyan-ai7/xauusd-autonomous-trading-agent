@@ -46,8 +46,15 @@ def calendar(*, verified=True, anchor=True, intervals=None):
         revision="synthetic-test-only",
         coverage_start_utc=datetime(2026, 9, 1, tzinfo=UTC),
         coverage_end_utc=datetime(2026, 10, 30, tzinfo=UTC),
-        open_intervals=tuple(intervals or ()),
+        open_intervals=tuple(
+            intervals if intervals is not None else (
+                SessionInterval(
+                    NOW - timedelta(hours=2), NOW + timedelta(hours=2)
+                ),
+            )
+        ),
         source_verified=verified,
+        session_coverage_complete=True,
         weekly_sunday_utc_anchor_verified=anchor,
     )
 
@@ -108,8 +115,13 @@ def test_missing_m1_in_verified_closed_session_is_not_automatically_corrupt() ->
         m1[-1], open_time=m1[-1].open_time + timedelta(minutes=1)
     )
     x[ContextTimeframe.M1] = tuple(m1)
+    closed_session = calendar(intervals=(
+        SessionInterval(
+            NOW - timedelta(days=5), NOW - timedelta(days=4)
+        ),
+    ))
     report = audit_seven_frame_chronology(
-        frames=x, as_of=NOW, calendar=calendar()
+        frames=x, as_of=NOW, calendar=closed_session
     )
     assert report.accepted is True
 
@@ -150,3 +162,15 @@ def test_invalid_session_metadata_rejected_early() -> None:
         replace(calendar(), broker_session_source_sha256="bad")
     with pytest.raises(ValueError, match="positive"):
         SessionInterval(NOW, NOW)
+
+
+
+def test_empty_or_incomplete_session_schedule_must_not_pass():
+    with pytest.raises(ValueError, match="cannot be empty"):
+        calendar(intervals=())
+    incomplete = replace(calendar(), session_coverage_complete=False)
+    result = audit_seven_frame_chronology(
+        frames=frames(), as_of=NOW, calendar=incomplete
+    )
+    assert not result.accepted
+    assert "SESSION_OPEN_CLOSED_CLASSIFICATION_INCOMPLETE" in result.reasons
