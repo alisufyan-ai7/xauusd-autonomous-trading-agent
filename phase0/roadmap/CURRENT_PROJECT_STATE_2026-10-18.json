@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "PR33_AND_PARENT_PR32_PY312_NATIVE_CI_ROOT_CAUSE__THEN_BROKER_READONLY_EVIDENCE",
+  "next_substantive_action": "NATIVE_PYTHON312_ISOLATED_TEST_OUTPUT_OR_GITHUB_ACTIONS_ACCOUNT_BILLING_RUNNER_EVIDENCE__NO_BROKER_ORDER",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -362,6 +362,16 @@
       "validate_records_run": 39761671259,
       "conclusion": "FAILED_UNVERIFIED_PY312_NO_ROOT_CAUSE_PROVEN"
     },
-    "risk_preflight_source": "PURE_NO_BROKER_CALLS_NOR_EXECUTION_PERMISSION"
+    "risk_preflight_source": "PURE_NO_BROKER_CALLS_NOR_EXECUTION_PERMISSION",
+    "native_python312_fallback": {
+      "status": "PREPARED_NOT_RUN",
+      "script": "phase0/ops/v2_pr33_isolated_py312_source_tests_20261022.ps1",
+      "exact_source_commit": "4bfb431daf078c84d4189a4c033a2d607ae53004",
+      "selected_tests_authored_total": 39,
+      "selected_tests_verified_pass": 0,
+      "write_behavior": "TEMP_ARCHIVE_AND_GIT_FETCH_ONLY_NO_MT5_OR_TASK_MUTATION",
+      "owner_vps_execution_occurred": false
+    },
+    "pr33_draft_unmerged": true
   }
 }
