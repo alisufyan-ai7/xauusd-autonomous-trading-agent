@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## NEW FINAL PR33 WINDOWS/UBUNTU CI PASS + VPS PROBE STILL NOT RUN (2026-10-22)
+
+**Exact newly verified complete code/test commit `1848c7c7fd850bb24203d65f830453e2e3b0c975`:** [GitHub Actions production-candidate run 39772152774](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39772152774) **PASS**: Windows Python3.12 **305 tests PASS**, coverage **88.23%**; Ubuntu Python3.12 **303 tests PASS, 2 Windows-specific skipped**, coverage **88.20%**. Exact tests include static PowerShell 5.1 syntax parsing of attended read-only diagnostic, which PASSED on native Windows; source probe safety/shortfall tests also PASS. **Ruff PASS, MyPy PASS (61 source files), execution-disabled-capability scan PASS and package builds PASS on both OS.** [Validate records 39772152748](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39772152748) PASS. Earlier I001/S603/S607 and BE paper lifecycle failures preserved as historical attempts; latest run supersedes those failures **only for this corrected source**.
+
+**Read-only Pro DEMO diagnostic, PREPARED / NOT EXECUTED on VPS:** `phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1` wraps `v2_pr33_readonly_mt5_seven_frames_probe_20261022.py`, freezing source **`a8945c68397ce06f527f9317c0f7560ad7f73d6b`**. Verifies admitted fingerprint/company/server/raw DEMO mode, disabled Python trading, seven completed frames, fresh quote and full requested history. Does not print raw account login, enable trading or place orders. **This diagnostic is verified only in synthetic tests and Windows parser, not against Exness/VPS.**
+
+**Remaining active blocker:** native CI is resolved; the new active evidence gate is owner-attended read-only Exness Pro MT5 W1/D1/M5/M1 source proof and then full registered TPB/independently healthy official Event Guard + durable real risk/execution/position watchdog (not yet implemented). **No broker orders, LIVE permission, MT5 Python trading enable, VPS task deployment or 48h DEMO trial.** PR32 and stacked PR33 remain DRAFT/UNMERGED; production main unchanged at `95875ccf1bddc43491ced1dd4358057b62b7800e`.
+
+
 ## LATEST CODE-VERIFIED CI — PR33 + ATTENDED READ-ONLY PROOF PENDING (2026-10-22)
 
 **Owner said GitHub Actions billing was resolved. This is now supported by new native job execution.** [PR32](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/32) `527b631c3a37bf1574266edb8e7b5b6e225e65ad` passed exact-source **Windows/Ubuntu Python3.12** CI in rerun `39758546890` plus Validate records `39758546916`, original fails preserved. Parent stays DRAFT/UNMERGED.
