@@ -54,12 +54,19 @@ class MT5ExtendedReadOnlyAdapter(MT5ReadOnlyAdapter):
         self._guard()
         account = self.observe_account()
         fp = account.fingerprint
+        # Existing read-only DTO uses str(value or ""), which maps the
+        # valid MT5 DEMO enum 0 to empty string; recheck the raw enum
+        # explicitly instead of silently downgrading account-type binding.
+        raw_mode = self._account().get("trade_mode")
+        mode_is_demo = (
+            type(raw_mode) is int and raw_mode == 0
+        ) or raw_mode == "DEMO"
         if (
             fp.account_id_sha256 != self._admitted_fingerprint
             or fp.server != self._admitted_server
             or fp.broker != self._admitted_company
             or fp.currency != "USD"
-            or fp.account_mode not in {"0", "DEMO"}
+            or not mode_is_demo
         ):
             raise MT5ReadOnlyError("DEMO account identity mismatch; fail closed")
 
