@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_ATTENDED_SANITIZED_THIRD_DEMO_READONLY_PROBE__NO_ORDER_TRADING_TOGGLE_OR_PR_MERGE",
+  "next_substantive_action": "AUDIT_W1_D1_TIMEFRAME_SESSION_GAP_AND_CAUSALITY_IN_OWNER_READONLY_EXNESS_DATA__THEN_FULL_TPB_OOS_AND_OFFICIAL_EVENT_GUARD__NO_BROKER_ORDERS",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -347,7 +347,7 @@
     "new_tests_verified_python312": 27,
     "new_tests_accepted_pass": 27,
     "demo_order_api_in_new_source": false,
-    "actual_broker_data_observed": false,
+    "actual_broker_data_observed": true,
     "broker_execution_runtime_validated": false,
     "demo_48h_started": false,
     "separate_openai_cloud_approved": false,
@@ -403,17 +403,36 @@
     ],
     "offline_tests_prove_real_market_data": false,
     "attended_readonly_mt5_probe": {
-      "status": "SECOND_OWNER_FAILURE_PRESERVED__CLASSIFIED_WRAPPER_CI_PASS_NEEDS_THIRD_READONLY_RUN",
-      "python": "phase0/ops/v2_pr33_readonly_mt5_seven_frames_probe_20261022.py",
-      "powershell": "phase0/ops/v2_pr33_attended_readonly_mt5_probe_20261022.ps1",
-      "pinned_source_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
-      "requires_existing_demo_profile": true,
-      "requires_external_python_trading_disabled": true,
-      "source_history_observed": false,
-      "exact_fingerprint_match_observed": false,
-      "broker_real_data_captured": false,
+      "status": "OWNER_ATTENDED_SINGLE_SNAPSHOT_SEVEN_FRAME_READONLY_PASS_NO_TRADING_ADMISSION",
+      "owner_third_readonly_capture_executed": true,
+      "probe_source_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
       "wrapper_verified_sha": "e1ab534c1fd99c82f86b258173fb687fa1c64533",
-      "next_attended_attempt_executed": false
+      "observed_utc": "2026-10-22T12:18:18.893538+00:00",
+      "broker": "Exness Technologies Ltd",
+      "server": "Exness-MT5Trial15",
+      "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+      "currency": "USD",
+      "trade_mode": "DEMO",
+      "symbol": "XAUUSD",
+      "quote_age_seconds": 1.281,
+      "all_seven_frame_counts_complete": true,
+      "w1": 104,
+      "d1": 180,
+      "h4": 300,
+      "h1": 500,
+      "m15": 1000,
+      "m5": 300,
+      "m1": 300,
+      "external_python_trading_disabled": true,
+      "owner_pro_subtype_attestation": true,
+      "pro_subtype_independent_broker_proof": false,
+      "order_api_calls": 0,
+      "full_calendar_session_data_proof": false,
+      "production_data_admission": false,
+      "demo_48h_started": false,
+      "execution_authorized": false,
+      "evidence_file": "phase0/evidence/V2_XAUUSD_DEMO_SEVEN_FRAME_READONLY_PASS_2026-10-22.json",
+      "unresolved": "BROKER_W1_WEEK_ANCHOR_SUNDAY_DERIVED_CLOSE__DST_SESSION_GAPS_AND_INDEPENDENT_STRATEGY_EVENT_COST_EVIDENCE"
     },
     "final_source_python312_ci": {
       "source_sha": "3f435855eee82ab91eb44cb8ed75bb9ae71b4f72",
@@ -471,6 +490,57 @@
         "broker_exposure_changed_observed": false,
         "evidence_pr33_comment": 6340238980,
         "immutable": true
+      },
+      {
+        "kind": "SEVEN_FRAME_READONLY_PASS_20261022",
+        "observed_at_utc": "2026-10-22T12:18:18.893538+00:00",
+        "wrapper_sha": "e1ab534c1fd99c82f86b258173fb687fa1c64533",
+        "source_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
+        "remote_head_observed": "a0a691b34ae322cedfbb5ceb0b55b67b3844c47a",
+        "result": "READ_ONLY_EXTENDED_MARKET_CAPTURE_COMPLETE_NOT_TRADING_ADMISSION",
+        "final_marker": "V2_EXTENDED_DEMO_READONLY_CAPTURE_PASS_NO_ORDER",
+        "snapshot_only": true,
+        "account_identity_fingerprint_confirmed": true,
+        "company_server_trade_mode_demo_confirmed": true,
+        "pro_subtype_independently_confirmed": false,
+        "external_python_trading_disabled_confirmed": true,
+        "instrument": "XAUUSD",
+        "quote_age_seconds": 1.281,
+        "frames": {
+          "W1": {
+            "observed": 104,
+            "requested": 104
+          },
+          "D1": {
+            "observed": 180,
+            "requested": 180
+          },
+          "H4": {
+            "observed": 300,
+            "requested": 300
+          },
+          "H1": {
+            "observed": 500,
+            "requested": 500
+          },
+          "M15": {
+            "observed": 1000,
+            "requested": 1000
+          },
+          "M5": {
+            "observed": 300,
+            "requested": 300
+          },
+          "M1": {
+            "observed": 300,
+            "requested": 300
+          }
+        },
+        "history_full_requested_counts": true,
+        "order_api_calls_reported": 0,
+        "release_deployed": false,
+        "evidence": "phase0/evidence/V2_XAUUSD_DEMO_SEVEN_FRAME_READONLY_PASS_2026-10-22.json",
+        "unchanged_prior_attempts": true
       }
     ],
     "corrected_python_version_wrapper": {
