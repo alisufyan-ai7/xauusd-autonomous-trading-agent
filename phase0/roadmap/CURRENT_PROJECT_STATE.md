@@ -1,5 +1,10 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## NEW 2026-10-23 — PR38 broker known-position observer added (NOT trading release)
+
+The read-only MT5 broker known-position component and adversarial fake-MT5 tests are now authored on PR38 (see [implementation checkpoint](V2_MT5_KNOWN_POSITION_RECONCILIATION_2026-10-23.md)). It binds a known position ID to actual broker opening and exit DEAL_POSITION_ID records, known SL+TP, 0.01 lot, account fingerprint, no foreign exposure; unresolved state is UNKNOWN, not CLOSED. Its coordinator-compatible `known_position_state` method **does not** provide `submit_qualified`. An order/deal ticket is **not** an MT5 position identifier. Existing S2 full Policy A broker-order stop remains unaltered. Native CI MUST be checked at this new tip before claiming PASS. Main remains `95875ccf1bddc43491ced1dd4358057b62b7800e`; LIVE remains disabled; no VPS/MT5 order action.
+
+
 ## NEW-CHAT HANDOFF CANONICAL POINTER — 2026-10-23
 
 **READ FIRST:** [`phase0/roadmap/NEXT_CHAT_CONTINUITY_HANDOFF_2026-10-23.md`](NEXT_CHAT_CONTINUITY_HANDOFF_2026-10-23.md) — the full account-specific, code-specific and owner-decision handoff for the new conversation. The user explicitly chose existing Exness Pro MT5 **DEMO** (real-market virtual funds, NOT real-money LIVE), one actual continuously autonomous XAUUSD trader, **one** pinned copy-paste Windows ForexVPS install/launch command once implementation is truly ready. No more retrospective candle-gap PowerShell probes or repetitive strategy screenshots/manually specified BUY/SELL. Owner gave standing DEMO-only intent; preserve frozen Policy A and do not silently interpret as real-money LIVE or a ready order port.
