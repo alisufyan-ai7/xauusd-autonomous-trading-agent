@@ -10,22 +10,22 @@
   "stacked_on_pr": 33,
   "requires_pr32_acceptance": true,
   "source_code_ci": {
-    "commit_before_evidence_docs": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
-    "production_candidate_run": 39788798969,
-    "record_validation_run": 39788798973,
+    "commit_before_evidence_docs": "8ba7468c60a28357e61a1e5fad9e8eed5491903c",
+    "production_candidate_run": 39792777998,
+    "record_validation_run": 39792778039,
     "windows_python312": {
       "verdict": "PASS",
-      "tests_passed": 367,
-      "coverage_percent": 88.73
+      "tests_passed": 374,
+      "coverage_percent": 88.74
     },
     "ubuntu_python312": {
       "verdict": "PASS",
-      "tests_passed": 363,
+      "tests_passed": 370,
       "tests_skipped": 4,
-      "coverage_percent": 88.71
+      "coverage_percent": 88.72
     },
     "ruff": "PASS",
-    "mypy": "PASS_68_SOURCE_FILES",
+    "mypy": "PASS_69_SOURCE_FILES",
     "disabled_capability_scan": "PASS",
     "source_and_wheel_build": "PASS",
     "tests_are_synthetic_not_historical_performance": true
@@ -114,17 +114,25 @@
       },
       "session_classifier": {
         "source": "src/xauusd_agent/features/v2_sparse_session_reconciliation.py",
+        "synthetic_unit_tests": "PASS",
         "tested_real_exness_calendar": false,
         "requires_complete_missing_slot_inventory": true,
         "requires_broker_calendar_coverage_issuer_hash": true,
+        "disallows_missing_slots_overlapping_open_session": true,
+        "always_returns_source_admitted_false": true,
         "ever_grants_trading_permission": false
       },
       "proposed_next_exhaustive_probe": {
         "source_pin": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
+        "wrapper_verified_review_sha": "8ba7468c60a28357e61a1e5fad9e8eed5491903c",
+        "production_ci_run": 39792777998,
+        "validate_records_run": 39792778039,
+        "native_ci": "PASS_WINDOWS374_UBUNTU370_SKIP4",
         "owner_vps_executed": false,
         "sample_limit": 64,
         "expected_partial_parent_buckets_to_inventory": 35,
         "expected_nominal_missing_slots_to_inventory": 83,
+        "source_calendar_admitted": false,
         "no_execution_capability": true
       }
     },
