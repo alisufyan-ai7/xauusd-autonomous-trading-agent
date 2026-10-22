@@ -12,8 +12,10 @@ if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
 if (-not (Test-Path -LiteralPath $Python)) {
     throw 'Python312 missing: do not downgrade runtime'
 }
-$Ver = (& $Python -c 'import sys;print(str(sys.version_info.major)+"."+str(sys.version_info.minor))')
-if ($LASTEXITCODE -ne 0 -or $Ver.Trim() -ne '3.12') {
+# Never pass a Python -c expression through PowerShell 5.1 native quoting.
+# PowerShell 5.1 strips inner quote marks and makes a valid expression invalid.
+$Ver = (& $Python --version 2>&1 | Out-String).Trim()
+if ($LASTEXITCODE -ne 0 -or $Ver -notmatch '^Python 3[.]12([.]|$)') {
     throw 'Only Python 3.12 is admitted'
 }
 & git -C $Repo fetch --no-tags origin "refs/heads/$Branch"
