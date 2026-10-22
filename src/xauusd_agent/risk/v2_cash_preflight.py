@@ -39,7 +39,7 @@ class BrokerCashRiskInputs:
     free_margin_usd: Decimal
     used_margin_usd: Decimal
     broker_incremental_margin_usd: Decimal
-    stop_loss_price_usd: Decimal
+    broker_stop_loss_cash_usd: Decimal
     commission_usd: Decimal
     swap_usd: Decimal
     slippage_usd: Decimal
@@ -87,7 +87,7 @@ def preview_policy_a_cash_risk(data: BrokerCashRiskInputs) -> CashRiskPreflight:
     fields = (
         data.balance_usd, data.equity_usd, data.free_margin_usd,
         data.used_margin_usd, data.broker_incremental_margin_usd,
-        data.stop_loss_price_usd, data.commission_usd, data.swap_usd,
+        data.broker_stop_loss_cash_usd, data.commission_usd, data.swap_usd,
         data.slippage_usd, data.gap_reserve_usd,
         data.existing_committed_risk_usd, data.adjusted_daily_loss_usd,
         data.adjusted_weekly_loss_usd, data.drawdown_from_peak_usd,
@@ -103,14 +103,14 @@ def preview_policy_a_cash_risk(data: BrokerCashRiskInputs) -> CashRiskPreflight:
         return reject("NO_ELIGIBLE_EQUITY")
     if data.volume_lots != Decimal("0.01"):
         return reject("ONLY_FROZEN_0_01_LOT_ALLOWED")
-    if data.stop_loss_price_usd <= 0:
+    if data.broker_stop_loss_cash_usd <= 0:
         return reject("INVALID_BROKER_STOP_LOSS_VALUE")
     eligible = min(data.balance_usd, data.equity_usd, APPROVED_ALLOCATION)
     ceiling = (MAX_RISK_FRACTION * eligible).quantize(
         Decimal("0.01"), rounding=ROUND_DOWN,
     )
     planned = sum((
-        data.stop_loss_price_usd,
+        data.broker_stop_loss_cash_usd,
         data.commission_usd,
         data.swap_usd,
         data.slippage_usd,
