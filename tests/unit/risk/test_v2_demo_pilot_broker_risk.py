@@ -131,7 +131,8 @@ def test_quote_age_broker_entry_and_tick_grid_cannot_drift():
 def test_full_policy_a_blocks_stops_too_far_and_unknown_verified_sources():
     assert verdict(p=replace(policy(), stop_adverse=Q("2960.200"))).status is PilotRiskStatus.DENY
     assert verdict(p=replace(policy(), accounting_reconciled=False)).status is PilotRiskStatus.DENY
-    assert verdict(p=replace(policy(), loss_equivalent_streak=Q("3"))).status is PilotRiskStatus.DENY
+    paused = verdict(p=replace(policy(), loss_equivalent_streak=Q("3")))
+    assert paused.status is PilotRiskStatus.DENY
 
 
 def test_unknown_or_locked_official_event_and_session_denies():
