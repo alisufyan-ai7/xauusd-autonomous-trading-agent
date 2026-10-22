@@ -58,7 +58,8 @@ class CashObservation:
     def __post_init__(self) -> None:
         if self.observed_utc.tzinfo is None or self.observed_utc.utcoffset() is None:
             raise DemoSafetyError("cash observation must have UTC timestamp")
-        if self.observed_utc.utcoffset().total_seconds() != 0:
+        offset = self.observed_utc.utcoffset()
+        if offset is None or offset.total_seconds() != 0:
             raise DemoSafetyError("cash observation not UTC")
         if not self.balance.is_finite() or not self.equity.is_finite():
             raise DemoSafetyError("nonfinite account cash")
