@@ -127,6 +127,24 @@ def test_position_validation_is_no_real_account_and_exact_min_lot() -> None:
     with pytest.raises(ValueError, match="0.01"):
         replace(sample_position(), lots=Decimal("0.005"))
     with pytest.raises(ValueError, match="BUY protective"):
-        replace(sample_position(), stop=Decimal("3002"))
+        replace(sample_position(), stop=Decimal("3025"))
     with pytest.raises(ValueError, match="cannot permit trading"):
         replace(PaperJournal(), execution_permitted=True)
+
+
+
+def test_fresh_position_cannot_start_without_protective_stop_but_can_reach_be() -> None:
+    with pytest.raises(ValueError, match="protective stop"):
+        PaperPosition(
+            ID, "BUY", Decimal("3000"), Decimal("3000"),
+            Decimal("3020"), Decimal("0.01"),
+        )
+    known = open_synthetic()
+    updated = step(
+        known, PaperEvent.SIMULATE_TIGHTEN_STOP, new_stop=Decimal("3001"),
+    )
+    assert updated.position is not None
+    assert updated.position.initial_stop == Decimal("2990")
+    assert updated.position.stop == Decimal("3001")
+    with pytest.raises(ValueError, match="tighten"):
+        step(updated, PaperEvent.SIMULATE_TIGHTEN_STOP, new_stop=Decimal("3000"))
