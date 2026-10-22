@@ -2,7 +2,7 @@
   "schema_version": "current-project-state-1.0",
   "as_of_date": "2026-10-18",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
-  "authoritative_main_sha": "ccaa8338aecee8bd3afbc358644410dff6c512e5",
+  "authoritative_main_sha": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
   "source_of_truth": "GITHUB",
   "active_focus": "DEMO_ADMIT",
   "pcr3": {
@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "OWNER_REVIEW_AUTONOMOUS_PRO_V2_ARCHITECTURE_ACCEPTANCE_SPEC_BEFORE_IMPLEMENTATION",
+  "next_substantive_action": "OWNER_REVIEW_V2_DRAFT_SPEC_OWNER_DECISION_PACKET__NO_CODE_OR_BROKER_ACTION",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,5 +215,41 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "prospective_autonomous_pro_design_owner_2026_10_21"
+  "latest_current_task_pointer": "owner_autonomous_pro_v2_spec_2026_10_22",
+  "owner_autonomous_pro_v2_spec_2026_10_22": {
+    "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
+    "pr30_merged": true,
+    "pr30_merge_commit": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
+    "pro_only": true,
+    "standard_cent_forbidden": true,
+    "source_adr": "phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md",
+    "architecture_file": "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md",
+    "owner_options_file": "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_OWNER_DECISION_PACKET_2026-10-22.md",
+    "acceptance_matrix": "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ACCEPTANCE_MATRIX_2026-10-22.json",
+    "acceptance_cases_total": 32,
+    "acceptance_cases_passed": 0,
+    "acceptance_cases_executed": 0,
+    "scope": [
+      "PRO_BROKER_ONLY",
+      "W1_D1_H4_H1_M15_M5_M1_MARKET_CONTEXT",
+      "ONE_VALIDATED_CHAMPION_STRATEGY",
+      "AI_ADVISORY_AND_RESEARCH",
+      "DETERMINISTIC_POLICY_A",
+      "KNOWN_POSITION_EXIT_BE_TRAILING_FUTURE_VARIANTS",
+      "LEARNING_CHALLENGER_CONTROL",
+      "48H_DEMO_OPERATIONAL_TEST",
+      "SEPARATE_LIVE_ADMISSION"
+    ],
+    "frozen_policy_a_unchanged": true,
+    "new_account_aware_risk_percent_selected": false,
+    "fixed_numerical_v2_risk_limits_approved": false,
+    "strategy_champion_approved": false,
+    "dynamic_exit_rules_approved": false,
+    "demo_release_implemented": false,
+    "demo_execution_authorized": false,
+    "live_execution_authorized": false,
+    "openai_production_calls_authorized": false,
+    "original_gate0_failed_evidence_preserved": true,
+    "next_step": "OWNER_REVIEW_V2_SPEC_AND_SELECT_SCOPE_PRIOR_TO_IMPLEMENTATION"
+  }
 }

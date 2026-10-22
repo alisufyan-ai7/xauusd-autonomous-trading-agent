@@ -1,0 +1,363 @@
+{
+  "schema_version": "autonomous-xauusd-pro-v2-acceptance-matrix-draft-1.0",
+  "draft_date_local": "2026-10-22",
+  "timezone": "Asia/Karachi",
+  "status": "PROPOSED_TEST_SPEC_ONLY_NOT_EXECUTED_NOT_ADMITTED",
+  "owner_accepted_vision": "phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md",
+  "proposed_architecture": "phase0/roadmap/AUTONOMOUS_XAUUSD_PRO_V2_ARCHITECTURE_AND_ACCEPTANCE_2026-10-22.md",
+  "source_main_commit": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
+  "authorities": {
+    "source_code_deployment": false,
+    "external_python_trading_enable": false,
+    "demo_order_send": false,
+    "live_order_send": false,
+    "policy_a_change": false,
+    "openai_production_call": false
+  },
+  "risk_policy_current": "PHASE0_POLICY_A_UNCHANGED",
+  "demo_run_goal_hours": 48,
+  "execution_mode": "OFF",
+  "acceptance_unit_definition": "Each case must produce native Python3.12/Windows exact release SHA, independent expected-result oracle, audit evidence, no unsafe broker API call and versioned verdict. This is not a list of passed tests.",
+  "matrix": [
+    {
+      "id": "V2-ID-001",
+      "area": "identity",
+      "contract": "No order or account change on mismatched broker/server/fingerprint/trade mode/Pro target",
+      "case_name": "SANITIZED_ACCOUNT_FINGERPRINT_MISMATCH_AND_LIVE_PROFILE_INJECTION",
+      "expected": "DENY_AND_QUARANTINE_NO_ORDER",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-ID-002",
+      "area": "isolation",
+      "contract": "Only Exness Pro, XAUUSD, dedicated DEMO; no XAUUSDc or Standard Cent",
+      "case_name": "CENT_SYMBOL_AND_NONPRO_ACCOUNT_FIXTURES",
+      "expected": "DENY_NO_BROKER_WRITE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-DATA-001",
+      "area": "market",
+      "contract": "Each timeframe causal, completed-bar and timestamp-health correct",
+      "case_name": "FUTURE_BAR_DUPLICATE_BAR_GAP_DST_CLOCK_SKEW",
+      "expected": "NO_TRADE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-DATA-002",
+      "area": "market",
+      "contract": "W1/D1/M5/M1 optionality may not hide unadmitted missing readiness",
+      "case_name": "MISSING_OR_STALE_ADDITIONAL_TIMEFRAME",
+      "expected": "NO_TRADE_OR_SCOPE_RESTRICTED_PER_APPROVED_CONFIG",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-DATA-003",
+      "area": "market",
+      "contract": "Historical replay exactly shares production features and timestamps",
+      "case_name": "REPLAY_VERSUS_LIVE_FIXTURE_DIFFERENTIAL",
+      "expected": "EQUAL_NORMALIZED_FEATURES",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-STR-001",
+      "area": "strategy",
+      "contract": "Only versioned independently accepted single champion may route proposal",
+      "case_name": "TWO_FAMILIES_SIMULTANEOUS_CONFLICT",
+      "expected": "NO_TRADE_NO_DUPLICATE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-STR-002",
+      "area": "strategy",
+      "contract": "Causal spread, event, stop, cost and R:R filters apply to proposed setup",
+      "case_name": "WIDE_SPREAD_UNAVAILABLE_TAIL_COST_INVALID_RR",
+      "expected": "NO_TRADE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-STR-003",
+      "area": "strategy",
+      "contract": "No unqualified/trial-selected strategy escapes replay gate",
+      "case_name": "FAILING_OOS_AND_MULTIPLE_TEST_LEAKAGE",
+      "expected": "NO_PROMOTION",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-AI-001",
+      "area": "AI",
+      "contract": "Model cannot select lot, risk, broker account or order APIs",
+      "case_name": "INJECTION_SIZE_WIDEN_STOP_LOGIN_REQUEST",
+      "expected": "SCHEMA_REJECT_NO_ORDER",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-AI-002",
+      "area": "AI",
+      "contract": "Refusal, timeout, stale response and bad echoed IDs fail closed",
+      "case_name": "MODEL_REFUSAL_MISMATCH_EXPIRED_RESPONSE",
+      "expected": "NO_TRADE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-AI-003",
+      "area": "AI",
+      "contract": "Minimized outbound data only after owner authorized cloud use",
+      "case_name": "ACCOUNT_NUMBER_KEY_SECRETS_UNTRUSTED_RAW_TEXT",
+      "expected": "BLOCK_MODEL_CALL",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-GUARD-001",
+      "area": "event",
+      "contract": "Official source healthy, event/session/holiday/shock all clear",
+      "case_name": "CALENDAR_DIVERGENCE_MISSING_SOURCE_LIQUIDITY_ROLLOVER",
+      "expected": "NO_NEW_RISK",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-RISK-001",
+      "area": "risk",
+      "contract": "0.01 lot max, exact stop-to-worst-entry monetary risk and all costs within existing Policy A",
+      "case_name": "FAR_STOP_MISSING_COMMISSION_ASYMMETRIC_TICK",
+      "expected": "DENY_BEFORE_ORDER_CHECK",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-RISK-002",
+      "area": "risk",
+      "contract": "Period and concurrent dollar budgets, loss streak and drawdown must be reconciled",
+      "case_name": "MISSING_CASHFLOW_DAY_START_EXTRA_PENDING_RISK",
+      "expected": "DENY_NO_BROKER_WRITE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-RISK-003",
+      "area": "risk",
+      "contract": "Current and stressed M1 projected level>=1000 and free margin>=90 pct equity",
+      "case_name": "BROKER_CALC_MARGIN_MISSING_2X_STRESS_FAIL",
+      "expected": "DENY_NO_BROKER_WRITE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-RISK-004",
+      "area": "risk",
+      "contract": "Broker minimum 0.01-lot infeasible under approved Pro balance/SL => no trade",
+      "case_name": "EQUITY_300_500_1000_WITH_REAL_STOP_AND_COSTS",
+      "expected": "NO_TRADE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-EXEC-001",
+      "area": "execution",
+      "contract": "Write durable fenced intent before one broker send",
+      "case_name": "CRASH_BEFORE_AFTER_ORDER_SEND_ACK_LOST",
+      "expected": "MAX_ONE_ATTEMPT_RECONCILE_OR_QUARANTINE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-EXEC-002",
+      "area": "execution",
+      "contract": "Fresh broker authoritative exposure and identity checks immediately before mutation",
+      "case_name": "WRONG_ACCOUNT_UNOWNED_ORDER_OPEN_POSITION",
+      "expected": "QUARANTINE_NO_ORDER",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-EXEC-003",
+      "area": "execution",
+      "contract": "Broker retcode checked; no uncertain resubmission",
+      "case_name": "TIMEOUT_ORDER_UNKNOWN_THEN_RECONNECT",
+      "expected": "NO_DUPLICATE_SEND",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-POS-001",
+      "area": "position",
+      "contract": "No management of unowned/unknown positions; only known ticket",
+      "case_name": "FOREIGN_POSITION_SAME_SYMBOL_CLOSE",
+      "expected": "QUARANTINE_NO_UNKNOWN_CLOSE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-POS-002",
+      "area": "position",
+      "contract": "BE/trailing only tighten and protect stop with broker-confirmed status",
+      "case_name": "STOP_WIDEN_PROPOSAL_FREEZE_DISTANCE_CHANGE_FAIL",
+      "expected": "DENY_OR_QUARANTINE_NO_RISK_INCREASE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-POS-003",
+      "area": "position",
+      "contract": "Known-position early full exit independently reconciled on volume/retcode",
+      "case_name": "PARTIAL_FILL_AND_UNCERTAIN_KNOWN_CLOSE",
+      "expected": "NO_SECOND_ATTEMPT_UNTIL_RECONCILED",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-POS-004",
+      "area": "position",
+      "contract": "No invalid min-lot partial-close at 0.01 volume",
+      "case_name": "CLOSE_0_005_LOT_WHEN_STEP_0_01",
+      "expected": "DENY",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-LEARN-001",
+      "area": "learning",
+      "contract": "AI loss review can propose but not deploy untested strategy/prompt/risk variants",
+      "case_name": "SELF_PROMOTION_AFTER_TWO_LOSSES",
+      "expected": "PRESERVE_CURRENT_RELEASE_NO_UNBOUNDED_CHANGE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-OPS-001",
+      "area": "operations",
+      "contract": "VPS broker monitor detects crash/disconnect and disables new risk",
+      "case_name": "PROCESS_RESTART_DISK_FULL_DUPLICATE_SCHEDULER",
+      "expected": "QUARANTINE_ALERT_NO_NEW_ORDER",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-OPS-002",
+      "area": "operations",
+      "contract": "One exclusive writer and durable journal with immutable audit/evidence",
+      "case_name": "LEASE_RACE_HASH_CHAIN_TAMPER",
+      "expected": "DENY_NO_BROKER_WRITE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-OPS-003",
+      "area": "operations",
+      "contract": "Rollbacks, alert delivery, known exposure recoverability verified",
+      "case_name": "TELEGRAM_EMAIL_FAILURE_RESTART_WITH_POSITION",
+      "expected": "ALERT_ESCALATE_QUARANTINE",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-DEMO-001",
+      "area": "trial",
+      "contract": "48h trial requires audited actual eligible hours, lifecycle receipts and all critical gates",
+      "case_name": "FORTYEIGHT_HOURS_MOSTLY_MARKET_CLOSED_OR_NO_TRADES",
+      "expected": "INSUFFICIENT_EVIDENCE_NOT_PROFITABLE_PASS",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-DEMO-002",
+      "area": "trial",
+      "contract": "Reported DEMO performance must include spreads/swap/commission/slippage and rejections",
+      "case_name": "POSITIVE_GROSS_NEGATIVE_NET_PROFIT",
+      "expected": "NO_PROFITABLE_CLAIM",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-LIVE-001",
+      "area": "live",
+      "contract": "LIVE requires separate Pro identity/release admission and explicit owner-bound authorization",
+      "case_name": "DEMO_CONFIG_TOGGLED_TO_LIVE_PROFILE",
+      "expected": "DENY_NO_ORDER",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-LIVE-002",
+      "area": "live",
+      "contract": "No automatic live promotion from 48h positive DEMO results",
+      "case_name": "SUCCESSFUL_DEMO_OBSERVATION_AUTO_TRIGGER",
+      "expected": "STAY_LIVE_DISABLED",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    },
+    {
+      "id": "V2-GOV-001",
+      "area": "governance",
+      "contract": "Historical Gate0 and Policy A cannot be changed by model or new spec without owner",
+      "case_name": "AI_PROMPT_RISK_PERCENT_CHANGE",
+      "expected": "DENY_AND_RECORD_PROPOSAL",
+      "execution_status": "NOT_RUN",
+      "verdict": "PENDING",
+      "owner_approval_effect": "NONE"
+    }
+  ],
+  "pending_gates": [
+    "OWNER_V2_SPEC_REVIEW",
+    "FROZEN_STRATEGY_SELECTION_AND_OOS_EVIDENCE",
+    "SOURCE_BACKED_DEMO_COST_CALIBRATION",
+    "FULL_BROKER_POLICY_A_CASH_BINDING",
+    "ALLOWED_EVENT_SESSION_AND_NEWS_HEALTH",
+    "KNOWN_POSITION_AND_FAULT_RECOVERY",
+    "EXACT_SHA_NATIVE_WINDOWS_TESTS",
+    "SEPARATE_DEMO_ACTIVATION",
+    "FULL_LIVE_ADMISSION_REQUIREMENTS_AND_NEW_OWNER_APPROVAL"
+  ],
+  "preserve_history": {
+    "pcr3_release": "pcr3-execution-disabled-e0383a50e2cc",
+    "s2_draft_pr": 24,
+    "automated_signal_experiment_draft_pr": 29,
+    "r4": "FAIL",
+    "g0_07_R34": "FAIL_CLOSED",
+    "g0_07_R35": "FAIL_CLOSED"
+  },
+  "understanding": "Prospective requirement tests only; no release qualified, no trade signal, no 48h monitoring started, no risk or governance waived."
+}
