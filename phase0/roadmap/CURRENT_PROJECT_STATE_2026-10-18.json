@@ -94,7 +94,7 @@
     "live_broker_action": "NOT_AUTHORIZED",
     "real_money_trading": "NOT_AUTHORIZED"
   },
-  "next_substantive_action": "AUDIT_W1_D1_TIMEFRAME_SESSION_GAP_AND_CAUSALITY_IN_OWNER_READONLY_EXNESS_DATA__THEN_FULL_TPB_OOS_AND_OFFICIAL_EVENT_GUARD__NO_BROKER_ORDERS",
+  "next_substantive_action": "OWNER_REVIEW_DRAFT_PR34_AND_REAL_SOURCE_CHRONOLOGY_OFFICIAL_EVENT_AND_NEW_TPB_REPLAY_ADMISSION__NO_VPS_TRADING",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -215,7 +215,7 @@
     "authorization_effect": "NONE",
     "github_main_sha_at_recording": "2848c98940def262459fd89d5897c6f63dd6aadb"
   },
-  "latest_current_task_pointer": "v2_engineering_priorities_2026_10_22",
+  "latest_current_task_pointer": "v2_five_priority_eng_2026_10_22",
   "owner_autonomous_pro_v2_spec_2026_10_22": {
     "status": "DRAFT_REVIEW_ONLY_NOT_IMPLEMENTED_NOT_DEPLOYED",
     "pr30_merged": true,
@@ -603,5 +603,69 @@
       "verified_actual_broker_data": false,
       "authorization_effect": "NONE"
     }
+  },
+  "v2_five_priority_eng_2026_10_22": {
+    "authority": "OWNER_AUTHORIZED_OFFLINE_EXECUTION_DISABLED_ENGINEERING_ONLY",
+    "branch": "implementation/pro-v2-chronology-replay-event-ledger-20261022",
+    "stacked_review_pr": 34,
+    "parent_pr": 33,
+    "parent_head_at_registration": "c452d90abf915761f0443be807e40cbe9784051d",
+    "main_unmodified": "95875ccf1bddc43491ced1dd4358057b62b7800e",
+    "code_test_proof": {
+      "exact_sha": "b769468d30bea4f9a9324556b2f15006cceed80e",
+      "ci_run": 39782217155,
+      "windows_py312": {
+        "status": "PASS",
+        "tests": 358,
+        "coverage_pct": 88.56
+      },
+      "ubuntu_py312": {
+        "status": "PASS",
+        "tests": 355,
+        "skipped": 3,
+        "coverage_pct": 88.54
+      },
+      "ruff": "PASS",
+      "mypy": "PASS_67_FILES",
+      "execution_disabled_scan": "PASS",
+      "wheel_and_sdist_build": "PASS",
+      "real_broker_or_production_admission": false
+    },
+    "files": [
+      "src/xauusd_agent/features/v2_chronology_audit.py",
+      "src/xauusd_agent/features/v2_crossframe_oracle.py",
+      "src/xauusd_agent/features/v2_tpb_zone_tracker.py",
+      "src/xauusd_agent/features/v2_replay_audit.py",
+      "src/xauusd_agent/guards/v2_official_source_gate.py",
+      "src/xauusd_agent/ops/v2_durable_paper_ledger.py",
+      "tests/unit/features/test_v2_chronology_audit.py",
+      "tests/unit/features/test_v2_crossframe_oracle.py",
+      "tests/unit/features/test_v2_tpb_zone_tracker.py",
+      "tests/unit/features/test_v2_replay_audit.py",
+      "tests/unit/guards/test_v2_official_source_gate.py",
+      "tests/unit/ops/test_v2_durable_paper_ledger.py",
+      "pyproject.toml",
+      "phase0/roadmap/V2_CHRONOLOGY_TPB_OOS_EVENT_PAPER_ENGINEERING_2026-10-22.md",
+      "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json"
+    ],
+    "chronology_real_source_w1_weekend_holidays_admitted": false,
+    "actual_price_crossframe_parity_run": false,
+    "full_frozen_tpb_candidate_generator_admitted": false,
+    "economic_out_of_sample_result": "INSUFFICIENT_EVIDENCE",
+    "older_dukascopy_private_bundle_hashes_preserved": true,
+    "older_r3_holdout": "FAILED_AND_CONSUMED_DO_NOT_REUSE",
+    "real_official_event_capture_admitted": false,
+    "bounded_analyst_production_enabled": false,
+    "durable_paper_journal_verified_native_tests": true,
+    "actual_broker_order_port_present": false,
+    "real_broker_order_calc_profit_margin_order_check_performed": false,
+    "real_broker_positions_ledger_reconciled": false,
+    "watchdog_delivery_drill_pass": false,
+    "demo_48h_started": false,
+    "trading_active": false,
+    "trading_authority": false,
+    "source_document": "phase0/roadmap/V2_CHRONOLOGY_TPB_OOS_EVENT_PAPER_ENGINEERING_2026-10-22.md",
+    "machine_gates": "phase0/roadmap/V2_5_PRIORITY_ENGINEERING_EVIDENCE_GATE_MATRIX_2026-10-22.json",
+    "next_gate": "REAL_EXNESS_SESSION_HOLIDAY_W1_PARITY_SOURCE_PROOF__PLUS_REGISTER_NEW_PROTECTED_V2_HOLDOUT_AND_OFFICIAL_EVENT_FEED_AND_DEMO_BROKER_BOUND_RUNTIME"
   }
 }
