@@ -1,0 +1,129 @@
+{
+  "schema_version": "v2-engineering-gate-evidence-2026-10-22-v1",
+  "date": "2026-10-22",
+  "timezone": "Asia/Karachi",
+  "status": "EXECUTION_DISABLED_PREPARATION_ONLY",
+  "based_on_pr33_head": "c452d90abf915761f0443be807e40cbe9784051d",
+  "based_on_authoritative_main": "95875ccf1bddc43491ced1dd4358057b62b7800e",
+  "branch": "implementation/pro-v2-chronology-replay-event-ledger-20261022",
+  "review_pr": 34,
+  "stacked_on_pr": 33,
+  "requires_pr32_acceptance": true,
+  "source_code_ci": {
+    "commit_before_evidence_docs": "b769468d30bea4f9a9324556b2f15006cceed80e",
+    "production_candidate_run": 39782217155,
+    "windows_python312": {
+      "verdict": "PASS",
+      "tests_passed": 358,
+      "coverage_percent": 88.56
+    },
+    "ubuntu_python312": {
+      "verdict": "PASS",
+      "tests_passed": 355,
+      "tests_skipped": 3,
+      "coverage_percent": 88.54
+    },
+    "ruff": "PASS",
+    "mypy": "PASS_67_SOURCE_FILES",
+    "disabled_capability_scan": "PASS",
+    "source_and_wheel_build": "PASS",
+    "tests_are_synthetic_not_historical_performance": true
+  },
+  "owner_attended_real_data_snapshot": {
+    "evidence": "phase0/evidence/V2_XAUUSD_DEMO_SEVEN_FRAME_READONLY_PASS_2026-10-22.json",
+    "status": "PASS_SINGLE_READONLY_SNAPSHOT_7_OF_7_BARS",
+    "broker": "Exness Technologies Ltd",
+    "server": "Exness-MT5Trial15",
+    "symbol": "XAUUSD",
+    "trade_mode": "DEMO",
+    "raw_account_identifiers_stored": false,
+    "order_api_calls": 0,
+    "external_python_trading_disabled": true
+  },
+  "gates": {
+    "1_chronology": {
+      "engineering": "SOURCE_AND_SYNTHETIC_TESTS_PASS",
+      "read_only_mt5_bars": "PASS_SINGLE_SNAPSHOT",
+      "broker_calendar_source_sha_verified": false,
+      "session_holidays_gap_coverage_verified": false,
+      "w1_sunday_bucket_vs_trading_close_verified": false,
+      "actual_broker_crossframe_parity_evaluated": false,
+      "admitted": false
+    },
+    "2_tpb": {
+      "engineering": "ZONE_A_B_TOUCH_REJECTION_CONFIRMATION_EXPIRY_AND_SAFETY_SYNTHETIC_TESTS_PASS",
+      "full_frozen_p0_setups_001_detector_integrated": false,
+      "causal_impulse_h1_swing_golden_vectors_complete": false,
+      "first_touch_persistence_and_supersession_verified": false,
+      "broker_executable_cost_tick_stop_admission": false,
+      "admitted": false
+    },
+    "3_replay": {
+      "engineering": "DETERMINISTIC_COST_R_DRAWDOWN_2X_COSTS_AND_LEDGER_HASH_TESTS_PASS",
+      "past_private_dukascopy_bundle_metadata": "GATE3_OLDER_R28_R3_H4_10619_H1_39269_M15_157019",
+      "past_holdout_status": "R3_CONSUMED_AND_FAILED__MUST_NOT_REUSE_AS_NEW_FINAL_OOS",
+      "new_prospectively_registered_holdout": false,
+      "actual_raw_files_available_in_this_branch": false,
+      "actual_tpb_oos_trades": 0,
+      "historical_strategy_economic_evaluation_completed": false,
+      "bootstrap_10000_fold_selection_adjustment_tested": false,
+      "profitability_evidence": "INSUFFICIENT_EVIDENCE",
+      "admitted": false
+    },
+    "4_official_event_guard_ai": {
+      "engineering": "OFFLINE_PROVENANCE_ALLOWLIST_DOL_BLS_BEA_FED_CENSUS_DST_FROZEN_GUARD_TESTS_PASS",
+      "live_official_machine_readable_source_fetch": false,
+      "provider_rights_parser_revision_timeliness_admitted": false,
+      "official_calendar_hashes_persisted": false,
+      "bounded_ai_schema": "EXISTING_BOUNDED_DISABLED_BY_DEFAULT",
+      "openai_live_transport_authorized": false,
+      "production_guard_healthy": false,
+      "admitted": false
+    },
+    "5_demo_lifecycle": {
+      "engineering": "SQLITE_SYNTHETIC_HASH_CHAIN_CAS_UNKNOWN_EXPOSURE_QUARANTINE_RESTART_TESTS_PASS",
+      "local_database_is_not_remote_immutable": true,
+      "real_broker_monetary_profit_margin_stop_ordercheck_verified": false,
+      "real_demo_order_send_close_modify_implemented": false,
+      "durable_real_broker_deal_position_reconciliation_verified": false,
+      "real_remote_watchdog_alert_delivery_and_restart_drill_pass": false,
+      "attended_48h_autonomous_demo_trial_started": false,
+      "execution_permitted": false,
+      "admitted": false
+    }
+  },
+  "unchanged_risk": [
+    "FROZEN_POLICY_A_0_25_PERCENT",
+    "V1_MAX_0_01_LOT",
+    "M1_MARGIN_1000_PERCENT_CURRENT_AND_STRESSED",
+    "FREE_MARGIN_MIN_90_PERCENT_EQUITY",
+    "E1_HUMAN_ONLY",
+    "P1_HUMAN_GATED",
+    "NO_AUTO_CLOSE_UNKNOWN_EXPOSURE",
+    "EXNESS_PRO_ONLY_NEVER_STANDARD_CENT"
+  ],
+  "permissions": {
+    "github_draft_engineering": true,
+    "merge_pr34": false,
+    "vps_source_deployment": false,
+    "external_python_trading_toggle": false,
+    "demo_order_send": false,
+    "live_order_send": false,
+    "openai_production_calls": false,
+    "real_funds_transfer": false
+  },
+  "next_dependencies": [
+    "Independent Exness Pro session/holiday revision hash and UTC W1 weekday source proof",
+    "Fresh private raw 7frame/bar/tick/quote export allowing crossframe parity without publishing credentials",
+    "Frozen full TPB predicates plus oracle/golden vectors and registered trial count",
+    "Prospective new untouched historical or forward holdout; old R3 holdout remains consumed",
+    "Independently verified official BLS/BEA/FED/CENSUS/DOL feed access, update/rights and timezone evidence",
+    "Real broker cash and risk, order reconciliation, alert delivery, recovery/fault native tests, explicit owner DEMO APC"
+  ],
+  "historical_failures_unchanged": [
+    "G0_05_R4_FAIL_CLOSED",
+    "G0_07_R34_FAIL_CLOSED",
+    "G0_07_R35_FAIL_CLOSED",
+    "PR33_FIRST_TWO_OWNER_READONLY_ATTEMPTS_FAIL_CLOSED"
+  ]
+}
