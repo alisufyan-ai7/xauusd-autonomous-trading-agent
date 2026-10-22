@@ -134,6 +134,18 @@
         "expected_nominal_missing_slots_to_inventory": 83,
         "source_calendar_admitted": false,
         "no_execution_capability": true
+      },
+      "owner_exhaustive_2026_10_22": {
+        "observed_utc": "2026-10-22T14:20:06.510718+00:00",
+        "full_compared_parent_buckets": 564,
+        "sparse_parent_buckets": 35,
+        "sparse_parent_aggregates_matched": 35,
+        "missing_nominal_child_slots": 83,
+        "all_35_parent_samples_available": true,
+        "crossframe_parity_accepted": false,
+        "session_source_full_broker_calendar_accepted": false,
+        "historical_research_backlog": true,
+        "separate_restricted_demo_pilot_current_session_integrity": "MANDATORY"
       }
     },
     "2_tpb": {
@@ -199,8 +211,10 @@
     "real_funds_transfer": false
   },
   "next_dependencies": [
-    "Owner evidence: 2026-10-22T13:54Z 563 full +35 sparse parent buckets; report all 83 missing nominal children, validate each against independently hashed date-specific Exness XAUUSD trading schedule, do not infer closed sessions from samples alone",
-    "Owner-attended non-writing bucket forensics: identify exact D1/H4 H4/H1 missing UTC slots, then verify scheduled closure vs live data loss using current dated Exness XAUUSD UTC+0 official hours/holiday revisions",
+    "Prioritize one deterministic TPB v2 objective signal and broker-sourced funded 0.01-lot DEMO execution risk/stop/journal/alerts and first attended owner-permitted test",
+    "Current XAUUSD quote spread/session and complete signal lookback must be valid, not all historic calendar buckets",
+    "Keep official high-impact Event Guard conservative NO_TRADE on missing coverage",
+    "Older historical Sunday/rollover 83-slot source classification remains an independent UNADMITTED research task",
     "Independent Exness Pro session/holiday revision hash and UTC W1 weekday source proof",
     "Fresh private raw 7frame/bar/tick/quote export allowing crossframe parity without publishing credentials",
     "Frozen full TPB predicates plus oracle/golden vectors and registered trial count",
@@ -213,5 +227,20 @@
     "G0_07_R34_FAIL_CLOSED",
     "G0_07_R35_FAIL_CLOSED",
     "PR33_FIRST_TWO_OWNER_READONLY_ATTEMPTS_FAIL_CLOSED"
-  ]
+  ],
+  "owner_fast_track_demo_decision_2026_10_22": {
+    "scope": "PROSPECTIVE_DEMO_ENGINEERING_ONLY",
+    "owner_intent": "START_REAL_DEMO_ASAP_NO_REPEATED_HISTORIC_GAP_PROBES",
+    "decision": "phase0/decisions/ADR-2026-10-22-004-FAST-TRACK-DEMO-PILOT.md",
+    "real_exhaustive_evidence": "phase0/evidence/V2_PR34_EXHAUSTIVE_DEMO_READONLY_SPARSE_BUCKETS_2026-10-22.json",
+    "historic_crossframe_admitted": false,
+    "historic_complete_schedule_audit_deferred_from_pilot_engineering": true,
+    "current_session_quote_and_active_lookback_checks_not_deferred": true,
+    "one_deterministic_tpb_strategy_only": true,
+    "real_broker_cash_and_margin_policy_mandatory": true,
+    "exact_broker_demo_approval_required": true,
+    "first_real_attended_demo_order_not_done": true,
+    "real_autonomous_48h_authorization_not_granted": true,
+    "automated_live_trading_not_authorized": true
+  }
 }
