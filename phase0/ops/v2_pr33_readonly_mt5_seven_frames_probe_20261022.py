@@ -36,12 +36,15 @@ READ_COUNTS = {
 
 
 def capture() -> dict[str, object]:
-    as_of = datetime.now(UTC)
     with MT5ExtendedReadOnlyAdapter(
         admitted_fingerprint_sha256=ADMITTED_FINGERPRINT,
         admitted_server=ADMITTED_SERVER,
         admitted_company=ADMITTED_COMPANY,
     ) as reader:
+        # Do not even sample a quote until the exact admitted DEMO identity
+        # and external-Python-disabled protection have been verified.
+        reader._guard_demo_identity()
+        as_of = datetime.now(UTC)
         # Capture the quote first. Reading seven historical series can take
         # seconds, so sampling tick LAST against the earlier as_of would
         # wrongly reject healthy active-market data as future-dated.
@@ -49,8 +52,10 @@ def capture() -> dict[str, object]:
         if quote is None:
             raise RuntimeError("XAUUSD quote unavailable; source proof incomplete")
         quote_age = (as_of - quote.broker_time).total_seconds()
-        if quote_age < -0.25 or quote_age > 5:
-            raise RuntimeError("quote timestamp unavailable, stale or future-dated")
+        if quote_age < -0.25:
+            raise RuntimeError("QUOTE_TIMESTAMP_FUTURE")
+        if quote_age > 5:
+            raise RuntimeError("QUOTE_TIMESTAMP_STALE")
         frames = reader.read_seven_frames(as_of=as_of, limits=READ_COUNTS)
         # Identity and disabled trading are rechecked after observation.
         reader._guard_demo_identity()
@@ -94,6 +99,29 @@ def capture() -> dict[str, object]:
         return out
 
 
+def _public_failure_reason(exc: Exception) -> str:
+    """Map exact known internal errors to fixed codes without exposing messages.
+
+    Broker exceptions can contain credentials or account identifiers. Never
+    put exception string, traceback, MT5 last_error, or raw login in output.
+    """
+    if type(exc) is not RuntimeError:
+        return "UNCLASSIFIED_READONLY_FAILURE"
+    detail = str(exc)
+    if detail == "XAUUSD quote unavailable; source proof incomplete":
+        return "QUOTE_UNAVAILABLE"
+    if detail == "QUOTE_TIMESTAMP_FUTURE":
+        return "QUOTE_TIMESTAMP_FUTURE"
+    if detail == "QUOTE_TIMESTAMP_STALE":
+        return "QUOTE_TIMESTAMP_STALE"
+    for timeframe in ContextTimeframe:
+        if detail == f"{timeframe.value} empty broker result":
+            return f"{timeframe.value}_EMPTY_BROKER_HISTORY"
+        if detail == f"{timeframe.value} contains a forming candle":
+            return f"{timeframe.value}_FORMING_BAR"
+    return "UNCLASSIFIED_RUNTIME_ERROR"
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Sanitized read-only seven-timeframe MT5 DEMO observation"
@@ -114,6 +142,7 @@ def main() -> int:
         print(json.dumps({
             "status": "FAIL_CLOSED_NO_ORDER",
             "error_type": type(exc).__name__,
+            "reason_code": _public_failure_reason(exc),
             "order_api_calls": 0,
         }, sort_keys=True))
         return 1
