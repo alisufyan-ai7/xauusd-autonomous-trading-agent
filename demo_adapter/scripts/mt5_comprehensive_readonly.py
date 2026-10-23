@@ -24,9 +24,14 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
-# -I ignores PYTHONPATH: select only the staged, Git-pinned module location.
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+# -I ignores PYTHONPATH and the current directory. Explicitly bind all
+# THREE import roots to the exported source tree, not installed/editable
+# packages from the VPS or Git worktree. Import resolution must be safe even
+# under -I -S (no site packages) before touching MetaTrader5.
+_STAGED_REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(_STAGED_REPO_ROOT / "src"))
+sys.path.insert(0, str(_STAGED_REPO_ROOT / "demo_adapter"))
+sys.path.insert(0, str(_STAGED_REPO_ROOT / "demo_adapter" / "src"))
 
 from xauusd_demo.broker_money_readonly import (  # noqa: E402, I001
     EXPECTED_ACCOUNT_SHA256, EXPECTED_COMPANY, EXPECTED_SERVER,
@@ -585,16 +590,49 @@ def _public_summary(report: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _pinned_local_import_check() -> bool:
+    """No MT5 attach, no network, no side effects. Verify all source origins."""
+    import xauusd_agent
+    import xauusd_demo
+    import scripts.v11_quote_coverage as quote_module
+
+    expected = (
+        (_STAGED_REPO_ROOT / "src" / "xauusd_agent" / "__init__.py").resolve(),
+        (_STAGED_REPO_ROOT / "demo_adapter" / "src" / "xauusd_demo" /
+         "__init__.py").resolve(),
+        (_STAGED_REPO_ROOT / "demo_adapter" / "scripts" /
+         "v11_quote_coverage.py").resolve(),
+    )
+    origins = (
+        Path(xauusd_agent.__file__ or "").resolve(),
+        Path(xauusd_demo.__file__ or "").resolve(),
+        Path(quote_module.__file__ or "").resolve(),
+    )
+    return origins == expected
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="One-shot real MT5 DEMO read-only evidence")
     parser.add_argument("--confirm-owner-readonly", action="store_true")
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--self-check-imports", action="store_true")
+    parser.add_argument("--output", type=Path)
     parser.add_argument("--prospective-four-hours", action="store_true")
     args = parser.parse_args(argv)
+    if args.self_check_imports:
+        # This path is callable under python -I -S without MetaTrader5 or any
+        # third-party packages. It does NOT initialize/attach to the terminal.
+        if args.confirm_owner_readonly or args.prospective_four_hours or args.output:
+            print("PINNED_IMPORT_PREFLIGHT_INVALID_ARGUMENTS")
+            return 2
+        if not _pinned_local_import_check():
+            print("PINNED_IMPORT_PREFLIGHT_SOURCE_MISMATCH")
+            return 1
+        print("PINNED_LOCAL_IMPORT_PREFLIGHT_PASS_NO_MT5")
+        return 0
     if not args.confirm_owner_readonly:
         print("NOT_RUN_OWNER_READONLY_CONFIRMATION_REQUIRED")
         return 2
-    if args.output.exists() or not args.output.is_absolute():
+    if args.output is None or args.output.exists() or not args.output.is_absolute():
         print("NOT_RUN_PRIVATE_EVIDENCE_DIRECTORY_MUST_BE_NEW_ABSOLUTE")
         return 2
     mt5: MT5ReadOnlySurface | None = None
