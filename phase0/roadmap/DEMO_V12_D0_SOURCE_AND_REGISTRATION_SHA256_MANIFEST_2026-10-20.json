@@ -1,0 +1,47 @@
+{
+  "schema": "V12_D0_SOURCE_DISCOVERY_PROSPECTIVE_REVIEWED_SHA256_MANIFEST_V0_1",
+  "status": "DESIGN_AND_STATIC_TEST_ONLY_NO_VPS_OWNER_APPROVAL",
+  "approved_frozen_v12_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+  "pr17_parent_sha": "6ac06d365214f1a0146b3669a529d14a127ca5de",
+  "files": [
+    {
+      "path": "demo_adapter/scripts/v12-d0-readonly-inventory.ps1",
+      "sha256": "adc226a7d21ca7eb296f100ad0a6c79d9554c76ca15ca260c3c82959f0312274",
+      "git_blob_sha1": "8d30a15810bcb8059f5c2457b9e7efe3e345b4cf",
+      "role": "WINDOWS_POWERSHELL_5_1_ONE_GUARDED_RUN_ONLY"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_d0_readonly_inventory.py",
+      "sha256": "ea1496f715a6601f47098ee15a9d09645dc804a63ab9248fa60a4d36d3f52260",
+      "git_blob_sha1": "a889bb04feb7659d121a99960fcecf14ff4f4a98",
+      "role": "READ_ONLY_SOURCE_DISCOVERY_SNAPSHOT_NOT_4H_CAPTURE"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_attempt_journal.py",
+      "sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
+      "git_blob_sha1": "cd572d8cfc6d3cec4aff2457fd0b8f68eaa880aa",
+      "role": "UNCHANGED_PR16_HASH_CHAINED_PRIVATE_ATTEMPT_JOURNAL"
+    },
+    {
+      "path": "phase0/roadmap/DEMO_V12_D0_DIAGNOSTIC_NOT_CAPTURE_FROZEN_REGISTRATION_2026-10-20.json",
+      "sha256": "ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534",
+      "git_blob_sha1": "923389601ab6a73fa2f2df04d4f1c9fcd2d7ac63",
+      "role": "PROSPECTIVELY_FROZEN_D0_REGISTRATION_UNAUTHORIZED_NOT_4H"
+    }
+  ],
+  "hashing": "SHA256_OF_EXACT_GITHUB_UTF8_LF_CONTENT_VERIFY_NATIVE_GET_FILEHASH_BEFORE_ANY_OWNER_APPROVED_VPS_RUN",
+  "sha_known_answer_vector": "abc=ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+  "source_nontrading": true,
+  "external_python_trading_must_remain_disabled": true,
+  "active_pr_execution_authority": false,
+  "owner_approval_pending": true,
+  "actual_date_specific_4h_xauusd_registration_unchanged": true,
+  "hardware_operator_attestation": "NOT_PRESENT",
+  "local_private_path": "ENV_LOCALAPPDATA/XAUUSD-v12-D0-PrivateEvidence/REGISTRATION_SHA256__CREATED_ONLY_AFTER_OWNER_APPROVAL",
+  "terminal_exe_source": "GET_PROCESS_TERMINAL64_REQUIRE_EXACTLY_ONE_RUNNING_AND_SAME_PID_AND_PATH_AFTER",
+  "terminal_exe_absolute_path_unverified_until_owner_run": true,
+  "python_executable_path_unverified_until_owner_run": true,
+  "guaranteed_zero_process_side_effects": false,
+  "initialize_might_start_or_activate_terminal": true,
+  "first_run_data_eligible_for_admission": false
+}

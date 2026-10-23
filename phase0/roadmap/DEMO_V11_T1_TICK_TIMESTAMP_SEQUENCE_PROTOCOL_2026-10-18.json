@@ -1,0 +1,66 @@
+{
+  "schema": "demo-v11-T1-tick-millisecond-protocol-20261018",
+  "status": "FROZEN_CANDIDATE_FOR_PROSPECTIVE_OFFLINE_EVALUATION_NO_CAPTURE_ADMISSION",
+  "registered_date_utc": "2026-10-18",
+  "applies_to": "DEMO_LIFECYCLE_ONLY_XAUUSD_RESTRICTED_SESSION",
+  "raw_source": {
+    "MT5_python_docs": "https://www.mql5.com/en/docs/python_metatrader5/mt5copyticksrange_py",
+    "expected": "COPY_TICKS_ALL structured array; exact UTC time_msc integer; bid/ask; flags; original source retrieval ordinal retained",
+    "duplicate_milliseconds": "PRESERVE_DISTINCT_ROWS_STRICTLY_IN_ORIGINAL_SOURCE_ORDER_NOT_DEDUPLICATED",
+    "source_ordinal": "CONTIGUOUS_MONOTONIC_GLOBAL_0_BASED_ORDER_ACROSS_ALL_SEGMENTS",
+    "no_sort_or_filter": true,
+    "same_timestamp_with_no_provable_order": "FAIL_CLOSED",
+    "overlapping_boundary_ticks": "FAIL_CLOSED_WITH_RAW_CHUNK_RECORDS_RATHER_THAN_SILENT_DUPLICATE_DROPPING",
+    "chunk_boundary_policy": "SOURCE_TICK_BELONGS_TO_ONLY_ONE_HALF_OPEN_10_MIN_BIN; REJECT_IF_SOURCE_RANGE_INCLUDES_ANY_UNRESOLVED_END_BOUNDARY_TICK",
+    "timestamp_check": "TIME_MSC_MUST_CORRESPOND_TO_UTC_WINDOW_INCLUSIVE_START_EXCLUSIVE_END",
+    "quote_price_source": "STR_BINARY_FLOAT_ROUNDTRIP_REPRESENTATION_AND_RAW_SOURCE_PROVENANCE_NO_FAKE_HIGHER_PRECISION",
+    "flags": "PRESERVE_INT_AND_TICK_SOURCE_SEGMENT",
+    "time_sec_crosscheck": "PRECAPTURE_FROZEN_CHECK_IF_MSC_DIV1000_FLOOR_DIFFERS_FROM_MT5_TIME; FAIL_CLOSED"
+  },
+  "pairing": {
+    "horizons_sec": [
+      1,
+      5,
+      30
+    ],
+    "tolerance_ms": "250",
+    "horizon_interval_rule": "TARGET_TIME_PLUS_H_MINUS_250MS_THROUGH_TARGET_PLUS_250MS_INCLUSIVE",
+    "candidate_pairs": "ALL_SUBSEQUENT_TRUE_TICKS_IN_FIXED_RANGE",
+    "maxima": "MAX_OF_ADVERSE_ASK_RISE_AND_BID_DECLINE_ACROSS_ALL_ELIGIBLE_PAIRS_INCLUDE_CROSS_BIN_VALUES",
+    "ten_minute_coverage": "ALL_24_BINS_EACH_HAS_AT_LEAST_ONE_WITHIN_BIN_PAIR_FOR_EACH_HORIZON",
+    "no_tick_pair": "NOT_ADMITTED",
+    "no_pair_interpolation": true,
+    "tie_break": "NONE_FOR_MAXIMA__KEEP_ALL_ELIGIBLE_CANDIDATE_PAIRS",
+    "no_percentile_or_trim": true,
+    "gap_quote_proxy": "MAX_ADVERSE_CHANGE_IN_ADJACENT_SOURCE_SEQUENCE_ALLOW_SAME_MILLISECOND",
+    "gap_no_quote_proof": "DOES_NOT_UPPER_BOUND_EXECUTION_OR_STOP_GAP"
+  },
+  "completeness": {
+    "fixed_duration_minutes": 240,
+    "poll_interval_seconds": 5,
+    "expected_slots": 2880,
+    "poll_complete_fraction_at_least": "0.99",
+    "all_240_minute_bins": true,
+    "no_unclassified_consecutive_source_time_gap_milliseconds": "5000",
+    "no_unclassified_window_edge_gap_milliseconds": "5000",
+    "collector_missing_interval": "FAIL_CLOSED",
+    "clock_skew": "INDEPENDENTLY_VERIFIED_PER_RUN_WITH_SOURCE_HASH_BEFORE_CAPTURE",
+    "four_hour_confidence_claim": false
+  },
+  "source_integrity": {
+    "tick_raw_private_sha256": null,
+    "poll_raw_private_sha256": null,
+    "segmented_raw_source_sha256": null,
+    "exact_source_file_sha256": null,
+    "independent_verifier_sha256": null,
+    "only_notarized_source_artifacts_admissible": true
+  },
+  "approval_authority": {
+    "registration_selection": "PROTOCOL_DESIGN_PROSPECTIVE_NO_MARKET_EVIDENCE",
+    "user_accepted_v11_methods_not_readonly_VPS_action": true,
+    "VPS_capture_authorized": false,
+    "MT5_external_python_tradeapi_disabled_required": true,
+    "PR_merge_authorized": false,
+    "numerical_calibration_admitted": false
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "schema": "DEMO_V12_NEAR_TERM_PROSPECTIVE_QUALIFICATION_CHECK_20261019",
+  "review_date_utc": "2026-10-19",
+  "method": "OWNER_APPROVED_PR13_OPTION_A_240M_XAUUSD_OBSERVATION_WITH_NON_EVENT_OVERLAP_ENTRY",
+  "status": "FAIL_CLOSED_NO_NEAR_TERM_DATE_CAN_BE_POSITIVELY_QUALIFIED_FROM_CURRENT_ADMISSIBLE_EVIDENCE",
+  "frozen_design_sha": "847829378956670e8936bf46c82e685de41145fd",
+  "frozen_preflight_sha": "9d768fcfd160b3ccfc92ecef44fe040da6b77db6",
+  "prior_ps15_sha": "cbb8f3bf0fc0e46fb187f62a3e849341756a4f80",
+  "date_specific_exness_dynamic_XAUUSD_symbol_full_open_hours_source_sha256": null,
+  "exness_maintenance_quote_only_close_only_holiday_verification_sha256": null,
+  "event_guard_live_healthy_source_sha256": null,
+  "complete_BLS_BEA_FED_CENSUS_DOL_source_original_raw_sha256": null,
+  "entry_overlap_eligible_and_liquid_source_sha256": null,
+  "chosen_observation_start_utc": null,
+  "chosen_observation_end_utc": null,
+  "chosen_entry_overlap_start_utc": null,
+  "chosen_entry_overlap_end_utc": null,
+  "source_research_observations": [
+    {
+      "origin": "Exness Help Center",
+      "url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+      "source_class": "OFFICIAL_PUBLIC_PAGE_TEXT_NOT_INSTRUMENT_FILTER_RESPONSE",
+      "facts": "Exness says a custom instrument and date filtered schedule displays full/close-only/quote-only states including known DST/holiday/maintenance; UTC+0 servers; instrument-generated dynamic XAUUSD exact row absent",
+      "status": "NOT_ADMISSIBLE_DATE_SPECIFIC_WINDOW",
+      "raw_body_sha256": null,
+      "reviewed_published_update_conflict": "Search index says 2026-09-29; alternate cached open says 2026-07-29; version reconciliation needed"
+    },
+    {
+      "origin": "Exness holiday hours",
+      "url": "https://get.exness.help/hc/en-us/articles/17923046759836-Holiday-trading-hours",
+      "source_class": "OFFICIAL_PUBLIC_PAGE_TEXT",
+      "facts": "UTC+0; warning may change; visible June/July 2026 overrides are not date-specific Oct future full-open proof",
+      "status": "NO_OCT_FUTURE_XAUUSD_FULL_OPEN_CERTIFICATE",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "BLS October release list",
+      "url": "https://www.bls.gov/schedule/2026/10_sched_list.htm",
+      "source_class": "US_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "Oct20 State Employment 10:00 ET, Oct21 Usual Weekly Earnings 10:00 ET, Oct28 Metropolitan Employment 10:00 ET and other Oct28 business data, Oct29 consumer expenditures 10:00 ET, Oct30 ECI 08:30 ET",
+      "status": "POSITIVE_EVENT_TIMES_FROM_ORIGIN_URL_NOT_RAW_BYTES",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "BEA",
+      "url": "https://www.bea.gov/news/schedule",
+      "source_class": "US_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "Oct29 GDP advance and Personal Income and Outlays at 08:30 Eastern",
+      "status": "POSITIVE_EVENT_TIMES_FROM_ORIGIN_URL_NOT_RAW_BYTES",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "Fed Board October calendar",
+      "url": "https://www.federalreserve.gov/newsevents/2026-october.htm",
+      "source_class": "US_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "Oct27-28 FOMC; Oct28 2pm ET release and 2:30pm ET press conference; individual speeches/statistical events also listed",
+      "status": "PUBLIC_CALENDAR_NOT_EVENT_GUARD_COMPLETE",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "Census 2026 list",
+      "url": "https://www.census.gov/economic-indicators/calendar-listview-2026.html",
+      "source_class": "US_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "Oct20 new residential construction 08:30 ET; Oct27 durable goods 08:30 ET, residential sales 10:00 ET; Oct28 advance economic indicators 08:30 ET and housing vacancies 10:00 ET",
+      "status": "PUBLIC_CALENDAR_NOT_EVENT_GUARD_COMPLETE",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "DOL ETA weekly claims publication schedule",
+      "url": "https://oui.doleta.gov/unemploy/claims_arch.asp",
+      "source_class": "US_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "Normal Thursday 8:30 AM Eastern publication; exception Nov25 2026 (Wednesday 8:30 AM). Exact Oct22 timezone conversion must use applicable EDT and independently frozen source.",
+      "status": "DOL_RECURRING_PUBLISHED_RULE_NOT_LIVE_RELEASE_CONFIRMED",
+      "raw_body_sha256": null
+    },
+    {
+      "origin": "GOV.UK clock changes",
+      "url": "https://www.gov.uk/when-do-the-clocks-change",
+      "source_class": "UK_OFFICIAL_PUBLIC_HTML_TEXT",
+      "facts": "UK clocks go back Oct25 2026",
+      "status": "PUBLIC_DATED_DST_FACT_NEEDS_ORIGINAL_BYTE_ARCHIVE",
+      "raw_body_sha256": null
+    }
+  ],
+  "frozen_event_guard_code": {
+    "path": "src/xauusd_agent/guards/event_guard.py",
+    "reported_tier_1_pre_post_minutes": [
+      30,
+      30
+    ],
+    "reported_tier_2_pre_post_minutes": [
+      15,
+      15
+    ],
+    "unknown_event_tier": "REJECT_UNTIL_OFFICIALLY_CLASSIFIED_NOT_ASSUME_TIER_2",
+    "tentative_or_suspended": "SOURCE_UNHEALTHY",
+    "source_health_unknown": "UNKNOWN_REJECT",
+    "source_disagreement": "SOURCE_UNHEALTHY",
+    "inventory_incomplete": "SOURCE_UNHEALTHY_OR_UNKNOWN",
+    "shock_locked": "SHOCK_LOCK",
+    "post_event_normalization_missing": "NORMALIZATION_PENDING",
+    "requires_all_observation_and_entry_segment_classification": true
+  },
+  "future_days_screen": [
+    {
+      "date": "2026-10-19",
+      "calendar_screen": "UNKNOWN_INVENTORY_AND_CURRENT_CLOCK",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-20",
+      "calendar_screen": "CENSUS_12_30_UTC_PLUS_BLS_14_00_UTC_POSITIVE_RELEASES",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-21",
+      "calendar_screen": "BLS_14_00_UTC",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-22",
+      "calendar_screen": "DOL_RECURRING_THURSDAY_08_30_ET_EXPECTED; REAL_UTC_AND_TIER_NOT_SOURCE_PINNED",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-23",
+      "calendar_screen": "NO_INTERSECTING_RELEASE_IDENTIFIED_IN_PARTIAL_REVIEW__NOT_PROOF_OF_ABSENCE",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-26",
+      "calendar_screen": "POST_UK_DST_CHANGE_PRE_US_DST_CHANGE__UK_US_SESSION_MAPPING_MUST_BE_REVERIFIED",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-27",
+      "calendar_screen": "CENSUS_12_30_AND_14_00_UTC_FOMC_MEETING_DAY_UNKNOWN_INTRADAY_BLOCKS",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-28",
+      "calendar_screen": "CENSUS_12_30_BLS_14_00_FOMC_18_00_STATEMENT_AND_18_30_PRESSER",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-29",
+      "calendar_screen": "BEA_AND_DOL_EXPECTED_12_30_BLS_14_00",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-10-30",
+      "calendar_screen": "BLS_EMPLOYMENT_COST_INDEX_12_30",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    },
+    {
+      "date": "2026-11-02",
+      "calendar_screen": "POST_US_DST_CHANGE__SOURCE_CALENDARS_AND_BROKER_INSTRUMENT_HOURS_UNKNOWN",
+      "instrument": "UNKNOWN",
+      "event_guard": "UNKNOWN",
+      "qualifies": false
+    }
+  ],
+  "screen_status": "NO_POSITIVE_ADMISSIBLE_DATE_OR_WINDOW_FOUND__NOT_PROOF_MARKET_WAS_ALWAYS_CLOSED",
+  "explain": "A missing release from a partial public list cannot prove no unscheduled event. No real XAUUSD dynamic instrument output nor broker source health means no real UTC 4h can be registered, even if a particular date has no known release.",
+  "not_the_approved_1230_1630_window": true,
+  "broker_cost_and_slippage_recon": "UNVERIFIED_ACTUAL_MT5_ACCOUNT_AND_CONSERVATIVE_STRESS_UNAVAILABLE_BEFORE_READ_ONLY_CAPTURE",
+  "first_actual_vps_owner_confirmation_id": null,
+  "all_execution_and_merge_authority": false
+}

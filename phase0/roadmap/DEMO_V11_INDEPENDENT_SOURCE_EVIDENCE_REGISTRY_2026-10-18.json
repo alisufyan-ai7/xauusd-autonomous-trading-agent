@@ -1,0 +1,242 @@
+{
+  "schema_version": "demo-v11-independent-evidence-source-registry-1.0",
+  "registered_date": "2026-10-18",
+  "scope": "DEMO_LIFECYCLE_ONLY",
+  "status": "OFFLINE_SOURCE_CONTRACT_REGISTERED_REAL_EVIDENCE_NOT_COLLECTED",
+  "evidence_integrity_requirements": {
+    "raw_bytes": "PRIVATE_IMMUTABLE_SHA256_BEFORE_PARSING",
+    "provenance": "source_identity_UTC_fetch_or_read_UTC_permissions_exact_account_and_symbol",
+    "corroboration": "independent_source_or_readback_and_two_implementations_of_decimal_recomputation",
+    "no_hash_proves_broker_origin": "SHA_ONLY_PROVES_BYTE_IDENTITY_NOT_THIRD_PARTY_AUTHENTICITY",
+    "no_sensitive_login_or_exposure_records_in_github": true,
+    "independent_reviewer_signature_or_record_sha256": null,
+    "unknown_or_not_independently_provable": "FAIL_CLOSED_NOT_ADMITTED"
+  },
+  "sources": [
+    {
+      "id": "S01_MT5_TERMINAL_ACCOUNT",
+      "origin": "EXNESS_MT5_DEMO_LOCAL_READ_ONLY",
+      "needed": [
+        "terminal_info.connected",
+        "tradeapi_disabled",
+        "account_info.company",
+        "server",
+        "login_fingerprint_sha256",
+        "trade_mode_DEMO",
+        "currency_USD",
+        "balance",
+        "equity",
+        "margin",
+        "margin_free",
+        "observed_utc"
+      ],
+      "allowed_preapproved_read_functions": [
+        "terminal_info",
+        "account_info"
+      ],
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S02_MT5_SYMBOL",
+      "origin": "EXNESS_MT5_DEMO_LOCAL_READ_ONLY",
+      "needed": [
+        "symbol_info XAUUSD",
+        "trade_tick_size",
+        "trade_tick_value_loss",
+        "trade_tick_value_profit",
+        "trade_contract_size",
+        "volume_min",
+        "volume_max",
+        "volume_step",
+        "trade_stops_level",
+        "trade_freeze_level",
+        "point",
+        "session_rules"
+      ],
+      "allowed_preapproved_read_functions": [
+        "symbol_info"
+      ],
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S03_MT5_TICK_STREAM",
+      "origin": "EXNESS_MT5_DEMO_LOCAL_READ_ONLY",
+      "needed": [
+        "time_msc",
+        "time_sec",
+        "bid",
+        "ask",
+        "flags",
+        "source_ordinal",
+        "segment_index",
+        "source_encoding",
+        "observer_utc",
+        "clock_skew_bound"
+      ],
+      "allowed_preapproved_read_functions": [
+        "symbol_info_tick",
+        "copy_ticks_range"
+      ],
+      "required_tick_protocol": "phase0/roadmap/DEMO_V11_T1_TICK_TIMESTAMP_SEQUENCE_PROTOCOL_2026-10-18.json",
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S04_MT5_EXPOSURE",
+      "origin": "EXNESS_MT5_DEMO_LOCAL_READ_ONLY",
+      "needed": [
+        "positions_get complete",
+        "orders_get complete",
+        "zero_exposure_pre_during_post",
+        "pending_and_owned_exposure_reconciliation"
+      ],
+      "allowed_preapproved_read_functions": [
+        "positions_get",
+        "orders_get"
+      ],
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S05_HISTORY_CASHFLOW_LEDGER",
+      "origin": "BROKER_HISTORY_AND_LOCAL_JOURNAL",
+      "needed": [
+        "strategy_inception_reconciled_equity",
+        "UTC_day_and_week_boundary_snapshots",
+        "cashflow_deposits_withdrawals_and_reversals",
+        "complete_fills_partial_fills_commission_swap_adjustments",
+        "loss_equivalent_streak",
+        "high_water_mark"
+      ],
+      "additional_broker_read_functions_only_if_separately_approved": [
+        "history_deals_get",
+        "history_orders_get"
+      ],
+      "allowed_now": "OFFLINE_DESIGN_ONLY",
+      "missing_boundary": "QUARANTINE",
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S06_EXNESS_ACCOUNT_FEES",
+      "origin": "EXNESS_DEMO_ACCOUNT_SPECIFIC_DOCUMENT_AND_BROKER_SPECIFICATIONS",
+      "needed": [
+        "account_class_exact_match",
+        "XAUUSD_round_trip_commission",
+        "swap_long_short_and_rollover_holding_reserve",
+        "currency_units",
+        "document_capture_timestamp",
+        "applicable_waiver_proof_if_zero"
+      ],
+      "zero_without_documentation": "PROHIBITED",
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S07_QUOTE_TO_USD_CONVERSION",
+      "origin": "ACCOUNT_SPECIFIC_MT5_SYMBOL_AND_INDEPENDENT_CONVERSION_ORACLE",
+      "needed": [
+        "loss_side_tick_value_verified",
+        "profit_side_asymmetry_check",
+        "contract_lot_basis",
+        "tick_size_volume",
+        "conversion_currency_rates_if_applicable",
+        "independent_oracle_recompute",
+        "no_float_math_in_final_currency"
+      ],
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S08_SLIPPAGE_GAP_STRESS",
+      "origin": "PROSPECTIVE_QUOTE_PROXY_PLUS_INDEPENDENT_CONSERVATIVE_BUFFER",
+      "needed": [
+        "1s_5s_30s_two_sided_adverse_quote_moves",
+        "observed_quote_gaps",
+        "short_horizon_candidate_semantics",
+        "source_sample_sufficiency",
+        "nonexecution_proxy_label",
+        "separately_supported_stop_execution_allowance",
+        "worst_quoted_and_stressed_usd_cost"
+      ],
+      "never_assume_observed_quote_max_caps_fill": true,
+      "missing_actual_slippage_bound": "NOT_ADMITTED_UNLESS_SEPARATELY_EVIDENCED_CONSERVATIVE_ALLOWANCE",
+      "proof_status": "NOT_COLLECTED",
+      "sha256": null
+    },
+    {
+      "id": "S09_EXNESS_SESSIONS_HOLIDAYS",
+      "origin": "OFFICIAL_EXNESS_INSTRUMENT_DATE_TIME_SCHEDULE",
+      "url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+      "needed": [
+        "XAUUSD_exact_date_broker_trading_eligible",
+        "close_only_quote_only_conditions",
+        "maintenance",
+        "all_holidays",
+        "rollover_exclusions",
+        "London_NY_liquid_session_independent_grounding",
+        "UTC_and_DST_mapping"
+      ],
+      "proof_status": "UNHASHED_PUBLIC_REFERENCE_ONLY",
+      "sha256": null
+    },
+    {
+      "id": "S10_EVENTS",
+      "origin": "OFFICIAL_BLS_BEA_CENSUS_FED_CALENDARS_PLUS_HEALTHY_EVENT_GUARD",
+      "urls": [
+        "https://www.bls.gov/schedule/2026/10_sched_list.htm",
+        "https://www.federalreserve.gov/newsevents/2026-october.htm",
+        "https://www.bea.gov/news/schedule",
+        "https://www.census.gov/economic-indicators/"
+      ],
+      "needed": [
+        "complete_relevant_date_release_scan",
+        "news_impact_classification",
+        "blocked_windows",
+        "event_guard_health",
+        "time_UTC_conversion",
+        "source_changed_recheck"
+      ],
+      "proof_status": "UNHASHED_PUBLIC_REFERENCES_ONLY",
+      "sha256": null
+    },
+    {
+      "id": "S11_WINDOWS_COLLECTOR_SOURCE_AND_MANIFEST",
+      "origin": "PRIVATE_REVIEWED_CODE_AND_OWNER_APPROVED_VPS_INVOCATION",
+      "needed": [
+        "sha256_of_host_core_policy_and_verifiers",
+        "source_commit_sha",
+        "SHA256_raw_bytes_pre_post",
+        "static_trading_function_allowlist",
+        "exact_UTC_registered_window",
+        "owner_explicit_capture_approval",
+        "no_shared_worktree_mutation",
+        "private_destination_exclusive_creation"
+      ],
+      "proof_status": "OFFLINE_CANDIDATE_ONLY",
+      "sha256": null
+    }
+  ],
+  "admission_formula": {
+    "planned_loss": "CEIL_CENT(ADVERSE_PRICE_TO_STOP_USD)+VERIFIED_COMMISSION+VERIFIED_SWAP_BUFFER+VERIFIED_SLIPPAGE_BUFFER+VERIFIED_GAP_BUFFER",
+    "risk_cap": "FLOOR_CENT(0.0025*MIN(BALANCE,EQUITY,10000))",
+    "concurrent": "<=50USD",
+    "daily": "<75_CURRENT_AND_<=75_PROSPECTIVE",
+    "weekly": "<150_CURRENT_AND_<=150_PROSPECTIVE",
+    "drawdown": "<500_CURRENT_AND_<=500_PROSPECTIVE",
+    "loss_equivalent_streak": "<3",
+    "M1": "CURRENT_AND_DOUBLE_MARGIN_STRESS_>=1000_PCT_AND_FREE_MARGIN_>=90_PCT",
+    "unknown_source": "DENY_QUARANTINE",
+    "authorization": "NONE"
+  },
+  "remaining_steps": [
+    "exact_day_week_timezone_and_journal_reconstruction_spec_before_broker_capture",
+    "real_source_attestation_and_hashes",
+    "separate_owner_VPS_read_only_approval",
+    "independent_two_pass_verification",
+    "separate_calibration_admission",
+    "separate_demo_execution_authorization"
+  ]
+}

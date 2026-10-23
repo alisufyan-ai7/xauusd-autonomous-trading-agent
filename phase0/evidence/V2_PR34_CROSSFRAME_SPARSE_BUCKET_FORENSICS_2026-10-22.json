@@ -1,0 +1,236 @@
+{
+  "schema_version": "xauusd-v2-pr34-real-forensic-evidence-v1",
+  "status": "OWNER_ATTENDED_FORENSIC_SNAPSHOT_STRICT_PARITY_FAIL_CLOSED",
+  "observed_utc": "2026-10-22T13:54:02.001273+00:00",
+  "source": "USER_SUPPLIED_SANITIZED_POWERSHELL_OUTPUT_ATTACHMENT",
+  "executed_wrapper_review_sha": "4734330f8cf29321387eeff2ebd0f77c9eccb2d4",
+  "archived_probe_source_sha": "dfa00c7b16dc2dc46fb6662cdf989a8c19965f5a",
+  "remote_branch_head_observed": "730b92e8e42e2df57bf05a3781d999e296212b04",
+  "symbol": "XAUUSD",
+  "broker": "Exness Technologies Ltd",
+  "server": "Exness-MT5Trial15",
+  "mode": "DEMO",
+  "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "external_python_trading_disabled": true,
+  "order_api_calls": 0,
+  "execution_permitted": false,
+  "all_requested_bar_counts_available": true,
+  "nominal_sunday_utc_weekly_open_observed": true,
+  "crossframe_compared_parent_bars": 563,
+  "crossframe_parity_accepted": false,
+  "crossframe_reason_codes": [
+    "D1_H4_MISSING_OR_MISALIGNED_CHILD_BARS",
+    "H4_H1_MISSING_OR_MISALIGNED_CHILD_BARS"
+  ],
+  "crossframe_gap_forensics": {
+    "D1_H4": {
+      "fully_covered_parent_buckets": 48,
+      "partial_parent_buckets": 9,
+      "zero_child_parent_buckets": 0,
+      "missing_child_slot_count": 45,
+      "misaligned_child_slot_count": 0,
+      "partial_aggregate_match_count": 9,
+      "partial_aggregate_disagreement_count": 0,
+      "samples_capped_at_six": true,
+      "samples": [
+        {
+          "parent_open_utc": "2026-08-23T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-08-23T00:00:00+00:00",
+            "2026-08-23T04:00:00+00:00",
+            "2026-08-23T08:00:00+00:00",
+            "2026-08-23T12:00:00+00:00",
+            "2026-08-23T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-08-30T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-08-30T00:00:00+00:00",
+            "2026-08-30T04:00:00+00:00",
+            "2026-08-30T08:00:00+00:00",
+            "2026-08-30T12:00:00+00:00",
+            "2026-08-30T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-06T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-09-06T00:00:00+00:00",
+            "2026-09-06T04:00:00+00:00",
+            "2026-09-06T08:00:00+00:00",
+            "2026-09-06T12:00:00+00:00",
+            "2026-09-06T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-13T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-09-13T00:00:00+00:00",
+            "2026-09-13T04:00:00+00:00",
+            "2026-09-13T08:00:00+00:00",
+            "2026-09-13T12:00:00+00:00",
+            "2026-09-13T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-20T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-09-20T00:00:00+00:00",
+            "2026-09-20T04:00:00+00:00",
+            "2026-09-20T08:00:00+00:00",
+            "2026-09-20T12:00:00+00:00",
+            "2026-09-20T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-27T00:00:00+00:00",
+          "expected_h4": 6,
+          "observed_h4": 1,
+          "missing_h4_starts_utc": [
+            "2026-09-27T00:00:00+00:00",
+            "2026-09-27T04:00:00+00:00",
+            "2026-09-27T08:00:00+00:00",
+            "2026-09-27T12:00:00+00:00",
+            "2026-09-27T16:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        }
+      ]
+    },
+    "H4_H1": {
+      "fully_covered_parent_buckets": 108,
+      "partial_parent_buckets": 26,
+      "zero_child_parent_buckets": 0,
+      "missing_child_slot_count": 38,
+      "misaligned_child_slot_count": 0,
+      "partial_aggregate_match_count": 26,
+      "partial_aggregate_disagreement_count": 0,
+      "samples_capped_at_six": true,
+      "samples": [
+        {
+          "parent_open_utc": "2026-09-22T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 3,
+          "missing_h1_starts_utc": [
+            "2026-09-22T21:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-23T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 3,
+          "missing_h1_starts_utc": [
+            "2026-09-23T21:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-24T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 3,
+          "missing_h1_starts_utc": [
+            "2026-09-24T21:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-25T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 1,
+          "missing_h1_starts_utc": [
+            "2026-09-25T21:00:00+00:00",
+            "2026-09-25T22:00:00+00:00",
+            "2026-09-25T23:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-27T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 2,
+          "missing_h1_starts_utc": [
+            "2026-09-27T20:00:00+00:00",
+            "2026-09-27T21:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        },
+        {
+          "parent_open_utc": "2026-09-28T20:00:00+00:00",
+          "expected_h1": 4,
+          "observed_h1": 3,
+          "missing_h1_starts_utc": [
+            "2026-09-28T21:00:00+00:00"
+          ],
+          "observed_child_aggregate_matches_parent": true
+        }
+      ]
+    },
+    "H1_M15": {
+      "fully_covered_parent_buckets": 249,
+      "partial_parent_buckets": 0,
+      "missing_child_slot_count": 0,
+      "misaligned_child_slot_count": 0,
+      "partial_aggregate_disagreement_count": 0
+    },
+    "M15_M5": {
+      "fully_covered_parent_buckets": 99,
+      "partial_parent_buckets": 0,
+      "missing_child_slot_count": 0,
+      "misaligned_child_slot_count": 0,
+      "partial_aggregate_disagreement_count": 0
+    },
+    "M5_M1": {
+      "fully_covered_parent_buckets": 59,
+      "partial_parent_buckets": 0,
+      "missing_child_slot_count": 0,
+      "misaligned_child_slot_count": 0,
+      "partial_aggregate_disagreement_count": 0
+    }
+  },
+  "total_incomplete_parent_buckets": 35,
+  "total_nominal_missing_child_slots": 83,
+  "total_partial_parent_ohlc_volume_aggregate_matches": 35,
+  "partial_bucket_aggregate_disagreements_reported": 0,
+  "sample_count_capped": "6 per pair, not exhaustive",
+  "full_chronology_admitted": false,
+  "official_broker_session_source_admitted": false,
+  "sparse_gap_session_classification_admitted": false,
+  "consecutive_bar_gap_counts_unclassified": {
+    "D1": 30,
+    "H1": 22,
+    "H4": 9,
+    "M15": 11,
+    "M5": 1,
+    "M1": 0,
+    "W1": 0
+  },
+  "official_broker_context": {
+    "source_url": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+    "source_page_last_updated": "2026-09-29",
+    "context_only": "Broker describes gold closed near rollover, usually 21:00 UTC in US summer and 22:00 UTC in US winter; weekly weekends and holidays affect scheduling.",
+    "exact_historical_dates_session_open_closed_classified": false,
+    "custom_instrument_schedule_range_retrieved": false,
+    "rights_to_republish_source_body_not_assumed": true
+  },
+  "interpretation": "Sunday logical D1 bar with only one H4 child and 21:00 UTC H1 nominal absence are consistent with weekend/repeated rollover shutdown. No broker-dated complete session calendar has been captured, so observed absence cannot be marked as VERIFIED_CLOSED. Zero partial aggregate disagreements is necessary but not sufficient.",
+  "immutable_prior_failure_preserved": "phase0/evidence/V2_PR34_CROSSFRAME_READONLY_FAIL_CLOSED_2026-10-22.json",
+  "no_raw_price_quotes_tickets_credentials_or_account_numbers": true,
+  "still_no_broker_order_or_vps_deploy": true
+}

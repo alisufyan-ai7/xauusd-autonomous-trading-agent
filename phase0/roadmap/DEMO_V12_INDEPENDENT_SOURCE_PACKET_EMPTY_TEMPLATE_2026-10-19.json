@@ -1,0 +1,182 @@
+{
+  "schema_version": "demo-v12-static-external-source-manifest-template-20261019",
+  "status": "EMPTY_FUTURE_SOURCE_TEMPLATE_NOT_REGISTERED_NOT_CAPTURE_PERMIT",
+  "scope": "DESIGN_APPROVED_ONLY__NOT_FILLABLE_WITH_UNVERIFIED_ASSUMPTIONS",
+  "approved_design_pr13_sha": "847829378956670e8936bf46c82e685de41145fd",
+  "approved_parent_pr12_sha": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+  "frozen_v12_prereg_git_blob": "c7dcf520fe2a3b12437cec6a1b5dd06c25494d5f",
+  "owner_design_comment_id": 6256228112,
+  "real_exact_observation_start_utc": null,
+  "real_exact_observation_end_utc": null,
+  "real_verified_overlap_start_utc": null,
+  "real_verified_overlap_end_utc": null,
+  "overlap_daypart_example_never_approved": true,
+  "external_source_authentication_completed": false,
+  "source_collection_permitted": false,
+  "actual_costs_numerically_admitted": false,
+  "actual_execution_slippage_measured": false,
+  "source_bytes_stored_in_private_vps": false,
+  "independent_source_pins_recorded": false,
+  "owner_separate_readonly_capture_approval_id": null,
+  "owner_approved_exit_deadline_and_attendance": null,
+  "source_digests_by_class": {
+    "exness_xauusd_hours": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "exness_holiday_dst": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "london_session": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "new_york_session": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "bls_calendar": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "bea_calendar": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "census_calendar": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "fed_calendar": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "dol_calendar": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "event_guard_health_blackout": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "demo_account_identity": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "clock_sync": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "tick_protocol": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "collector_source": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "host_source": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "private_output_policy": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "broker_fee_swap": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "tick_loss_usd_conversion": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "pre_demo_quote_proxy_floor": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "gap_floor": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "stress_event_external": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "nonoverlap_components": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    },
+    "supervised_exit_reconciliation": {
+      "sha256": null,
+      "source_url_or_protected_locator": null,
+      "retrieved_utc": null,
+      "expected_regime": null
+    }
+  },
+  "operational_authorizations": {
+    "pr_merge": false,
+    "vps_access": false,
+    "broker_capture": false,
+    "mt5_config_changes": false,
+    "external_python_trading": false,
+    "demo_orders": false,
+    "live_orders": false,
+    "order_modify_cancel_close": false
+  },
+  "remains_execution_disabled": true,
+  "full_policy_a_and_quarantine": "UNCHANGED",
+  "reviewer_outputs_may_only_say": "SYNTHETIC_OFFLINE_SCHEMA_REVIEW_ONLY_NOT_CAPTURE_OR_DEMO_ADMISSION",
+  "notes": [
+    "All hashes, dates and real source origins remain null. No invented real UTC capture window.",
+    "Matching hashes establish bytes identity only; they do not authenticate Exness or government event sources.",
+    "No actual MT5 sample, prices, fees, slippage reserve, gap buffer, event stress observation or fill acquired.",
+    "Do not enter owner approval tokens or private broker identities into GitHub.",
+    "Source manifest data, methods, and real run registration require independent review and separate owner authority before VPS read-only acquisition."
+  ]
+}
