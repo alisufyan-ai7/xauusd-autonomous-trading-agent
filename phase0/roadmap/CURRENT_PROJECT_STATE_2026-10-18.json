@@ -409,7 +409,7 @@
     "proposed_governance_reconciliation": "phase0/governance/PROPOSED_RULE7_DEMO_ENGINEERING_RECONCILIATION_2026-10-23.md"
   },
   "latest_comprehensive_readonly_broker_capture_2026_10_23": {
-    "status": "OWNER_FIRST_ATTEMPT_IMPORT_FAILED_BEFORE_MT5_FIXED_TESTED_AWAITING_FIRST_REAL_CAPTURE",
+    "status": "SECOND_CORRECTED_ATTEMPT_FAIL_CLOSED_DEMOSAFETYERROR_CAUSE_UNKNOWN",
     "active_pr": 40,
     "canonical_only_mt5_discovery_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
     "python_source": "demo_adapter/scripts/mt5_comprehensive_readonly.py",
@@ -439,7 +439,7 @@
     "actual_mt5_orders_sent": false,
     "s2_full_policy_hard_stop_present": true,
     "other_partial_broker_discovery_scripts": "SUPERSEDED_NOT_RECOMMENDED_NO_REPEAT",
-    "owner_next_step": "REVIEWED_SINGLE_CORRECTED_VPS_LAUNCH_ONCE_AND_SHARE_SANITIZED_SUMMARY",
+    "owner_next_step": "SHARE_LOCAL_ONLY_EXISTING_PRIVATE_EVIDENCE_FILE_INVENTORY__DO_NOT_REPEAT_MT5",
     "real_money_live_pilot_authorized": false,
     "open_pr_count": 1,
     "prior_attempt_source_pin": "150b60e8884b13d6a934c1e9ff77bd523826c75e",
@@ -453,23 +453,30 @@
     "pre_mt5_import_preflight": true,
     "corrected_launcher_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "incident_record": "phase0/roadmap/MT5_SINGLE_CAPTURE_IMPORT_FAILURE_2026-10-23.md",
-    "status_truth": "SOURCE_TESTED_NO_REAL_BROKER_CAPTURE"
+    "status_truth": "IMPORT_PREFLIGHT_PASS__BROKER_CAPTURE_FAIL_CLOSED_NO_ADMITTED_SAMPLES",
+    "attempt_2_error_type": "DemoSafetyError",
+    "attempt_2_import_preflight": "PASS",
+    "attempt_2_source_sha": "10425e6180ef660226e298ef06a0fa423334332e",
+    "attempt_2_sample_count_verified": null,
+    "attempt_2_broker_connectivity_verified": null,
+    "attempt_2_sanitized_complete_summary_verified": false,
+    "incident_attempt_2": "phase0/roadmap/MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md"
   },
   "current_next_chat_handoff_2026_10_23": {
-    "status": "OWNER_REPORTED_CORRECTED_READONLY_VPS_SCRIPT_RUN__ACTUAL_OUTPUT_PENDING_NEW_CHAT",
+    "status": "CORRECTED_VPS_ATTEMPT_FAIL_CLOSED_AFTER_IMPORT_PREFLIGHT__CAUSE_UNKNOWN",
     "canonical_start_here": "phase0/roadmap/START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md",
-    "result_evaluated": false,
-    "corrected_run_completed_successfully": null,
-    "corrected_run_failed": null,
+    "result_evaluated": true,
+    "corrected_run_completed_successfully": false,
+    "corrected_run_failed": true,
     "corrected_run_quote_samples": null,
     "corrected_run_broker_account_observed": null,
-    "corrected_run_orders_sent": null,
+    "corrected_run_orders_sent": 0,
     "previous_failed_attempt": "MODULE_NOT_FOUND_XAUUSD_AGENT_PRE_MT5_ALREADY_RECORDED",
     "previous_failed_attempt_distinct_from_new_run": true,
     "corrected_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "canonical_single_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
     "private_capture_location_pattern": "%LOCALAPPDATA%\\\\XAUUSD-BrokerEvidence\\\\capture-*",
-    "next_action": "RECONCILE_GITHUB_THEN_ANALYZE_OWNER_SUPPLIED_VPS_OUTPUT__NO_AUTOMATIC_RERUN",
+    "next_action": "OWNER_ONE_LOCAL_ONLY_PRIVATE_EVIDENCE_INVENTORY__NO_MT5_INVOCATION_NO_REPEAT_CAPTURE",
     "broker_order_execution": "STILL_BLOCKED_UNDER_POLICY_A",
     "account_type": "EXNESS_PRO_MT5_DEMO_VIRTUAL_FUNDS_REAL_BROKER_API_GOAL",
     "future_live_money": "NOT_AUTHORIZED",
@@ -484,7 +491,13 @@
       39949921134
     ],
     "owner_request": "PRESERVE_CONTEXT_IN_GITHUB_ACROSS_CHAT_LIMITS",
-    "documentation_location": "PR40_ONLY_UNMERGED_PRODUCTION_MAIN_STILL_OLDER"
+    "documentation_location": "PR40_ONLY_UNMERGED_PRODUCTION_MAIN_STILL_OLDER",
+    "latest_output_failure_type": "DemoSafetyError",
+    "isolated_import_preflight": "PASS_NO_MT5",
+    "completed_capture_admitted": false,
+    "private_evidence_files_inspected": false,
+    "source_runtime_failure_guard_identified": false,
+    "failure_incident": "phase0/roadmap/MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md"
   },
   "github_recovery_2026_10_23_new_chat": {
     "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
@@ -522,5 +535,27 @@
     "rule7_reconciliation_accepted": false,
     "main_modified_by_recovery": false,
     "next_step": "INSPECT_CORRECTED_OWNER_VPS_CONSOLE_AND_SHAREABLE_SUMMARY_BEFORE_ANY_REPEAT_OR_DEFECT_FIX"
+  },
+  "latest_correction_after_real_vps_failure_2026_10_23": {
+    "scope": "DIAGNOSTIC_OBSERVABILITY_ONLY_NO_TRADING",
+    "active_pr": 40,
+    "failure_run_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
+    "preflight": "PASS",
+    "failure": "FAIL_CLOSED_NO_ORDER",
+    "failure_class": "DemoSafetyError",
+    "failure_guard": "UNKNOWN_FROM_EXISTING_SANITIZED_OUTPUT",
+    "known_reported_order_check_calls": 0,
+    "known_reported_order_send_calls": 0,
+    "file_inventory_verified": false,
+    "existing_captured_partial_evidence_status": "NOT_INSPECTED",
+    "source_change": "FAILURE_STAGE_ENUM_AND_PARTIAL_ARTIFACT_FLAGS",
+    "new_tests": "EARLY_WRONG_ACCOUNT_AND_POST_STATIC_EXCEPTION_PRIVACY_NO_ORDER",
+    "native_ci_at_document_commit": "PENDING_CONFIRMATION",
+    "launcher_repinned": false,
+    "new_mt5_attempt_authorized": false,
+    "full_policy_a_cash_admitted": false,
+    "official_news_admitted": false,
+    "governance_rule7_amendment_accepted": false,
+    "real_money_live_authorized": false
   }
 }
