@@ -51,7 +51,7 @@ def test_windows_powershell_parses_only() -> None:
         f"'{escaped}',[ref]$tokens,[ref]$errors)|Out-Null; "
         "if($errors.Count -gt 0){$errors|Out-String|Write-Output; exit 1}"
     )
-    result = subprocess.run(
+    result = subprocess.run(  # noqa: S603 -- native parser only, never run VPS script
         [powershell, "-NoProfile", "-NonInteractive", "-Command", command],
         capture_output=True, text=True, timeout=45, check=False,
     )
