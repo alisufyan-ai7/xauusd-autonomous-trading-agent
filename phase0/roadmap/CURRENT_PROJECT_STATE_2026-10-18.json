@@ -475,7 +475,7 @@
     "attempted_four_hour_capture_completed": false
   },
   "current_next_chat_handoff_2026_10_23": {
-    "status": "LATEST_REAL_EXNESS_DEMO_STATIC_READONLY_PASS__PROSPECTIVE_4H_PENDING_AND_S2_ORDER_NO_GO",
+    "status": "OWNER_REVISED_REAL_DEMO_FIRST_NO_STANDALONE_4H_GATE_DYNAMIC_POSITION_MANAGEMENT_REQUIRED_BUT_RUNTIME_NOT_READY",
     "canonical_start_here": "phase0/roadmap/START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md",
     "result_evaluated": true,
     "corrected_run_completed_successfully": false,
@@ -488,7 +488,7 @@
     "corrected_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "canonical_single_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
     "private_capture_location_pattern": "%LOCALAPPDATA%\\\\XAUUSD-BrokerEvidence\\\\capture-*",
-    "next_action": "VERIFY_NATIVE_CI_FOR_REPINNED_COMPREHENSIVE_READONLY_SCRIPT_THEN_REQUEST_SEPARATE_OWNER_4H_PERMISSION",
+    "next_action": "IMPLEMENT_TRUSTED_RUNTIME_FULL_POLICY_A_QUALIFIED_BROKER_PORT_AND_DEMO_LOCAL_RELEASE; DO_NOT_DEPLOY_READONLY_AS_FAKE_DEMO_ORDERING",
     "broker_order_execution": "STILL_BLOCKED_UNDER_POLICY_A",
     "account_type": "EXNESS_PRO_MT5_DEMO_VIRTUAL_FUNDS_REAL_BROKER_API_GOAL",
     "future_live_money": "NOT_AUTHORIZED",
@@ -520,7 +520,14 @@
     "latest_vps_sanitized_summary_sha256": "794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B",
     "latest_vps_historical_ticks_pass": true,
     "latest_vps_real_broker_margin_0_01_usd": "2.01",
-    "four_hour_quote_slots_collected": null
+    "four_hour_quote_slots_collected": null,
+    "latest_owner_decision": "phase0/decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md",
+    "four_hour_mandatory_for_revised_future_demo_protocol": false,
+    "owner_requires_human_style_known_position_supervision": true,
+    "risk_rate_0_25_considered_permanent": false,
+    "replacement_numerical_risk_policy_authorized": false,
+    "actual_runtime_order_sender_ready": false,
+    "actual_windows_vps_deployment_performed": false
   },
   "github_recovery_2026_10_23_new_chat": {
     "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
@@ -674,5 +681,34 @@
     "prospective_launcher_new_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
     "prospective_launcher_prepared_but_not_executed": true,
     "prospective_four_hour_new_owner_authorization_received": false
+  },
+  "owner_explicit_revised_demo_release_direction_2026_10_23": {
+    "decision": "ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION",
+    "actual_broker_demo_order_lifecycle_intent": "EXPLICIT_OWNER_REQUEST",
+    "actual_demo_broker_orders_executed": false,
+    "pending_four_hour_readonly_prerequisite_for_successor_first_demo_order": false,
+    "earlier_v11_four_hour_method_status": "IMMUTABLE_PREVIOUS_ADOPTED_PROTOCOL_NOT_REWRITTEN",
+    "alternative_continuous_calibration_method_admitted": false,
+    "source_backed_nonzero_fee_slippage_gap_reserves_required_before_execution": true,
+    "stop_loss_price_distance_fixed_by_0_25_percent": false,
+    "owner_rejects_immutable_future_risk_fraction_0_25_percent": true,
+    "versioned_replacement_risk_rate_or_formula_selected": false,
+    "currently_enforced_legacy_risk_rate": "0.0025",
+    "desired_dynamic_known_position_management": [
+      "EARLY_KNOWN_POSITION_CLOSE",
+      "STOP_TO_BREAKEVEN",
+      "TIGHTEN_OR_TRAIL_STOP",
+      "BOUNDED_TAKE_PROFIT_MODIFICATION"
+    ],
+    "dynamic_position_manager_broker_mutations_implemented_and_admitted": false,
+    "only_one_001_lot_xauusd_exness_pro_demo_scope": true,
+    "actual_execution_broker_port_implemented_and_admitted": false,
+    "s2_hard_stop": "FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED",
+    "read_only_coordinator_port_always_denies_submit": true,
+    "governance_rule7_accepted_main_conflict_unresolved": true,
+    "forex_vps_access_by_chatgpt": false,
+    "owner_standing_demo_intent_requires_no_more_generic_permission_loop": true,
+    "live_trading_authorized": false,
+    "next_real_goal": "FINISH_BROKER_AUTHORITY_BINDING_SINGLE_S2_SENDER_AND_ACTUAL_VPS_ACTIVATION__NO_FAKE_TRADING"
   }
 }
