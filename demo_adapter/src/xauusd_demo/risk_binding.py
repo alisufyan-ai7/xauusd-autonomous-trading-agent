@@ -46,8 +46,11 @@ class DemoRiskCalibration:
         ):
             if not isinstance(value, Decimal) or not value.is_finite() or value < 0:
                 raise DemoSafetyError(f"{label} must be a finite nonnegative Decimal")
-        if self.stressed_adverse_cost < self.current_adverse_cost:
-            raise DemoSafetyError("stressed adverse cost cannot be below current adverse cost")
+        # Owner-selected restricted-session v1.1 evidence method requires
+        # stressed cost >= max(2x current, verified stressed components).
+        # This numerical rule cannot substitute for actual source admission.
+        if self.stressed_adverse_cost < 2 * self.current_adverse_cost:
+            raise DemoSafetyError("stressed adverse cost must be at least 2x current")
 
     def sha256(self) -> str:
         self.validate()
