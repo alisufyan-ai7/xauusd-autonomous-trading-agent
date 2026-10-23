@@ -136,9 +136,12 @@
     "latest_static_read_only_broker_evidence": true,
     "four_hour_prospective_cost_source": false,
     "real_demo_order_authorized": false,
-    "full_policy_a_admitted": false
+    "full_policy_a_admitted": false,
+    "revised_standalone_four_hour_mandatory": false,
+    "owner_intent_real_broker_demo": true,
+    "dynamic_position_management_operational": false
   },
-  "next_code_action": "Validate prepared pinned four-hour read-only launcher in native Windows+Ubuntu CI; request separate owner-confirmed prospective observation; do not send orders or admit Policy A without costs/news/session/complete broker journal.",
+  "next_code_action": "Engineer and test one ACTUAL broker-authoritative qualified existing S2 MT5 DEMO order port + broker-known dynamic position management and single on-VPS release. Do not treat read-only capture as launch; no direct VPS connector in this chat.",
   "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER",
   "latest_native_contract_validation": {
     "source_head": "f40f1d68e587a22c47869519434077a96cab071f",
@@ -247,5 +250,22 @@
     "canonical_four_hour_launcher_prepared": true,
     "canonical_four_hour_launcher_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
     "four_hour_run_authorized_by_owner_after_latest_result": false
+  },
+  "latest_owner_mandate_2026_10_23": {
+    "source_decision": "phase0/decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md",
+    "owner_express_demo_only_order_operation_intent": true,
+    "required_separate_four_hour_prerequisite_for_revised_demo_protocol": false,
+    "historic_4h_v11_method_unchanged_archived": true,
+    "required_alternative_numerical_risk_calibration_established": false,
+    "owner_requires_dynamic_stop_target_and_known_position_management": true,
+    "planned_loss_fraction_0_25_is_not_sl_price_or_tp": true,
+    "owner_wants_risk_fraction_revised_not_pinned_permanently": true,
+    "alternative_bounded_numerical_policy_defined": false,
+    "existing_main_policy_a_current_cap": "0.0025",
+    "current_execution_authority": "NO_GO_S2_UNCONDITIONAL_DENY",
+    "qualified_active_broker_submit_port_exists": false,
+    "actual_vps_order_deployment": false,
+    "user_wants_single_source_pinned_vps_deploy_after_qualified_runtime": true,
+    "live_real_money": false
   }
 }
