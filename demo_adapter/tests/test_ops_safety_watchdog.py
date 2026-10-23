@@ -32,15 +32,15 @@ def test_killed_by_default_and_requires_exact_human_p1(tmp_path: Path):
         assert w.status() == "KILLED"
         assert not w.check_fresh(now=NOW)
         with pytest.raises(DemoSafetyError, match="P1"):
-            w.arm_attended(now=NOW, operator_token="activate")
-        w.arm_attended(now=NOW, operator_token="P1-ARM-DEMO-WATCHDOG")
+            w.arm_attended(now=NOW, confirmation_phrase="activate")
+        w.arm_attended(now=NOW, confirmation_phrase="P1-ARM-DEMO-WATCHDOG")
         assert w.check_fresh(now=NOW + timedelta(seconds=3))
 
 
 def test_durable_stale_watchdog_quarantine_requires_manual_restart(tmp_path: Path):
     path = tmp_path / "stale.sqlite"
     with PersistentDemoSafetyWatchdog(path) as w:
-        w.arm_attended(now=NOW, operator_token="P1-ARM-DEMO-WATCHDOG")
+        w.arm_attended(now=NOW, confirmation_phrase="P1-ARM-DEMO-WATCHDOG")
         w.heartbeat(now=NOW + timedelta(seconds=5))
         assert not w.check_fresh(now=NOW + timedelta(minutes=1))
         assert w.status() == "QUARANTINED"
@@ -49,12 +49,12 @@ def test_durable_stale_watchdog_quarantine_requires_manual_restart(tmp_path: Pat
         assert w.status() == "QUARANTINED"
         with pytest.raises(DemoSafetyError, match="P1"):
             w.arm_attended(now=NOW + timedelta(minutes=2),
-                           operator_token="P1-ARM-DEMO-WATCHDOG")
+                           confirmation_phrase="P1-ARM-DEMO-WATCHDOG")
 
 
 def test_rollback_latches_and_incident_persists(tmp_path: Path):
     with PersistentDemoSafetyWatchdog(tmp_path / "rollback.sqlite") as w:
-        w.arm_attended(now=NOW, operator_token="P1-ARM-DEMO-WATCHDOG")
+        w.arm_attended(now=NOW, confirmation_phrase="P1-ARM-DEMO-WATCHDOG")
         with pytest.raises(DemoSafetyError, match="stale"):
             w.heartbeat(now=NOW - timedelta(seconds=1))
         assert w.status() == "QUARANTINED"
@@ -89,7 +89,7 @@ def test_alert_email_then_telegram_partial_failure_is_durable(tmp_path: Path):
 def test_e1_kill_does_not_close_positions_or_send_orders(tmp_path: Path):
     transport = FakeTwoChannelAlerts()
     with PersistentDemoSafetyWatchdog(tmp_path / "kill.sqlite") as w:
-        w.arm_attended(now=NOW, operator_token="P1-ARM-DEMO-WATCHDOG")
+        w.arm_attended(now=NOW, confirmation_phrase="P1-ARM-DEMO-WATCHDOG")
         w.kill(now=NOW, reason="manual E1 operator control")
         assert w.status() == "KILLED"
         assert not w.check_fresh(now=NOW)
