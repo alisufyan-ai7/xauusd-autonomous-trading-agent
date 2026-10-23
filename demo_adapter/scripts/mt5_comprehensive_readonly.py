@@ -395,21 +395,39 @@ def tick_window(
 def collect_static(
     mt5: MT5ReadOnlySurface, now: datetime, *,
     on_historical_tick: Callable[[dict[str, Any]], None] | None = None,
+    on_stage: Callable[[str], None] | None = None,
 ) -> dict[str, Any]:
-    """One comprehensive account, quote, history, risk, bar and past-tick read."""
+    """One comprehensive account, quote, history, risk, bar and past-tick read.
+
+    Stage callbacks contain *constant* safety codes, never raw broker data.
+    They preserve diagnostic provenance if a source guard fails closed.
+    """
     _utc_time(now)
+
+    def stage(code: str) -> None:
+        if on_stage is not None:
+            on_stage(code)
+
+    stage("STATIC_ACCOUNT_IDENTITY_AND_EXPOSURE")
     before = _identity(mt5, require_flat=True)
+    stage("STATIC_SYMBOL_QUOTE_AND_CONTRACT")
     symbol = symbol_details(mt5, now)
+    stage("STATIC_BROKER_PROFIT_AND_MARGIN")
     money = money_matrix(mt5, symbol)
     # Run the existing strict broker-money validator immediately while its
     # attached quote remains fresh; slow history/rates reads follow afterward.
+    stage("STATIC_LEGACY_BROKER_MONEY_GUARD")
     legacy_money = inspect_real_demo_money(mt5, now=now)
+    stage("STATIC_ACCOUNT_DEAL_ORDER_HISTORY")
     history = history_summary(mt5, now)
+    stage("STATIC_SEVEN_TIMEFRAME_BARS")
     frames = rate_coverage(mt5)
+    stage("STATIC_HISTORICAL_BROKER_TICKS")
     ticks = tick_window(
         mt5, now - timedelta(hours=4), now,
         on_tick=on_historical_tick,
     )
+    stage("STATIC_FINAL_IDENTITY_AND_EXPOSURE")
     after = _identity(mt5, require_flat=True)
     if (
         before["account_fingerprint_sha256"] != after["account_fingerprint_sha256"]
@@ -639,23 +657,36 @@ def run(argv: list[str] | None = None) -> int:
     mt5: MT5ReadOnlySurface | None = None
     initialized = False
     report: dict[str, Any] = {"status": "INCOMPLETE_FAIL_CLOSED_NO_ORDER"}
+    failure_stage = "MT5_MODULE_IMPORT"
+
+    def mark_stage(code: str) -> None:
+        nonlocal failure_stage
+        failure_stage = code
+
     try:
         raw = importlib.import_module("MetaTrader5")
+        mark_stage("MT5_READONLY_METHOD_ALLOWLIST")
         mt5 = MT5ReadOnlySurface(raw)
+        mark_stage("MT5_INITIALIZE")
         if not mt5.initialize():
             raise DemoSafetyError("attached MT5 terminal initialize failed")
         initialized = True
         now = datetime.now(UTC)
+        mark_stage("PRIVATE_EVIDENCE_DIRECTORY_CREATE")
         args.output.mkdir(parents=True, exist_ok=False)
+        mark_stage("STATIC_BROKER_OBSERVATIONS")
         with (args.output / "past_four_hour_broker_ticks.jsonl").open("xb") as stream:
             def write_historic(row: dict[str, Any]) -> None:
                 stream.write(_canonical(row))
             report.update(collect_static(
                 mt5, now, on_historical_tick=write_historic,
+                on_stage=mark_stage,
             ))
         report["status"] = "STATIC_COMPLETE_FOUR_HOUR_PENDING"
+        mark_stage("STATIC_EVIDENCE_SEAL")
         _write_private(args.output / "static_evidence.json", _canonical(report))
         if args.prospective_four_hours:
+            mark_stage("PROSPECTIVE_REGISTRATION")
             # Durable source/timing registration is written BEFORE the first
             # observation; unknown official event/session provenance is null.
             start = datetime.now(UTC) + timedelta(seconds=3)
@@ -688,16 +719,19 @@ def run(argv: list[str] | None = None) -> int:
                 def write_tick(row: dict[str, Any]) -> None:
                     ticks.write(_canonical(row))
 
+                mark_stage("PROSPECTIVE_FOUR_HOUR_SAMPLING")
                 report["prospective_window"] = collect_prospective_quotes(
                     mt5, start=start, now_fn=lambda: datetime.now(UTC),
                     sleep_fn=time.sleep, on_sample=write_row, on_tick=write_tick,
                 )
+            mark_stage("OFFLINE_QUOTE_COVERAGE")
             report["v11_quote_proxy"] = private_v11_quote_proxy(
                 start=start, end=finish, polls_path=poll_file, ticks_path=tick_file,
             )
             report["status"] = "COMPLETE_READONLY_NOT_ADMITTED"
         else:
             report["status"] = "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED"
+        mark_stage("FINAL_EVIDENCE_SEAL")
         _write_private(args.output / "complete_evidence.json", _canonical(report))
         summary = _public_summary(report)
         _write_private(args.output / "shareable_summary.json", _canonical(summary))
@@ -708,6 +742,15 @@ def run(argv: list[str] | None = None) -> int:
         failure = {
             "status": "FAIL_CLOSED_NO_ORDER",
             "error_type": type(exc).__name__,
+            # Only a fixed source-code stage label: no exception string,
+            # account identity, tickets, history, credentials or raw MT5 data.
+            "failure_stage": failure_stage,
+            "private_static_evidence_present": (
+                args.output / "static_evidence.json"
+            ).is_file(),
+            "private_prospective_registration_present": (
+                args.output / "prospective_run_registration.json"
+            ).is_file(),
             "output_location": "PRIVATE_LOCAL_ONLY",
             "order_check_calls": 0, "order_send_calls": 0,
             "no_retry_without_source_review": True,
