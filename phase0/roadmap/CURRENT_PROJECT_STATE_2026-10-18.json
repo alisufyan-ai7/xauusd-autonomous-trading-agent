@@ -527,7 +527,13 @@
     "risk_rate_0_25_considered_permanent": false,
     "replacement_numerical_risk_policy_authorized": false,
     "actual_runtime_order_sender_ready": false,
-    "actual_windows_vps_deployment_performed": false
+    "actual_windows_vps_deployment_performed": false,
+    "mandatory_first_read": "AGENT_START_HERE.md",
+    "new_demo_only_governance_exception_accepted_in_main": true,
+    "new_active_management_pure_evaluator_source": "demo_adapter/src/xauusd_demo/known_position_management.py",
+    "new_active_management_evaluator_order_permission": false,
+    "native_CI_status_for_new_evaluator": "NO_RUN_RETURNED_AT_LAST_CHECK",
+    "real_demo_broker_order_deployed": false
   },
   "github_recovery_2026_10_23_new_chat": {
     "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
@@ -710,5 +716,35 @@
     "owner_standing_demo_intent_requires_no_more_generic_permission_loop": true,
     "live_trading_authorized": false,
     "next_real_goal": "FINISH_BROKER_AUTHORITY_BINDING_SINGLE_S2_SENDER_AND_ACTUAL_VPS_ACTIVATION__NO_FAKE_TRADING"
+  },
+  "owner_vision_authoritative_main_sync_2026_10_23": {
+    "accepted_main_agent_entry": "AGENT_START_HERE.md",
+    "original_2026_10_21_autonomous_vision": "phase0/decisions/ADR-2026-10-21-001-AUTONOMOUS-PRO-TRADING-VISION.md",
+    "oct22_fasttrack": "phase0/decisions/ADR-2026-10-22-004-FAST-TRACK-DEMO-PILOT.md",
+    "oct23_owner_direction": "phase0/decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md",
+    "main_governance_rule8_demo_only_engineering_exception": true,
+    "main_governance_rule7_original_preserved": true,
+    "main_imported_root_navigation_and_adr_and_decision_index": true,
+    "prior_40_pr_audit_count": 40,
+    "historical_merged_pr_count": 13,
+    "historical_closed_unmerged_pr_count": 26,
+    "latest_single_draft_pr_number": 40,
+    "historical_archive_branches_preserved": 5,
+    "readme_and_current_project_state_handoff_links_added": true,
+    "owner_demanded_product": "CONTINUOUS_INTELLIGENT_REAL_EXNESS_PRO_MT5_XAUUSD_DEMO_ORDER_TRADER_WITH_MANAGED_KNOWN_POSITIONS",
+    "risk_fraction_0_25_is_structural_stop_price": false,
+    "new_risk_policy_numeric_formula_admitted": false,
+    "four_hour_standalone_wait_mandatory_for_successor_demo": false,
+    "old_failures_reinterpreted": false,
+    "live_trading_authorized": false,
+    "vps_broker_order_deployment_performed": false,
+    "git_merge_to_main_of_pr40_performed": false,
+    "new_deterministic_management_evaluator_path": "demo_adapter/src/xauusd_demo/known_position_management.py",
+    "new_deterministic_management_tests": "demo_adapter/tests/test_known_position_management.py",
+    "new_management_evaluator_does_not_send_orders": true,
+    "new_management_evaluator_broker_modification_port_integrated": false,
+    "new_source_ci_results_reported": false,
+    "post_main_doc_update_pr40_mergeable_last_observed": false,
+    "next_release_work": "RECONCILE_MAIN_DOCS_TO_DRAFT_PR40; VERIFY_NATIVE_CI; COMPLETE_FULL_BROKER_RISK_EVENT_TPB_SINGLE_SENDER_AND_VPS_RELEASE"
   }
 }
