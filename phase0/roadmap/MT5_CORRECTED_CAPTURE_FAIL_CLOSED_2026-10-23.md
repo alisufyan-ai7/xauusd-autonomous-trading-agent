@@ -1,5 +1,35 @@
 # Incident — corrected comprehensive Exness DEMO read-only collector failed closed (2026-10-23)
 
+
+## 2026-10-23 follow-up — owner PRIVATE file inventory received and original hash independently reproduced
+
+**Exact operator inventory for the original corrected run** under private `%LOCALAPPDATA%\\XAUUSD-BrokerEvidence\\capture-20261023T122721Z-5a5a5665d8b64f6591c30bd7f46a77bd`:
+
+| Private artifact basename | Exists | Bytes |
+|---|---|---:|
+| `failure.json` | YES | 185 |
+| `past_four_hour_broker_ticks.jsonl` | YES | 0 |
+| `static_evidence.json` | NO | — |
+| `prospective_run_registration.json` | NO | — |
+| `prospective_quote_samples.jsonl` | NO | — |
+| `prospective_broker_ticks.jsonl` | NO | — |
+| `complete_evidence.json` | NO | — |
+| `shareable_summary.json` | NO | — |
+
+The operator supplied `failure.json` SHA-256 **`83292117FAA298CB527459D02CA23C91558F166238AECE98CC2AC5E6F3BCA728`**. Independently reconstructed the **exact 185-byte UTF-8 JSON plus terminal LF** from the pinned collector's constant serialized failure object; independently computed SHA-256 is **identical**. This *proves* the persisted failure contains only the console's six generic fields, not a hidden exception reason; the user need not reveal raw `failure.json`.
+
+**New causal localization, source-order grounded:** `mt5.initialize()` returned success and the unique private capture directory and historical-tick output handle were created. Otherwise this pinned `run()` could not have reached the zero-byte `past_four_hour_broker_ticks.jsonl` file. The caller entered the `collect_static` path and raised `DemoSafetyError` before writing any valid historical tick row and before completing/sealing `static_evidence.json`. This does **not** establish that identity, flat exposure, quote/spec, broker math, history or bars passed; any of those, or the first tick/empty tick read, could reject. No prospective registration or five-second sample was started. Empty tick file means **no preserved historical tick**, not proof `copy_ticks_range()` was necessarily called.
+
+**Result:** `STATIC_COLLECTION_FAIL_CLOSED_AFTER_MT5_INITIALIZE__EXACT_GUARD_UNKNOWN`. Do not claim the original capture reached or completed four hours or that Exness rejected an order; all order APIs remain reported 0.
+
+### One prospective source-specific diagnostic, NO four-hour rerun
+
+Since the existing failure file and tick file cannot identify the guard, one *optional attended STATIC-ONLY replay* against the same read-only MT5 source is prepared on PR40:
+`phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1`. It is pinned to exact prior corrected collector/test source `723e276ca32f80e6b705c8dd087a4325609c59e5`, exports its Git archive without VPS checkout, runs isolated preflight, then calls **the same collector without `--prospective-four-hours`**. One prompt for explicit operator consent; no timer-based four-hour observation, order check/send, terminal login/permission/scheduler change. The diagnostic uses fixed enum-like `failure_stage` and exact fixed `safe_guard_code` allowlists: no raw exception string, account/login/history/ticket leaks. It stores new evidence in a unique private local directory and emits only sanitized outcomes/hashes. New source/tests exercise known reasons and unknown/redacted private strings. It remains **prepared only**, no operator run performed; source CI approval must be checked before owner action.
+
+A static replay examines *current* MT5 safety state; even if it identifies a guard now, **do not retroactively assert the same transient reason was responsible for the earlier captured failure** without evidence. A fully successful static replay is still not a qualified v1.1 cost source, no completed prospective window, and no broker-order admission. No blanket repeated diagnostics; inspect the single result before further action.
+
+
 **Evidence status:** `FAIL_CLOSED_NO_ORDER`. This is the **second, corrected launcher attempt**, distinct from [the immutable earlier missing-import incident](MT5_SINGLE_CAPTURE_IMPORT_FAILURE_2026-10-23.md). Its internal safety reason is **UNKNOWN** from the available transcript. Do not reinterpret a successful import preflight as completed MT5, account, monetary or four-hour evidence.
 
 ## Owner-provided sanitized console proof
