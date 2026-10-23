@@ -1,5 +1,8 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+> **CURRENT AGENT HANDOFF:** [AGENT_START_HERE.md](../../AGENT_START_HERE.md). This file contains preserved dated history; its early 2026-10-23 snapshot predates the 26-PR retirement and the owner DEMO-only governance amendment. Read that root index and query live [PR #40](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/40) before acting. No real broker order has been observed or deployed by this record. The latest objective is a continuous Exness Pro DEMO broker trader, not another mandatory four-hour study. Do not treat prior technical NO_GO as final product scope.
+
+
 ## Owner override recorded 2026-10-23 — DEMO NOW, NOT A FOUR-HOUR PHASE; DYNAMIC KNOWN-POSITION MANAGEMENT
 
 Read [ADR-2026-10-23-003](../decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md). **The owner explicitly rejects a separate mandatory four-hour read-only wait before the future real Exness Pro DEMO pilot**, requests actual autonomous MT5 DEMO broker orders and continuous monitoring immediately once executable, and reaffirms human-inspired position management (early exit, tighten/trail SL, break-even, bounded TP changes). The historic v1.1 four-hour acceptance design remains immutable as an *older* protocol, **not a prerequisite for the revised future pilot**. Data collection should continue while a functioning approved demo agent operates; missing stop/fee/gap/slippage cannot be set to zero merely to permit entry.
