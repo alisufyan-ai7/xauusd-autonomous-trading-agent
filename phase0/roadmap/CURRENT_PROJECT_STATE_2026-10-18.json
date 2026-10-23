@@ -20,11 +20,11 @@
     "native_demo_admit_ci_run": 39862977399
   },
   "schema_version": "current-project-state-1.0",
-  "as_of_date": "2026-10-18",
+  "as_of_date": "2026-10-23",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "95875ccf1bddc43491ced1dd4358057b62b7800e",
   "source_of_truth": "GITHUB",
-  "active_focus": "DEMO_ADMIT",
+  "active_focus": "REAL_BROKER_DEMO_PRODUCTION_READY_M1_FIRST",
   "pcr3": {
     "release_id": "pcr3-execution-disabled-e0383a50e2cc",
     "source_revision": "e0383a50e2cce9639bee50b0e53f8d5c0db798a8",
@@ -112,9 +112,13 @@
     "demo_activation": "NOT_AUTHORIZED",
     "demo_broker_action": "NOT_AUTHORIZED",
     "live_broker_action": "NOT_AUTHORIZED",
-    "real_money_trading": "NOT_AUTHORIZED"
+    "real_money_trading": "NOT_AUTHORIZED",
+    "owner_continuous_demo_product_intent": "APPROVED_IN_PRINCIPLE",
+    "effective_demo_order_execution": "NO_GO_NOT_RELEASED",
+    "owner_tiny_live_future_desire": "CONDITIONAL_NOT_ACTIVATION_APPROVAL",
+    "live_auto_promotion": "FORBIDDEN"
   },
-  "next_substantive_action": "NEW_CHAT_READ_GITHUB_HANDOFF_PR38_AND_CODE_INTEGRATE_QUALIFIED_CONTINUOUS_DEMO_ORDER_PORT_POLICY_A_TPB_OFFICIAL_EVENT_GUARD_RECOVERY_ALERTS_THEN_TEST_PACKAGE_ONE_REAL_VPS_LAUNCH_COMMAND_NO_FAKE_START",
+  "next_substantive_action": "REAL_BROKER_DEMO_M1_FINISH_ONE_SOURCE_QUALIFIED_EXISTING_S2_MT5_EXECUTOR_AND_NATIVE_FAULT_TESTS_WITH_S2_HARD_STOP_INTACT_UNTIL_LIVE_EVIDENCE_VPS_ACCEPTANCE;_THEN_M3_REAL_EXNESS_DEMO_ORDER_AND_CONTINUOUS_M4_REVIEW;_LIVE_M5_SEPARATELY_GATED",
   "pr7": {
     "status": "MERGED",
     "head_sha": "e2e030c6e114bd3fb83c61b0908001df2834886c",
@@ -1256,5 +1260,31 @@
     "forexvps_modified": false,
     "main_merged": false,
     "details": "phase0/roadmap/V2_S2_SOURCE_BOUND_POLICY_A_INTEGRATION_2026-10-23.md"
+  },
+  "owner_real_broker_demo_then_conditional_live_milestone_2026_10_23": {
+    "goal_decision_adr": "phase0/decisions/ADR-2026-10-23-002-REAL_BROKER_DEMO_THEN_CONDITIONAL_TINY_LIVE.md",
+    "canonical_human": "phase0/roadmap/REAL_BROKER_DEMO_TO_TINY_LIVE_CRITICAL_PATH_2026-10-23.md",
+    "canonical_json": "phase0/roadmap/REAL_BROKER_DEMO_LIVE_MILESTONES_2026-10-23.json",
+    "broker_demo_real_order_send_required": true,
+    "paper_or_fake_broker_proves_demo_production": false,
+    "virtual_funds_demo_real_broker": true,
+    "owner_demo_intent": "APPROVED_IN_PRINCIPLE_AS_PREVIOUSLY_RECORDED",
+    "effective_demo_broker_orders": "NO_GO_UNTIL_SOURCE_AND_VPS_ACCEPTANCE",
+    "first_demo_order_broker_proven": false,
+    "autonomous_continuous_demo_running": false,
+    "desired_initial_demo_review_window_hours": [
+      24,
+      48
+    ],
+    "one_two_day_profitability_statistical_proof": false,
+    "desired_live_max_lot": "0.01",
+    "live_pilot_current_authority": "NOT_AUTHORIZED",
+    "live_auto_promotion_after_positive_demo": false,
+    "live_account_fingerprint_independently_admitted": false,
+    "accepted_main_governance_rule7_conflict": "UNRESOLVED_SEPARATE_ACCEPTANCE_REQUIRED",
+    "current_native_tested_code_sha": "ce1e422337a8afdd23d1f18674490f5b79882b62",
+    "ci_release": 39923675345,
+    "source_numeric_calibration_v11": "NOT_ADMITTED",
+    "github_reported_visibility": "PUBLIC"
   }
 }
