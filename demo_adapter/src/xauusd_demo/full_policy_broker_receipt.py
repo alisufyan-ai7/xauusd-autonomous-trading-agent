@@ -86,7 +86,8 @@ class BoundAdverseCost:
             "slippage_reserve_usd": str(items[2]),
             "gap_reserve_usd": str(items[3]),
         }
-        return hashlib.sha256(json.dumps(raw, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        serialized = json.dumps(raw, sort_keys=True, separators=(",", ":")).encode()
+        return hashlib.sha256(serialized).hexdigest()
 
 
 @dataclass(frozen=True, slots=True)
