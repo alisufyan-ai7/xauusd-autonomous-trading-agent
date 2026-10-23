@@ -475,7 +475,7 @@
     "attempted_four_hour_capture_completed": false
   },
   "current_next_chat_handoff_2026_10_23": {
-    "status": "LATEST_VPS_STATIC_DIAG_FAIL_CLOSED_HISTORICAL_TICK_VALIDATION__SUBREASON_UNCLASSIFIED__NEW_OFFLINE_GUARD_FIX",
+    "status": "LATEST_REAL_EXNESS_DEMO_STATIC_READONLY_PASS__PROSPECTIVE_4H_PENDING_AND_S2_ORDER_NO_GO",
     "canonical_start_here": "phase0/roadmap/START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md",
     "result_evaluated": true,
     "corrected_run_completed_successfully": false,
@@ -488,7 +488,7 @@
     "corrected_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "canonical_single_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
     "private_capture_location_pattern": "%LOCALAPPDATA%\\\\XAUUSD-BrokerEvidence\\\\capture-*",
-    "next_action": "AFTER_ALL_NATIVE_CI_GREEN_OPTIONAL_ONE_OWNER_ATTENDED_SHORT_STATIC_ONLY_DIAG_PINNED_TO_462AC5__NO_FOUR_HOUR_OR_TRADING",
+    "next_action": "VERIFY_NATIVE_CI_FOR_REPINNED_COMPREHENSIVE_READONLY_SCRIPT_THEN_REQUEST_SEPARATE_OWNER_4H_PERMISSION",
     "broker_order_execution": "STILL_BLOCKED_UNDER_POLICY_A",
     "account_type": "EXNESS_PRO_MT5_DEMO_VIRTUAL_FUNDS_REAL_BROKER_API_GOAL",
     "future_live_money": "NOT_AUTHORIZED",
@@ -514,7 +514,13 @@
     "corrected_run_failure_detail_recoverable_from_local_file": false,
     "latest_vps_failure_stage": "STATIC_HISTORICAL_BROKER_TICKS",
     "latest_vps_failure_code": "HISTORICAL_TICK_ORDER_OR_PRICE_INVALID",
-    "latest_vps_failure_file_sha256": "84620F5EF9B6FBF7BEDFDBB35FB1CB59110008FCE8128E2F07598186339C0646"
+    "latest_vps_failure_file_sha256": "84620F5EF9B6FBF7BEDFDBB35FB1CB59110008FCE8128E2F07598186339C0646",
+    "latest_vps_readonly_status": "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED",
+    "latest_vps_static_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "latest_vps_sanitized_summary_sha256": "794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B",
+    "latest_vps_historical_ticks_pass": true,
+    "latest_vps_real_broker_margin_0_01_usd": "2.01",
+    "four_hour_quote_slots_collected": null
   },
   "github_recovery_2026_10_23_new_chat": {
     "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
@@ -586,7 +592,13 @@
     "native_ci_failed_reason": "RUFF_S603_POWERSHELL_PARSE_ONLY_TEST",
     "native_ci_correction_sha": "89b7c80a75f771fffb1ab16fb8f5bb8a1b934715",
     "on_vps_static_diagnostic_executed": false,
-    "owner_last_static_diagnostic_executed": true
+    "owner_last_static_diagnostic_executed": true,
+    "newly_observed_successor_static_pass": true,
+    "successor_static_report_sha256": "794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B",
+    "successor_old_failures_immutable": true,
+    "prospective_four_hour_script_repinned": true,
+    "prospective_four_hour_script_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "prospective_four_hour_script_owner_consent": false
   },
   "latest_reproducible_mt5_static_history_tick_failure_2026_10_23": {
     "attempt_kind": "ONE_OWNER_ATTENDED_STATIC_ONLY_NO_PROSPECTIVE",
@@ -614,5 +626,53 @@
     "source_patch_native_ci_at_machine_record": "CHECK_HEAD_BEFORE_RUN",
     "real_demo_order_authorized": false,
     "real_live_order_authorized": false
+  },
+  "latest_verified_real_exness_demo_static_source_2026_10_23": {
+    "status": "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED",
+    "owner_attended_vps_capture": "PASS_STATIC_READONLY_ONLY",
+    "time_from_private_dir_utc": "2026-10-23T13:37:14Z",
+    "verified_python_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "launcher_review_commit": "a54bf80a39faf8a44bdeeed078a912d280b811d8",
+    "private_dir_local_only": "%LOCALAPPDATA%\\XAUUSD-BrokerEvidence\\static-diagnostic-20261023T133714Z-3582e170822143d2a0ead18fb82906f7",
+    "sanitized_summary_sha256": "794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B",
+    "sanitized_capture_id_sha256": "b45dc3ff0e65d42edd62d659873282debb71353c9ce3fe8c7ddd7b0546289203",
+    "exact_pinned_exness_demo_account_fingerprint_matches": true,
+    "globally_zero_pending_orders": true,
+    "globally_zero_positions": true,
+    "real_order_calc_profit_and_margin_for_buy_sell_0_01": true,
+    "hypothetical_cash_loss_usd_for_price_distance_2_5_10": [
+      2,
+      5,
+      10
+    ],
+    "broker_incremental_margin_usd": "2.01",
+    "conservative_stressed_2x_incremental_margin_usd": "4.02",
+    "bar_counts": {
+      "M1": 2000,
+      "M5": 1200,
+      "M15": 1200,
+      "H1": 1200,
+      "H4": 1200,
+      "D1": 370,
+      "W1": 110
+    },
+    "past_four_hour_historical_tick_source_validation": "PASS_NO_SHAREABLE_TICK_COUNT",
+    "historical_xauusd_fee_rows": 0,
+    "zero_fee_proven": false,
+    "four_hour_prospective_quote_slots": null,
+    "four_hour_prospective_quote_proxy": null,
+    "independent_v11_adverse_cost_calibration_admitted": false,
+    "official_event_guard_admitted": false,
+    "full_policy_a_admitted": false,
+    "order_check_calls_reported": 0,
+    "order_send_calls_reported": 0,
+    "real_demo_pending_orders_sent": false,
+    "live_real_money_authorized": false,
+    "historical_failed_attempts_preserved": true,
+    "standalone_receipt": "phase0/roadmap/MT5_STATIC_READONLY_VERIFIED_PASS_2026-10-23.md",
+    "new_prospective_launcher": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
+    "prospective_launcher_new_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "prospective_launcher_prepared_but_not_executed": true,
+    "prospective_four_hour_new_owner_authorization_received": false
   }
 }
