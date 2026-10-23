@@ -1,5 +1,12 @@
 # Real Exness broker DEMO → conditional tiny LIVE: executable critical path
 
+## 2026-10-23 13:37Z — NEW LATEST VERIFIED STATIC READ-ONLY BROKER **PASS**
+
+Read [MT5_STATIC_READONLY_VERIFIED_PASS_2026-10-23.md](MT5_STATIC_READONLY_VERIFIED_PASS_2026-10-23.md). Owner attended source-pinned launcher `a54bf80a39faf8a44bdeeed078a912d280b811d8` / Python pin `462ac5e94fbeb656f3415603f12e81fdc3c3bd58`. Real Exness Pro DEMO static collector returned `STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED` and exact sanitized report SHA256 `794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B`. The correct account and zero positions/orders verified, 0.01-lot six BUY/SELL cash loss and margin calculations passed (USD 2/5/10 loss, USD 2.01 incremental margin, USD 4.02 conservative 2×); seven frames PASS; historical ticks PASS; XAUUSD fee rows **0 observed, NOT a zero-fee proof**. `order_send=0`, `order_check=0`. Four-hour prospective slots/proxy **NULL**, official source and full Policy A **NOT ADMITTED**. Raw broker records private on VPS. Historical earlier failed attempts remain immutable.
+
+The owner-independent PR40 branch now **prepares but does not execute** original comprehensive 4h script `phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1`, repinned to successful exact collector `462ac5e94fbeb656f3415603f12e81fdc3c3bd58` with matching native PowerShell test. One subsequent 4h observational run requires **separate explicit owner assent and latest exact HEAD CI PASS**; it is not an order or production release. S2 hard execution stop, Gate0 failure history, governance Rule7, DEMO order NO_GO and LIVE NO_GO unchanged.
+
+
 ## 2026-10-23 — CORRECTED VPS COLLECTOR ACTUALLY FAILED CLOSED; IMPORT PREFLIGHT PASSED
 
 **LATEST OWNER EVIDENCE, superseding the prior "corrected run output pending" note.** Read the [new immutable incident record](MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md) before interpreting any earlier progress narrative.
