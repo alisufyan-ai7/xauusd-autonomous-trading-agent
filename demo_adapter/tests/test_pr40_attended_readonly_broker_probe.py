@@ -46,8 +46,10 @@ def test_native_windows_powershell_parses_attended_broker_probe():
         f"'{quoted}',[ref]$tokens,[ref]$errors)|Out-Null; "
         "if($errors.Count -ne 0){$errors|Out-String|Write-Output; exit 1}"
     )
-    result = subprocess.run(
-        ["powershell", "-NoProfile", "-NonInteractive", "-Command", check],
+    pwsh = shutil.which("powershell")
+    assert pwsh is not None
+    result = subprocess.run(  # noqa: S603 -- exact native parser only
+        [pwsh, "-NoProfile", "-NonInteractive", "-Command", check],
         capture_output=True, text=True, timeout=35, check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
