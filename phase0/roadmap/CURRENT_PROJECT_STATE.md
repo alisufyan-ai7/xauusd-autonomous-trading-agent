@@ -1,5 +1,14 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## 2026-10-23 — MAIN-BASED DOCS CONSOLIDATION CANDIDATE, NOT A CODE RELEASE
+
+[Read-first PR audit](OPEN_PR_CONSOLIDATION_AUDIT_2026-10-23.md): GitHub currently has **26 open DRAFT PRs**, arranged as three unmerged development families. Old v1.1/v1.2 research (#10–22,#28), attended S2 canary (#23–26) and failed alternative advisory (#29) require selective source reuse / evidence retention, **not wholesale merges**. Current V2 integration is the stacked #32→#38 lineage (PR32 has failed validation at its own HEAD; PR38 synthetic CI is green at its HEAD, but not a real VPS/broker pass). This DOC-ONLY branch copies **74 existing historical roadmap/decision/sanitized evidence-metadata blobs** directly from their exact GitHub source revisions without importing trading-capable code. It also adds the portfolio index and preserved owner decisions. No source PR is closed/merged yet.
+
+**Owner execution target (unchanged):** real MetaTrader5 `order_send` to the exact connected Exness Pro **DEMO** broker server on ForexVPS, with genuine broker orders/deals/positions and virtual funds. Autonomous XAUUSD TPB; no simulator substituted. Later LIVE 0.01 lot is desired only as a separate approved pilot, never an automatic 24–48h promotion. [Product path](REAL_BROKER_DEMO_TO_TINY_LIVE_CRITICAL_PATH_2026-10-23.md). Full frozen Policy A and guard/source admissions remain blocking and S2 pre-order hard stop remains in the DRAFT code.
+
+**Main governance conflict:** accepted `GOVERNANCE.md` rule 7 prohibits trading-capable implementation before Gate 0 closure. Later draft owner approval in principle for fast-tracked real broker DEMO cannot silently supersede it. Need a separately approved explicit scoped accepted rule update (if owner wants acceleration); none issued by this doc consolidation. Historic G0 failures intact. No real broker order/VPS access/merge verified.
+
+
 ## NEXT PROPOSED PRODUCT SPEC — Autonomous XAUUSD Pro v2 (2026-10-22)
 
 **PR30 MERGED + V2 SPEC DRAFT:** Owner approved docs-only PR30 and GitHub confirmed merge to authoritative `main=51a7f7de395767a9ae1f9904f752bd74b3cdc010` (October21 UTC / October22 Pakistan time); original owner Pro-only and autonomous trading vision now permanently on main. This read-first note belongs to a **separate unmerged v2 specification proposal branch**, not an execution, strategy, trading or risk-policy grant.

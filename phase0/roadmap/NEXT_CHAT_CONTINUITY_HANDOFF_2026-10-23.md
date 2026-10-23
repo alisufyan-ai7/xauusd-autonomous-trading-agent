@@ -1,5 +1,10 @@
 # XAU/USD Autonomous Trading Agent — authoritative next-chat continuity handoff
 
+## IMPORTANT — DOCUMENTATION-ONLY MAIN CONSOLIDATION / NEWEST PR PORTFOLIO AUDIT
+
+See [current exact 26-PR inventory and merge/close plan](OPEN_PR_CONSOLIDATION_AUDIT_2026-10-23.md) before acting on older HEADs in this file. This handoff is copied from DRAFT PR38 for historical source continuity; the **main-based docs-only proposal has NOT merged executable source**. PR32→38 remain the active unmixed V2 code stack; accepted `main` still has Governance rule7 and no autonomous qualified MT5 order-sending runtime. The product requires REAL MT5 Exness broker-side DEMO orders funded by virtual account money, not fakes. Latest PR38 HEAD must be retrieved dynamically, native CI is not VPS, and 24–48h DEMO observations never authorize LIVE. Older v1.1/v1.2 and canary evidence docs are historical only. No merges/closures/VPS/orders occurred.
+
+
 ## Latest M1 milestone validation receipt — 2026-10-23
 
 2026-10-23 **M1 durable goal contract** code/test HEAD `f40f1d68e587a22c47869519434077a96cab071f`: [release CI 39933014003](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39933014003) **SUCCESS**, Python3.12 **283 Windows + 283 Ubuntu tests passed**, Ruff PASS, MyPy 19 files PASS, static `PASS_STATIC_STOP_PRESENT__FIRST_DEMO_ORDER_NOT_ADMITTED`; [DEMO-admit 39933013847](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39933013847) SUCCESS, [production-candidate 39933013955](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39933013955) SUCCESS, [record validation 39933014007](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39933014007) SUCCESS. The new `demo_adapter/tests/test_real_broker_product_milestone.py` enforces REAL Exness DEMO broker order acceptance as the desired product, forbid automatic LIVE after 24–48h, and checks the S2 order denial is still present. All CI is **OFFLINE/SYNTHETIC**; no live Exness DEMO order or VPS modification.
