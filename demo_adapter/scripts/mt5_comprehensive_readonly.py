@@ -61,6 +61,63 @@ FORBIDDEN_METHODS = (
 )
 
 
+# Fixed, source-reviewed reasons only. Never echo str(exc) from an MT5,
+# filesystem or history exception: it may contain sensitive account data.
+_SAFE_GUARD_CODES: dict[str, str] = {
+    "MT5 disconnected or external Python trading not disabled":
+        "DEMO_TERMINAL_DISCONNECTED_OR_PYTHON_TRADING_ENABLED",
+    "unexpected Exness Pro MT5 DEMO account":
+        "DEMO_IDENTITY_FIELDS_INVALID",
+    "broker account fingerprint mismatched": "DEMO_FINGERPRINT_MISMATCH",
+    "pending orders or positions present; no new risk admission":
+        "EXPOSURE_NOT_ZERO",
+    "XAUUSD broker tick stale / future": "QUOTE_STALE_OR_FUTURE",
+    "unusable XAUUSD broker bid/ask": "QUOTE_INVALID_OR_CROSSED",
+    "broker minimum lot exceeds frozen 0.01": "BROKER_MIN_LOT_EXCEEDS_CAP",
+    "nonpositive tick size": "BROKER_TICK_SIZE_INVALID",
+    "broker returned unusable margin": "BROKER_MARGIN_INVALID",
+    "broker stop loss must be negative": "BROKER_STOP_CASH_SIGN_INVALID",
+    "MT5 account identity or cash changed during source read":
+        "ACCOUNT_CHANGED_DURING_READ",
+    "terminal disconnected or external Python trading not disabled":
+        "LEGACY_TERMINAL_DISCONNECTED_OR_PYTHON_TRADING_ENABLED",
+    "MT5 account is not DEMO": "LEGACY_NOT_DEMO",
+    "Exness account broker/server/currency mismatch":
+        "LEGACY_BROKER_IDENTITY_INVALID",
+    "MT5 DEMO fingerprint mismatch": "LEGACY_FINGERPRINT_MISMATCH",
+    "zero open orders and positions not established":
+        "LEGACY_EXPOSURE_NOT_ZERO",
+    "XAUUSD instrument is not in full trading mode":
+        "LEGACY_SYMBOL_NOT_FULL_TRADING",
+    "broker symbol cash/tick/lot specification invalid":
+        "LEGACY_SYMBOL_CASH_OR_LOT_SPEC_INVALID",
+    "MT5 tick stale or future": "LEGACY_QUOTE_STALE_OR_FUTURE",
+    "crossed or unusable XAUUSD quote": "LEGACY_QUOTE_INVALID",
+    "account balance/equity/margin invalid": "LEGACY_ACCOUNT_MONEY_INVALID",
+    "broker history_deals_get returned no data": "LEGACY_DEAL_HISTORY_MISSING",
+    "broker hypothetical protective loss or margin invalid":
+        "LEGACY_CALCULATION_INVALID",
+    "complete deal history unavailable": "HISTORY_DEALS_UNAVAILABLE",
+    "historical orders unavailable": "HISTORY_ORDERS_UNAVAILABLE",
+    "empty or oversized tick source": "HISTORICAL_TICKS_EMPTY_OR_OVERSIZED",
+    "invalid historical tick time/order/quote":
+        "HISTORICAL_TICK_ORDER_OR_PRICE_INVALID",
+    "tick time_msc missing": "HISTORICAL_TICK_TIME_MISSING",
+    "prospective quote slot missed": "PROSPECTIVE_SLOT_MISSED",
+}
+for _frame in ("M1", "M5", "M15", "H1", "H4", "D1", "W1"):
+    _SAFE_GUARD_CODES[f"missing MT5 {_frame} history"] = (
+        f"FRAME_{_frame}_MISSING"
+    )
+
+
+def _safe_guard_code(exc: Exception) -> str:
+    """Classify ONLY known fixed safety-check strings; redact everything else."""
+    if not isinstance(exc, DemoSafetyError):
+        return "UNCLASSIFIED_REDACTED"
+    return _SAFE_GUARD_CODES.get(str(exc), "UNCLASSIFIED_REDACTED")
+
+
 def _utc_time(value: datetime) -> None:
     if value.tzinfo is None or value.utcoffset() != timedelta(0):
         raise DemoSafetyError("UTC clock required")
@@ -742,6 +799,7 @@ def run(argv: list[str] | None = None) -> int:
         failure = {
             "status": "FAIL_CLOSED_NO_ORDER",
             "error_type": type(exc).__name__,
+            "safe_guard_code": _safe_guard_code(exc),
             # Only a fixed source-code stage label: no exception string,
             # account identity, tickets, history, credentials or raw MT5 data.
             "failure_stage": failure_stage,
