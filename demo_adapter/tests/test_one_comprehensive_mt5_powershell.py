@@ -14,7 +14,7 @@ COLLECTOR = ROOT / "demo_adapter/scripts/mt5_comprehensive_readonly.py"
 
 def test_one_comprehensive_launcher_never_calls_trading_api_or_mutates_terminal():
     text = LAUNCHER.read_text(encoding="utf-8")
-    assert "$Pinned = '10425e6180ef660226e298ef06a0fa423334332e'" in text
+    assert "$Pinned = '462ac5e94fbeb656f3415603f12e81fdc3c3bd58'" in text
     assert "mt5_comprehensive_readonly.py" in text
     assert "--prospective-four-hours" in text
     assert "--confirm-owner-readonly" in text
