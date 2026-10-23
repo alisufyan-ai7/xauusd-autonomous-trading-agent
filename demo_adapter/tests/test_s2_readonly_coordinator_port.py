@@ -242,3 +242,39 @@ def test_zero_trading_and_zero_phantom_intents_via_coordinator(tmp_path):
             "SELECT COUNT(*) FROM agent_cycles"
         ).fetchone()[0]==0
     assert mt5.orders==[mt5.order]
+
+
+def test_unified_known_position_reads_full_entry_and_exit_history():
+    port,_,mt5,_=make_port()
+    mt5.orders=[]
+    mt5.positions=[{
+        "identifier":700,"ticket":701,"magic":260101,"symbol":"XAUUSD",
+        "volume":0.01,"type":0,"sl":2695.0,"tp":2720.0,
+    }]
+    mt5.deals=[{
+        "ticket":1001,"order":501,"position_id":700,
+        "symbol":"XAUUSD","magic":260101,"type":0,"entry":0,
+        "volume":0.01,
+        "time_msc":int((NOW-timedelta(seconds=5)).timestamp()*1000),
+    }]
+    assert port.known_position_state(filled(),NOW)=="OPEN"
+    mt5.positions=[]
+    # Disappearance alone is not a closure. Only a matched exit deal is.
+    assert port.known_position_state(filled(),NOW)=="UNKNOWN"
+    mt5.deals.append({
+        "ticket":1002,"order":502,"position_id":700,"symbol":"XAUUSD",
+        "magic":0,"type":1,"entry":1,"volume":0.01,
+        "time_msc":int((NOW-timedelta(seconds=1)).timestamp()*1000),
+    })
+    assert port.known_position_state(filled(),NOW)=="CLOSED"
+    assert "history_deals_get" in mt5.calls
+
+
+def test_unified_port_rejects_cross_account_filled_receipt():
+    from dataclasses import replace
+    port,_,mt5,_=make_port()
+    with pytest.raises(DemoSafetyError):
+        port.known_position_state(
+            replace(filled(),account_fingerprint="f"*64),NOW
+        )
+    assert not mt5.calls
