@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import hashlib
 import importlib.util
+import shutil
+import subprocess
+import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -359,3 +362,44 @@ def test_complete_one_run_writes_source_registration_before_sampling(
     assert "order_check" not in broker.calls
     assert broker.calls.count("shutdown") == 1
     assert "COMPLETE_READONLY_NOT_ADMITTED" in capsys.readouterr().out
+
+
+def test_actual_export_layout_under_python_isolated_without_installed_packages(
+    tmp_path: Path,
+) -> None:
+    """Reproduce the VPS -I import failure; -S removes editable pip packages.
+
+    The exported Git snapshot, NOT the editable CI installs or VPS Python path,
+    must supply xauusd_agent, xauusd_demo, and v1.1 quote coverage.
+    """
+    root = Path(__file__).resolve().parents[2]
+    for relative in (
+        "src/xauusd_agent",
+        "demo_adapter/src/xauusd_demo",
+        "demo_adapter/scripts",
+    ):
+        src = root / relative
+        assert src.is_dir()
+        shutil.copytree(src, tmp_path / relative)
+    entry = tmp_path / "demo_adapter/scripts/mt5_comprehensive_readonly.py"
+    child = subprocess.run(  # noqa: S603 -- exact test Python, no MT5 initialization
+        [sys.executable, "-I", "-S", str(entry), "--self-check-imports"],
+        capture_output=True, text=True, timeout=35, check=False,
+        cwd=tmp_path,
+    )
+    assert child.returncode == 0, child.stdout + child.stderr
+    assert child.stdout.strip() == "PINNED_LOCAL_IMPORT_PREFLIGHT_PASS_NO_MT5"
+    assert "MetaTrader5" not in child.stderr
+
+
+def test_import_preflight_does_not_initialize_or_modify_broker(
+    monkeypatch, capsys,
+) -> None:
+    def must_not_import_mt5(name: str) -> object:
+        if name == "MetaTrader5":
+            raise AssertionError("preflight must not import or attach MT5")
+        raise AssertionError(f"unexpected import request {name}")
+
+    monkeypatch.setattr(probe.importlib, "import_module", must_not_import_mt5)
+    assert probe.run(["--self-check-imports"]) == 0
+    assert "PASS_NO_MT5" in capsys.readouterr().out
