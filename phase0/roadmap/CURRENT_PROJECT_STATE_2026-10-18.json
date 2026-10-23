@@ -359,6 +359,29 @@
     "broker_s2_hard_stop_still_active": true,
     "real_live_capital_authorized": false,
     "critical_record": "phase0/roadmap/CLOSED_PR_SOURCE_ARCHIVE_AND_V2_INTEGRATION_2026-10-23.md",
-    "dynamic_read_first": "PR40_MERGE_UNAUTHORIZED_WHOLE_V2_SOURCE_STAGED"
+    "dynamic_read_first": "PR40_MERGE_UNAUTHORIZED_WHOLE_V2_SOURCE_STAGED",
+    "policy_one_feature_per_pr_draft": true
+  },
+  "latest_2026_10_23_m1_source_bound_coordinator_port": {
+    "status": "READONLY_UNIFIED_PENDING_AND_KNOWN_BROKER_RECONCILIATION_OFFLINE_ONLY",
+    "active_pr": 40,
+    "provisional_code_test_head": "e00b0e9b849a815a94b7b44ba111041799ffee80",
+    "module": "demo_adapter/src/xauusd_demo/s2_readonly_coordinator_port.py",
+    "test_module": "demo_adapter/tests/test_s2_readonly_coordinator_port.py",
+    "uses_single_existing_S2_builder": true,
+    "pending_broker_read_only": true,
+    "known_position_deal_history_read_only": true,
+    "requires_exact_account_fingerprint": true,
+    "rejects_all_order_submissions": true,
+    "no_phantom_preparing_on_readonly_proposal": true,
+    "demo_broker_order_sender_real_admitted": false,
+    "accepted_governance_rule7_amended": false,
+    "external_python_trading_enabled": false,
+    "owner_first_broker_order_release_permit": "NOT_ADMITTED",
+    "code_merge_to_main": false,
+    "proposed_pr_policy": "phase0/governance/PR_LIFECYCLE_POLICY_2026-10-23.md",
+    "proposed_rule7_reconciliation": "phase0/governance/PROPOSED_RULE7_DEMO_ENGINEERING_RECONCILIATION_2026-10-23.md",
+    "open_prs_count": 1,
+    "deprecated_pr_stack_reopened": false
   }
 }
