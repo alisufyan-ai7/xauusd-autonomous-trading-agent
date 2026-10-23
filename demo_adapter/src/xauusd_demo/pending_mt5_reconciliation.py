@@ -12,11 +12,15 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from .continuous_coordinator import (
-    PendingBrokerAck, PendingOrderObservation, QualifiedBrokerAck,
+    PendingBrokerAck,
+    PendingOrderObservation,
+    QualifiedBrokerAck,
 )
 from .envelope import DemoSafetyError
 from .known_position_reconciliation import (
-    EXPECTED_COMPANY, EXPECTED_SERVER, KNOWN_MAGIC,
+    EXPECTED_COMPANY,
+    EXPECTED_SERVER,
+    KNOWN_MAGIC,
 )
 from .mt5_demo import _decimal, _record
 
