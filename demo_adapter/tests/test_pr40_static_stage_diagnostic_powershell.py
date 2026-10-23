@@ -16,7 +16,7 @@ SCRIPT = ROOT / "phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1
 
 def test_one_static_diagnostic_is_opt_in_readonly_and_no_prospective_run() -> None:
     source = SCRIPT.read_text(encoding="utf-8")
-    assert "$Pinned = '4a7ed9e916b1bd897c358910f9e128917bc706da'" in source
+    assert "$Pinned = '462ac5e94fbeb656f3415603f12e81fdc3c3bd58'" in source
     assert "$ConfirmAttendedStaticReadOnlyDiagnosis" in source
     assert "& $Python -B -I -S $Script --self-check-imports" in source
     assert "& $Python -B -I $Script --confirm-owner-readonly --output $Output" in source
