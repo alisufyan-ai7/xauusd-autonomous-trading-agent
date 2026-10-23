@@ -4,10 +4,10 @@
   "scope": "OWNER_DIRECTION_DRAFT_BRANCH_NOT_ACCEPTED_MAIN",
   "source_adr": "phase0/decisions/ADR-2026-10-23-002-REAL_BROKER_DEMO_THEN_CONDITIONAL_TINY_LIVE.md",
   "human_roadmap": "phase0/roadmap/REAL_BROKER_DEMO_TO_TINY_LIVE_CRITICAL_PATH_2026-10-23.md",
-  "source_of_truth": "GITHUB_MAIN_ACCEPTED_PLUS_DRAFT_PR38_ENGINEERING",
-  "production_main_at_record": "95875ccf1bddc43491ced1dd4358057b62b7800e",
-  "active_branch": "implementation/demo-continuous-supervisor-20261023",
-  "active_draft_pr": 38,
+  "source_of_truth": "GITHUB_ACCEPTED_MAIN_PLUS_SINGLE_DRAFT_PR40_ENGINEERING",
+  "production_main_at_record": "bf6c931fac208ed2b781a2d22734df1124dea1e6",
+  "active_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
+  "active_draft_pr": 40,
   "definition": {
     "broker": "Exness Pro",
     "platform": "MetaTrader5",
@@ -127,7 +127,12 @@
     "external_python_trading_enabled": false,
     "live_credentials_in_demo_package": false,
     "old_gate_failures_reclassified": false,
-    "allow_merged_without_owner_approval": false
+    "allow_merged_without_owner_approval": false,
+    "corrected_owner_vps_capture": "FAIL_CLOSED_AFTER_ISOLATED_IMPORT_PASS__DEMONSTRATED_ERROR_TYPE_ONLY",
+    "corrected_capture_mt5_initialized": null,
+    "corrected_capture_four_hour_data_admitted": false,
+    "corrected_capture_failure_guard_identified": false,
+    "s2_policy_a_hard_stop_still_present": true
   },
   "next_code_action": "Implement single existing S2 QualifiedDemoBrokerPort fail-closed with broker-authoritative source receipt, adversarial Windows/Ubuntu tests; complete independent fees/calibration/session/news/pending cancellation and VPS demo acceptance before enabling order sending",
   "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER",
@@ -146,5 +151,23 @@
     "actual_mt5_demo_order_proven": false,
     "actual_live_order_proven": false,
     "active_s2_order_hard_stop": true
+  },
+  "latest_corrected_vps_capture_disposition": {
+    "source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
+    "launcher_source_review": "a68063d22fa28c04f9c1f505dd3821af15a5e814",
+    "import_preflight": "PASS",
+    "collector_status": "FAIL_CLOSED_NO_ORDER",
+    "error_type": "DemoSafetyError",
+    "exact_rejection_reason": "NOT_REPORTED_OR_RECOVERABLE_FROM_CONSOLE",
+    "reported_order_check_calls": 0,
+    "reported_order_send_calls": 0,
+    "money_matrix_admitted": false,
+    "quote_slot_count_verified": null,
+    "private_local_file_inventory_inspected": false,
+    "mitigation": "FAILURE_STAGE_ENUM_PLUS_SANITIZED_PRIVATE_EVIDENCE_PRESENT_FLAGS_ON_PR40",
+    "mitigation_native_ci": "PENDING_EXACT_HEAD",
+    "next_owner_action": "INSPECT_EXISTING_PRIVATE_CAPTURE_FILE_INVENTORY_ONLY",
+    "repeat_four_hour_capture_permitted": false,
+    "incident_path": "phase0/roadmap/MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md"
   }
 }
