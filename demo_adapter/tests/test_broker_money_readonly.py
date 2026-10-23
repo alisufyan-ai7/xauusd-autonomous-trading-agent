@@ -1,0 +1,205 @@
+# ruff: noqa: I001
+from __future__ import annotations
+
+from datetime import UTC, datetime, timedelta
+from decimal import Decimal
+from types import SimpleNamespace
+
+import pytest
+
+from test_demo_adapter import FakeMT5, fingerprint
+from xauusd_demo import DemoSafetyError
+from xauusd_demo import broker_money_readonly as money
+
+NOW = datetime(2026, 10, 22, 12, tzinfo=UTC)
+
+
+class MoneyFake(FakeMT5):
+    SYMBOL_TRADE_MODE_FULL = 4
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.now = NOW
+        self.cash_loss_multiplier = Decimal("1")
+        self.profit_calls = 0
+        self.margin_calls = 0
+        self.check_calls = 0
+        self.history_ok = True
+
+    def account_info(self) -> object:
+        base = super().account_info()
+        return SimpleNamespace(**base.__dict__, balance=10000.0)
+
+    def symbol_info(self, symbol: str) -> object:
+        super().symbol_info(symbol)
+        return SimpleNamespace(
+            trade_mode=self.SYMBOL_TRADE_MODE_FULL,
+            volume_min="0.01", volume_step="0.01",
+            trade_tick_size="0.01", trade_tick_value_loss="1",
+        )
+
+    def symbol_info_tick(self, symbol: str) -> object:
+        super().symbol_info_tick(symbol)
+        return SimpleNamespace(
+            bid=Decimal("3000"), ask=Decimal("3000.20"),
+            time_msc=int(self.now.timestamp() * 1000),
+        )
+
+    def order_calc_profit(
+        self, order_type: int, symbol: str, volume: float,
+        price_open: float, price_close: float,
+    ) -> float:
+        self.profit_calls += 1
+        assert symbol == "XAUUSD" and volume == 0.01
+        result = (Decimal(str(price_close)) - Decimal(str(price_open))) * 100
+        if order_type == self.ORDER_TYPE_SELL:
+            result = -result
+        return float(result * Decimal(str(volume)) * self.cash_loss_multiplier)
+
+    def order_calc_margin(
+        self, order_type: int, symbol: str, volume: float, price: float
+    ) -> float:
+        self.margin_calls += 1
+        return 50.0
+
+    def history_deals_get(
+        self, start: datetime, end: datetime
+    ) -> tuple[object, ...] | None:
+        assert start.year == 2020 and end == self.now
+        return () if self.history_ok else None
+
+    def order_check(self, payload: dict[str, object]) -> object:
+        self.check_calls += 1
+        raise AssertionError("broker read-only probe must never order_check")
+
+
+@pytest.fixture(autouse=True)
+def stub_synthetic_account(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(money, "EXPECTED_ACCOUNT_SHA256", fingerprint())
+
+
+def test_real_port_contract_synthetic_cash_margin_both_sides_no_orders() -> None:
+    port = MoneyFake()
+    result = money.inspect_real_demo_money(port, now=NOW)
+    assert result["status"] == "REAL_BROKER_READONLY_MONEY_CAPTURE_NOT_ORDER_ADMISSION"
+    assert result["historical_deal_count_unclassified"] == 0
+    assert result["spread_usd_per_oz"] == "0.20"
+    assert len(result["hypothetical_side_calculations"]) == 2
+    assert all(
+        side["broker_reference_stop_loss_cash_usd"] == "5.000"
+        or Decimal(side["broker_reference_stop_loss_cash_usd"]) == Decimal("5")
+        for side in result["hypothetical_side_calculations"]
+    )
+    assert port.profit_calls == port.margin_calls == 2
+    assert port.check_calls == port.send_calls == 0
+    assert result["execution_permitted"] is False
+    assert result["full_policy_a_runtime_admitted"] is False
+    assert "12345678" not in str(result)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("tradeapi_disabled", False), ("connected", False),
+    ("trade_mode", 2),
+    ("positions", (object(),)), ("orders", (object(),)),
+    ("positions", None), ("orders", None), ("history_ok", False),
+])
+def test_live_account_exposure_history_or_python_trade_enabled_vetoes(
+    field: str, value: object
+) -> None:
+    port = MoneyFake()
+    setattr(port, field, value)
+    with pytest.raises(DemoSafetyError):
+        money.inspect_real_demo_money(port, now=NOW)
+    assert port.check_calls == port.send_calls == 0
+
+
+def test_stale_quote_does_not_reach_profit_or_margin_calculation() -> None:
+    port = MoneyFake()
+    port.now = NOW - timedelta(minutes=2)
+    with pytest.raises(DemoSafetyError, match="stale"):
+        money.inspect_real_demo_money(port, now=NOW)
+    assert port.profit_calls == port.margin_calls == port.send_calls == 0
+
+
+def test_broker_cash_calc_unavailable_is_rejected() -> None:
+    port = MoneyFake()
+    port.cash_loss_multiplier = Decimal("0")
+    with pytest.raises(DemoSafetyError, match="invalid"):
+        money.inspect_real_demo_money(port, now=NOW)
+    assert port.check_calls == port.send_calls == 0
+
+
+def test_account_fingerprint_cannot_be_switched() -> None:
+    port = MoneyFake()
+    money.EXPECTED_ACCOUNT_SHA256 = "f" * 64
+    with pytest.raises(DemoSafetyError, match="fingerprint"):
+        money.inspect_real_demo_money(port, now=NOW)
+    assert port.profit_calls == port.send_calls == 0
+
+
+def test_reference_is_not_a_strategy_or_real_policy_a_authorization() -> None:
+    port = MoneyFake()
+    r = money.inspect_real_demo_money(port, now=NOW)
+    assert r["strategy_direction_qualified"] is False
+    assert r["event_guard_live_source_admitted"] is False
+    assert r["history_cashflow_and_loss_streak_reconciled"] is False
+    assert r["order_send_calls"] == 0
+
+
+
+def test_probe_cli_requires_manual_readonly_confirmation(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    import runpy
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).resolve().parents[1] / "scripts/real_demo_money_readonly.py"
+    module = runpy.run_path(str(script), run_name="test_import_only")
+    monkeypatch.setattr(sys, "argv", ["read-only-money-probe"])
+    assert module["main"]() == 2
+    assert "REQUIRES_EXPLICIT_READ_ONLY_CONFIRMATION" in capsys.readouterr().out
+
+
+def test_owner_vps_powershell_script_static_safety_and_parser() -> None:
+    import ast
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[2]
+    script = root / "phase0/ops/v2_demo_real_broker_money_attended_20261022.ps1"
+    content = script.read_text(encoding="utf-8")
+    assert "414f6d1fd339dd6466b793adf2bd87f328804425" in content
+    assert "--confirm-readonly" in content
+    # Regression: PowerShell 5.1 mangles quotes embedded inside python -c.
+    assert "& $Python --version 2>&1" in content
+    assert "-notmatch '^Python 3[.]12([.]|$)'" in content
+    assert "& $Python -c" not in content
+    for forbidden in ("order_send(", "order_check(", "schtasks", "Set-ScheduledTask"):
+        assert forbidden not in content
+    code_path = root / "demo_adapter/src/xauusd_demo/broker_money_readonly.py"
+    tree = ast.parse(code_path.read_text(encoding="utf-8"))
+    method_names = {
+        node.func.attr
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    }
+    assert not method_names.intersection({
+        "order_send", "order_check", "symbol_select", "login",
+    })
+    if sys.platform == "win32":
+        path = str(script).replace("'", "''")
+        command = (
+            "$tokens=$null; $errors=$null; "
+            "$null=[System.Management.Automation.Language.Parser]::ParseFile("
+            f"'{path}',[ref]$tokens,[ref]$errors);"
+            "if($errors.Count -ne 0){exit 1}"
+        )
+        subprocess.run(  # noqa: S603
+            [
+                r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
+                "-NoProfile", "-NonInteractive", "-Command", command,
+            ],
+            check=True, capture_output=True, text=True,
+        )

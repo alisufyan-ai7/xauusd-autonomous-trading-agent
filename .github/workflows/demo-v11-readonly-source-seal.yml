@@ -1,0 +1,50 @@
+name: demo-v11-readonly-source-seal
+
+on:
+  pull_request:
+    paths:
+      - "demo_adapter/scripts/v11_*.py"
+      - "demo_adapter/scripts/v11_*.ps1"
+      - "demo_adapter/scripts/seal_v11_readonly_capture.py"
+      - "demo_adapter/tests/test_v11_*.py"
+      - ".github/workflows/demo-v11-readonly-source-seal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seal-offline-source:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Seal exact-head zero-permission private capture source
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $head = (git rev-parse HEAD).Trim()
+          if ($head -cne "${{ github.event.pull_request.head.sha || github.sha }}") {
+              throw 'EXACT_HEAD_MISMATCH'
+          }
+          python demo_adapter/scripts/seal_v11_readonly_capture.py --exact-head $head --output demo_adapter/dist/v11-readonly-source-$head.zip
+          if ($LASTEXITCODE -ne 0) { throw 'READONLY_SEAL_FAILED' }
+      - name: Hash execution-OFF stage helper (not in source ZIP)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $helper = 'demo_adapter/scripts/v11_readonly_executionoff_stage.py'
+          if (-not [IO.File]::Exists($helper)) { throw 'STAGE_HELPER_MISSING' }
+          $hash = (Get-FileHash -LiteralPath $helper -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Output "V11_EXECUTION_OFF_STAGE_HELPER_SHA256=$hash"
+          Write-Output 'V11_STAGE_HELPER_NOT_EXECUTED=True'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demo-v11-readonly-source-${{ github.event.pull_request.head.sha || github.sha }}
+          path: demo_adapter/dist/v11-readonly-source-*.zip
+          if-no-files-found: error
+          retention-days: 30

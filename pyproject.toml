@@ -10,6 +10,8 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
   "MetaTrader5==5.0.6090; platform_system == 'Windows'",
+  # Python zoneinfo requires an IANA database on Windows for event-time DST.
+  "tzdata>=2025.2,<2028; platform_system == 'Windows'",
 ]
 
 [project.optional-dependencies]

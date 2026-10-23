@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -168,7 +168,9 @@ class DemoMT5Adapter:
             "control_state": control_state,
         }
 
-    def _build_request(self, request: DemoOrderRequest) -> dict[str, Any]:
+    def _build_request(
+        self, request: DemoOrderRequest, *, now: datetime | None = None
+    ) -> dict[str, Any]:
         request.validate()
         assert self._mt5 is not None
 
@@ -191,6 +193,61 @@ class DemoMT5Adapter:
         bid = _decimal(tick.get("bid"), "bid")
         ask = _decimal(tick.get("ask"), "ask")
         stops_level = Decimal(int(info.get("trade_stops_level") or 0)) * point
+        if bid <= 0 or ask <= bid or point <= 0:
+            raise DemoSafetyError("invalid broker quote or point")
+        if request.is_tpb_stop:
+            assert request.entry_stop is not None
+            assert request.take_profit is not None
+            assert request.expires_utc is not None
+            effective = now or datetime.now(UTC)
+            if (
+                effective.tzinfo is None
+                or effective.utcoffset() != timedelta(0)
+                or not effective < request.expires_utc
+                or request.expires_utc - effective > timedelta(hours=1)
+            ):
+                raise DemoSafetyError("TPB STOP expiry not an eligible 4-bar window")
+            tick_size = _decimal(info.get("trade_tick_size"), "trade_tick_size")
+            if tick_size <= 0:
+                raise DemoSafetyError("symbol tick size unavailable")
+            for value in (
+                request.entry_stop, request.stop_loss, request.take_profit,
+            ):
+                steps = value / tick_size
+                if steps != steps.to_integral_value():
+                    raise DemoSafetyError("TPB STOP price not broker tick normalized")
+            buy = request.side is DemoSide.BUY
+            if (
+                (buy and (
+                    request.entry_stop <= ask + stops_level
+                    or request.entry_stop - request.stop_loss < stops_level
+                    or request.take_profit - request.entry_stop < stops_level
+                ))
+                or (not buy and (
+                    request.entry_stop >= bid - stops_level
+                    or request.stop_loss - request.entry_stop < stops_level
+                    or request.entry_stop - request.take_profit < stops_level
+                ))
+            ):
+                raise DemoSafetyError("TPB STOP violates market or protective levels")
+            order_type = (
+                int(self._mt5.ORDER_TYPE_BUY_STOP)
+                if buy else int(self._mt5.ORDER_TYPE_SELL_STOP)
+            )
+            return {
+                "action": int(self._mt5.TRADE_ACTION_PENDING),
+                "symbol": "XAUUSD",
+                "volume": float(request.volume_lots),
+                "type": order_type,
+                "price": float(request.entry_stop),
+                "sl": float(request.stop_loss),
+                "tp": float(request.take_profit),
+                "expiration": int(request.expires_utc.timestamp()),
+                "type_time": int(self._mt5.ORDER_TIME_SPECIFIED),
+                "deviation": self._policy.max_deviation_points,
+                "magic": 260101,
+                "comment": f"XAU-TPB {request.request_id[:8]}",
+            }
 
         if request.side is DemoSide.BUY:
             price = ask
@@ -278,11 +335,18 @@ class DemoMT5Adapter:
             )
             raise
 
-        mt5_request = self._build_request(request)
+        mt5_request = self._build_request(request, now=effective_now)
         assert self._mt5 is not None
 
+        # Broker margin calculator uses directional BUY/SELL economics even
+        # for a future STOP entry; the order submission type remains STOP.
+        # NEVER pass pending ORDER_TYPE_*_STOP as proof of current exposure.
+        margin_direction_type = (
+            int(self._mt5.ORDER_TYPE_BUY)
+            if request.side is DemoSide.BUY else int(self._mt5.ORDER_TYPE_SELL)
+        )
         margin_raw = self._mt5.order_calc_margin(
-            int(mt5_request["type"]),
+            margin_direction_type,
             "XAUUSD",
             float(request.volume_lots),
             float(mt5_request["price"]),

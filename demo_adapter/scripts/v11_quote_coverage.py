@@ -6,6 +6,7 @@ A measured quote proxy is not realized execution slippage.
 """
 from __future__ import annotations
 
+from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -54,6 +55,8 @@ def evaluate_quote_coverage(
     end_utc: datetime,
     polls: list[QuoteSample],
     ticks: list[QuoteSample],
+    *,
+    pair_tolerance_ms: int = 0,
 ) -> QuoteCoverageResult:
     """Reject gaps instead of interpolating or ignoring unfavorable segments.
 
@@ -126,16 +129,21 @@ def evaluate_quote_coverage(
         previous = bid, ask
         bucket = (timestamp - start_ms) // (10 * 60 * 1000)
         for horizon in (1, 5, 30):
-            successor = indexed.get(timestamp + horizon * 1000)
-            if successor is None:
-                continue
-            # All observed eligible pairs contribute to the worst quote
-            # move, including pairs crossing a 10-minute bin boundary.
-            later_bid, later_ask = successor
-            maxima[horizon] = max(maxima[horizon], later_ask - ask, bid - later_bid)
-            # Only within-bin pairs qualify the coverage of that bin.
-            if (timestamp + horizon * 1000 - start_ms) // (10 * 60 * 1000) == bucket:
-                qualified[horizon].add(bucket)
+            target_ms = timestamp + horizon * 1000
+            left = bisect_left(times, target_ms - pair_tolerance_ms)
+            right = bisect_right(times, target_ms + pair_tolerance_ms)
+            # Consider ALL true ticks in the declared tolerance interval, not
+            # the most favorable quote or interpolated synthetic ticks.
+            for actual_ms in times[left:right]:
+                if actual_ms <= timestamp:
+                    continue
+                later_bid, later_ask = indexed[actual_ms]
+                maxima[horizon] = max(
+                    maxima[horizon], later_ask - ask, bid - later_bid
+                )
+                # Only within-bin true tick pairs qualify ten-minute coverage.
+                if (actual_ms - start_ms) // (10 * 60 * 1000) == bucket:
+                    qualified[horizon].add(bucket)
     if any(len(qualified[h]) != 24 for h in (1, 5, 30)):
         raise QuoteCoverageError("insufficient true tick pairs in 10-minute blocks")
 
