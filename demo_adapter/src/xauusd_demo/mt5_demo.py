@@ -338,8 +338,15 @@ class DemoMT5Adapter:
         mt5_request = self._build_request(request, now=effective_now)
         assert self._mt5 is not None
 
+        # Broker margin calculator uses directional BUY/SELL economics even
+        # for a future STOP entry; the order submission type remains STOP.
+        # NEVER pass pending ORDER_TYPE_*_STOP as proof of current exposure.
+        margin_direction_type = (
+            int(self._mt5.ORDER_TYPE_BUY)
+            if request.side is DemoSide.BUY else int(self._mt5.ORDER_TYPE_SELL)
+        )
         margin_raw = self._mt5.order_calc_margin(
-            int(mt5_request["type"]),
+            margin_direction_type,
             "XAUUSD",
             float(request.volume_lots),
             float(mt5_request["price"]),
