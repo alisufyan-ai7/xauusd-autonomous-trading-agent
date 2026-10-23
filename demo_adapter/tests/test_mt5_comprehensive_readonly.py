@@ -420,6 +420,7 @@ def test_fail_closed_source_stage_and_private_artifact_status_are_sanitized(
     failure = probe.json.loads((output / "failure.json").read_text())
     assert failure["status"] == "FAIL_CLOSED_NO_ORDER"
     assert failure["failure_stage"] == "STATIC_ACCOUNT_IDENTITY_AND_EXPOSURE"
+    assert failure["safe_guard_code"] == "DEMO_IDENTITY_FIELDS_INVALID"
     assert failure["private_static_evidence_present"] is False
     assert failure["private_prospective_registration_present"] is False
     assert failure["no_retry_without_source_review"] is True
@@ -450,6 +451,7 @@ def test_failure_after_static_stage_preserves_existing_local_evidence(
     ]) == 1
     failure = probe.json.loads((output / "failure.json").read_text())
     assert failure["failure_stage"] == "PROSPECTIVE_FOUR_HOUR_SAMPLING"
+    assert failure["safe_guard_code"] == "UNCLASSIFIED_REDACTED"
     assert failure["private_static_evidence_present"] is True
     assert failure["private_prospective_registration_present"] is True
     assert (output / "static_evidence.json").is_file()
@@ -459,3 +461,18 @@ def test_failure_after_static_stage_preserves_existing_local_evidence(
     assert "PRIVATE_ORDER_TICKET" not in capsys.readouterr().out
     assert "order_send" not in broker.calls
     assert "order_check" not in broker.calls
+
+
+def test_safe_guard_code_only_uses_fixed_approved_messages():
+    assert probe._safe_guard_code(
+        DemoSafetyError("XAUUSD broker tick stale / future")
+    ) == "QUOTE_STALE_OR_FUTURE"
+    assert probe._safe_guard_code(
+        DemoSafetyError("missing MT5 H4 history")
+    ) == "FRAME_H4_MISSING"
+    assert probe._safe_guard_code(
+        DemoSafetyError("account=PRIVATE_987 order=111")
+    ) == "UNCLASSIFIED_REDACTED"
+    assert probe._safe_guard_code(
+        ValueError("ticket=PRIVATE_987")
+    ) == "UNCLASSIFIED_REDACTED"
