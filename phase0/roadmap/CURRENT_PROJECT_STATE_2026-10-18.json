@@ -1193,5 +1193,34 @@
     "production_main_changed": false,
     "no_merges": true,
     "pointer": "phase0/roadmap/V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md"
+  },
+  "latest_2026_10_23_pending_stop_window_guard": {
+    "status": "OFFLINE_TESTED_NONEXECUTING",
+    "source_test_commit": "ab1571a0bb2fe526e1cf7e3693a7810220e4e7bc",
+    "source_module": "demo_adapter/src/xauusd_demo/pending_entry_window_guard.py",
+    "source_tests": "demo_adapter/tests/test_pending_entry_window_guard.py",
+    "native_windows_ubuntu_tests_each": 262,
+    "native_ci": {
+      "release": 39918805503,
+      "admit": 39918805615,
+      "production_candidate": 39918805328
+    },
+    "guards": [
+      "MAX_PENDING_60_MIN",
+      "EXPIRY_SETTLEMENT_1_MIN",
+      "FULL_FIVE_AGENCY_SOURCE_ADMISSION",
+      "PRELOCK_TIER1_30_MIN_TIER2_15_MIN",
+      "SOURCE_FRESHNESS_AND_REVISION",
+      "VERIFIED_BROKER_SESSION_THROUGH_EXPIRY"
+    ],
+    "actual_live_source_bound": false,
+    "integrated_broker_execution_port": false,
+    "source_authenticity_verified_on_vps": false,
+    "already_pending_unscheduled_release_cancel_implemented": false,
+    "real_exness_demo_orders_placed": false,
+    "deployed_to_vps": false,
+    "real_money_live_enabled": false,
+    "immediate_next_action": "CONTINUE_QUALIFIED_BROKER_S2_FULL_POLICY_A_AND_LIVE_EVENTS_INTEGRATION_BUT_KEEP_HARD_ORDER_DENIAL",
+    "detailed_checkpoint": "phase0/roadmap/V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md"
   }
 }

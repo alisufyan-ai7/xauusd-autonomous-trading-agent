@@ -1,5 +1,10 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+## 2026-10-23 — STOP order news/session lifetime guard; native 262-test CI PASS
+
+Source HEAD `ab1571a0bb2fe526e1cf7e3693a7810220e4e7bc`: added pure pending STOP lifecycle official-news and session window screen; aborts if proposed order remains active into Tier-1/Tier-2 lock or unverifiable session boundary, including 1m expiry uncertainty buffer. [Native 262-test Windows/Ubuntu PASS](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39918805503); [DEMO-admit PASS](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39918805615); [production-candidate PASS](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/actions/runs/39918805328). [Full engineering handoff](V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md). **Not wired to qualified order-sending port; actual S2 hard STOP remains.** No deployment/order/merge; real LIVE disabled. Note unplanned calendar changes while order already pending still need explicit safe cancellation design.
+
+
 
 ## 2026-10-23 — PR38 five-workstream draft integration; pending STOP lifecycle CI PASS; NOT DEPLOYABLE
 
