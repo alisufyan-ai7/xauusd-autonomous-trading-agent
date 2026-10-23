@@ -532,7 +532,7 @@ class ContinuousDemoCoordinator:
                 self.conn.execute("COMMIT")
                 return CycleResult(
                     "ACTIVE", "BROKER_PENDING_ACKNOWLEDGED",
-                    str(receipt.order_ticket),
+                    str(broker_response.order_ticket),
                 )
             if not isinstance(broker_response, QualifiedBrokerAck):
                 raise DemoSafetyError("broker port lacks exact verified fill receipt")
