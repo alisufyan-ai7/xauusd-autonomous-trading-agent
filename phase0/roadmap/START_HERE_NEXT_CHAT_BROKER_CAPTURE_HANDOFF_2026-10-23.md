@@ -1,5 +1,16 @@
 # START HERE — XAU/USD Autonomous Agent next-chat handoff (2026-10-23)
 
+## 2026-10-23 — VPS FAILED-CAPTURE INVENTORY RECONCILED; NEXT OPTION ONE SHORT STATIC-ONLY DIAGNOSIS
+
+**Owner supplied private file inventory for the already failed corrected collector.** `failure.json` exists (185 bytes), SHA256 `83292117FAA298CB527459D02CA23C91558F166238AECE98CC2AC5E6F3BCA728`, exactly reproduced by local SHA256 of the pinned collector's six-field canonical failure JSON. `past_four_hour_broker_ticks.jsonl` exists at **0 bytes**. `static_evidence.json`, `prospective_run_registration.json`, both prospective JSONL files, `complete_evidence.json` and `shareable_summary.json` **do not exist**. Source-order proof: **actual MT5 initialize succeeded and static read path was entered**, since the unique private directory and historical-tick file are created only after a successful MT5 initialize. One static safety check or first-tick handling failed before the first valid historical tick write. The exact source guard still **UNKNOWN**; zero quotes, no completed 4h window or v1.1/admitted broker cash evidence. Full inventory, source ordering and hash receipt: [immutable corrected-run incident](MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md). Earlier pre-MT5 import failure stays separate.
+
+**Owner-independent mitigation (same sole draft PR40):** source commit `723e276ca32f80e6b705c8dd087a4325609c59e5` adds fixed sanitized `failure_stage`, `safe_guard_code` allowlist and adversarial redaction tests to the same existing collector. A **single optional owner-attended short STATIC-ONLY** PowerShell launcher, `phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1`, exact code pin above, can run the existing collector **without `--prospective-four-hours`**. It must not be used until native CI is verified. Its output may isolate a current-state guard; it cannot retroactively prove the same transient cause from the previous run, and it is not a four-hour capture or execution admission. It does not change terminal/account permissions or place/check orders. No new VPS run has occurred.
+
+**Preserved CI defect:** initial new launcher-test SHA `7981e624991730580d9e4935fcec01a24c68131e` FAILED Windows and Ubuntu in DEMO-admit/release workflows due to Ruff `S603` on the parser-only subprocess call (no broker action). Same-PR correction `89b7c80a75f771fffb1ab16fb8f5bb8a1b934715` marks the parser-only command with an explicit audit annotation matching existing tests. Latest full CI must be checked before relying on the static-only script. Historical failure remains immutable, no blanket reruns.
+
+**Risk/governance:** S2 `FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED` still blocks `order_check/order_send`; no real DEMO order, no LIVE, no merge/deploy approval, and accepted main rule7 conflict remains unresolved. One active DRAFT PR40 only.
+
+
 ## 2026-10-23 — CORRECTED VPS COLLECTOR ACTUALLY FAILED CLOSED; IMPORT PREFLIGHT PASSED
 
 **LATEST OWNER EVIDENCE, superseding the prior "corrected run output pending" note.** Read the [new immutable incident record](MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md) before interpreting any earlier progress narrative.
