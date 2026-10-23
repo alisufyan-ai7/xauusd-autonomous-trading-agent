@@ -685,3 +685,32 @@ def test_bad_tpb_stop_never_reaches_mt5_check_or_send(
             with pytest.raises(DemoSafetyError):
                 adapter._build_request(req, now=NOW)
             assert mt5.send_calls == 0
+
+
+@pytest.mark.parametrize("side", [DemoSide.BUY, DemoSide.SELL])
+def test_new_tpb_pending_stop_path_keeps_original_s2_full_policy_hard_stop(
+    tmp_path: Path, side: DemoSide,
+) -> None:
+    mt5 = FakeTPBStopMT5()
+    mt5.tradeapi_disabled = False
+
+    def forbidden_order_api(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("order_check/order_send must not be reached")
+
+    mt5.order_check = forbidden_order_api  # type: ignore[method-assign]
+    mt5.order_send = forbidden_order_api  # type: ignore[method-assign]
+    with ledger(tmp_path) as book, control(tmp_path) as gate:
+        arm(gate)
+        with DemoMT5Adapter(
+            identity(), executable_policy(), book, control=gate, module=mt5,
+        ) as adapter:
+            with pytest.raises(DemoSafetyError, match="full Policy A"):
+                adapter.submit_market_order(
+                    stop_request(side=side),
+                    confirmation_phrase="SUBMIT-BOUNDED-DEMO-XAUUSD",
+                    activation_permit=activation(),
+                    risk_calibration=calibration(),
+                    now=NOW,
+                )
+            assert gate.snapshot().state is DemoControlState.QUARANTINED
+            assert mt5.send_calls == 0
