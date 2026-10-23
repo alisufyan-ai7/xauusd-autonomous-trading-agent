@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import hashlib
 from datetime import datetime, timedelta
-from decimal import Decimal
 from typing import Any
 
 from .continuous_coordinator import (
