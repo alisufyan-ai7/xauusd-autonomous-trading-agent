@@ -349,6 +349,7 @@ def test_complete_one_run_writes_source_registration_before_sampling(
         "--prospective-four-hours",
     ]) == 0
     assert saved
+    assert (output / "static_pre_tick_private.json").is_file()
     assert (output / "static_evidence.json").is_file()
     assert (output / "complete_evidence.json").is_file()
     assert (output / "shareable_summary.json").is_file()
@@ -422,6 +423,7 @@ def test_fail_closed_source_stage_and_private_artifact_status_are_sanitized(
     assert failure["failure_stage"] == "STATIC_ACCOUNT_IDENTITY_AND_EXPOSURE"
     assert failure["safe_guard_code"] == "DEMO_IDENTITY_FIELDS_INVALID"
     assert failure["private_static_evidence_present"] is False
+    assert failure["private_pre_tick_checkpoint_present"] is False
     assert failure["private_prospective_registration_present"] is False
     assert failure["no_retry_without_source_review"] is True
     assert "WRONG_SERVER_SECRET" not in capsys.readouterr().out
@@ -453,6 +455,7 @@ def test_failure_after_static_stage_preserves_existing_local_evidence(
     assert failure["failure_stage"] == "PROSPECTIVE_FOUR_HOUR_SAMPLING"
     assert failure["safe_guard_code"] == "UNCLASSIFIED_REDACTED"
     assert failure["private_static_evidence_present"] is True
+    assert failure["private_pre_tick_checkpoint_present"] is True
     assert failure["private_prospective_registration_present"] is True
     assert (output / "static_evidence.json").is_file()
     assert (output / "prospective_run_registration.json").is_file()
@@ -548,3 +551,45 @@ def test_identical_millisecond_broker_ticks_are_not_falsely_unsorted():
     assert observed["tick_count"] == 2
     assert observed["max_intertick_gap_ms"] == 0
     assert observed["independently_admitted_prospective_v11_evidence"] is False
+
+
+def test_real_tick_check_fail_closed_but_preserves_only_private_pre_tick_checkpoint(
+    tmp_path, monkeypatch, capsys,
+):
+    broker = FakeMT5()
+    broker.now = datetime.now(UTC)
+
+    def invalid_quote(symbol, start, end, flags):
+        assert start.microsecond == 0 and end.microsecond == 0
+        assert end - start == timedelta(hours=4)
+        return [{
+            "time_msc": int((start + timedelta(seconds=2)).timestamp() * 1000),
+            "bid": 0,
+            "ask": 2700,
+        }]
+
+    broker.copy_ticks_range = invalid_quote
+    monkeypatch.setattr(probe.importlib, "import_module", lambda name: broker)
+    output = tmp_path / "private"
+    assert probe.run(["--confirm-owner-readonly", "--output", str(output)]) == 1
+    failure = probe.json.loads((output / "failure.json").read_text())
+    assert failure["failure_stage"] == "STATIC_HISTORICAL_BROKER_TICKS"
+    assert failure["safe_guard_code"] == "HISTORICAL_TICK_BID_NONPOSITIVE"
+    assert failure["private_pre_tick_checkpoint_present"] is True
+    assert failure["private_static_evidence_present"] is False
+    assert failure["private_prospective_registration_present"] is False
+    checkpoint = probe.json.loads(
+        (output / "static_pre_tick_private.json").read_text()
+    )
+    assert checkpoint["status"] == "INCOMPLETE_PRE_TICK_NOT_ADMITTED"
+    assert checkpoint["historical_ticks_validated"] is False
+    assert checkpoint["final_account_reconciliation_done"] is False
+    assert len(checkpoint["broker_money_0_01"]) == 6
+    assert len(checkpoint["seven_frame_coverage"]) == 7
+    assert not (output / "static_evidence.json").exists()
+    assert not (output / "shareable_summary.json").exists()
+    assert (output / "past_four_hour_broker_ticks.jsonl").stat().st_size == 0
+    assert "order_send" not in broker.calls
+    assert "order_check" not in broker.calls
+    assert broker.calls.count("shutdown") == 1
+    assert "2700" not in capsys.readouterr().out
