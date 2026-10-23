@@ -512,9 +512,9 @@ class ContinuousDemoCoordinator:
         # CRITICAL: durable PREPARING must survive process termination before
         # attempting an external action. No automatic resubmission on restart.
         try:
-            receipt = port.submit_qualified(proposal, now)
-            if isinstance(receipt, PendingBrokerAck):
-                receipt.validate(
+            broker_response = port.submit_qualified(proposal, now)
+            if isinstance(broker_response, PendingBrokerAck):
+                broker_response.validate(
                     setup_key=proposal.setup_key, side=proposal.side,
                     account_fingerprint=self._fingerprint, now=now,
                 )
@@ -522,20 +522,21 @@ class ContinuousDemoCoordinator:
                 self.conn.execute("BEGIN IMMEDIATE")
                 self.conn.execute(
                     "INSERT INTO agent_pending_receipts VALUES (?,?)",
-                    (proposal.setup_key, receipt.encode()),
+                    (proposal.setup_key, broker_response.encode()),
                 )
                 self.conn.execute(
                     "UPDATE agent_cycles SET stage='PENDING',ticket=? "
                     "WHERE setup_key=?",
-                    (str(receipt.order_ticket), proposal.setup_key),
+                    (str(broker_response.order_ticket), proposal.setup_key),
                 )
                 self.conn.execute("COMMIT")
                 return CycleResult(
                     "ACTIVE", "BROKER_PENDING_ACKNOWLEDGED",
                     str(receipt.order_ticket),
                 )
-            if not isinstance(receipt, QualifiedBrokerAck):
+            if not isinstance(broker_response, QualifiedBrokerAck):
                 raise DemoSafetyError("broker port lacks exact verified fill receipt")
+            receipt = broker_response
             receipt.validate(
                 setup_key=proposal.setup_key, side=proposal.side,
                 account_fingerprint=self._fingerprint,
