@@ -477,55 +477,69 @@ class DemoMT5Adapter:
                 "demo submission outcome is uncertain; reconcile before any retry"
             )
 
-        result_row = _record(result, "order_send")
+        try:
+            result_row = _record(result, "order_send")
+            retcode = int(result_row.get("retcode", -1))
+        except (ValueError, TypeError, DemoSafetyError) as exc:
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
+                detail="unparseable broker response after send",
+                now=effective_now,
+            )
+            raise DemoSafetyError(
+                "demo broker response unparseable; reconcile before any retry"
+            ) from exc
         done_code = int(self._mt5.TRADE_RETCODE_DONE)
-        retcode = int(result_row.get("retcode", -1))
         if request.is_tpb_stop and retcode == getattr(
             self._mt5, "TRADE_RETCODE_PLACED", None
         ):
-            # MT5 PLACED is a pending broker order, NOT a filled position.
-            # Do not fabricate a trade, deal or position identifier.
-            ticket = result_row.get("order")
-            pending_rows = self._mt5.orders_get()
-            positions_rows = self._mt5.positions_get()
-            if (
-                type(ticket) is not int or ticket <= 0
-                or pending_rows is None or positions_rows is None
-                or len(tuple(positions_rows)) != 0
-                or len(tuple(pending_rows)) != 1
-            ):
-                self._mark_uncertain_and_quarantine(
-                    request_id=request.request_id,
-                    detail="pending STOP retcode lacks exact flat/one-order receipt",
-                    now=effective_now,
+            # PLACED is not a fill. Any unparseable post-send observation is
+            # uncertain, NOT an ordinary NO_TRADE: a real pending order may
+            # already be accepted by the server.
+            try:
+                ticket = result_row.get("order")
+                pending_rows = self._mt5.orders_get()
+                positions_rows = self._mt5.positions_get()
+                if (
+                    type(ticket) is not int or ticket <= 0
+                    or pending_rows is None or positions_rows is None
+                    or len(tuple(positions_rows)) != 0
+                    or len(tuple(pending_rows)) != 1
+                ):
+                    raise DemoSafetyError("pending STOP not singular/flat")
+                pending = _record(tuple(pending_rows)[0], "pending order")
+                if (
+                    pending.get("ticket") != ticket
+                    or pending.get("symbol") != "XAUUSD"
+                    or pending.get("magic") != 260101
+                    or pending.get("type") != mt5_request["type"]
+                    or _decimal(pending.get("volume_initial"), "pending lots")
+                    != request.volume_lots
+                    or _decimal(pending.get("price_open"), "pending entry")
+                    != request.entry_stop
+                    or _decimal(pending.get("sl"), "pending stop") != request.stop_loss
+                    or _decimal(pending.get("tp"), "pending target")
+                    != request.take_profit
+                    or pending.get("time_expiration") != mt5_request["expiration"]
+                    or pending.get("state") != getattr(
+                        self._mt5, "ORDER_STATE_PLACED", None
+                    )
+                ):
+                    raise DemoSafetyError("pending STOP differs from intent")
+                self._ledger.mark_acknowledged(
+                    request.request_id, mt5_retcode=retcode,
+                    order_ticket=str(ticket),
                 )
-                raise DemoSafetyError("pending STOP broker acknowledgment uncertain")
-            pending = _record(tuple(pending_rows)[0], "pending order")
-            if (
-                pending.get("ticket") != ticket
-                or pending.get("symbol") != "XAUUSD"
-                or pending.get("magic") != 260101
-                or pending.get("type") != mt5_request["type"]
-                or _decimal(pending.get("volume_initial"), "pending lots")
-                != request.volume_lots
-                or _decimal(pending.get("price_open"), "pending entry")
-                != request.entry_stop
-                or _decimal(pending.get("sl"), "pending stop") != request.stop_loss
-                or _decimal(pending.get("tp"), "pending target") != request.take_profit
-                or pending.get("time_expiration") != mt5_request["expiration"]
-                or pending.get("state") != getattr(
-                    self._mt5, "ORDER_STATE_PLACED", None
-                )
-            ):
-                self._mark_uncertain_and_quarantine(
-                    request_id=request.request_id,
-                    detail="pending STOP order differs from submitted intent",
-                    now=effective_now,
-                )
-                raise DemoSafetyError("pending STOP broker details uncertain")
-            self._ledger.mark_acknowledged(
-                request.request_id, mt5_retcode=retcode, order_ticket=str(ticket),
-            )
+            except Exception as exc:
+                if self._ledger.status(request.request_id) == "PREPARED":
+                    self._mark_uncertain_and_quarantine(
+                        request_id=request.request_id,
+                        detail="post-send pending STOP acknowledgment unreconciled",
+                        now=effective_now,
+                    )
+                raise DemoSafetyError(
+                    "pending STOP broker acknowledgment uncertain; no retry"
+                ) from exc
             return {
                 "status": "PENDING_ACKNOWLEDGED",
                 "request_id": request.request_id,
