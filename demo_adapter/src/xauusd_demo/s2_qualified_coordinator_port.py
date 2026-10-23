@@ -31,6 +31,7 @@ class RealDemoOrderSource(Protocol):
         True flags or placeholder hashes. S2 independently verifies all
         broker/account/cash/cost/stop/session/quote values before submission.
         """
+        ...
 
 
 class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
