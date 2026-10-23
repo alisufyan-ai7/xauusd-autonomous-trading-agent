@@ -18,12 +18,14 @@ import json
 import sys
 import time
 from collections.abc import Callable
+from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
 # -I ignores PYTHONPATH: select only the staged, Git-pinned module location.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from xauusd_demo.broker_money_readonly import (  # noqa: E402, I001
@@ -32,6 +34,9 @@ from xauusd_demo.broker_money_readonly import (  # noqa: E402, I001
 )
 from xauusd_demo.envelope import DemoSafetyError  # noqa: E402
 from xauusd_demo.mt5_demo import _decimal, _record  # noqa: E402
+from scripts.v11_quote_coverage import (  # noqa: E402
+    QuoteCoverageError, QuoteSample, evaluate_quote_coverage,
+)
 
 SYMBOL = "XAUUSD"
 SAMPLE_SECONDS = 5
@@ -494,6 +499,47 @@ def collect_prospective_quotes(
     }
 
 
+
+
+def private_v11_quote_proxy(
+    *, start: datetime, end: datetime, polls_path: Path, ticks_path: Path
+) -> dict[str, Any]:
+    """Run strict OFFLINE quote coverage from the same private raw capture.
+
+    A failure records usable evidence without inventing a zero fee/slippage or
+    asking the operator to repeat an otherwise successful four-hour reading.
+    """
+    def read_rows(path: Path) -> list[dict[str, Any]]:
+        with path.open(encoding="utf-8") as handle:
+            return [json.loads(row) for row in handle if row.strip()]
+
+    polls = [
+        QuoteSample(
+            int(datetime.fromisoformat(x["observed_utc"]).timestamp() * 1000),
+            str(x["bid"]), str(x["ask"]),
+        )
+        for x in read_rows(polls_path)
+    ]
+    ticks = [
+        QuoteSample(int(x["time_msc"]), str(x["bid"]), str(x["ask"]))
+        for x in read_rows(ticks_path)
+    ]
+    try:
+        outcome = evaluate_quote_coverage(
+            start, end, polls, ticks, pair_tolerance_ms=1000,
+        )
+    except QuoteCoverageError as exc:
+        return {
+            "status": "QUOTE_COVERAGE_FAIL_CLOSED_NOT_ADMITTED",
+            "failure_class": type(exc).__name__,
+            "failure_reason": str(exc),
+            "adverse_cost_usd_admitted": False,
+        }
+    return asdict(outcome) | {
+        "adverse_cost_usd_admitted": False,
+        "official_event_and_session_preregistration_admitted": False,
+    }
+
 def _write_private(path: Path, content: bytes) -> None:
     # Exclusive creation prevents overwriting an earlier evidence capture.
     with path.open("xb") as stream:
@@ -524,6 +570,7 @@ def _public_summary(report: dict[str, Any]) -> dict[str, Any]:
             "historical_cash_and_fee_evidence", {}
         ).get("xauusd_fee_rows_count"),
         "four_hour_quote_slots": extra.get("observed_slots"),
+        "four_hour_quote_proxy": report.get("v11_quote_proxy"),
         "four_hour_tick_count": extra.get("broker_tick_summary", {}).get("tick_count"),
         "full_policy_a_admitted": False,
         "official_event_guard_admitted": False,
@@ -570,10 +617,31 @@ def run(argv: list[str] | None = None) -> int:
         report["status"] = "STATIC_COMPLETE_FOUR_HOUR_PENDING"
         _write_private(args.output / "static_evidence.json", _canonical(report))
         if args.prospective_four_hours:
-            with (
-                (args.output / "prospective_quote_samples.jsonl").open("xb") as samples,
-                (args.output / "prospective_broker_ticks.jsonl").open("xb") as ticks,
-            ):
+            # Durable source/timing registration is written BEFORE the first
+            # observation; unknown official event/session provenance is null.
+            start = datetime.now(UTC) + timedelta(seconds=3)
+            finish = start + timedelta(seconds=WINDOW_SECONDS)
+            registration = {
+                "schema": "ONE_RUN_4H_SOURCE_PROSPECTIVE_REGISTRATION_V1",
+                "written_before_first_sample_utc": datetime.now(UTC).isoformat(),
+                "start_utc": start.isoformat(), "end_utc": finish.isoformat(),
+                "sample_seconds": SAMPLE_SECONDS,
+                "expected_slots": WINDOW_SECONDS // SAMPLE_SECONDS,
+                "source_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                "account_fingerprint_sha256": EXPECTED_ACCOUNT_SHA256,
+                "owner_attended_readonly_confirmation": True,
+                "official_event_and_session_sha256": None,
+                "accepted_v11_preregistration": False,
+                "broker_order_actions": 0,
+            }
+            _write_private(
+                args.output / "prospective_run_registration.json",
+                _canonical(registration),
+            )
+            report["prospective_registration_sha256"] = _sha(registration)
+            poll_file = args.output / "prospective_quote_samples.jsonl"
+            tick_file = args.output / "prospective_broker_ticks.jsonl"
+            with poll_file.open("xb") as samples, tick_file.open("xb") as ticks:
                 def write_row(row: dict[str, Any]) -> None:
                     samples.write(_canonical(row))
                     samples.flush()
@@ -582,9 +650,12 @@ def run(argv: list[str] | None = None) -> int:
                     ticks.write(_canonical(row))
 
                 report["prospective_window"] = collect_prospective_quotes(
-                    mt5, start=datetime.now(UTC), now_fn=lambda: datetime.now(UTC),
+                    mt5, start=start, now_fn=lambda: datetime.now(UTC),
                     sleep_fn=time.sleep, on_sample=write_row, on_tick=write_tick,
                 )
+            report["v11_quote_proxy"] = private_v11_quote_proxy(
+                start=start, end=finish, polls_path=poll_file, ticks_path=tick_file,
+            )
             report["status"] = "COMPLETE_READONLY_NOT_ADMITTED"
         else:
             report["status"] = "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED"
