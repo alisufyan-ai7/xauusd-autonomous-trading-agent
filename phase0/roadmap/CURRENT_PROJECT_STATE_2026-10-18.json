@@ -1,6 +1,6 @@
 {
   "schema_version": "current-project-state-1.0",
-  "as_of_date": "2026-10-18",
+  "as_of_date": "2026-10-23",
   "repository": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "authoritative_main_sha": "51a7f7de395767a9ae1f9904f752bd74b3cdc010",
   "source_of_truth": "GITHUB",
@@ -383,5 +383,29 @@
     "proposed_rule7_reconciliation": "phase0/governance/PROPOSED_RULE7_DEMO_ENGINEERING_RECONCILIATION_2026-10-23.md",
     "open_prs_count": 1,
     "deprecated_pr_stack_reopened": false
+  },
+  "latest_2026_10_23_readonly_real_broker_diagnostic": {
+    "status": "OWNER_RUN_REQUIRED_NO_REAL_CAPTURE_YET",
+    "active_pr": 40,
+    "source_module": "demo_adapter/scripts/real_demo_money_readonly.py",
+    "source_pin": "dc5bed52682f3ece8ebd1b120bd24723d1f716b8",
+    "powershell": "phase0/ops/real_exness_demo_broker_money_readonly_pr40_20261023.ps1",
+    "native_script_safety_tests": "demo_adapter/tests/test_pr40_attended_readonly_broker_probe.py",
+    "no_order_check_send": true,
+    "actual_broker_orders": false,
+    "no_python_trading_toggle": true,
+    "no_live_login": true,
+    "code_source_test_head": "058ed68f4e5c4d20c0ed55d64cb00a31f4ad323a",
+    "source_ci_release_run": 39941236394,
+    "source_ci_admission_run": 39941236571,
+    "source_ci_candidate_run": 39941236639,
+    "source_ci_status_at_document_commit": "IN_PROGRESS",
+    "broker_vps_capture_performed": false,
+    "numerical_cost_calibration_v11_admitted": false,
+    "main_trading_code_merged": false,
+    "human_gate_required": "EXPLICIT_ATTENDED_READ_ONLY_VPS_RUN_AND_PROVENANCE_REVIEW",
+    "active_open_pr_count": 1,
+    "proposed_one_feature_one_pr_policy": "phase0/governance/PR_LIFECYCLE_POLICY_2026-10-23.md",
+    "proposed_governance_reconciliation": "phase0/governance/PROPOSED_RULE7_DEMO_ENGINEERING_RECONCILIATION_2026-10-23.md"
   }
 }

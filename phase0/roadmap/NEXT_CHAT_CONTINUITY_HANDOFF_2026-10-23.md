@@ -1,5 +1,14 @@
 # XAU/USD Autonomous Trading Agent — authoritative next-chat continuity handoff
 
+## 2026-10-23 — owner-run REAL broker evidence source PIN prepared, not executed
+
+**Next actionable source step (requires attended owner/VPS action):** [`../ops/real_exness_demo_broker_money_readonly_pr40_20261023.ps1`](../ops/real_exness_demo_broker_money_readonly_pr40_20261023.ps1) is a **source-pinned, read-only** PowerShell 5.1 diagnostic. It fetches the sole consolidated PR40 lineage, verifies code source `dc5bed52682f3ece8ebd1b120bd24723d1f716b8` is an ancestor, checks exact Windows repo-root and Python3.12, exports the tested source to an isolated temporary ZIP, then attaches *only to the existing* Exness Pro DEMO terminal and reads actual symbol quote, stop-loss price-to-cash, incremental margin and broker cash/account values for both BUY and SELL 0.01-lot. It refuses LIVE/wrong fingerprint/unknown exposure and requires Python external trading disabled. It invokes NO `order_check`, NO `order_send`, NO login change or scheduled-task mutation; clears temp files afterward. Its native tests **parse only**; no VPS run, real broker receipt or numeric fee-calibration admission was performed. User must separately authorize/run on the Windows ForexVPS after the source is correctly staged; do not claim this is the promised one-command **trading** launcher.
+
+**Current engineering on PR40:** `s2_readonly_coordinator_port.py` with exact TPB-to-S2 source preview and pending/known position/deal reconciliation; submit is still unconditionally blocked, no phantom durable order. [One coherent feature/one PR policy](../governance/PR_LIFECYCLE_POLICY_2026-10-23.md) and [prospective governance rule7 reconciliation](../governance/PROPOSED_RULE7_DEMO_ENGINEERING_RECONCILIATION_2026-10-23.md) reside on the SAME PR40, neither is silently adopted into accepted `main`. All historical 26 PRs remain CLOSED UNMERGED with five source archive refs. Owner's goal remains **genuine Exness DEMO server-side MT5 orders with virtual account funds, not paper trading**, followed by observed continuous DEMO and independent future LIVE authorization if risk admission passes. User run + real source provenance, complete v1.1 commissions/swaps/slippage/gap calibration, operational official economic calendar/session, fully qualified S2 submit and real pending/filled recovery/alerts remain release blockers.
+
+
+**Next code action:** complete the single S2 source-authorized sender, correct pending STOP broker PLACED vs actual fill receipt handling, runtime official calendar/event invalidation and risk evidence; no parallel order_send. Source PIN diagnostic is only a read-only necessary step; output cannot prove all-cost commission/gap admission or profitability.
+
 ## NEWEST 2026-10-23 — single PR40 + M1 read-only unification
 
 ## Latest M1 source integration and PR hygiene — 2026-10-23
