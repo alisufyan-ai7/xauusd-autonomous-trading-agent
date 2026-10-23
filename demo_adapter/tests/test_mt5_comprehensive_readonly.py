@@ -297,3 +297,65 @@ def test_privacy_shareable_summary_has_no_broker_login_or_trade_identifiers():
     assert summary["full_policy_a_admitted"] is False
     assert summary["order_send_calls"] == 0
     assert summary["four_hour_quote_slots"] is None
+
+
+def test_private_offline_v11_proxy_records_insufficient_coverage_not_zero_cost(tmp_path):
+    start = NOW
+    polls = tmp_path / "poll.jsonl"
+    ticks = tmp_path / "ticks.jsonl"
+    polls.write_text(
+        '{"observed_utc":"2026-10-23T11:00:00+00:00","bid":"2699","ask":"2700"}\\n',
+        encoding="utf-8",
+    )
+    ticks.write_text(
+        '{"time_msc":1792753200000,"bid":"2699","ask":"2700"}\\n',
+        encoding="utf-8",
+    )
+    result = probe.private_v11_quote_proxy(
+        start=start, end=start + timedelta(hours=4),
+        polls_path=polls, ticks_path=ticks,
+    )
+    assert result["status"] == "QUOTE_COVERAGE_FAIL_CLOSED_NOT_ADMITTED"
+    assert result["adverse_cost_usd_admitted"] is False
+
+
+def test_complete_one_run_writes_source_registration_before_sampling(
+    tmp_path, monkeypatch, capsys,
+):
+    broker = FakeMT5()
+    broker.now = datetime.now(UTC)
+    output = tmp_path / "private-output"
+    monkeypatch.setattr(probe.importlib, "import_module", lambda name: broker)
+    saved: list[dict] = []
+    def synthetic_fast_window(port, *, start, now_fn, sleep_fn, on_sample, on_tick):
+        record = output / "prospective_run_registration.json"
+        assert record.is_file()
+        reg = probe.json.loads(record.read_text(encoding="utf-8"))
+        assert reg["start_utc"] == start.isoformat()
+        assert reg["accepted_v11_preregistration"] is False
+        assert reg["official_event_and_session_sha256"] is None
+        saved.append(reg)
+        on_sample({"slot": 0, "observed_utc": start.isoformat(),
+                   "bid": "2699.8", "ask": "2700", "tick_time_utc": start.isoformat()})
+        on_tick({"time_msc": int(start.timestamp()*1000),
+                 "bid": "2699.8", "ask": "2700"})
+        return {"observed_slots": 1, "broker_tick_summary": {"tick_count": 1}}
+    monkeypatch.setattr(probe, "collect_prospective_quotes", synthetic_fast_window)
+    assert probe.run([
+        "--confirm-owner-readonly", "--output", str(output),
+        "--prospective-four-hours",
+    ]) == 0
+    assert saved
+    assert (output / "static_evidence.json").is_file()
+    assert (output / "complete_evidence.json").is_file()
+    assert (output / "shareable_summary.json").is_file()
+    assert (output / "prospective_broker_ticks.jsonl").is_file()
+    summary = probe.json.loads((output / "shareable_summary.json").read_text())
+    assert summary["order_send_calls"] == 0
+    assert summary["full_policy_a_admitted"] is False
+    assert summary["four_hour_quote_slots"] == 1
+    assert summary["four_hour_quote_proxy"]["adverse_cost_usd_admitted"] is False
+    assert "order_send" not in broker.calls
+    assert "order_check" not in broker.calls
+    assert broker.calls.count("shutdown") == 1
+    assert "COMPLETE_READONLY_NOT_ADMITTED" in capsys.readouterr().out
