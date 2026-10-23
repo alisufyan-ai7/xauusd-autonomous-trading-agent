@@ -475,7 +475,7 @@
     "attempted_four_hour_capture_completed": false
   },
   "current_next_chat_handoff_2026_10_23": {
-    "status": "CORRECTED_VPS_ATTEMPT_FAIL_CLOSED_STATIC_AFTER_SUCCESSFUL_MT5_INIT__EXACT_GUARD_UNKNOWN",
+    "status": "LATEST_VPS_STATIC_DIAG_FAIL_CLOSED_HISTORICAL_TICK_VALIDATION__SUBREASON_UNCLASSIFIED__NEW_OFFLINE_GUARD_FIX",
     "canonical_start_here": "phase0/roadmap/START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md",
     "result_evaluated": true,
     "corrected_run_completed_successfully": false,
@@ -488,7 +488,7 @@
     "corrected_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "canonical_single_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
     "private_capture_location_pattern": "%LOCALAPPDATA%\\\\XAUUSD-BrokerEvidence\\\\capture-*",
-    "next_action": "ONE_OPTIONAL_OWNER_ATTENDED_SHORT_STATIC_ONLY_STAGE_REPLAY_AFTER_CI__NOT_FOUR_HOUR",
+    "next_action": "AFTER_ALL_NATIVE_CI_GREEN_OPTIONAL_ONE_OWNER_ATTENDED_SHORT_STATIC_ONLY_DIAG_PINNED_TO_462AC5__NO_FOUR_HOUR_OR_TRADING",
     "broker_order_execution": "STILL_BLOCKED_UNDER_POLICY_A",
     "account_type": "EXNESS_PRO_MT5_DEMO_VIRTUAL_FUNDS_REAL_BROKER_API_GOAL",
     "future_live_money": "NOT_AUTHORIZED",
@@ -511,7 +511,10 @@
     "source_runtime_failure_guard_identified": false,
     "failure_incident": "phase0/roadmap/MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md",
     "corrected_run_mt5_connected": true,
-    "corrected_run_failure_detail_recoverable_from_local_file": false
+    "corrected_run_failure_detail_recoverable_from_local_file": false,
+    "latest_vps_failure_stage": "STATIC_HISTORICAL_BROKER_TICKS",
+    "latest_vps_failure_code": "HISTORICAL_TICK_ORDER_OR_PRICE_INVALID",
+    "latest_vps_failure_file_sha256": "84620F5EF9B6FBF7BEDFDBB35FB1CB59110008FCE8128E2F07598186339C0646"
   },
   "github_recovery_2026_10_23_new_chat": {
     "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
@@ -562,9 +565,9 @@
     "known_reported_order_send_calls": 0,
     "file_inventory_verified": true,
     "existing_captured_partial_evidence_status": "FAILURE_JSON_185_BYTES_AND_ZERO_BYTE_HISTORY_TICK_ONLY",
-    "source_change": "FIXED_SAFE_STAGE_AND_ALLOWLISTED_GUARD_CODES",
+    "source_change": "WHOLE_SECOND_UTC_WINDOWS_PLUS_TICK_SUBREASON_CODES_PLUS_INCOMPLETE_PRIVATE_PRETICK_CHECKPOINT",
     "new_tests": "EARLY_WRONG_ACCOUNT_AND_POST_STATIC_EXCEPTION_PRIVACY_NO_ORDER",
-    "native_ci_at_document_commit": "CHECK_CURRENT_SHA_BEFORE_ANY_OPERATOR_ACTION",
+    "native_ci_at_document_commit": "CHECK_LATEST_HEAD",
     "launcher_repinned": false,
     "new_mt5_attempt_authorized": false,
     "full_policy_a_cash_admitted": false,
@@ -577,11 +580,39 @@
     "static_report_written": false,
     "prospective_observation_started": false,
     "newly_prepared_static_diagnostic_script": "phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1",
-    "source_pinned_static_diagnostic": "723e276ca32f80e6b705c8dd087a4325609c59e5",
+    "source_pinned_static_diagnostic": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
     "prospective_four_hour_replay_allowed": false,
     "native_ci_known_failed_at": "7981e624991730580d9e4935fcec01a24c68131e",
     "native_ci_failed_reason": "RUFF_S603_POWERSHELL_PARSE_ONLY_TEST",
     "native_ci_correction_sha": "89b7c80a75f771fffb1ab16fb8f5bb8a1b934715",
-    "on_vps_static_diagnostic_executed": false
+    "on_vps_static_diagnostic_executed": false,
+    "owner_last_static_diagnostic_executed": true
+  },
+  "latest_reproducible_mt5_static_history_tick_failure_2026_10_23": {
+    "attempt_kind": "ONE_OWNER_ATTENDED_STATIC_ONLY_NO_PROSPECTIVE",
+    "private_run_time_utc": "2026-10-23T13:20:13Z",
+    "launcher_review_sha": "b42005212f8f4869b815af2fad3a523c2eaed55b",
+    "collector_runtime_pin": "723e276ca32f80e6b705c8dd087a4325609c59e5",
+    "isolated_source_import": "PASS_NO_MT5",
+    "observed_mt5_initialized": true,
+    "observed_stage": "STATIC_HISTORICAL_BROKER_TICKS",
+    "observed_safe_guard_code": "HISTORICAL_TICK_ORDER_OR_PRICE_INVALID",
+    "tick_anomaly_subtype": "UNKNOWN_NOT_RECORDED_BY_OLD_SOURCE",
+    "status": "FAIL_CLOSED_NO_ORDER",
+    "failure_json_sha256": "84620F5EF9B6FBF7BEDFDBB35FB1CB59110008FCE8128E2F07598186339C0646",
+    "private_static_report_present": false,
+    "private_prospective_registration_present": false,
+    "order_check_calls_reported": 0,
+    "order_send_calls_reported": 0,
+    "pre_tick_identity_and_money_and_history_and_frames_reached": true,
+    "backdated_causal_claim_for_prior_capture": false,
+    "four_hour_capture_completed": false,
+    "source_patch": "WHOLE_SECOND_WINDOWS_SPECIFIC_TICK_GUARDS_NONADMITTED_PRIVATE_PRETICK_CHECKPOINT",
+    "source_patch_test_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "new_static_only_launcher": "phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1",
+    "source_patch_performed_on_vps": false,
+    "source_patch_native_ci_at_machine_record": "CHECK_HEAD_BEFORE_RUN",
+    "real_demo_order_authorized": false,
+    "real_live_order_authorized": false
   }
 }
