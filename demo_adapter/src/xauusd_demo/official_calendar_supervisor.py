@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 """Durable official-source Event Guard revision/health supervisor.
 
 Uses the *existing* pure admission and event_guard. VerifiedOfficialSnapshot
