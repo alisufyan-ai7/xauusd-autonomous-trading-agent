@@ -304,11 +304,11 @@ def test_private_offline_v11_proxy_records_insufficient_coverage_not_zero_cost(t
     polls = tmp_path / "poll.jsonl"
     ticks = tmp_path / "ticks.jsonl"
     polls.write_text(
-        '{"observed_utc":"2026-10-23T11:00:00+00:00","bid":"2699","ask":"2700"}\\n',
+        '{"observed_utc":"2026-10-23T11:00:00+00:00","bid":"2699","ask":"2700"}\n',
         encoding="utf-8",
     )
     ticks.write_text(
-        '{"time_msc":1792753200000,"bid":"2699","ask":"2700"}\\n',
+        '{"time_msc":1792753200000,"bid":"2699","ask":"2700"}\n',
         encoding="utf-8",
     )
     result = probe.private_v11_quote_proxy(
