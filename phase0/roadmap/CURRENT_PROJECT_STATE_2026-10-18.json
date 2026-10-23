@@ -454,5 +454,36 @@
     "corrected_launcher_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
     "incident_record": "phase0/roadmap/MT5_SINGLE_CAPTURE_IMPORT_FAILURE_2026-10-23.md",
     "status_truth": "SOURCE_TESTED_NO_REAL_BROKER_CAPTURE"
+  },
+  "current_next_chat_handoff_2026_10_23": {
+    "status": "OWNER_REPORTED_CORRECTED_READONLY_VPS_SCRIPT_RUN__ACTUAL_OUTPUT_PENDING_NEW_CHAT",
+    "canonical_start_here": "phase0/roadmap/START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md",
+    "result_evaluated": false,
+    "corrected_run_completed_successfully": null,
+    "corrected_run_failed": null,
+    "corrected_run_quote_samples": null,
+    "corrected_run_broker_account_observed": null,
+    "corrected_run_orders_sent": null,
+    "previous_failed_attempt": "MODULE_NOT_FOUND_XAUUSD_AGENT_PRE_MT5_ALREADY_RECORDED",
+    "previous_failed_attempt_distinct_from_new_run": true,
+    "corrected_source_pin": "10425e6180ef660226e298ef06a0fa423334332e",
+    "canonical_single_script": "phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1",
+    "private_capture_location_pattern": "%LOCALAPPDATA%\\\\XAUUSD-BrokerEvidence\\\\capture-*",
+    "next_action": "RECONCILE_GITHUB_THEN_ANALYZE_OWNER_SUPPLIED_VPS_OUTPUT__NO_AUTOMATIC_RERUN",
+    "broker_order_execution": "STILL_BLOCKED_UNDER_POLICY_A",
+    "account_type": "EXNESS_PRO_MT5_DEMO_VIRTUAL_FUNDS_REAL_BROKER_API_GOAL",
+    "future_live_money": "NOT_AUTHORIZED",
+    "only_open_pr": 40,
+    "historical_open_pr_count": 0,
+    "review_code_ci_reference": "55c79901038f8610e42c41c99a31ec3f1f32d8be",
+    "known_success_workflow_runs": [
+      39949921127,
+      39949921139,
+      39949921122,
+      39949921188,
+      39949921134
+    ],
+    "owner_request": "PRESERVE_CONTEXT_IN_GITHUB_ACROSS_CHAT_LIMITS",
+    "documentation_location": "PR40_ONLY_UNMERGED_PRODUCTION_MAIN_STILL_OLDER"
   }
 }

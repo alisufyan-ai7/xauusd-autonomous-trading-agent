@@ -1,5 +1,10 @@
 # XAU/USD Autonomous Trading Agent — authoritative next-chat continuity handoff
 
+## 2026-10-23 — new-chat continuation: corrected VPS run OUTPUT PENDING
+
+**NEWEST PRIORITY: [START HERE — authoritative new-chat handoff](START_HERE_NEXT_CHAT_BROKER_CAPTURE_HANDOFF_2026-10-23.md).** The owner reports having run the **corrected** source-pinned comprehensive read-only PowerShell script on the ForexVPS and will supply its **actual output in the NEXT CHAT**. **The run result is UNKNOWN until that output is inspected**: do not call it PASS/FAIL, assume 4h completed, or request another run. The previous distinct first attempt (missing `xauusd_agent` import) is already diagnosed and preserved. PR40 remains the one draft engineering PR; no broker orders, no VPS trading activation, no main code merge or LIVE authority has been established. Future chat: reconcile GitHub dynamically, read the forthcoming output, record its disposition in PR40, then continue the single S2 source-admitted Exness DEMO broker path. Keep source privacy and one-feature/one-PR discipline.
+
+
 ## Latest 2026-10-23 — PRE-MT5 IMPORT FAILURE CORRECTED; ONE SOURCE-CAPTURE ATTEMPT PENDING
 
 The owner's first attended comprehensive launcher at prior pinned source `150b60e8884b13d6a934c1e9ff77bd523826c75e` failed **before MetaTrader5 initialization** with `ModuleNotFoundError: No module named 'xauusd_agent'`, due to a missing exported core `src` path under `python -I`. **NO prospective four-hour observation started, NO broker order was checked/sent, and no MT5 setting was changed.** This is NOT a trading result or a completed calibration. Exact [incident diagnosis and retained failure](MT5_SINGLE_CAPTURE_IMPORT_FAILURE_2026-10-23.md).
