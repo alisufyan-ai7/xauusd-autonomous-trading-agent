@@ -1,0 +1,176 @@
+{
+  "schema_version": "demo-lifecycle-adverse-cost-preregistration-1.2-option-a-candidate",
+  "registered_date_utc": "2026-10-18",
+  "state": "PROSPECTIVELY_PREPARED_OWNER_IN_PRINCIPLE_ONLY_FINAL_DESIGN_APPROVAL_REQUIRED",
+  "scope": "DEMO_LIFECYCLE_ONLY",
+  "owner_decision": "OPTION_A_IN_PRINCIPLE_WITH_SAFETY_REFINEMENTS_2026_10_18",
+  "authority": "ENGINEERING_DESIGN_AND_OFFLINE_SYNTHETIC_TESTS_ONLY",
+  "remains_draft_unmerged": true,
+  "chain": {
+    "base_option_a_review_pr12": "b03e1ba3ee2434744010ac8bdf37904ba19df730",
+    "immutable_original_v1_0_blob": "3e6e0d19e70da5a02002615160e3f0c0a0367b77",
+    "original_v1_0_selected_initial": false,
+    "v1_1_file": "phase0/roadmap/DEMO_LIFECYCLE_COST_PREREGISTRATION_V1_1_RESTRICTED_SESSION_2026-10-18.json",
+    "v1_1_unchanged": true,
+    "historical_fail_closed_and_pcr3_quarantine_preserved": true
+  },
+  "account": {
+    "mode": "EXNESS_MT5_DEMO_ONLY",
+    "symbol": "XAUUSD",
+    "currency": "USD",
+    "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+    "requested_volume_lots": "0.01",
+    "proven_real_fingerprint_and_costs": false
+  },
+  "observation": {
+    "length_minutes": 240,
+    "contiguous": true,
+    "rule": "ENTIRE_FOUR_HOURS_VERIFIED_BROKER_ELIGIBLE_XAUUSD_LIQUID_OBSERVATION",
+    "overlap_requirement": "CONTAIN_INDEPENDENTLY_VERIFIED_LONDON_NEW_YORK_OVERLAP_FULL_ELIGIBLE_SUBWINDOW",
+    "observation_only_outside_overlap": true,
+    "observe_may_include_event_stress": "ONLY_SEPARATE_EVENT_STRESS_DATA_IF_AUTHORITATIVE_EVIDENCE_AND_EXPLICIT_RELEVANT_SOURCE_APPROVED; NO_CONTAMINATION_OF_BASELINE",
+    "prohibit_capture_when_broker_session_unknown": true,
+    "prohibit_capture_when_event_guard_unhealthy": true,
+    "minimum_poll_slots": 2880,
+    "minimum_distinct_poll_fraction": "0.99",
+    "require_all_240_minute_bins": true,
+    "tick_protocol": "phase0/roadmap/DEMO_V11_T1_TICK_TIMESTAMP_SEQUENCE_PROTOCOL_2026-10-18.json",
+    "true_tick_pair_horizons_seconds": [
+      1,
+      5,
+      30
+    ],
+    "event_guard_allowed_capture_regime": "ONLY_WHEN_EXACT_SESSION_AND_EVENT_GUARD_READ_ONLY_CAPTURE_APPROVED",
+    "actual_start_utc": null,
+    "actual_end_utc": null,
+    "illustrative_summer_reference_utc": [
+      "12:30",
+      "16:30"
+    ],
+    "illustration_not_selected": true,
+    "summer_center_overlap_reference_utc": [
+      "13:30",
+      "16:30"
+    ],
+    "winter_center_overlap_reference_utc": [
+      "14:30",
+      "16:30"
+    ],
+    "official_date_specific_exness_xauusd_schedule_sha256": null,
+    "holiday_dst_source_sha256": null,
+    "event_guard_source_sha256": null,
+    "clock_skew_verification_sha256": null,
+    "owner_explicit_exact_capture_approval": null,
+    "reject_gap_or_unverified_source_without_trimming": true
+  },
+  "eventual_demo_entry": {
+    "eligible_regime": "INDEPENDENTLY_VERIFIED_NON_EVENT_LONDON_NY_OVERLAP_ONLY",
+    "never_in_observation_only_minutes": true,
+    "live_session_news_holiday_shock_spread_tick_guard": "STRICT_FAIL_CLOSED",
+    "event_blackout_pre_and_post": "EXACT_PRIOR_REGISTERED_GUARD_POLICY_NOT_GUESSED",
+    "flat_by": "STRICTLY_BEFORE_EARLIER_OF_VERIFIED_ENTRY_OVERLAP_END_OR_BROKER_ELIGIBLE_SESSION_END",
+    "entry_cutoff": "PROSPECTIVELY_REGISTERED_POSITIVE_PRE_FLAT_EXIT_LEAD_AND_OPERATOR_AVAILABILITY_REQUIRED",
+    "exit_and_reconciliation_deadline": "STRICTLY_EARLIER_THAN_OVERLAP_OR_SESSION_END",
+    "no_same_boundary_time_as_flat_verification": true,
+    "known_owned_positions_must_be_broker_confirmed_closed": true,
+    "all_pending_orders_must_be_broker_confirmed_absent": true,
+    "if_not_flat_or_unknown": "QUARANTINE_BLOCK_NEW_RISK_ALERT_HUMAN_ONLY_E1; NEVER_AUTOCLOSE_UNKNOWN_EXPOSURE",
+    "no_rollover_or_overnight_or_weekly_reopen_holding": true,
+    "future_rollover_permission": "NEW_SEPARATELY_ADMITTED_PROSPECTIVE_REGIME_ONLY",
+    "post_exit_handling": "HUMAN_GATED_RESUMPTION_P1",
+    "owner_attended_monitor_and_exit_plan_proven": false,
+    "live_activation_allowed": false
+  },
+  "baseline_current": {
+    "cohort": "ENTRY_ELIGIBLE_NON_EVENT_VERIFIED_OVERLAP_ONLY",
+    "eligible_quote_record_rule": "BOTH_ENDPOINTS_INSIDE_VERIFIED_OVERLAP_AND_CLEAR_OF_ALL_EVENT_GUARD_BLOCKS",
+    "exclude": [
+      "LONDON_ONLY_OBSERVATION",
+      "NONOVERLAP",
+      "NEWS_PRE_POST_BLOCK",
+      "EVENT",
+      "SHOCK",
+      "STALE_OR_INVERTED_TICK",
+      "UNKNOWN_SOURCE"
+    ],
+    "provenance": "INDEPENDENTLY_HASHED_TRUE_TICKS_AND_DATED_BROKER_CALENDAR_GUARD_ALL_RECONCILED",
+    "minimum_bins": "EVERY_ENTIRE_ONE_MINUTE_BIN_OF_VERIFIED_ENTRY_OVERLAP_UNLESS_PROSPECTIVE_SPEC_EXPLICITLY_REJECTS_WHOLE_WINDOW",
+    "base_math": "CEIL_CENT(SEPARATE_NONOVERLAPPING_MAX_SPREAD_USD+MAX_PROSPECTIVE_QUOTE_MOVE_PROXY_FLOOR_USD+MAX_PROSPECTIVE_GAP_PROXY_FLOOR_USD+EVIDENCED_ROUND_TRIP_COMMISSION_USD+EVIDENCED_HOLDING_CONTINGENCY_USD)",
+    "numeric_result": null,
+    "pre_demo_execution_slippage_measured": false
+  },
+  "stressed": {
+    "cohort": "WORST_EVIDENCE_FROM_ALL_240_OBSERVATION_MINUTES_PLUS_SEPARATELY_VALIDATED_RELEVANT_EVENT_STRESS_SOURCES",
+    "keep_event_stress_separate_from_baseline": true,
+    "required_relevant_event_observations": "VERIFY_RELEVANCE_OR_PIN_INDEPENDENTLY_PROVED_CONSERVATIVE_STRESS_FLOOR; UNKNOWN_NOT_ADMITTED",
+    "stress_quote_rule": "MAX_COMPONENT_EACH_OF_FULL_OBSERVATION_AND_PINNED_RELEVANT_EVENT_STRESS_RECORDS_WITH_NO_FAVORABLE_TRIMMING",
+    "stress_math": "CEIL_CENT(MAX(2*CURRENT_ADVERSE_COST,MAX_OBS_STRESS_SPREAD+STRESS_QUOTE_PROXY_FLOOR+STRESS_GAP_FLOOR+ROUND_TRIP_COMMISSION_AND_HOLDING_STRESS_RESERVES))",
+    "stop_fill_or_tail_guarantee": false,
+    "numeric_result": null,
+    "cannot_use_only_overlap_for_stressed": true
+  },
+  "slippage": {
+    "registration_kind": "PROSPECTIVE_CONSERVATIVE_PRE_DEMO_QUOTE_PROXY_FLOOR_NOT_MEASURED_EXECUTION_SLIPPAGE",
+    "source_requirement": "PRESPECIFIED_INDEPENDENT_PROVENANCE_AND_EXACT_USD_CONVERSION",
+    "floor_formula": "MAX(PINNED_INDEPENDENT_PREDEMO_ALLOWANCE_USD,MAX_TRUE_1S_5S_30S_ADVERSE_QUOTE_MOVE_PROXY_USD)",
+    "pinned_allowance_usd": null,
+    "pinned_allowance_proof_sha256": null,
+    "missing_floor": "NOT_ADMITTED_NEVER_IMPUTE_ZERO",
+    "separate_gap_floor": "MANDATORY_AND_PROVEN_NO_COMPONENT_DOUBLE_COUNTING",
+    "future_execution_slippage_measurement": "LATER_OWNER_AUTHORIZED_ATTENDED_DEMO_LIFECYCLE_ONLY_MEASURE_SUBMITTED_VS_FILLED_PRICE_AND_STOP_EXIT_SLIPPAGE_ALL_SUFFICIENT_EVENTS_PRESERVE_NEGATIVE_CASES",
+    "no_quote_move_masquerading_as_realized_slippage": true,
+    "no_slippage_bound_from_max_quote_sample": true
+  },
+  "costs": {
+    "account_specific_commission_proof_sha256": null,
+    "account_specific_swap_holding_proof_sha256": null,
+    "tick_size_tick_value_loss_conversion_proof_sha256": null,
+    "gap_reserve_floor_usd": null,
+    "stress_event_source_sha256": null,
+    "current_adverse_cost_usd": null,
+    "stressed_adverse_cost_usd": null,
+    "synthetic_values_never_production_authority": true,
+    "positive_or_documented_zero_requirement": "RECONCILED_ACCOUNT_SPECIFIC_PROOF_ONLY",
+    "double_count_review_sha256": null,
+    "source_integrity": "EXACT_PRIVATE_BYTES_SHA256_PLUS_INDEPENDENT_EXTERNAL_ORIGIN_VERIFICATION",
+    "no_retrospective_percentile_cherry_picking": true,
+    "no_usd_calibration_admitted": true
+  },
+  "policy_a_unchanged": {
+    "per_trade_risk": "FLOOR_CENT(0.0025*MIN(BALANCE,EQUITY,10000))",
+    "max_lots": "0.01",
+    "planned_loss": "PRICE_TO_BROKER_VALID_STOP_USD+VERIFIED_COMMISSION+VERIFIED_SWAP+VERIFIED_SLIPPAGE_RESERVE+VERIFIED_GAP_RESERVE",
+    "concurrent_max_usd": "50.00",
+    "daily_max_usd": "75.00",
+    "weekly_max_usd": "150.00",
+    "drawdown_max_usd": "500.00",
+    "pause_full_r_equivalents": "3.00",
+    "margin_pct_min_current_and_2x_stressed": "1000",
+    "free_margin_equity_fraction_min_current_and_stressed": "0.90",
+    "human_only_emergency": "E1",
+    "human_gated_resume": "P1",
+    "durable_kill_quarantine_reconciliation": "RETAIN",
+    "external_python_trading_disabled": true,
+    "broker_order_submission_hard_veto": "RETAIN"
+  },
+  "admission_gates": {
+    "successor_method_final_owner_approval": false,
+    "independently_proven_session_and_utc_window": false,
+    "read_only_vps_capture_owner_approved": false,
+    "independent_broker_and_event_data_present": false,
+    "current_stressed_numeric_proof": false,
+    "full_policy_a_runtime_binding_admitted": false,
+    "attended_verified_flat_before_session_end": false,
+    "DEMO_ADMIT_PASS": false
+  },
+  "forbidden_authorizations": [
+    "PR12_OR_NEW_SUCCESSOR_MERGE",
+    "VPS_ACCESS",
+    "REAL_DATA_CAPTURE",
+    "MT5_CONFIGURATION",
+    "ENABLE_EXTERNAL_PYTHON_TRADING",
+    "DEMO_ORDERS",
+    "LIVE_TRADING"
+  ],
+  "next": "OFFLINE_SYNTHETIC_SPLIT_SCOPE_AND_FLAT_DEADLINE_TESTS_THEN_EXACT_SHA_OWNER_FINAL_SUCCESSOR_APPROVAL"
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": "xauusd-pr34-owner-attended-crossframe-rejection-v1",
+  "date_utc": "2026-10-22",
+  "observed_utc": "2026-10-22T13:32:33.856256+00:00",
+  "source": "SANITIZED_OWNER_PASTED_VPS_POWERSHELL_OUTPUT",
+  "review_wrapper_commit": "a7114eff0649fb843095300042a0114933cd7033",
+  "isolated_python_source_commit": "48128c83130aa767b047d382f113d4510cb3ac4d",
+  "scope": "EXNESS_XAUUSD_READ_ONLY_CROSSFRAME_NO_TRADING",
+  "broker": "Exness Technologies Ltd",
+  "server": "Exness-MT5Trial15",
+  "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "trade_mode": "DEMO",
+  "external_python_trading_disabled": true,
+  "broker_order_and_position_actions_authorized": false,
+  "execution_permitted": false,
+  "order_api_calls": 0,
+  "w1_nominal_sunday_utc_open_observed": true,
+  "all_requested_bar_counts_available": true,
+  "crossframe_compared_parent_bars": 564,
+  "crossframe_parity_accepted": false,
+  "crossframe_reason_codes": [
+    "D1_H4_MISSING_OR_MISALIGNED_CHILD_BARS",
+    "H4_H1_MISSING_OR_MISALIGNED_CHILD_BARS"
+  ],
+  "ohlc_or_volume_disagreement_reported": false,
+  "source_status": "READ_ONLY_CROSSFRAME_OR_HISTORY_REJECTED",
+  "power_shell_final": "V2_PR34_CROSSFRAME_READONLY_DIAGNOSTIC_FAIL_CLOSED",
+  "full_chronology_admitted": false,
+  "official_broker_session_source_admitted": false,
+  "full_chronology_reason_codes": [
+    "D1_GAP_UNCLASSIFIED",
+    "H1_GAP_UNCLASSIFIED",
+    "H4_GAP_UNCLASSIFIED",
+    "M15_GAP_UNCLASSIFIED",
+    "M5_GAP_UNCLASSIFIED",
+    "OFFICIAL_BROKER_SESSION_SOURCE_UNVERIFIED",
+    "SESSION_OPEN_CLOSED_CLASSIFICATION_INCOMPLETE",
+    "W1_ANCHOR_UNVERIFIED"
+  ],
+  "timeframe_gap_counts_unclassified": {
+    "D1": 30,
+    "H1": 22,
+    "H4": 9,
+    "M1": 0,
+    "M15": 11,
+    "M5": 1,
+    "W1": 0
+  },
+  "source_analysis": {
+    "strict_child_bar_count_logic": "Requires all nominal child bars even during potentially closed sessions. This can reject sparse market buckets and should not be bypassed without verified session metadata.",
+    "root_cause": "UNDETERMINED_WHETHER_SCHEDULED_CLOSED_INTERVALS_OR_ACTUAL_BAR_LOSS",
+    "exness_official_hours_source": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+    "exness_source_context": "Gold (XAUUSD) usually closed during rollover, schedule may include holidays and DST",
+    "full_broker_specific_dated_calendar_captured": false,
+    "read_only_acceptance": "COUNT_AND_ACCOUNT_GUARDS_OK__STRICT_PARITY_FAIL"
+  },
+  "status": "IMMUTABLE_READONLY_PARITY_FAIL_CLOSED_NOT_TRADING_ADMISSION",
+  "permissions": {
+    "demo_orders": false,
+    "live_orders": false,
+    "mt5_external_python_toggle": false,
+    "vps_deploy": false,
+    "policy_change": false
+  },
+  "evidence_limit": "User-pasted sanitized output, no raw per-bar data. No exact missing UTC windows are available yet. No broker action."
+}

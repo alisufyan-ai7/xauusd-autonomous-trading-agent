@@ -1,0 +1,45 @@
+{
+  "schema": "demo-v11-prospective-window-candidate-disposition-1.0",
+  "recorded_utc_date": "2026-10-18",
+  "status": "CANDIDATE_NOT_SELECTED_FAIL_CLOSED_DO_NOT_CAPTURE",
+  "candidate_for_evaluation_only": {
+    "start_utc": "2026-10-20T13:00:00Z",
+    "end_utc": "2026-10-20T17:00:00Z",
+    "market_symbol": "XAUUSD",
+    "candidate_rule": "ENTIRE_4H_LIQUID_LONDON_NY_REQUIRES_VERIFIED_SESSION_ELIGIBILITY",
+    "outcome": "NOT_QUALIFIED",
+    "exness_trading_center_table_overlap": "PUBLISHED_SUMMER_13_30_TO_16_30_UTC_ONLY_3_HOURS",
+    "bls_release_collision": {
+      "name": "State Employment and Unemployment (Monthly) Sep 2026",
+      "eastern_time": "2026-10-20T10:00:00-04:00",
+      "converted_utc": "2026-10-20T14:00:00Z",
+      "high_impact_classification": "UNKNOWN_PENDING_EVENT_GUARD",
+      "must_not_assume_unblocked": true
+    },
+    "public_page_links": [
+      "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+      "https://www.bls.gov/schedule/2026/10_sched_list.htm"
+    ],
+    "provider_xauusd_specific_schedule_hash_sha256": null,
+    "event_guard_calendar_manifest_hash_sha256": null,
+    "official_source_snapshot_hash_sha256": null
+  },
+  "reserved_eligible_window": {
+    "start_utc": null,
+    "end_utc": null,
+    "status": "NOT_PROSPECTIVELY_REGISTERED",
+    "proof_of_all_4h_session_eligibility_sha256": null,
+    "source_schedule_and_dst_hash_sha256": null,
+    "event_guard_clean_and_health_sha256": null,
+    "tick_protocol_sha256": null,
+    "independent_owner_capture_approval_id": null
+  },
+  "unchanged_authority": {
+    "owner_design_v11_selected": true,
+    "runtime_trading_armed": false,
+    "vps_capture_authorized": false,
+    "external_python_trading_disabled": true,
+    "no_missing_calibration_costs_filled": true,
+    "no_merge_authorized": true
+  }
+}

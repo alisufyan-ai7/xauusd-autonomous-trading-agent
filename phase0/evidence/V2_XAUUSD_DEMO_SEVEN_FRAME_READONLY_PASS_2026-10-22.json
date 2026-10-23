@@ -1,0 +1,110 @@
+{
+  "schema_version": "xauusd-v2-owner-attended-seven-frame-readonly-evidence-v1",
+  "date_utc": "2026-10-22",
+  "observed_utc": "2026-10-22T12:18:18.893538+00:00",
+  "source": "SANITIZED_OWNER_PASTED_POWERSHELL_STDOUT_THIS_CONVERSATION",
+  "status": "READ_ONLY_EXTENDED_MARKET_CAPTURE_COMPLETE_NOT_TRADING_ADMISSION",
+  "local_wrapper_verified_sha": "e1ab534c1fd99c82f86b258173fb687fa1c64533",
+  "source_probe_sha": "f2b26c882620b8a3ba6118a8bfad073851f336bf",
+  "fetched_remote_head_reported": "a0a691b34ae322cedfbb5ceb0b55b67b3844c47a",
+  "wrapper_final_marker": "V2_EXTENDED_DEMO_READONLY_CAPTURE_PASS_NO_ORDER",
+  "instrument": "XAUUSD",
+  "broker_company": "Exness Technologies Ltd",
+  "server": "Exness-MT5Trial15",
+  "trade_mode": "DEMO",
+  "account_type": "Exness Pro (owner-attested dedicated account; subtype not independently shown by probe)",
+  "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "external_python_trading_disabled": true,
+  "execution_enabled": false,
+  "order_api_calls": 0,
+  "quote_age_seconds": 1.281,
+  "all_requested_history_available": true,
+  "raw_account_numbers_in_evidence": false,
+  "creds_in_evidence": false,
+  "bars": {
+    "W1": {
+      "requested": 104,
+      "observed": 104,
+      "oldest_open_utc": "2024-10-20T00:00:00+00:00",
+      "latest_closed_utc": "2026-10-18T00:00:00+00:00",
+      "latest_age_seconds": 389898
+    },
+    "D1": {
+      "requested": 180,
+      "observed": 180,
+      "oldest_open_utc": "2026-03-25T00:00:00+00:00",
+      "latest_closed_utc": "2026-10-22T00:00:00+00:00",
+      "latest_age_seconds": 44298
+    },
+    "H4": {
+      "requested": 300,
+      "observed": 300,
+      "oldest_open_utc": "2026-08-17T00:00:00+00:00",
+      "latest_closed_utc": "2026-10-22T12:00:00+00:00",
+      "latest_age_seconds": 1098
+    },
+    "H1": {
+      "requested": 500,
+      "observed": 500,
+      "oldest_open_utc": "2026-09-22T18:00:00+00:00",
+      "latest_closed_utc": "2026-10-22T12:00:00+00:00",
+      "latest_age_seconds": 1098
+    },
+    "M15": {
+      "requested": 1000,
+      "observed": 1000,
+      "oldest_open_utc": "2026-10-07T15:15:00+00:00",
+      "latest_closed_utc": "2026-10-22T12:15:00+00:00",
+      "latest_age_seconds": 198
+    },
+    "M5": {
+      "requested": 300,
+      "observed": 300,
+      "oldest_open_utc": "2026-10-21T10:15:00+00:00",
+      "latest_closed_utc": "2026-10-22T12:15:00+00:00",
+      "latest_age_seconds": 198
+    },
+    "M1": {
+      "requested": 300,
+      "observed": 300,
+      "oldest_open_utc": "2026-10-22T07:18:00+00:00",
+      "latest_closed_utc": "2026-10-22T12:18:00+00:00",
+      "latest_age_seconds": 18
+    }
+  },
+  "verdicts": {
+    "attended_readonly_seven_frame_capture": "PASS_SNAPSHOT_AT_OBSERVED_UTC",
+    "exact_admitted_sanitized_demo_fingerprint": "PASS_AS_REPORTED_BY_EXECUTED_GUARD",
+    "xauusd_only": "PASS",
+    "frozen_h4_h1_m15_minimum_history_counts": "PASS_COUNTS_ONLY",
+    "quote_max_5_second_freshness": "PASS_AS_OBSERVED",
+    "zero_order_api_calls": "PASS_AS_REPORTED",
+    "history_semantics_gap_and_session_alignment": "NOT_VERIFIED",
+    "live_event_calendar_provenance": "NOT_VERIFIED",
+    "full_strategy_predicates_chronological_oos_costs": "NOT_VERIFIED",
+    "broker_calc_profit_margin_order_check": "NOT_RUN",
+    "broker_orders_positions_executed_or_managed": "NOT_RUN",
+    "demo_48h_execution_monitoring": "NOT_STARTED",
+    "live_account_admission": "NOT_AUTHORIZED",
+    "release_deployed": "NOT_DEPLOYED"
+  },
+  "open_issues": [
+    "W1 oldest 2024-10-20 and derived last_closed Sunday 2026-10-18: validate MT5 broker W1 opening boundary and true calendar session before causal feature use; close is bar open + timedelta(7d), not independently broker-confirmed closing time",
+    "Validate UTC D1/H4/H1/M15/M5/M1 bar boundaries across broker trading session, holiday, missing bars and rollover",
+    "Source-backed official Event Guard with observed time/health; risk/position ledger, full frozen strategy setup and chronological out-of-sample economic tests, independent activation gating remain outstanding"
+  ],
+  "historical_evidence_preserved": {
+    "owner_attempt_1": "FAIL_CLOSED_POWERSHELL_PYTHON_QUOTING_BEFORE_MT5",
+    "owner_attempt_2": "FAIL_CLOSED_RUNTIME_ERROR_CAUSE_UNKNOWN",
+    "owner_attempt_3": "PASS_READONLY_SEVEN_FRAME_SNAPSHOT"
+  },
+  "authorities": {
+    "broker_demo_order": false,
+    "broker_live_order": false,
+    "external_python_trading_enable": false,
+    "release_deploy": false,
+    "openai_live_transport": false,
+    "policy_a_numeric_change": false
+  },
+  "evidence_limit": "Owner-supplied sanitized terminal output, not direct independent ChatGPT VPS observation. All market data time-specific; not a future trade-feed health guarantee."
+}

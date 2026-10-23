@@ -1,0 +1,54 @@
+{
+  "schema": "DEMO_V12_D0_R2_BOOTSTRAP_RECOVERY_PROSPECTIVE_SOURCE_PINS_V1",
+  "status": "NOT_APPROVED_NOT_EXECUTED__R1_BOOTSTRAP_PREATTACH_FAIL_CLOSED_PRESERVED",
+  "previous_pr18_approved_sha": "3ff100189349ada29331730af99459fecc4ea821",
+  "prior_r1_registration_sha256": "ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534",
+  "prior_r1_preflight_proof_shas": [
+    "914ae74caef38bd3a3b6f08cc9d18e8eaae161457d3d2a6f572ffd529f8d887b",
+    "1dac09c21c5ed2f7112d09abe662a7531d794f0189e254bfb9d6af2488a7f9a3"
+  ],
+  "new_r2_registration_sha256": "13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61",
+  "files": [
+    {
+      "path": "demo_adapter/scripts/v12-d0-r2-attended-bootstrap.ps1",
+      "sha256": "91d493b5af205fcf964ee1d051d9bd0f505d17ea0fad9f1d0ca3e59678e31087",
+      "git_blob_sha1": "e2cb230341593c629ca5a0608d3e576521452f25",
+      "role": "UNAPPROVED_ATTENDED_SOURCE_STAGE_AND_ONE_TIME_R2_SNAPSHOT_ORCHESTRATION"
+    },
+    {
+      "path": "phase0/roadmap/DEMO_V12_D0_R2_FROZEN_REGISTRATION_2026-10-20.json",
+      "sha256": "13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61",
+      "git_blob_sha1": "b70d86140f9cd99a653e3fcaddb9e110d9611edc",
+      "role": "UNAPPROVED_DISTINCT_ONE_ATTEMPT_R2"
+    },
+    {
+      "path": "demo_adapter/scripts/v12-d0-readonly-inventory.ps1",
+      "sha256": "adc226a7d21ca7eb296f100ad0a6c79d9554c76ca15ca260c3c82959f0312274",
+      "git_blob_sha1": "8d30a15810bcb8059f5c2457b9e7efe3e345b4cf",
+      "role": "UNCHANGED_ORIGINAL_PR18_APPROVED_READONLY_WRAPPER"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_d0_readonly_inventory.py",
+      "sha256": "ea1496f715a6601f47098ee15a9d09645dc804a63ab9248fa60a4d36d3f52260",
+      "git_blob_sha1": "a889bb04feb7659d121a99960fcecf14ff4f4a98",
+      "role": "UNCHANGED_PR18_D0_HOST"
+    },
+    {
+      "path": "demo_adapter/scripts/v12_attempt_journal.py",
+      "sha256": "547131361b690e95c6718734b6de727e812346e92af8c1a20ced4f6dbc12ef06",
+      "git_blob_sha1": "cd572d8cfc6d3cec4aff2457fd0b8f68eaa880aa",
+      "role": "UNCHANGED_PRIVATE_EXCLUSIVE_FSYNC_JOURNAL"
+    }
+  ],
+  "exact_source_bytes": "GITHUB_UTF8_LF_RECHECK_NATIVE_GET_FILEHASH_SHA256_BEFORE_FIRST_NEW_OWNER_APPROVED_R2",
+  "new_r2_owner_approval_received": false,
+  "r1_owner_approval_does_not_transfer": true,
+  "actual_vps_mt5_r2_executed": false,
+  "actual_d0_r1_mt5_attached": false,
+  "r1_stage_must_not_be_removed_or_renamed": true,
+  "r1_reuse_prohibited": true,
+  "v12_four_hour_capture_allowed": false,
+  "external_python_trading_must_remain_disabled": true,
+  "order_api_calls_allowed": false,
+  "main_and_pcr3_untouched": true
+}

@@ -1,0 +1,17 @@
+# READ FIRST — PR22 prospective D0-R3 A2 after failed Phase A1 — 2026-10-20
+
+**Current authoritative GitHub stack:** main `ccaa8338aecee8bd3afbc358644410dff6c512e5`; PR20 frozen `f255f59b401310a5acf2b3b0fc6169ac5635acc9`; PR21 frozen `f0423f40ae1cb51c01b915b6cfb5f7d7e799ce1e`; new **draft unmerged** successor PR22 (live exact head and final CI pin MUST be taken from its PR discussion). All prior stages and failure registrations preserved. NO shared MT5/PCR3/Gate0 or VPS changes were undertaken by the assistant. Do not merge.
+
+## Current outcome: Phase A1 FAIL_CLOSED and consumed
+
+Owner performed one approved attended version-only run based on PR21 exact HEAD and verifier SHA256 `3bc6a33b459bfebd732cf08725b2d34b95edf33b223266f6b9839f6aa3490281`; the PS inline guard printed exact SHA and verified. Python reported `File "<string>", line 1` and PowerShell `NativeCommandError`. No `R3_VERSION_ONLY_PASS` marker or `PYTHON_EXE`. Full Python traceback truncated by PowerShell. This establishes actual python process launch but **DOES NOT establish Python 3.12 runtime version**, does not establish import success, and does not imply MT5 attach/broker data. The owner Phase A1 approval is **CONSUMED: NO RETRY**. New failure incident file: `phase0/roadmap/DEMO_V12_D0_R3_PHASE_A1_OWNER_VPS_FAILURE_2026-10-20.md`.
+
+Potential PS5.1 native `-c` quote loss in the original embedded double-quoted Python literals is a *hypothesis*, NOT independently confirmed cause from that log. Do not modify PR21 or rewrite its evidence. R1 `ab1c266290f3c38f5b8e08bd44b0b06645c0e496839b7c9fa47fd4581f9d0534` and R2 `13c1ece5068a18b04512776a7387615c51c7075bd9df850d7e4415f6cd773c61` remain **two separate older immutable FAIL_CLOSED D0 preattach attempts**, NEVER rerun, delete, reinterpret or re-label either.
+
+## Distinct prospective A2
+
+New `phase0/roadmap/DEMO_V12_D0_R3_PHASE_A2_PROSPECTIVE_VERSION_ONLY_REGISTRATION_2026-10-20.json` remains **DESIGN ONLY, NOT EXECUTABLE, NOT OWNER APPROVED**. `demo_adapter/scripts/v12-d0-r3-a2-version-only-ps51.ps1` permits only version check using the literal `C:\Program Files\Python312\python.exe` and a quote-free `-B -I -c` payload which prints `3|12|sys.executable`; PowerShell validates strict major/minor/path and clean exit. No MetaTrader5 import, `initialize`, broker, orders, Task Scheduler, Git or writes. `demo_adapter/tests/test_v12_d0_r3_a2_version_only_ps51.py` adds **native Windows PS5.1 quote-free Python3.12 execution test** on isolated GitHub runner, in addition to parser, no-approval negative test and shell-only branch. A2 is NOT another D0 broker attach attempt and does not consume broker R3 registration budget.
+
+## Owner approval boundary
+
+After exact-head native Windows/Linux CI succeeds, the **smallest next separate owner action** is an explicit, **NEW ONE-SHOT A2 VERSION_ONLY** approval with exact draft PR22 head, new source SHA and expected interpreter path. The prior A1 token must never be reused. Until then: no new Python process on VPS, no import, MT5 initialize, broker/quotes/account/orders, 240min capture, VPS mutation, config/PCR3/Gate0 changes, demo/live trading or PR merge. After any A2 success, **B MetaTrader5 import is a distinct, unapproved next phase**, and C terminal identity and D attach remain later independent approvals. Source of truth: this handoff, incident, registration and `CURRENT_PROJECT_STATE` files; exact CI run IDs and source SHA MUST be pinned in final PR22 issue comment after CI to avoid self-reference.

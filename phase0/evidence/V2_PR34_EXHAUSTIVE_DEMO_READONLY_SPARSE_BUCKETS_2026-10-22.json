@@ -1,0 +1,108 @@
+{
+  "schema_version": "v2-exness-demo-readonly-exhaustive-forensics-2026-10-22-v1",
+  "status": "OBSERVED_FULL_FORENSIC_INVENTORY__STRICT_PARITY_FAIL_CLOSED",
+  "observed_utc": "2026-10-22T14:20:06.510718+00:00",
+  "origin": "USER_UPLOADED_SANITIZED_VPS_OUTPUT",
+  "original_user_upload_sha256": "6e398fa0bebd9256f63708d658202b2e0c007ba093dee2b21af1e9fa73d9aa63",
+  "review_wrapper_sha": "8ba7468c60a28357e61a1e5fad9e8eed5491903c",
+  "pinned_code_sha": "78b1a3c105bdab50f2b4d46eddc8c915db5dfc96",
+  "broker": "Exness Technologies Ltd",
+  "server": "Exness-MT5Trial15",
+  "symbol": "XAUUSD",
+  "trade_mode": "DEMO",
+  "account_fingerprint_sha256": "9fed7cb1789aad5b0bb3593f624502263875a55235c013fb5abc00917fa22e91",
+  "external_python_trading_disabled": true,
+  "order_api_calls": 0,
+  "all_requested_bar_counts_available": true,
+  "w1_nominal_sunday_utc_open_observed": true,
+  "complete_parent_buckets": 564,
+  "partial_parent_buckets": 35,
+  "missing_nominal_child_slots": 83,
+  "sample_inventory_complete": true,
+  "partial_aggregate_matches": 35,
+  "partial_aggregate_disagreements": 0,
+  "misaligned_child_slots": 0,
+  "pairs": {
+    "D1_H4": {
+      "full": 48,
+      "partial": 9,
+      "missing": 45,
+      "samples": 9,
+      "all_9_partial_bars_match_available_aggregate": true,
+      "sunday_parent_open_dates": [
+        "2026-08-23",
+        "2026-08-30",
+        "2026-09-06",
+        "2026-09-13",
+        "2026-09-20",
+        "2026-09-27",
+        "2026-10-04",
+        "2026-10-11",
+        "2026-10-18"
+      ],
+      "each_sunday_missing_h4_open_hours_utc": [
+        0,
+        4,
+        8,
+        12,
+        16
+      ],
+      "observed_one_h4_sunday_bucket_hour_utc": 20
+    },
+    "H4_H1": {
+      "full": 108,
+      "partial": 26,
+      "missing": 38,
+      "samples": 26,
+      "all_26_partial_bars_match_available_aggregate": true,
+      "missing_h1_open_hour_utc_frequency": {
+        "20": 4,
+        "21": 26,
+        "22": 4,
+        "23": 4
+      },
+      "friday_early_close_parent_dates": [
+        "2026-09-25",
+        "2026-10-02",
+        "2026-10-09",
+        "2026-10-16"
+      ],
+      "sunday_short_open_parent_dates": [
+        "2026-09-27",
+        "2026-10-04",
+        "2026-10-11",
+        "2026-10-18"
+      ],
+      "all_missing_21_utc_hour_occurrences": 26
+    },
+    "H1_M15": {
+      "full": 249,
+      "partial": 0,
+      "missing": 0,
+      "disagreements": 0
+    },
+    "M15_M5": {
+      "full": 99,
+      "partial": 0,
+      "missing": 0,
+      "disagreements": 0
+    },
+    "M5_M1": {
+      "full": 60,
+      "partial": 0,
+      "missing": 0,
+      "disagreements": 0
+    }
+  },
+  "official_context": "https://get.exness.help/hc/en-us/articles/4405235684498-Instrument-trading-hours",
+  "official_page_updated_utc": "2026-09-29T07:18:00Z",
+  "official_guidance": "UTC+0 servers, rollover generally 21:00 UTC in US summer, gold usually closed, weekends/DST/holiday changes. It does not prove historical exact schedules for these 83 nominal slots.",
+  "interpretation": "Repeatable weekends and rollover strongly support expected no-candle periods in historical data. No open-session missing bars can be inferred solely from the summary, and broker date-scoped session metadata is not proved.",
+  "strict_crossframe_parity_accepted": false,
+  "full_session_calendar_admitted": false,
+  "historical_data_correction_required_for_demo_pilot": false,
+  "new_status_of_historical_gap_work": "SECONDARY_RESEARCH_NOT_DEMO_ENTRY_BLOCKER_IF_CURRENT_SESSION_AND_LIVE_BROKER_CHECKS_PASS",
+  "demo_activation_authorized": false,
+  "live_activation_authorized": false,
+  "requested_next_priority": "BUILD_ONE_STRATEGY_DEMO_EXECUTION_PILOT_EARLIEST_WITH_REAL_BROKER_CASH_RISK_IDENTITY_JOURNAL_ALERTS_AND_EXPLICIT_OWNER_PERMIT"
+}
