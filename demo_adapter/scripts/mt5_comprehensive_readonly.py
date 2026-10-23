@@ -17,11 +17,11 @@ import importlib
 import json
 import sys
 import time
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
-from collections.abc import Callable
 
 # -I ignores PYTHONPATH: select only the staged, Git-pinned module location.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
