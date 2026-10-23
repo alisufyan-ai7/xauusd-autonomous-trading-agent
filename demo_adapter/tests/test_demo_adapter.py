@@ -714,3 +714,21 @@ def test_new_tpb_pending_stop_path_keeps_original_s2_full_policy_hard_stop(
                 )
             assert gate.snapshot().state is DemoControlState.QUARANTINED
             assert mt5.send_calls == 0
+
+
+def test_owner_selected_v11_cost_calibration_requires_two_times_current():
+    with pytest.raises(DemoSafetyError, match="at least 2x current"):
+        DemoRiskCalibration(
+            calibration_id="SYNTHETIC-STRESS-ONLY",
+            source_sha256="e" * 64,
+            scope=DEMO_LIFECYCLE_SCOPE,
+            current_adverse_cost=Decimal("1.25"),
+            stressed_adverse_cost=Decimal("2.49"),
+        ).validate()
+    DemoRiskCalibration(
+        calibration_id="SYNTHETIC-STRESS-ONLY",
+        source_sha256="e" * 64,
+        scope=DEMO_LIFECYCLE_SCOPE,
+        current_adverse_cost=Decimal("1.25"),
+        stressed_adverse_cost=Decimal("2.50"),
+    ).validate()
