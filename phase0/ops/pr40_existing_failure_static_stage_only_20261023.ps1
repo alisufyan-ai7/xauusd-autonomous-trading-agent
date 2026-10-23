@@ -13,7 +13,7 @@ if (-not $ConfirmAttendedStaticReadOnlyDiagnosis) {
 $Repo = 'C:\Users\Administrator\Desktop\xauusd-autonomous-trading-agent'
 $Branch = 'integration/real-exness-demo-v2-single-lineage-20261023'
 # Exact code+test SHA containing sanitized failure_stage and safe_guard_code.
-$Pinned = '723e276ca32f80e6b705c8dd087a4325609c59e5'
+$Pinned = '4a7ed9e916b1bd897c358910f9e128917bc706da'
 $Python = 'C:\Program Files\Python312\python.exe'
 $Terminal = 'C:\Program Files\MetaTrader 5\terminal64.exe'
 if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
