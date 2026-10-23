@@ -20,12 +20,13 @@ import time
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
+from collections.abc import Callable
 
 # -I ignores PYTHONPATH: select only the staged, Git-pinned module location.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from xauusd_demo.broker_money_readonly import (  # noqa: E402
+from xauusd_demo.broker_money_readonly import (  # noqa: E402, I001
     EXPECTED_ACCOUNT_SHA256, EXPECTED_COMPANY, EXPECTED_SERVER,
     inspect_real_demo_money,
 )
@@ -329,7 +330,7 @@ def tick_window(
     if end <= start or end - start > timedelta(hours=4):
         raise DemoSafetyError("tick window invalid")
     ticks = _rows(mt5.copy_ticks_range(
-        SYMBOL, start, end, getattr(mt5, "COPY_TICKS_INFO")
+        SYMBOL, start, end, mt5.COPY_TICKS_INFO
     ), "tick window")
     if not ticks or len(ticks) > MAX_TICKS:
         raise DemoSafetyError("empty or oversized tick source")
