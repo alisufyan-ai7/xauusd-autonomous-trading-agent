@@ -18,6 +18,8 @@ def test_one_comprehensive_launcher_never_calls_trading_api_or_mutates_terminal(
     assert "mt5_comprehensive_readonly.py" in text
     assert "--prospective-four-hours" in text
     assert "--confirm-owner-readonly" in text
+    assert "& $Python -B -I -S $Script --self-check-imports" in text
+    assert "PINNED_IMPORT_PREFLIGHT_FAIL_CLOSED__NO_MT5_ATTACH__NO_CAPTURE" in text
     assert "$ConfirmAttendedReadOnlyFourHourCapture" in text
     assert "git -C $Repo archive --format=zip" in text
     assert "git -C $Repo merge-base --is-ancestor $Pinned $Remote" in text
@@ -35,6 +37,8 @@ def test_one_comprehensive_launcher_never_calls_trading_api_or_mutates_terminal(
 def test_python_collector_uses_exclusive_private_evidence_and_explicit_allowlist():
     text = COLLECTOR.read_text(encoding="utf-8")
     assert "class MT5ReadOnlySurface:" in text
+    assert 'sys.path.insert(0, str(_STAGED_REPO_ROOT / "src"))' in text
+    assert "--self-check-imports" in text
     assert "FORBIDDEN_METHODS" in text
     assert '"xb"' in text
     assert "prospective_run_registration.json" in text
