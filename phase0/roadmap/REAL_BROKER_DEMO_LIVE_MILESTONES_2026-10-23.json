@@ -132,9 +132,13 @@
     "corrected_capture_mt5_initialized": true,
     "corrected_capture_four_hour_data_admitted": false,
     "corrected_capture_failure_guard_identified": false,
-    "s2_policy_a_hard_stop_still_present": true
+    "s2_policy_a_hard_stop_still_present": true,
+    "latest_static_read_only_broker_evidence": true,
+    "four_hour_prospective_cost_source": false,
+    "real_demo_order_authorized": false,
+    "full_policy_a_admitted": false
   },
-  "next_code_action": "Implement single existing S2 QualifiedDemoBrokerPort fail-closed with broker-authoritative source receipt, adversarial Windows/Ubuntu tests; complete independent fees/calibration/session/news/pending cancellation and VPS demo acceptance before enabling order sending",
+  "next_code_action": "Validate prepared pinned four-hour read-only launcher in native Windows+Ubuntu CI; request separate owner-confirmed prospective observation; do not send orders or admit Policy A without costs/news/session/complete broker journal.",
   "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER",
   "latest_native_contract_validation": {
     "source_head": "f40f1d68e587a22c47869519434077a96cab071f",
@@ -213,5 +217,35 @@
     "launcher_path": "phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1",
     "broker_diagnostic_retested_after_source_correction": false,
     "no_trade_governance_unchanged": true
+  },
+  "latest_owner_verified_static_readonly_broker_pass": {
+    "status": "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED",
+    "source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "static_launcher_review": "a54bf80a39faf8a44bdeeed078a912d280b811d8",
+    "summary_sha256": "794A326E64B9703CF7066471F708C3E830582E9E2B7A616E6E03440AC7B01A2B",
+    "capture_sha256": "b45dc3ff0e65d42edd62d659873282debb71353c9ce3fe8c7ddd7b0546289203",
+    "demo_fingerprint": true,
+    "global_orders": 0,
+    "global_positions": 0,
+    "broker_dynamic_cash_buy_sell_0_01": true,
+    "loss_cash_stop_distances_2_5_10_usd": [
+      2,
+      5,
+      10
+    ],
+    "incremental_margin_usd": "2.01",
+    "stressed_2x_margin_usd": "4.02",
+    "seven_bar_frames_pass": true,
+    "historical_tick_source_pass": true,
+    "xauusd_fee_rows": 0,
+    "broker_fee_zero_proven": false,
+    "four_hour_prospective_observed": false,
+    "full_policy_a_calibrated": false,
+    "event_guard_admitted": false,
+    "real_demo_order_send_performed": false,
+    "evidence": "phase0/roadmap/MT5_STATIC_READONLY_VERIFIED_PASS_2026-10-23.md",
+    "canonical_four_hour_launcher_prepared": true,
+    "canonical_four_hour_launcher_source_pin": "462ac5e94fbeb656f3415603f12e81fdc3c3bd58",
+    "four_hour_run_authorized_by_owner_after_latest_result": false
   }
 }
