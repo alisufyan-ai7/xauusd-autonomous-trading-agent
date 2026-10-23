@@ -10,7 +10,7 @@ if (-not $ConfirmAttendedReadOnlyFourHourCapture) {
 }
 $Repo = 'C:\Users\Administrator\Desktop\xauusd-autonomous-trading-agent'
 $Branch = 'integration/real-exness-demo-v2-single-lineage-20261023'
-$Pinned = '10425e6180ef660226e298ef06a0fa423334332e'
+$Pinned = '462ac5e94fbeb656f3415603f12e81fdc3c3bd58'
 $Python = 'C:\Program Files\Python312\python.exe'
 $Terminal = 'C:\Program Files\MetaTrader 5\terminal64.exe'
 if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
