@@ -26,7 +26,7 @@ from .full_policy_broker_receipt import (
     preview_broker_full_policy_a,
 )
 from .mt5_cash_source import read_mt5_pro_demo_cash
-from .mt5_demo import DemoMT5Adapter, _decimal, _record
+from .mt5_demo import DemoMT5Adapter, _decimal
 from .pending_entry_window_guard import screen_pending_entry_window
 from .prospective_cash_journal import ProspectiveDemoCashJournal
 
