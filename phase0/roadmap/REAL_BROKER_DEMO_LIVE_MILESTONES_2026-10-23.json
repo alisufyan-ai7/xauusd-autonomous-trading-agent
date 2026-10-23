@@ -1,0 +1,134 @@
+{
+  "schema_version": "xauusd-real-broker-demo-to-conditional-tiny-live-milestones-v1",
+  "as_of_utc_date": "2026-10-23",
+  "scope": "OWNER_DIRECTION_DRAFT_BRANCH_NOT_ACCEPTED_MAIN",
+  "source_adr": "phase0/decisions/ADR-2026-10-23-002-REAL_BROKER_DEMO_THEN_CONDITIONAL_TINY_LIVE.md",
+  "human_roadmap": "phase0/roadmap/REAL_BROKER_DEMO_TO_TINY_LIVE_CRITICAL_PATH_2026-10-23.md",
+  "source_of_truth": "GITHUB_MAIN_ACCEPTED_PLUS_DRAFT_PR38_ENGINEERING",
+  "production_main_at_record": "95875ccf1bddc43491ced1dd4358057b62b7800e",
+  "active_branch": "implementation/demo-continuous-supervisor-20261023",
+  "active_draft_pr": 38,
+  "definition": {
+    "broker": "Exness Pro",
+    "platform": "MetaTrader5",
+    "environment": "DEMO",
+    "instrument": "XAUUSD",
+    "capital_type": "VIRTUAL",
+    "real_broker_order_send_required": true,
+    "real_demo_broker_order_records_required": true,
+    "simulation_acceptable_for_final_demo_acceptance": false,
+    "autonomous_buy_sell_stop_tp": true,
+    "daily_approval_per_trade_required": false,
+    "source_authority": "EXACT_DEMO_ACCOUNT_IDENTITY_AND_RELEASE_GATES_ONLY",
+    "live_account_preference": "EXNESS_PRO_NOT_STANDARD_CENT"
+  },
+  "risk_frozen": {
+    "max_lots": "0.01",
+    "all_cost_loss_fraction": "0.0025",
+    "allocation_usd": "10000",
+    "concurrent_usd": "50",
+    "daily_usd": "75",
+    "weekly_usd": "150",
+    "drawdown_usd": "500",
+    "streak_full_r": "3.00",
+    "margin_current_stressed_min_percent": "1000",
+    "free_margin_min_equity_fraction": "0.90",
+    "double_stressed_incremental_margin": true,
+    "live_no_automatic_promotion": true
+  },
+  "stages": [
+    {
+      "id": "M1",
+      "priority": 1,
+      "status": "IN_PROGRESS_NONEXECUTING",
+      "goal": "SINGLE_SOURCE_QUALIFIED_S2_MT5_DEMO_ORDER_PORT",
+      "acceptance": [
+        "EXACT_DEMO_ACCOUNT_FINGERPRINT_ONLY",
+        "POLICY_A_COMPLETE_REAL_BROKER_CASH_AND_COST_EVIDENCE",
+        "ONE_DURABLE_PENDING_STOP_SEND_PATH",
+        "PENDING_PLACED_NEVER_MISTAKEN_FOR_FILLED",
+        "BROKER_ORDER_DEAL_POSITION_RECONCILIATION",
+        "AMBIGUOUS_SEND_NEVER_RETRIED",
+        "NATIVE_WINDOWS_UBUNTU_FAULT_MATRIX_PASS"
+      ]
+    },
+    {
+      "id": "M2",
+      "priority": 2,
+      "status": "PARTIAL_SOURCE_NOT_ADMITTED",
+      "goal": "LIVE_TPB_EVENT_GUARD_COST_WATCHDOG_INTEGRATION",
+      "acceptance": [
+        "OBJECTIVE_CAUSAL_TPB_BUY_SELL_NO_TRADE",
+        "INDEPENDENTLY_ADMITTED_V11_NUMERIC_COSTS",
+        "LIVE_VERIFIED_OFFICIAL_AGENCIES_AND_SESSIONS",
+        "PENDING_ORDER_EVENT_REVISION_CANCELLATION",
+        "CASH_DAY_WEEK_STREAK_HIGH_WATER",
+        "DELIVERED_EMAIL_AND_TELEGRAM_TESTS",
+        "OWNER_CONTROLLED_KILL_RESTART"
+      ]
+    },
+    {
+      "id": "M3",
+      "priority": 3,
+      "status": "NOT_READY",
+      "goal": "REAL_EXNESS_DEMO_BROKER_ORDER_ACCEPTANCE_PLUS_ONE_PINNED_POWERSHELL_DEPLOY",
+      "acceptance": [
+        "EXACT_SHA_SIGNED_OR_HASHED_RELEASE",
+        "FOREXVPS_WIN_NATIVE_RECONCILIATION",
+        "REAL_ORDER_CHECK_AND_ORDER_SEND_DEMO",
+        "BROKER_DEMO_ACCEPTED_ORDER_AND_FILLED_DEAL_POSITION_RECORD",
+        "REAL_BROKER_STOP_TP_AND_CLOSE_PROOF",
+        "ROLLBACK_AND_EMERGENCY_DRILL"
+      ]
+    },
+    {
+      "id": "M4",
+      "priority": 4,
+      "status": "NOT_STARTED",
+      "goal": "24_48_HOUR_EARLY_REVIEW_OF_CONTINUOUS_ACTUAL_BROKER_DEMO",
+      "acceptance": [
+        "AUDITED_ACTUAL_DEMO_BROKER_ORDER_LIFECYCLE",
+        "COST_AND_RISK_ADHERENCE",
+        "RELIABILITY_AND_INCIDENT_DATA",
+        "NET_RESULTS_NO_PROFITABILITY_CLAIM_FROM_SHORT_SAMPLE",
+        "INDEPENDENT_REVIEW_BEFORE_ANY_LIVE_CONSIDERATION"
+      ],
+      "early_review_hours_min": 24,
+      "early_review_hours_target": 48,
+      "profitability_validated_by_48h": false,
+      "automatic_live_promotion": false
+    },
+    {
+      "id": "M5",
+      "priority": 5,
+      "status": "FUTURE_DESIRED_NOT_AUTHORIZED",
+      "goal": "SEPARATELY_ADMITTED_EXNESS_PRO_TINY_LIVE_PILOT",
+      "acceptance": [
+        "ALL_APPLICABLE_GATES_OR_EXPLICIT_VERSIONED_REPLACEMENT_PASS",
+        "INDEPENDENT_LIVE_ACCOUNT_FINGERPRINT_AND_CONTRACT_CHECK",
+        "FROZEN_LIVE_RISK_AND_COST_VERIFIED",
+        "MIN_0_01_LOT_FITS_0_25_PERCENT_OR_NO_TRADE",
+        "SEPARATE_EXACT_OWNER_LIVE_APPROVAL",
+        "NO_AUTO_LIVE_SWITCH"
+      ],
+      "maximum_lot_size": "0.01",
+      "money_at_risk": "REAL",
+      "automatically_authorized_after_demo": false
+    }
+  ],
+  "gates": {
+    "accepted_main_governance_rule7_conflict": "UNRESOLVED_REQUIRES_EXPLICIT_PROSPECTIVE_RECONCILIATION",
+    "demo_owner_product_intent": "APPROVED_IN_PRINCIPLE",
+    "effective_demo_order_execution": "NO_GO",
+    "live_owner_product_goal": "DESIRED_CONDITIONAL",
+    "effective_live_order_execution": "NO_GO",
+    "demo_server_order_evidence": false,
+    "vps_installed_broker_trader": false,
+    "external_python_trading_enabled": false,
+    "live_credentials_in_demo_package": false,
+    "old_gate_failures_reclassified": false,
+    "allow_merged_without_owner_approval": false
+  },
+  "next_code_action": "Implement single existing S2 QualifiedDemoBrokerPort fail-closed with broker-authoritative source receipt, adversarial Windows/Ubuntu tests; complete independent fees/calibration/session/news/pending cancellation and VPS demo acceptance before enabling order sending",
+  "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER"
+}
