@@ -471,6 +471,7 @@ def collect_static(
     mt5: MT5ReadOnlySurface, now: datetime, *,
     on_historical_tick: Callable[[dict[str, Any]], None] | None = None,
     on_stage: Callable[[str], None] | None = None,
+    on_pre_tick_checkpoint: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """One comprehensive account, quote, history, risk, bar and past-tick read.
 
@@ -497,6 +498,26 @@ def collect_static(
     history = history_summary(mt5, now)
     stage("STATIC_SEVEN_TIMEFRAME_BARS")
     frames = rate_coverage(mt5)
+    # Private, explicitly INCOMPLETE checkpoint only; never a final static
+    # report or admission. Preserve already observed account/monetary/history
+    # and bars before the independently strict historical tick check.
+    if on_pre_tick_checkpoint is not None:
+        stage("STATIC_PRE_TICK_PRIVATE_CHECKPOINT")
+        on_pre_tick_checkpoint({
+            "schema": "EXNESS_DEMO_STATIC_PRE_TICK_PRIVATE_V1",
+            "status": "INCOMPLETE_PRE_TICK_NOT_ADMITTED",
+            "capture_started_utc": now.isoformat(),
+            "account_before": before,
+            "symbol": symbol,
+            "broker_money_0_01": money,
+            "prior_money_inspector": legacy_money,
+            "historical_cash_and_fee_evidence": history,
+            "seven_frame_coverage": frames,
+            "zero_order_api_actions": True,
+            "full_policy_a_admitted": False,
+            "historical_ticks_validated": False,
+            "final_account_reconciliation_done": False,
+        })
     stage("STATIC_HISTORICAL_BROKER_TICKS")
     # MT5 Python range inputs are datetime-based whereas tick.time_msc
     # is millisecond-resolution. Pin historical bounds to *whole UTC
@@ -758,9 +779,17 @@ def run(argv: list[str] | None = None) -> int:
         with (args.output / "past_four_hour_broker_ticks.jsonl").open("xb") as stream:
             def write_historic(row: dict[str, Any]) -> None:
                 stream.write(_canonical(row))
+
+            def write_pre_tick_checkpoint(data: dict[str, Any]) -> None:
+                _write_private(
+                    args.output / "static_pre_tick_private.json",
+                    _canonical(data),
+                )
+
             report.update(collect_static(
                 mt5, now, on_historical_tick=write_historic,
                 on_stage=mark_stage,
+                on_pre_tick_checkpoint=write_pre_tick_checkpoint,
             ))
         report["status"] = "STATIC_COMPLETE_FOUR_HOUR_PENDING"
         mark_stage("STATIC_EVIDENCE_SEAL")
@@ -830,6 +859,9 @@ def run(argv: list[str] | None = None) -> int:
             "failure_stage": failure_stage,
             "private_static_evidence_present": (
                 args.output / "static_evidence.json"
+            ).is_file(),
+            "private_pre_tick_checkpoint_present": (
+                args.output / "static_pre_tick_private.json"
             ).is_file(),
             "private_prospective_registration_present": (
                 args.output / "prospective_run_registration.json"
