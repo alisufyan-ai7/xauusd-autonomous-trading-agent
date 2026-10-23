@@ -145,6 +145,10 @@ def test_account_bound_frozen_cash_and_stressed_margin_math_only(monkeypatch):
     assert receipt.decision.disposition == FullRiskDisposition.ALLOW_MATH_ONLY
     assert receipt.broker_price_loss_usd == D("5")
     assert receipt.decision.l_plan == D("8.00")
+    # M1 first reserves the entire all-cost planned loss ($8), including
+    # gap; 2x stress reserves $16 and 2x broker incremental margin ($16).
+    assert receipt.decision.m1_current_margin_percent == D("124900")
+    assert receipt.decision.m1_stressed_margin_percent == D("62400")
     assert receipt.execution_permitted is False
     assert mt5.calls.count("order_calc_profit") == 1
     assert mt5.calls.count("order_calc_margin") == 1
