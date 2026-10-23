@@ -1,0 +1,579 @@
+"""Single, comprehensive owner-run MT5 read-only broker evidence collector.
+
+Uses the existing Exness Pro DEMO connection, never changes account/symbol,
+places/checks/cancels no orders, and never asserts calibrated Policy A
+or live-production readiness. One invocation captures all currently observable
+account/symbol/history/timeframe/monetary fields plus a prospective 4h
+5-second quote window. Evidence is kept locally, not in a GitHub repository.
+
+Historic tick lookback is only background context, NOT a substitute for
+the owner-preregistered v1.1 prospective window or official event evidence.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import importlib
+import json
+import sys
+import time
+from datetime import UTC, datetime, timedelta
+from decimal import Decimal
+from pathlib import Path
+from typing import Any, Callable
+
+# -I ignores PYTHONPATH: select only the staged, Git-pinned module location.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+
+from xauusd_demo.broker_money_readonly import (  # noqa: E402
+    EXPECTED_ACCOUNT_SHA256, EXPECTED_COMPANY, EXPECTED_SERVER,
+    inspect_real_demo_money,
+)
+from xauusd_demo.envelope import DemoSafetyError  # noqa: E402
+from xauusd_demo.mt5_demo import _decimal, _record  # noqa: E402
+
+SYMBOL = "XAUUSD"
+SAMPLE_SECONDS = 5
+WINDOW_SECONDS = 4 * 60 * 60
+MAX_TICKS = 1_500_000
+HISTORY_FROM = datetime(2000, 1, 1, tzinfo=UTC)
+UTC_CLOCK_SKEW_SECONDS = 5
+READONLY_METHODS = (
+    "initialize", "shutdown", "terminal_info", "account_info", "symbol_info",
+    "symbol_info_tick", "positions_get", "orders_get", "history_deals_get",
+    "history_orders_get", "copy_ticks_range", "copy_rates_from_pos",
+    "order_calc_profit", "order_calc_margin",
+)
+FORBIDDEN_METHODS = (
+    "order_send", "order_check", "login", "symbol_select",
+    "order_delete", "order_modify",
+)
+
+
+def _utc_time(value: datetime) -> None:
+    if value.tzinfo is None or value.utcoffset() != timedelta(0):
+        raise DemoSafetyError("UTC clock required")
+
+
+def _canonical(value: Any) -> bytes:
+    return (json.dumps(value, sort_keys=True, separators=(",", ":"),
+                       allow_nan=False) + "\n").encode("utf-8")
+
+
+def _sha(value: Any) -> str:
+    return hashlib.sha256(_canonical(value)).hexdigest()
+
+
+def _numeric(value: Any, label: str) -> str:
+    return str(_decimal(value, label))
+
+
+def _rows(raw: Any, label: str) -> list[Any]:
+    if raw is None:
+        raise DemoSafetyError(f"{label} unavailable")
+    return list(raw)
+
+
+def _millis(row: Any) -> int:
+    if isinstance(row, dict):
+        value = row.get("time_msc")
+    else:
+        try:
+            value = row["time_msc"]
+        except (KeyError, IndexError, TypeError, ValueError) as exc:
+            raise DemoSafetyError("tick time_msc missing") from exc
+    if type(value) is not int:
+        # numpy scalar integers are not Python int: normalize with a strict
+        # roundtrip check, never interpret floating quote timestamps.
+        if type(value) is float or value is None:
+            raise DemoSafetyError("tick timestamp type invalid")
+        try:
+            stamp = int(value)
+        except (TypeError, ValueError) as exc:
+            raise DemoSafetyError("tick timestamp invalid") from exc
+    else:
+        stamp = value
+    if stamp <= 0:
+        raise DemoSafetyError("nonpositive broker tick timestamp")
+    return stamp
+
+
+def _field(row: Any, key: str) -> Any:
+    if isinstance(row, dict):
+        return row.get(key)
+    try:
+        return row[key]
+    except (KeyError, IndexError, TypeError, ValueError):
+        return None
+
+
+class MT5ReadOnlySurface:
+    """Explicit method allowlist; the trading methods are never reachable."""
+
+    def __init__(self, raw: Any) -> None:
+        self.__raw = raw
+        for method in READONLY_METHODS:
+            if not callable(getattr(raw, method, None)):
+                raise DemoSafetyError(f"missing MT5 read method: {method}")
+
+    def __getattr__(self, method: str) -> Any:
+        if method in READONLY_METHODS:
+            return getattr(self.__raw, method)
+        if method.startswith(("TIMEFRAME_", "ORDER_TYPE_", "COPY_TICKS_", "SYMBOL_")):
+            value = getattr(self.__raw, method, None)
+            if type(value) is int:
+                return value
+        raise DemoSafetyError(f"MT5 function not in read-only allowlist: {method}")
+
+
+def _identity(mt5: MT5ReadOnlySurface, *, require_flat: bool) -> dict[str, Any]:
+    terminal = _record(mt5.terminal_info(), "terminal")
+    account = _record(mt5.account_info(), "account")
+    if terminal.get("connected") is not True or terminal.get("tradeapi_disabled") is not True:
+        raise DemoSafetyError("MT5 disconnected or external Python trading not disabled")
+    if (
+        type(account.get("trade_mode")) is not int or account["trade_mode"] != 0
+        or account.get("company") != EXPECTED_COMPANY
+        or account.get("server") != EXPECTED_SERVER
+        or account.get("currency") != "USD"
+        or type(account.get("login")) is not int
+        or account["login"] <= 0
+    ):
+        raise DemoSafetyError("unexpected Exness Pro MT5 DEMO account")
+    digest = hashlib.sha256(
+        f"{account['company']}|{account['server']}|{account['login']}|USD".encode()
+    ).hexdigest()
+    if digest != EXPECTED_ACCOUNT_SHA256:
+        raise DemoSafetyError("broker account fingerprint mismatched")
+    orders = _rows(mt5.orders_get(), "orders_get")
+    positions = _rows(mt5.positions_get(), "positions_get")
+    if require_flat and (orders or positions):
+        raise DemoSafetyError("pending orders or positions present; no new risk admission")
+    return {
+        "account_fingerprint_sha256": digest,
+        "demo_mode": True,
+        "tradeapi_disabled": True,
+        "terminal_trade_allowed": bool(terminal.get("trade_allowed")) if
+            terminal.get("trade_allowed") is not None else "UNKNOWN",
+        "account_trade_allowed": bool(account.get("trade_allowed")) if
+            account.get("trade_allowed") is not None else "UNKNOWN",
+        "positions_count": len(positions),
+        "orders_count": len(orders),
+        "balance_usd": _numeric(account.get("balance"), "balance"),
+        "equity_usd": _numeric(account.get("equity"), "equity"),
+        "margin_usd": _numeric(account.get("margin"), "margin"),
+        "free_margin_usd": _numeric(account.get("margin_free"), "margin_free"),
+        "leverage": account.get("leverage") if type(account.get("leverage")) is int else None,
+        "margin_level_pct": (
+            _numeric(account["margin_level"], "margin_level")
+            if account.get("margin_level") is not None else None
+        ),
+    }
+
+
+def symbol_details(mt5: MT5ReadOnlySurface, now: datetime) -> dict[str, Any]:
+    _utc_time(now)
+    info = _record(mt5.symbol_info(SYMBOL), "symbol info")
+    tick = _record(mt5.symbol_info_tick(SYMBOL), "symbol tick")
+    required = (
+        "trade_tick_size", "trade_tick_value_loss", "trade_tick_value_profit",
+        "trade_contract_size", "point", "volume_min", "volume_max",
+        "volume_step", "trade_stops_level", "trade_freeze_level",
+        "swap_long", "swap_short", "swap_mode",
+    )
+    data: dict[str, Any] = {}
+    for key in required:
+        data[key] = _numeric(info.get(key), key)
+    for key in (
+        "digits", "trade_mode", "trade_exemode", "trade_calc_mode",
+        "filling_mode", "expiration_mode", "order_mode",
+    ):
+        value = info.get(key)
+        data[key] = value if type(value) is int else None
+    for key in ("bid", "ask"):
+        data[key] = _numeric(tick.get(key), key)
+    stamp = _millis(tick)
+    observed = datetime.fromtimestamp(stamp / 1000, UTC)
+    if observed > now + timedelta(seconds=1) or now - observed > timedelta(
+        seconds=UTC_CLOCK_SKEW_SECONDS
+    ):
+        raise DemoSafetyError("XAUUSD broker tick stale / future")
+    if Decimal(data["bid"]) <= 0 or Decimal(data["ask"]) <= Decimal(data["bid"]):
+        raise DemoSafetyError("unusable XAUUSD broker bid/ask")
+    data["tick_time_utc"] = observed.isoformat()
+    data["spread_price"] = str(Decimal(data["ask"]) - Decimal(data["bid"]))
+    if Decimal(data["volume_min"]) > Decimal("0.01"):
+        raise DemoSafetyError("broker minimum lot exceeds frozen 0.01")
+    if Decimal(data["trade_tick_size"]) <= 0:
+        raise DemoSafetyError("nonpositive tick size")
+    return data
+
+
+def money_matrix(mt5: MT5ReadOnlySurface, symbol: dict[str, Any]) -> list[dict[str, str]]:
+    """Actual broker profit and incremental margin for both 0.01-lot sides."""
+    tick = Decimal(symbol["trade_tick_size"])
+    if tick <= 0:
+        raise DemoSafetyError("no tick grid")
+    result: list[dict[str, str]] = []
+    for side in ("BUY", "SELL"):
+        direction = getattr(mt5, "ORDER_TYPE_BUY" if side == "BUY" else "ORDER_TYPE_SELL")
+        entry = Decimal(symbol["ask"] if side == "BUY" else symbol["bid"])
+        margin = _decimal(mt5.order_calc_margin(
+            direction, SYMBOL, 0.01, float(entry)
+        ), "broker margin")
+        if margin <= 0:
+            raise DemoSafetyError("broker returned unusable margin")
+        for distance in (Decimal("2"), Decimal("5"), Decimal("10")):
+            stop = entry - distance if side == "BUY" else entry + distance
+            stop = (stop / tick).to_integral_value() * tick
+            loss = _decimal(mt5.order_calc_profit(
+                direction, SYMBOL, 0.01, float(entry), float(stop)
+            ), "broker stop loss")
+            if stop <= 0 or loss >= 0:
+                raise DemoSafetyError("broker stop loss must be negative")
+            result.append({
+                "side": side, "lots": "0.01", "entry": str(entry),
+                "stop": str(stop), "stop_distance_price": str(distance),
+                "broker_loss_cash_usd": str(-loss),
+                "broker_incremental_margin_usd": str(margin),
+                "conservative_2x_broker_margin_usd": str(2 * margin),
+            })
+    return result
+
+
+def history_summary(mt5: MT5ReadOnlySurface, now: datetime) -> dict[str, Any]:
+    _utc_time(now)
+    deals = _rows(mt5.history_deals_get(HISTORY_FROM, now), "complete deal history")
+    orders = _rows(mt5.history_orders_get(HISTORY_FROM, now), "historical orders")
+    fees: list[dict[str, Any]] = []
+    cashflow = Decimal(0)
+    fee_rows_missing = 0
+    deal_types: dict[str, int] = {}
+    for raw in deals:
+        row = _record(raw, "historical deal")
+        key = str(row.get("type", "MISSING"))
+        deal_types[key] = deal_types.get(key, 0) + 1
+        for field in ("profit", "commission", "swap", "fee"):
+            if field in row:
+                cashflow += _decimal(row[field], f"history {field}")
+            else:
+                fee_rows_missing += 1
+        if row.get("symbol") == SYMBOL:
+            if all(row.get(k) is not None for k in (
+                "time_msc", "volume", "commission", "swap", "fee", "profit",
+            )):
+                fees.append({
+                    "time_msc": _millis(row),
+                    "volume": _numeric(row["volume"], "deal volume"),
+                    "commission_usd": _numeric(row["commission"], "commission"),
+                    "swap_usd": _numeric(row["swap"], "swap"),
+                    "fee_usd": _numeric(row["fee"], "fee"),
+                    "profit_usd": _numeric(row["profit"], "profit"),
+                    "entry_class": str(row.get("entry", "UNKNOWN")),
+                })
+            else:
+                fee_rows_missing += 1
+    return {
+        "history_from_utc": HISTORY_FROM.isoformat(),
+        "history_through_utc": now.isoformat(),
+        "all_broker_deal_count": len(deals),
+        "all_history_order_count": len(orders),
+        "all_history_cashflows_if_reported_usd": str(cashflow),
+        "account_deal_types_counts": deal_types,
+        "fee_rows_missing": fee_rows_missing,
+        "xauusd_fee_rows": fees,
+        "xauusd_fee_rows_count": len(fees),
+        "fee_zero_proven": False,
+        "complete_history_proven": False,
+        "cash_journal_authorized": False,
+    }
+
+
+def rate_coverage(mt5: MT5ReadOnlySurface) -> dict[str, Any]:
+    frames = (
+        ("M1", "TIMEFRAME_M1", 2000), ("M5", "TIMEFRAME_M5", 1200),
+        ("M15", "TIMEFRAME_M15", 1200), ("H1", "TIMEFRAME_H1", 1200),
+        ("H4", "TIMEFRAME_H4", 1200), ("D1", "TIMEFRAME_D1", 370),
+        ("W1", "TIMEFRAME_W1", 110),
+    )
+    out: dict[str, Any] = {}
+    for name, const, count in frames:
+        timeframe = getattr(mt5, const)
+        bars = _rows(mt5.copy_rates_from_pos(SYMBOL, timeframe, 0, count),
+                     f"{name} rates")
+        if not bars:
+            raise DemoSafetyError(f"missing MT5 {name} history")
+        first, last = bars[0], bars[-1]
+        stamps = [_field(row, "time") for row in bars]
+        if any(value is None for value in stamps):
+            raise DemoSafetyError(f"{name} bar timestamps incomplete")
+        out[name] = {
+            "bar_count": len(bars),
+            "first_bar_utc": datetime.fromtimestamp(int(_field(first, "time")), UTC).isoformat(),
+            "last_bar_utc": datetime.fromtimestamp(int(_field(last, "time")), UTC).isoformat(),
+            "bar_times_sha256": _sha([int(x) for x in stamps]),
+            "last_bar_open": _numeric(_field(last, "open"), f"{name} open"),
+            "last_bar_close": _numeric(_field(last, "close"), f"{name} close"),
+            "live_current_bar_included": True,
+            "completed_bar_strategy_admitted": False,
+        }
+    return out
+
+
+def tick_window(mt5: MT5ReadOnlySurface, start: datetime, end: datetime) -> dict[str, Any]:
+    _utc_time(start)
+    _utc_time(end)
+    if end <= start or end - start > timedelta(hours=4):
+        raise DemoSafetyError("tick window invalid")
+    ticks = _rows(mt5.copy_ticks_range(
+        SYMBOL, start, end, getattr(mt5, "COPY_TICKS_INFO")
+    ), "tick window")
+    if not ticks or len(ticks) > MAX_TICKS:
+        raise DemoSafetyError("empty or oversized tick source")
+    bid_min, bid_max = Decimal("Infinity"), Decimal("-Infinity")
+    spread_min, spread_max = Decimal("Infinity"), Decimal("-Infinity")
+    earliest: int | None = None
+    latest: int | None = None
+    digest = hashlib.sha256()
+    previous = 0
+    for raw in ticks:
+        stamp = _millis(raw)
+        bid = _decimal(_field(raw, "bid"), "tick bid")
+        ask = _decimal(_field(raw, "ask"), "tick ask")
+        if (
+            stamp < int(start.timestamp() * 1000) or
+            stamp > int(end.timestamp() * 1000) or
+            stamp < previous or bid <= 0 or ask <= bid
+        ):
+            raise DemoSafetyError("invalid historical tick time/order/quote")
+        previous = stamp
+        earliest = stamp if earliest is None else earliest
+        latest = stamp
+        bid_min, bid_max = min(bid_min, bid), max(bid_max, bid)
+        spread = ask - bid
+        spread_min, spread_max = min(spread_min, spread), max(spread_max, spread)
+        digest.update(_canonical([stamp, str(bid), str(ask)]))
+    return {
+        "start_utc": start.isoformat(), "end_utc": end.isoformat(),
+        "tick_count": len(ticks), "first_tick_msc": earliest,
+        "last_tick_msc": latest, "tick_bid_min": str(bid_min),
+        "tick_bid_max": str(bid_max), "spread_min_price": str(spread_min),
+        "spread_max_price": str(spread_max), "sanitized_tick_sha256": digest.hexdigest(),
+        "independently_admitted_prospective_v11_evidence": False,
+    }
+
+
+def collect_static(mt5: MT5ReadOnlySurface, now: datetime) -> dict[str, Any]:
+    """One comprehensive account, quote, history, risk, bar and past-tick read."""
+    _utc_time(now)
+    before = _identity(mt5, require_flat=True)
+    symbol = symbol_details(mt5, now)
+    money = money_matrix(mt5, symbol)
+    history = history_summary(mt5, now)
+    frames = rate_coverage(mt5)
+    ticks = tick_window(mt5, now - timedelta(hours=4), now)
+    # Reuse earlier reviewed broker quote/account 0.01-lot cash inspector.
+    legacy_money = inspect_real_demo_money(mt5, now=now)
+    after = _identity(mt5, require_flat=True)
+    if (
+        before["account_fingerprint_sha256"] != after["account_fingerprint_sha256"]
+        or before["balance_usd"] != after["balance_usd"]
+        or before["equity_usd"] != after["equity_usd"]
+    ):
+        raise DemoSafetyError("MT5 account identity or cash changed during source read")
+    return {
+        "schema": "EXNESS_DEMO_COMPREHENSIVE_READONLY_V1",
+        "capture_started_utc": now.isoformat(),
+        "account_before": before, "account_after": after,
+        "symbol": symbol, "broker_money_0_01": money,
+        "prior_money_inspector": legacy_money,
+        "historical_cash_and_fee_evidence": history,
+        "seven_frame_coverage": frames, "past_four_hour_tick_context": ticks,
+        "official_events_source_authenticated": False,
+        "session_holiday_source_authenticated": False,
+        "v11_cost_calibration_admitted": False,
+        "policy_a_execution_admitted": False,
+        "broker_order_check_calls": 0, "broker_order_send_calls": 0,
+        "live_real_money_authorized": False,
+    }
+
+
+def collect_prospective_quotes(
+    mt5: MT5ReadOnlySurface, *,
+    start: datetime,
+    now_fn: Callable[[], datetime],
+    sleep_fn: Callable[[float], None],
+    duration_seconds: int = WINDOW_SECONDS,
+    sample_seconds: int = SAMPLE_SECONDS,
+    on_sample: Callable[[dict[str, Any]], None] | None = None,
+) -> dict[str, Any]:
+    """Exactly one prospective contiguous window; no synthetic backfilling.
+
+    The default is a four-hour run of 5-second snapshots. All official source
+    and owner-preregistration evidence remains independently unadmitted.
+    """
+    _utc_time(start)
+    if duration_seconds <= 0 or duration_seconds % sample_seconds:
+        raise DemoSafetyError("prospective sampling duration invalid")
+    if sample_seconds <= 0:
+        raise DemoSafetyError("prospective sampling cadence invalid")
+    if (now_fn() - start).total_seconds() > sample_seconds:
+        raise DemoSafetyError("sampling start was missed")
+    samples = 0
+    spread_min = Decimal("Infinity")
+    spread_max = Decimal("-Infinity")
+    hash_samples = hashlib.sha256()
+    for i in range(duration_seconds // sample_seconds):
+        target = start + timedelta(seconds=i * sample_seconds)
+        while (wait := (target - now_fn()).total_seconds()) > 0:
+            sleep_fn(min(wait, 1.0))
+        stamp = now_fn()
+        if stamp < target or stamp >= target + timedelta(seconds=sample_seconds):
+            raise DemoSafetyError("prospective quote slot missed")
+        if i % 12 == 0:
+            _identity(mt5, require_flat=True)
+        symbol = symbol_details(mt5, stamp)
+        row = {
+            "slot": i, "observed_utc": stamp.isoformat(),
+            "bid": symbol["bid"], "ask": symbol["ask"],
+            "tick_time_utc": symbol["tick_time_utc"],
+        }
+        if on_sample is not None:
+            on_sample(row)
+        hash_samples.update(_canonical(row))
+        spread = Decimal(symbol["spread_price"])
+        spread_min = min(spread_min, spread)
+        spread_max = max(spread_max, spread)
+        samples += 1
+    finish = start + timedelta(seconds=duration_seconds)
+    while (wait := (finish - now_fn()).total_seconds()) > 0:
+        sleep_fn(min(wait, 1.0))
+    if now_fn() > finish + timedelta(seconds=sample_seconds):
+        raise DemoSafetyError("prospective window ended late")
+    _identity(mt5, require_flat=True)
+    broker_ticks = tick_window(mt5, start, finish)
+    return {
+        "expected_slots": duration_seconds // sample_seconds,
+        "observed_slots": samples,
+        "start_utc": start.isoformat(), "end_utc": finish.isoformat(),
+        "quote_spread_min": str(spread_min),
+        "quote_spread_max": str(spread_max),
+        "quote_samples_sha256": hash_samples.hexdigest(),
+        "broker_tick_summary": broker_ticks,
+        "prospective_observation_complete": True,
+        "owner_preregistration_independently_verified": False,
+        "official_news_session_prechecked": False,
+        "calibration_admitted": False,
+    }
+
+
+def _write_private(path: Path, content: bytes) -> None:
+    # Exclusive creation prevents overwriting an earlier evidence capture.
+    with path.open("xb") as stream:
+        stream.write(content)
+        stream.flush()
+
+
+def _public_summary(report: dict[str, Any]) -> dict[str, Any]:
+    account = report.get("account_before", {})
+    extra = report.get("prospective_window") or {}
+    frame = report.get("seven_frame_coverage", {})
+    return {
+        "schema": "EXNESS_DEMO_READONLY_SHAREABLE_SUMMARY_V1",
+        "capture_id_sha256": _sha(report),
+        "status": report.get("status"),
+        "account_fingerprint_matches_pinned_demo": account.get(
+            "account_fingerprint_sha256"
+        ) == EXPECTED_ACCOUNT_SHA256,
+        "broker": EXPECTED_COMPANY, "server": EXPECTED_SERVER,
+        "lot_verified": "0.01",
+        "zero_positions": account.get("positions_count") == 0,
+        "zero_pending_orders": account.get("orders_count") == 0,
+        "seven_frame_counts": {
+            k: v.get("bar_count") for k, v in frame.items()
+        },
+        "real_money_matrix": report.get("broker_money_0_01"),
+        "historical_fee_rows": report.get(
+            "historical_cash_and_fee_evidence", {}
+        ).get("xauusd_fee_rows_count"),
+        "four_hour_quote_slots": extra.get("observed_slots"),
+        "four_hour_tick_count": extra.get("broker_tick_summary", {}).get("tick_count"),
+        "full_policy_a_admitted": False,
+        "official_event_guard_admitted": False,
+        "order_check_calls": 0, "order_send_calls": 0,
+        "live_real_money_authorized": False,
+        "limitations": [
+            "MT5 cannot independently prove future official calendar news validity",
+            "Historic tick data do not substitute for prospectively registered v1.1",
+            "No real execution fees/slippage/gaps if no broker XAUUSD deals",
+            "No account-switch, trade-toggle or broker order action performed",
+        ],
+    }
+
+
+def run(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="One-shot real MT5 DEMO read-only evidence")
+    parser.add_argument("--confirm-owner-readonly", action="store_true")
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--prospective-four-hours", action="store_true")
+    args = parser.parse_args(argv)
+    if not args.confirm_owner_readonly:
+        print("NOT_RUN_OWNER_READONLY_CONFIRMATION_REQUIRED")
+        return 2
+    if args.output.exists() or not args.output.is_absolute():
+        print("NOT_RUN_PRIVATE_EVIDENCE_DIRECTORY_MUST_BE_NEW_ABSOLUTE")
+        return 2
+    mt5: MT5ReadOnlySurface | None = None
+    initialized = False
+    report: dict[str, Any] = {"status": "INCOMPLETE_FAIL_CLOSED_NO_ORDER"}
+    try:
+        raw = importlib.import_module("MetaTrader5")
+        mt5 = MT5ReadOnlySurface(raw)
+        if not mt5.initialize():
+            raise DemoSafetyError("attached MT5 terminal initialize failed")
+        initialized = True
+        now = datetime.now(UTC)
+        args.output.mkdir(parents=True, exist_ok=False)
+        report.update(collect_static(mt5, now))
+        report["status"] = "STATIC_COMPLETE_FOUR_HOUR_PENDING"
+        _write_private(args.output / "static_evidence.json", _canonical(report))
+        if args.prospective_four_hours:
+            with (args.output / "prospective_quote_samples.jsonl").open("xb") as stream:
+                def write_row(row: dict[str, Any]) -> None:
+                    stream.write(_canonical(row))
+                    stream.flush()
+                report["prospective_window"] = collect_prospective_quotes(
+                    mt5, start=datetime.now(UTC), now_fn=lambda: datetime.now(UTC),
+                    sleep_fn=time.sleep, on_sample=write_row,
+                )
+            report["status"] = "COMPLETE_READONLY_NOT_ADMITTED"
+        else:
+            report["status"] = "STATIC_COMPLETE_PROSPECTIVE_NOT_COLLECTED"
+        _write_private(args.output / "complete_evidence.json", _canonical(report))
+        summary = _public_summary(report)
+        _write_private(args.output / "shareable_summary.json", _canonical(summary))
+        print(json.dumps(summary, sort_keys=True))
+        return 0
+    except Exception as exc:
+        # Never print raw account, historic trade IDs or MT5 exception detail.
+        failure = {
+            "status": "FAIL_CLOSED_NO_ORDER",
+            "error_type": type(exc).__name__,
+            "output_location": "PRIVATE_LOCAL_ONLY",
+            "order_check_calls": 0, "order_send_calls": 0,
+            "no_retry_without_source_review": True,
+        }
+        if args.output.exists():
+            try:
+                _write_private(args.output / "failure.json", _canonical(failure))
+            except OSError:
+                pass
+        print(json.dumps(failure, sort_keys=True))
+        return 1
+    finally:
+        if initialized and mt5 is not None:
+            mt5.shutdown()
+
+
+if __name__ == "__main__":
+    raise SystemExit(run())
