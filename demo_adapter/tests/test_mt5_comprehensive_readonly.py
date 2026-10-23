@@ -403,3 +403,59 @@ def test_import_preflight_does_not_initialize_or_modify_broker(
     monkeypatch.setattr(probe.importlib, "import_module", must_not_import_mt5)
     assert probe.run(["--self-check-imports"]) == 0
     assert "PASS_NO_MT5" in capsys.readouterr().out
+
+
+def test_fail_closed_source_stage_and_private_artifact_status_are_sanitized(
+    tmp_path, monkeypatch, capsys,
+):
+    """A broker safety rejection is classifiable without exposing MT5 data."""
+    broker = FakeMT5()
+    broker.account["server"] = "WRONG_SERVER_SECRET"
+    monkeypatch.setattr(probe.importlib, "import_module", lambda name: broker)
+    output = tmp_path / "attempt"
+    assert probe.run([
+        "--confirm-owner-readonly", "--output", str(output),
+        "--prospective-four-hours",
+    ]) == 1
+    failure = probe.json.loads((output / "failure.json").read_text())
+    assert failure["status"] == "FAIL_CLOSED_NO_ORDER"
+    assert failure["failure_stage"] == "STATIC_ACCOUNT_IDENTITY_AND_EXPOSURE"
+    assert failure["private_static_evidence_present"] is False
+    assert failure["private_prospective_registration_present"] is False
+    assert failure["no_retry_without_source_review"] is True
+    assert "WRONG_SERVER_SECRET" not in capsys.readouterr().out
+    assert "WRONG_SERVER_SECRET" not in str(failure)
+    assert "order_send" not in broker.calls
+    assert "order_check" not in broker.calls
+
+
+def test_failure_after_static_stage_preserves_existing_local_evidence(
+    tmp_path, monkeypatch, capsys,
+):
+    """Never lose an already captured static receipt due to later sampling fault."""
+    broker = FakeMT5()
+    broker.now = datetime.now(UTC)
+    monkeypatch.setattr(probe.importlib, "import_module", lambda name: broker)
+
+    def synthetic_rejected_sample(*_args, **_kwargs):
+        raise DemoSafetyError("PRIVATE_ORDER_TICKET_OR_LOGIN_MUST_NOT_PRINT")
+
+    monkeypatch.setattr(
+        probe, "collect_prospective_quotes", synthetic_rejected_sample,
+    )
+    output = tmp_path / "attempt"
+    assert probe.run([
+        "--confirm-owner-readonly", "--output", str(output),
+        "--prospective-four-hours",
+    ]) == 1
+    failure = probe.json.loads((output / "failure.json").read_text())
+    assert failure["failure_stage"] == "PROSPECTIVE_FOUR_HOUR_SAMPLING"
+    assert failure["private_static_evidence_present"] is True
+    assert failure["private_prospective_registration_present"] is True
+    assert (output / "static_evidence.json").is_file()
+    assert (output / "prospective_run_registration.json").is_file()
+    assert not (output / "shareable_summary.json").exists()
+    assert "PRIVATE_ORDER_TICKET" not in str(failure)
+    assert "PRIVATE_ORDER_TICKET" not in capsys.readouterr().out
+    assert "order_send" not in broker.calls
+    assert "order_check" not in broker.calls
