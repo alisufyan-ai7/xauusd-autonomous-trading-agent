@@ -1222,5 +1222,39 @@
     "real_money_live_enabled": false,
     "immediate_next_action": "CONTINUE_QUALIFIED_BROKER_S2_FULL_POLICY_A_AND_LIVE_EVENTS_INTEGRATION_BUT_KEEP_HARD_ORDER_DENIAL",
     "detailed_checkpoint": "phase0/roadmap/V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md"
+  },
+  "latest_2026_10_23_s2_policy_a_source_integration": {
+    "status": "SOURCE_BOUND_SYNTHETIC_TESTED_NONEXECUTING",
+    "active_pr": 38,
+    "source_test_sha": "ce1e422337a8afdd23d1f18674490f5b79882b62",
+    "new_module": "demo_adapter/src/xauusd_demo/s2_full_policy_probe.py",
+    "tests": "demo_adapter/tests/test_s2_full_policy_probe.py",
+    "code_wired_to_existing_s2_builder": true,
+    "linked_cash_source_and_prospective_journal": true,
+    "broker_profit_margin_and_tick_loss_concordance": true,
+    "full_policy_a_pure_math_bound": true,
+    "m1_includes_all_cost_gap_reserve": true,
+    "stressed_adverse_cost_at_least_2x": true,
+    "owner_selected_v11_calibration_numeric_admitted": false,
+    "official_agency_operational_source_authenticated": false,
+    "source_bound_mt5_order_sender_admitted": false,
+    "order_check_or_send_enabled": false,
+    "github_release_ci": 39923675345,
+    "github_demo_admit_ci": 39923675487,
+    "github_production_candidate_ci": 39923675325,
+    "windows_py312_tests_passed": 279,
+    "ubuntu_py312_tests_passed": 279,
+    "ruff_and_mypy": "PASS_19_DEMO_FILES",
+    "remaining_blockers": [
+      "INDEPENDENT_REAL_COST_CALIBRATION_V11_NO_NUMERIC_EVIDENCE",
+      "VERIFIED_REAL_FIVE_AGENCY_AND_MT5_SESSION_COVERAGE",
+      "QUALIFIED_MT5_PENDING_ORDER_SENDING_AND_FILLED_POSITION_RECONCILIATION",
+      "VPS_ATTENDED_READONLY_AND_REAL_ALERT_RESTART_TESTS",
+      "SOURCE_PINNED_DEMO_ONLY_INSTALL_AND_LAUNCH"
+    ],
+    "real_money_live_enabled": false,
+    "forexvps_modified": false,
+    "main_merged": false,
+    "details": "phase0/roadmap/V2_S2_SOURCE_BOUND_POLICY_A_INTEGRATION_2026-10-23.md"
   }
 }
