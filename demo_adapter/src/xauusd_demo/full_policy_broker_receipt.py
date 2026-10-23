@@ -252,11 +252,19 @@ def preview_broker_full_policy_a(
     if tuple(mt5.positions_get()) or tuple(mt5.orders_get()):
         raise DemoSafetyError("exposure changed during calculation")
     adverse_price = max(-loss, tick_value_based)
+    # M1 cash available after the filled position moves adversely must
+    # include ALL planned-loss components, including the gap reserve.
+    # Selected v1.1 requires stressed adverse cost >= 2x current; source
+    # evidence for numeric calibration is still independently unadmitted.
     current_cost = (
         adverse_price + costs.commission_roundtrip_usd
         + costs.swap_reserve_usd + costs.slippage_reserve_usd
+        + costs.gap_reserve_usd
     )
-    stressed_cost = current_cost + costs.gap_reserve_usd
+    stressed_cost = max(
+        Decimal(2) * current_cost,
+        current_cost + costs.gap_reserve_usd,
+    )
     data = FullPolicyAInput(
         symbol="XAUUSD", side=proposal.side, volume_lots=LOT,
         volume_min=vol_min, volume_step=vol_step,
