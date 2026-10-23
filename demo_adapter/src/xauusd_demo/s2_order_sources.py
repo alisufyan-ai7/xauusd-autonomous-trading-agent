@@ -11,9 +11,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from .full_policy_broker_receipt import BoundAdverseCost
-
 if TYPE_CHECKING:
+    from .full_policy_broker_receipt import BoundAdverseCost
     from xauusd_agent.guards.v2_official_source_gate import VerifiedOfficialSnapshot
 
     from .prospective_cash_journal import ProspectiveDemoCashJournal
