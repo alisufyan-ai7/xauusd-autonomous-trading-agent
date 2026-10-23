@@ -1,5 +1,8 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
+> **CURRENT AGENT HANDOFF:** [AGENT_START_HERE.md](../../AGENT_START_HERE.md). This file contains preserved dated history; its early 2026-10-23 snapshot predates the 26-PR retirement and the owner DEMO-only governance amendment. Read that root index and query live [PR #40](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/40) before acting. No real broker order has been observed or deployed by this record. The latest objective is a continuous Exness Pro DEMO broker trader, not another mandatory four-hour study. Do not treat prior technical NO_GO as final product scope.
+
+
 ## 2026-10-23 — MAIN-BASED DOCS CONSOLIDATION CANDIDATE, NOT A CODE RELEASE
 
 [Read-first PR audit](OPEN_PR_CONSOLIDATION_AUDIT_2026-10-23.md): GitHub currently has **26 open DRAFT PRs**, arranged as three unmerged development families. Old v1.1/v1.2 research (#10–22,#28), attended S2 canary (#23–26) and failed alternative advisory (#29) require selective source reuse / evidence retention, **not wholesale merges**. Current V2 integration is the stacked #32→#38 lineage (PR32 has failed validation at its own HEAD; PR38 synthetic CI is green at its HEAD, but not a real VPS/broker pass). This DOC-ONLY branch copies **74 existing historical roadmap/decision/sanitized evidence-metadata blobs** directly from their exact GitHub source revisions without importing trading-capable code. It also adds the portfolio index and preserved owner decisions. No source PR is closed/merged yet.
