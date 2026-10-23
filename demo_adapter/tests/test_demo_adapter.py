@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import uuid
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
@@ -600,3 +600,88 @@ def test_daily_submission_budget_is_hard_bounded(tmp_path: Path) -> None:
                 request(),
                 now=datetime(2026, 10, 18, 2, tzinfo=UTC),
             )
+
+
+class FakeTPBStopMT5(FakeMT5):
+    ORDER_TYPE_BUY_STOP = 4
+    ORDER_TYPE_SELL_STOP = 5
+    TRADE_ACTION_PENDING = 5
+    ORDER_TIME_SPECIFIED = 2
+
+    def symbol_info(self, symbol: str) -> object:
+        base = super().symbol_info(symbol)
+        values = vars(base)
+        values["trade_tick_size"] = 0.01
+        return SimpleNamespace(**values)
+
+
+def stop_request(*, side: DemoSide = DemoSide.BUY) -> DemoOrderRequest:
+    return DemoOrderRequest(
+        request_id=str(uuid.uuid4()), symbol="XAUUSD", side=side,
+        volume_lots=Decimal("0.01"),
+        stop_loss=Decimal("1990") if side is DemoSide.BUY else Decimal("2010"),
+        entry_stop=Decimal("2001") if side is DemoSide.BUY else Decimal("1999"),
+        take_profit=Decimal("2025") if side is DemoSide.BUY else Decimal("1975"),
+        expires_utc=NOW + timedelta(minutes=45),
+    )
+
+
+@pytest.mark.parametrize("side", [DemoSide.BUY, DemoSide.SELL])
+def test_single_s2_sender_builds_frozen_pending_stop_payload_without_sending(
+    tmp_path: Path, side: DemoSide,
+) -> None:
+    mt5 = FakeTPBStopMT5()
+    with ledger(tmp_path) as entry_ledger:
+        with DemoMT5Adapter(
+            identity(), executable_policy(), entry_ledger, module=mt5
+        ) as adapter:
+            payload = adapter._build_request(stop_request(side=side), now=NOW)
+            assert payload["action"] == mt5.TRADE_ACTION_PENDING
+            assert payload["type"] == (
+                mt5.ORDER_TYPE_BUY_STOP if side is DemoSide.BUY
+                else mt5.ORDER_TYPE_SELL_STOP
+            )
+            assert payload["price"] == (2001 if side is DemoSide.BUY else 1999)
+            assert payload["tp"] == (2025 if side is DemoSide.BUY else 1975)
+            assert payload["expiration"] == int(
+                (NOW + timedelta(minutes=45)).timestamp()
+            )
+            assert payload["sl"] and payload["magic"] == 260101
+            assert mt5.send_calls == 0
+
+
+@pytest.mark.parametrize("invalid", [
+    "missing_tp", "expired", "too_distant_expiry", "market_crossed",
+    "off_tick", "stop_not_adverse", "missing_tick_size",
+])
+def test_bad_tpb_stop_never_reaches_mt5_check_or_send(
+    tmp_path: Path, invalid: str,
+) -> None:
+    from dataclasses import replace
+
+    mt5 = FakeTPBStopMT5()
+    req = stop_request()
+    if invalid == "missing_tp":
+        req = replace(req, take_profit=None)
+    elif invalid == "expired":
+        req = replace(req, expires_utc=NOW)
+    elif invalid == "too_distant_expiry":
+        req = replace(req, expires_utc=NOW + timedelta(hours=5))
+    elif invalid == "market_crossed":
+        req = replace(req, entry_stop=Decimal("2000.2"))
+    elif invalid == "off_tick":
+        req = replace(req, entry_stop=Decimal("2001.001"))
+    elif invalid == "stop_not_adverse":
+        req = replace(req, stop_loss=Decimal("2002"))
+    else:
+        mt5.symbol_info = lambda symbol: SimpleNamespace(
+            volume_min=0.01, volume_max=100., volume_step=0.01,
+            point=0.001, trade_stops_level=10, trade_tick_size=0
+        )
+    with ledger(tmp_path) as entry_ledger:
+        with DemoMT5Adapter(
+            identity(), executable_policy(), entry_ledger, module=mt5
+        ) as adapter:
+            with pytest.raises(DemoSafetyError):
+                adapter._build_request(req, now=NOW)
+            assert mt5.send_calls == 0
