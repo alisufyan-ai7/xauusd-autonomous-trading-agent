@@ -485,5 +485,42 @@
     ],
     "owner_request": "PRESERVE_CONTEXT_IN_GITHUB_ACROSS_CHAT_LIMITS",
     "documentation_location": "PR40_ONLY_UNMERGED_PRODUCTION_MAIN_STILL_OLDER"
+  },
+  "github_recovery_2026_10_23_new_chat": {
+    "basis": "CONNECTED_GITHUB_API_AT_PRE_RECEIPT_PR40_HEAD",
+    "accepted_main_sha": "bf6c931fac208ed2b781a2d22734df1124dea1e6",
+    "pr_number": 40,
+    "pr_state_at_reconciliation": "OPEN_DRAFT_UNMERGED",
+    "pr_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
+    "pr_head_pre_receipt": "dcb9afcffbf969d31d7a1c46e844f7d499cc13b1",
+    "ahead_by": 41,
+    "behind_by": 0,
+    "changed_files": 108,
+    "other_open_pr_count": 0,
+    "five_workflow_runs_success": [
+      39951460275,
+      39951460152,
+      39951460279,
+      39951460153,
+      39951460225
+    ],
+    "nine_jobs_all_success": true,
+    "ci_is_offline_synthetic_not_broker_evidence": true,
+    "post_receipt_branch_head_must_be_refetched": true,
+    "corrected_run_owner_reported": true,
+    "corrected_run_output_supplied_to_new_chat": false,
+    "corrected_run_status": "CORRECTED_SCRIPT_OWNER_REPORTED_RUN__RESULT_PENDING_OWNER_OUTPUT",
+    "corrected_run_mt5_connected": null,
+    "corrected_run_quote_slots": null,
+    "corrected_run_sanitized_hash_verified": null,
+    "corrected_run_pass": null,
+    "corrected_run_fail": null,
+    "known_prior_import_failure_immutable": true,
+    "s2_static_stop_inspected": true,
+    "effective_demo_order_permit": false,
+    "live_order_permit": false,
+    "rule7_reconciliation_accepted": false,
+    "main_modified_by_recovery": false,
+    "next_step": "INSPECT_CORRECTED_OWNER_VPS_CONSOLE_AND_SHAREABLE_SUMMARY_BEFORE_ANY_REPEAT_OR_DEFECT_FIX"
   }
 }
