@@ -1,8 +1,8 @@
+# ruff: noqa: S105, S106
 # ruff: noqa: I001
 from __future__ import annotations
 
 import json
-from types import SimpleNamespace
 
 import pytest
 
