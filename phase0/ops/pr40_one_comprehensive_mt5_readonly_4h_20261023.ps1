@@ -64,6 +64,13 @@ try {
     if (-not (Test-Path -LiteralPath $Script)) {
         throw 'Pinned comprehensive MT5 collector missing'
     }
+    # Zero-broker dependency/packaging preflight in the EXACT exported
+    # source. -I -S disables editable/site package imports, reproducing
+    # the original VPS ModuleNotFoundError before any four-hour sampling.
+    & $Python -B -I -S $Script --self-check-imports
+    if ($LASTEXITCODE -ne 0) {
+        throw 'PINNED_IMPORT_PREFLIGHT_FAIL_CLOSED__NO_MT5_ATTACH__NO_CAPTURE'
+    }
     New-Item -Path $PrivateRoot -ItemType Directory -Force | Out-Null
     Write-Output ('READONLY_SOURCE_PIN=' + $Pinned)
     Write-Output 'REAL_EXNESS_PRO_MT5_DEMO_ACCOUNT__READ_ONLY'
