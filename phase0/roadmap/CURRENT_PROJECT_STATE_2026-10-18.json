@@ -1155,5 +1155,43 @@
     ],
     "no_real_money_account_switch": true,
     "next_session_instruction": "READ_THIS_HANDOFF_AND_STATE_FILES_ON_PR38_LATEST_HEAD_THEN_IMPLEMENT_BLOCKERS_IN_GITHUB_NATIVE_TESTS_AND_DELIVER_GENUINE_VPS_LAUNCHER_NOT_READONLY_DIAGNOSTIC"
+  },
+  "latest_2026_10_23_pending_stop_integration": {
+    "status": "DRAFT_OFFLINE_TESTED_NOT_DEPLOYABLE",
+    "source_head": "a13f66358d003ef89afb6dc2624d36a6975eba0a",
+    "active_branch": "implementation/demo-continuous-supervisor-20261023",
+    "draft_pr": 38,
+    "ci": {
+      "demo_release": 39918014924,
+      "demo_admit": 39918014935,
+      "production_candidate": 39918014923,
+      "per_os_py312_tests": 245,
+      "ruff": "PASS",
+      "mypy_source_files": 17
+    },
+    "confirmed": {
+      "tpb_stop_plan_compiler": true,
+      "s2_stop_payload_building": true,
+      "broker_full_policy_a_nonexecuting_preview": true,
+      "durable_official_calendar_revision_supervisor": true,
+      "persisted_pending_stop_and_known_fill_state_machine": true,
+      "read_only_mt5_pending_reconciliation": true,
+      "watchdog_outbox_and_mocked_alert_transport": true
+    },
+    "release_blockers": {
+      "fully_qualified_concrete_mt5_sender": true,
+      "broker_authoritative_full_policy_a_runtime_binding": true,
+      "fully_admitted_objective_tpb_live_ingestion": true,
+      "operational_official_source_event_guard": true,
+      "real_alert_delivery_restart_vps_drills": true,
+      "tested_real_trading_one_command_launcher": true
+    },
+    "source_broker_orders_sent": 0,
+    "external_python_trading_state": "UNCHANGED_DISABLED",
+    "demo_trading_started": false,
+    "real_money_live_enabled": false,
+    "production_main_changed": false,
+    "no_merges": true,
+    "pointer": "phase0/roadmap/V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md"
   }
 }

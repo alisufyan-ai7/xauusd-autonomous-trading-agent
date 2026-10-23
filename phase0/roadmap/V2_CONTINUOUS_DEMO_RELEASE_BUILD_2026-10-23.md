@@ -16,3 +16,8 @@ Start from draft PR37 tip `027ac0419528d1a3349fcfad71a4edbb8971b303`. Add `demo_
 6. Existing VPS terminal external Python trading is disabled and cannot be switched by a normal MT5 Python call; launch command must not falsely claim to toggle a UI-only setting.
 
 This checkpoint is intended for owner-independent native code/test progress, not a release. Do not represent new SQLite tests or a running timer as live autonomous trades. GitHub Actions are not the Windows VPS. Production main, user funds, installed MT5 and scheduled tasks untouched; stacked PRs remain draft.
+
+
+## 2026-10-23 continuation after original handoff — STOP order state machine and five-workstream draft
+
+**Do not misread the historical SHA at top of this document as current.** Subsequent work on PR38 implemented broker-reconciled pending STOP lifecycle, deterministic TPB Zone-A BUY/SELL STOP/SL/TP candidate, cash-risk nonexecuting MT5 preview, durable source-revision Event Guard, watchdog/outbox and SMTP/Telegram delivery transport fakes. Native-corrected **code** HEAD: `a13f66358d003ef89afb6dc2624d36a6975eba0a`; release-offline Actions **39918014924 SUCCESS** (245 Windows and 245 Ubuntu), demo-admit **39918014935 SUCCESS**, production-candidate **39918014923 SUCCESS**, before subsequent documentation. Exact source and remaining blocks are in [this new checkpoint](V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md). **S2 unconditional full Policy A real-order hard stop is untouched; no VPS deployment or actual broker order; not production-ready.** PR32–38 remain stacked DRAFT unmerged. All predecessor G0 failures immutable.

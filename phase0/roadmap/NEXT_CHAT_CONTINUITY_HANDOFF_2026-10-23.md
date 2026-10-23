@@ -117,3 +117,8 @@ This project is private. **Do not mix** work or assumptions from the separate Vo
 - [ ] Real-money LIVE trading: **NOT REQUESTED/NOT AUTHORIZED**.
 
 **Resume immediately from PR38's latest branch HEAD.** Work on code and tests, not another planning-only loop. Keep the final user-facing new-chat prompt short and instruct it to reconcile this handoff first.
+
+
+## 2026-10-23 continuation after original handoff — STOP order state machine and five-workstream draft
+
+**Do not misread the historical SHA at top of this document as current.** Subsequent work on PR38 implemented broker-reconciled pending STOP lifecycle, deterministic TPB Zone-A BUY/SELL STOP/SL/TP candidate, cash-risk nonexecuting MT5 preview, durable source-revision Event Guard, watchdog/outbox and SMTP/Telegram delivery transport fakes. Native-corrected **code** HEAD: `a13f66358d003ef89afb6dc2624d36a6975eba0a`; release-offline Actions **39918014924 SUCCESS** (245 Windows and 245 Ubuntu), demo-admit **39918014935 SUCCESS**, production-candidate **39918014923 SUCCESS**, before subsequent documentation. Exact source and remaining blocks are in [this new checkpoint](V2_DEMO_PENDING_STOP_LIFECYCLE_CI_CHECKPOINT_2026-10-23.md). **S2 unconditional full Policy A real-order hard stop is untouched; no VPS deployment or actual broker order; not production-ready.** PR32–38 remain stacked DRAFT unmerged. All predecessor G0 failures immutable.
