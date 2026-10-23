@@ -593,8 +593,9 @@ def _public_summary(report: dict[str, Any]) -> dict[str, Any]:
 def _pinned_local_import_check() -> bool:
     """No MT5 attach, no network, no side effects. Verify all source origins."""
     import xauusd_agent
-    import xauusd_demo
+
     import scripts.v11_quote_coverage as quote_module
+    import xauusd_demo
 
     expected = (
         (_STAGED_REPO_ROOT / "src" / "xauusd_agent" / "__init__.py").resolve(),
