@@ -12,8 +12,9 @@ import re
 import smtplib
 import ssl
 import urllib.request
+from collections.abc import Callable
 from email.message import EmailMessage
-from typing import Any, Callable
+from typing import Any
 
 from .envelope import DemoSafetyError
 
