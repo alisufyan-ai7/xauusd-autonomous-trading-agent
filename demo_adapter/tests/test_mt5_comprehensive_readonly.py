@@ -4,7 +4,6 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 from datetime import UTC, datetime, timedelta
-from decimal import Decimal as D
 from pathlib import Path
 
 import pytest
@@ -187,7 +186,9 @@ def test_surface_is_closed_to_trading_and_login_methods():
     assert not broker.calls
 
 
-@pytest.mark.parametrize("changed", ["live", "login", "wrong_server", "disabled_toggle", "position", "pending"])
+@pytest.mark.parametrize(
+    "changed", ["live", "login", "wrong_server", "disabled_toggle", "position", "pending"]
+)
 def test_identity_failures_never_read_as_broker_release(changed):
     broker = FakeMT5()
     if changed == "live":
@@ -207,7 +208,12 @@ def test_identity_failures_never_read_as_broker_release(changed):
     assert "order_send" not in broker.calls
 
 
-@pytest.mark.parametrize("changed", ["stale", "crossed_quote", "bad_volume", "missing_history", "missing_bars", "bad_margin"])
+@pytest.mark.parametrize(
+    "changed", [
+        "stale", "crossed_quote", "bad_volume", "missing_history",
+        "missing_bars", "bad_margin",
+    ],
+)
 def test_real_broker_source_gaps_fail_closed(changed):
     broker = FakeMT5()
     if changed == "stale":
