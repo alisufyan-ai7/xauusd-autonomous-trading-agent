@@ -5,7 +5,6 @@ import hashlib
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal as D
-from pathlib import Path
 
 import pytest
 
@@ -13,7 +12,9 @@ from xauusd_agent.guards.event_guard import ProtectedEvent
 from xauusd_agent.guards.v2_official_source_gate import VerifiedOfficialSnapshot
 from xauusd_agent.risk.full_policy_a import FullRiskDisposition
 
-from xauusd_demo.envelope import DemoIdentity, DemoOrderRequest, DemoPolicy, DemoSafetyError, DemoSide
+from xauusd_demo.envelope import (
+    DemoIdentity, DemoOrderRequest, DemoPolicy, DemoSafetyError, DemoSide,
+)
 from xauusd_demo.full_policy_broker_receipt import BoundAdverseCost
 from xauusd_demo.ledger import DemoSubmissionLedger
 from xauusd_demo.mt5_demo import DemoMT5Adapter
@@ -169,7 +170,10 @@ def agency_sources():
     )
 
 
-def execute_preview(tmp_path, monkeypatch, *, modify=None, req=None, official=None, digest=None, session=None):
+def execute_preview(
+    tmp_path, monkeypatch, *, modify=None, req=None,
+    official=None, digest=None, session=None,
+):
     monkeypatch.setattr("xauusd_demo.mt5_cash_source._EXPECTED_SHA", FP)
     monkeypatch.setattr("xauusd_demo.full_policy_broker_receipt.EXPECTED_ACCOUNT_SHA256", FP)
     mt5 = FakeS2Broker()
