@@ -26,6 +26,7 @@ class TPBStopPlan:
     tp1_informational: Decimal
     confirmed_bar_utc: datetime
     expires_utc: datetime
+    proposal_expires_utc: datetime
     execution_permitted: bool = False
 
     def __post_init__(self) -> None:
@@ -138,4 +139,5 @@ def compile_tpb_zone_a_stop(
         tp1_informational=tp1,
         confirmed_bar_utc=confirmation.close_time,
         expires_utc=confirmation.close_time + timedelta(minutes=60),
+        proposal_expires_utc=confirmation.close_time + timedelta(seconds=30),
     )
