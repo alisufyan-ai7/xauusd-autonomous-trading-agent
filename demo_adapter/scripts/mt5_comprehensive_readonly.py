@@ -320,7 +320,10 @@ def rate_coverage(mt5: MT5ReadOnlySurface) -> dict[str, Any]:
     return out
 
 
-def tick_window(mt5: MT5ReadOnlySurface, start: datetime, end: datetime) -> dict[str, Any]:
+def tick_window(
+    mt5: MT5ReadOnlySurface, start: datetime, end: datetime, *,
+    on_tick: Callable[[dict[str, Any]], None] | None = None,
+) -> dict[str, Any]:
     _utc_time(start)
     _utc_time(end)
     if end <= start or end - start > timedelta(hours=4):
@@ -336,6 +339,9 @@ def tick_window(mt5: MT5ReadOnlySurface, start: datetime, end: datetime) -> dict
     latest: int | None = None
     digest = hashlib.sha256()
     previous = 0
+    max_adjacent_tick_jump = Decimal(0)
+    max_intertick_gap_ms = 0
+    last_bid: Decimal | None = None
     for raw in ticks:
         stamp = _millis(raw)
         bid = _decimal(_field(raw, "bid"), "tick bid")
@@ -346,7 +352,16 @@ def tick_window(mt5: MT5ReadOnlySurface, start: datetime, end: datetime) -> dict
             stamp < previous or bid <= 0 or ask <= bid
         ):
             raise DemoSafetyError("invalid historical tick time/order/quote")
+        if previous:
+            max_intertick_gap_ms = max(max_intertick_gap_ms, stamp - previous)
+            if last_bid is not None:
+                max_adjacent_tick_jump = max(
+                    max_adjacent_tick_jump, abs(bid - last_bid)
+                )
         previous = stamp
+        last_bid = bid
+        if on_tick is not None:
+            on_tick({"time_msc": stamp, "bid": str(bid), "ask": str(ask)})
         earliest = stamp if earliest is None else earliest
         latest = stamp
         bid_min, bid_max = min(bid_min, bid), max(bid_max, bid)
@@ -358,22 +373,32 @@ def tick_window(mt5: MT5ReadOnlySurface, start: datetime, end: datetime) -> dict
         "tick_count": len(ticks), "first_tick_msc": earliest,
         "last_tick_msc": latest, "tick_bid_min": str(bid_min),
         "tick_bid_max": str(bid_max), "spread_min_price": str(spread_min),
-        "spread_max_price": str(spread_max), "sanitized_tick_sha256": digest.hexdigest(),
+        "spread_max_price": str(spread_max),
+        "max_adjacent_bid_jump_price": str(max_adjacent_tick_jump),
+        "max_intertick_gap_ms": max_intertick_gap_ms,
+        "sanitized_tick_sha256": digest.hexdigest(),
         "independently_admitted_prospective_v11_evidence": False,
     }
 
 
-def collect_static(mt5: MT5ReadOnlySurface, now: datetime) -> dict[str, Any]:
+def collect_static(
+    mt5: MT5ReadOnlySurface, now: datetime, *,
+    on_historical_tick: Callable[[dict[str, Any]], None] | None = None,
+) -> dict[str, Any]:
     """One comprehensive account, quote, history, risk, bar and past-tick read."""
     _utc_time(now)
     before = _identity(mt5, require_flat=True)
     symbol = symbol_details(mt5, now)
     money = money_matrix(mt5, symbol)
+    # Run the existing strict broker-money validator immediately while its
+    # attached quote remains fresh; slow history/rates reads follow afterward.
+    legacy_money = inspect_real_demo_money(mt5, now=now)
     history = history_summary(mt5, now)
     frames = rate_coverage(mt5)
-    ticks = tick_window(mt5, now - timedelta(hours=4), now)
-    # Reuse earlier reviewed broker quote/account 0.01-lot cash inspector.
-    legacy_money = inspect_real_demo_money(mt5, now=now)
+    ticks = tick_window(
+        mt5, now - timedelta(hours=4), now,
+        on_tick=on_historical_tick,
+    )
     after = _identity(mt5, require_flat=True)
     if (
         before["account_fingerprint_sha256"] != after["account_fingerprint_sha256"]
@@ -406,6 +431,7 @@ def collect_prospective_quotes(
     duration_seconds: int = WINDOW_SECONDS,
     sample_seconds: int = SAMPLE_SECONDS,
     on_sample: Callable[[dict[str, Any]], None] | None = None,
+    on_tick: Callable[[dict[str, Any]], None] | None = None,
 ) -> dict[str, Any]:
     """Exactly one prospective contiguous window; no synthetic backfilling.
 
@@ -451,7 +477,7 @@ def collect_prospective_quotes(
     if now_fn() > finish + timedelta(seconds=sample_seconds):
         raise DemoSafetyError("prospective window ended late")
     _identity(mt5, require_flat=True)
-    broker_ticks = tick_window(mt5, start, finish)
+    broker_ticks = tick_window(mt5, start, finish, on_tick=on_tick)
     return {
         "expected_slots": duration_seconds // sample_seconds,
         "observed_slots": samples,
@@ -534,17 +560,29 @@ def run(argv: list[str] | None = None) -> int:
         initialized = True
         now = datetime.now(UTC)
         args.output.mkdir(parents=True, exist_ok=False)
-        report.update(collect_static(mt5, now))
+        with (args.output / "past_four_hour_broker_ticks.jsonl").open("xb") as stream:
+            def write_historic(row: dict[str, Any]) -> None:
+                stream.write(_canonical(row))
+            report.update(collect_static(
+                mt5, now, on_historical_tick=write_historic,
+            ))
         report["status"] = "STATIC_COMPLETE_FOUR_HOUR_PENDING"
         _write_private(args.output / "static_evidence.json", _canonical(report))
         if args.prospective_four_hours:
-            with (args.output / "prospective_quote_samples.jsonl").open("xb") as stream:
+            with (
+                (args.output / "prospective_quote_samples.jsonl").open("xb") as samples,
+                (args.output / "prospective_broker_ticks.jsonl").open("xb") as ticks,
+            ):
                 def write_row(row: dict[str, Any]) -> None:
-                    stream.write(_canonical(row))
-                    stream.flush()
+                    samples.write(_canonical(row))
+                    samples.flush()
+
+                def write_tick(row: dict[str, Any]) -> None:
+                    ticks.write(_canonical(row))
+
                 report["prospective_window"] = collect_prospective_quotes(
                     mt5, start=datetime.now(UTC), now_fn=lambda: datetime.now(UTC),
-                    sleep_fn=time.sleep, on_sample=write_row,
+                    sleep_fn=time.sleep, on_sample=write_row, on_tick=write_tick,
                 )
             report["status"] = "COMPLETE_READONLY_NOT_ADMITTED"
         else:
