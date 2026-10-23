@@ -1,3 +1,4 @@
+# ruff: noqa: I001
 from __future__ import annotations
 
 from dataclasses import replace
@@ -16,10 +17,10 @@ BASE = datetime(2026, 10, 23, 12, tzinfo=UTC)
 FP = "9" * 64
 
 
-def bar(idx, o, h, l, c):
+def bar(idx, o, h, low, c):
     return ContextBar(
         ContextTimeframe.M15, BASE + timedelta(minutes=15 * idx),
-        D(str(o)), D(str(h)), D(str(l)), D(str(c)), 200,
+        D(str(o)), D(str(h)), D(str(low)), D(str(c)), 200,
     )
 
 
