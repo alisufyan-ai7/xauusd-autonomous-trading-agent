@@ -1285,6 +1285,23 @@
     "current_native_tested_code_sha": "ce1e422337a8afdd23d1f18674490f5b79882b62",
     "ci_release": 39923675345,
     "source_numeric_calibration_v11": "NOT_ADMITTED",
-    "github_reported_visibility": "PUBLIC"
+    "github_reported_visibility": "PUBLIC",
+    "native_contract_validation": {
+      "source_head": "f40f1d68e587a22c47869519434077a96cab071f",
+      "release_run": 39933014003,
+      "demo_admit_run": 39933013847,
+      "production_candidate_run": 39933013955,
+      "records_run": 39933014007,
+      "native_windows_py312_tests": 283,
+      "native_ubuntu_py312_tests": 283,
+      "mypy_source_files": 19,
+      "ruff": "PASS",
+      "result": "PASS_OFFLINE_ONLY",
+      "test_path": "demo_adapter/tests/test_real_broker_product_milestone.py",
+      "actual_mt5_demo_order_proven": false,
+      "actual_live_order_proven": false,
+      "active_s2_order_hard_stop": true
+    },
+    "latest_milestone_code_sha": "f40f1d68e587a22c47869519434077a96cab071f"
   }
 }

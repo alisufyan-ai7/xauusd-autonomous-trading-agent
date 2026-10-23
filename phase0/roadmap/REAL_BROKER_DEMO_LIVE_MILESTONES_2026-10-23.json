@@ -130,5 +130,21 @@
     "allow_merged_without_owner_approval": false
   },
   "next_code_action": "Implement single existing S2 QualifiedDemoBrokerPort fail-closed with broker-authoritative source receipt, adversarial Windows/Ubuntu tests; complete independent fees/calibration/session/news/pending cancellation and VPS demo acceptance before enabling order sending",
-  "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER"
+  "visibility_concern": "GITHUB_API_REPORTS_PUBLIC_REPOSITORY_CHECK_WITH_OWNER",
+  "latest_native_contract_validation": {
+    "source_head": "f40f1d68e587a22c47869519434077a96cab071f",
+    "release_run": 39933014003,
+    "demo_admit_run": 39933013847,
+    "production_candidate_run": 39933013955,
+    "records_run": 39933014007,
+    "native_windows_py312_tests": 283,
+    "native_ubuntu_py312_tests": 283,
+    "mypy_source_files": 19,
+    "ruff": "PASS",
+    "result": "PASS_OFFLINE_ONLY",
+    "test_path": "demo_adapter/tests/test_real_broker_product_milestone.py",
+    "actual_mt5_demo_order_proven": false,
+    "actual_live_order_proven": false,
+    "active_s2_order_hard_stop": true
+  }
 }
