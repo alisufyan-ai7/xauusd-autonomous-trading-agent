@@ -1,3 +1,5 @@
+# SUPERSEDED FOR MT5 DISCOVERY by phase0/ops/pr40_one_comprehensive_mt5_readonly_4h_20261023.ps1
+# Retained ONLY for historical compatibility and audit. Do not run multiple capture scripts.
 #requires -Version 5.1
 # Single attended staging + REAL BROKER CASH-RECEIPT capture on Exness Pro DEMO.
 # NO order_check, order_send, Python-trading toggle or scheduled task changes.
