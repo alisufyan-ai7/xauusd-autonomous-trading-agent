@@ -27,6 +27,7 @@ from .envelope import DemoSafetyError
 
 class PositionStage(StrEnum):
     PREPARING = "PREPARING"
+    PENDING = "PENDING"
     ACKNOWLEDGED = "ACKNOWLEDGED"
     CLOSED = "CLOSED"
     UNCERTAIN = "UNCERTAIN"
@@ -146,6 +147,101 @@ class QualifiedBrokerAck:
             tick_size=Decimal(raw["tick_size"]),
         )
 
+
+@dataclass(frozen=True, slots=True)
+class PendingBrokerAck:
+    """Durable accepted STOP ORDER, not proof of a filled position."""
+    setup_key: str
+    account_fingerprint: str
+    order_ticket: int
+    side: str
+    volume_lots: Decimal
+    entry_stop: Decimal
+    stop_loss: Decimal
+    take_profit: Decimal
+    expires_utc: datetime
+
+    def validate(
+        self, *, setup_key: str, account_fingerprint: str, side: str,
+        now: datetime | None = None,
+    ) -> None:
+        if (
+            self.setup_key != setup_key
+            or self.account_fingerprint != account_fingerprint
+            or self.side != side
+            or type(self.order_ticket) is not int or self.order_ticket <= 0
+            or any(
+                type(x) is not Decimal or not x.is_finite() or x <= 0
+                for x in (
+                    self.volume_lots, self.entry_stop, self.stop_loss,
+                    self.take_profit,
+                )
+            )
+            or self.volume_lots != Decimal("0.01")
+            or (
+                self.side == "BUY"
+                and not (self.stop_loss < self.entry_stop < self.take_profit)
+            )
+            or (
+                self.side == "SELL"
+                and not (self.take_profit < self.entry_stop < self.stop_loss)
+            )
+            or self.expires_utc.tzinfo is None
+            or self.expires_utc.utcoffset() != timedelta(0)
+            or (
+                now is not None and (
+                    not now < self.expires_utc
+                    or self.expires_utc - now > timedelta(hours=1)
+                )
+            )
+        ):
+            raise DemoSafetyError("unqualified pending STOP acknowledgment")
+
+    def encode(self) -> str:
+        return json.dumps(
+            {
+                "setup_key": self.setup_key,
+                "account_fingerprint": self.account_fingerprint,
+                "order_ticket": self.order_ticket,
+                "side": self.side,
+                "volume_lots": str(self.volume_lots),
+                "entry_stop": str(self.entry_stop),
+                "stop_loss": str(self.stop_loss),
+                "take_profit": str(self.take_profit),
+                "expires_utc": self.expires_utc.isoformat(),
+            }, sort_keys=True, separators=(",", ":"),
+        )
+
+    @classmethod
+    def decode(cls, content: str) -> PendingBrokerAck:
+        payload = json.loads(content)
+        if type(payload) is not dict:
+            raise DemoSafetyError("unusable pending broker receipt")
+        return cls(
+            setup_key=payload["setup_key"],
+            account_fingerprint=payload["account_fingerprint"],
+            order_ticket=payload["order_ticket"],
+            side=payload["side"],
+            volume_lots=Decimal(payload["volume_lots"]),
+            entry_stop=Decimal(payload["entry_stop"]),
+            stop_loss=Decimal(payload["stop_loss"]),
+            take_profit=Decimal(payload["take_profit"]),
+            expires_utc=datetime.fromisoformat(payload["expires_utc"]),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class PendingOrderObservation:
+    """Broker-authoritative port must prove waiting/fill/expired/cancelled."""
+    state: str
+    fill: QualifiedBrokerAck | None = None
+
+    def __post_init__(self) -> None:
+        if self.state not in {"PENDING", "FILLED", "EXPIRED", "UNKNOWN"}:
+            raise DemoSafetyError("unrecognized pending order state")
+        if (self.state == "FILLED") != (self.fill is not None):
+            raise DemoSafetyError("fill receipt required only for FILLED state")
+
 @dataclass(frozen=True)
 class CycleResult:
     state: str
@@ -159,15 +255,22 @@ class QualifiedDemoBrokerPort(Protocol):
     def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
         """Query actual seven-frame source, complete TPB, verified events and risk."""
 
-    def submit_qualified(self, proposal: VerifiedProposal, now: datetime) -> QualifiedBrokerAck:
+    def submit_qualified(
+        self, proposal: VerifiedProposal, now: datetime
+    ) -> QualifiedBrokerAck | PendingBrokerAck:
         """Internally recheck account/stop/cash/period/M1/event/position, send once.
 
         Must *never* trust a proposal to assert broker cash or risk approval.
-        Return an exact source-confirmed receipt on definitive fill acknowledgment.
+        Return a definitive known fill OR pending-order receipt; never assume PLACED is filled.
         """
 
     def known_position_state(self, receipt: QualifiedBrokerAck, now: datetime) -> str:
         """Return OPEN, CLOSED or UNKNOWN using authoritative broker deals."""
+
+    def known_pending_state(
+        self, receipt: PendingBrokerAck, now: datetime
+    ) -> PendingOrderObservation:
+        """Prove pending, filled (full receipt), expired-flat or UNKNOWN via MT5."""
 
 
 class ContinuousDemoCoordinator:
@@ -196,6 +299,12 @@ class ContinuousDemoCoordinator:
         )
         self.conn.execute(
             """CREATE TABLE IF NOT EXISTS agent_broker_receipts (
+             setup_key TEXT PRIMARY KEY, receipt_json TEXT NOT NULL,
+             FOREIGN KEY(setup_key) REFERENCES agent_cycles(setup_key)
+            ) STRICT"""
+        )
+        self.conn.execute(
+            """CREATE TABLE IF NOT EXISTS agent_pending_receipts (
              setup_key TEXT PRIMARY KEY, receipt_json TEXT NOT NULL,
              FOREIGN KEY(setup_key) REFERENCES agent_cycles(setup_key)
             ) STRICT"""
@@ -276,8 +385,73 @@ class ContinuousDemoCoordinator:
             return CycleResult("QUARANTINED", "NO_ORDER", "MULTIPLE_INTENTS")
         if rows:
             key, stage, ticket = rows[0]
-            if stage != "ACKNOWLEDGED" or not ticket:
-                self._quarantine("UNCERTAIN_OR_PENDING_BROKER_SUBMISSION")
+            if not ticket:
+                self._quarantine("UNKNOWN_UNACKNOWLEDGED_BROKER_SUBMISSION")
+                return CycleResult("QUARANTINED", "NO_ORDER", "AMBIGUOUS_SUBMISSION")
+            if stage == "PENDING":
+                try:
+                    persisted = self.conn.execute(
+                        "SELECT receipt_json FROM agent_pending_receipts "
+                        "WHERE setup_key=?", (key,),
+                    ).fetchone()
+                    if persisted is None:
+                        raise DemoSafetyError("missing pending STOP order receipt")
+                    pending = PendingBrokerAck.decode(str(persisted[0]))
+                    pending.validate(
+                        setup_key=str(key), account_fingerprint=self._fingerprint,
+                        side=str(self.conn.execute(
+                            "SELECT side FROM agent_cycles WHERE setup_key=?",
+                            (key,),
+                        ).fetchone()[0]),
+                    )
+                    if str(pending.order_ticket) != str(ticket):
+                        raise DemoSafetyError("pending ticket changed")
+                    observation = port.known_pending_state(pending, now)
+                    if observation.state == "PENDING" and now < pending.expires_utc:
+                        return CycleResult("ACTIVE", "MONITOR_PENDING_ORDER", str(ticket))
+                    if observation.state == "EXPIRED":
+                        # Port must prove broker history is fully expired/cancelled,
+                        # no fill/deal and no positions or foreign exposure.
+                        self.conn.execute(
+                            "UPDATE agent_cycles SET stage='CLOSED' WHERE setup_key=?",
+                            (key,),
+                        )
+                        return CycleResult("ACTIVE", "PENDING_ORDER_EXPIRED", str(ticket))
+                    if observation.state != "FILLED" or observation.fill is None:
+                        raise DemoSafetyError("pending status unknown/unreconciled")
+                    receipt = observation.fill
+                    receipt.validate(
+                        setup_key=str(key), account_fingerprint=self._fingerprint,
+                        side=pending.side,
+                    )
+                    if receipt.order_ticket != pending.order_ticket:
+                        raise DemoSafetyError("opening order ticket does not match pending")
+                    if (
+                        receipt.stop_loss != pending.stop_loss
+                        or receipt.take_profit != pending.take_profit
+                        or receipt.volume_lots != pending.volume_lots
+                    ):
+                        raise DemoSafetyError("filled position lost bound protections")
+                    self.conn.execute("BEGIN IMMEDIATE")
+                    self.conn.execute(
+                        "INSERT INTO agent_broker_receipts VALUES (?,?)",
+                        (key, receipt.encode()),
+                    )
+                    self.conn.execute(
+                        "UPDATE agent_cycles SET stage='ACKNOWLEDGED',ticket=? "
+                        "WHERE setup_key=?", (str(receipt.position_id), key),
+                    )
+                    self.conn.execute("COMMIT")
+                    return CycleResult(
+                        "ACTIVE", "PENDING_ORDER_FILLED", str(receipt.position_id)
+                    )
+                except Exception:
+                    if self.conn.in_transaction:
+                        self.conn.execute("ROLLBACK")
+                    self._quarantine("PENDING_ORDER_RECONCILIATION_UNKNOWN")
+                    return CycleResult("QUARANTINED", "NO_ORDER", "PENDING_UNKNOWN")
+            if stage != "ACKNOWLEDGED":
+                self._quarantine("UNCERTAIN_BROKER_SUBMISSION")
                 return CycleResult("QUARANTINED", "NO_ORDER", "AMBIGUOUS_SUBMISSION")
             try:
                 saved = self.conn.execute(
@@ -339,6 +513,27 @@ class ContinuousDemoCoordinator:
         # attempting an external action. No automatic resubmission on restart.
         try:
             receipt = port.submit_qualified(proposal, now)
+            if isinstance(receipt, PendingBrokerAck):
+                receipt.validate(
+                    setup_key=proposal.setup_key, side=proposal.side,
+                    account_fingerprint=self._fingerprint, now=now,
+                )
+                # Crash before atomic COMMIT leaves PREPARING => NO RETRY.
+                self.conn.execute("BEGIN IMMEDIATE")
+                self.conn.execute(
+                    "INSERT INTO agent_pending_receipts VALUES (?,?)",
+                    (proposal.setup_key, receipt.encode()),
+                )
+                self.conn.execute(
+                    "UPDATE agent_cycles SET stage='PENDING',ticket=? "
+                    "WHERE setup_key=?",
+                    (str(receipt.order_ticket), proposal.setup_key),
+                )
+                self.conn.execute("COMMIT")
+                return CycleResult(
+                    "ACTIVE", "BROKER_PENDING_ACKNOWLEDGED",
+                    str(receipt.order_ticket),
+                )
             if not isinstance(receipt, QualifiedBrokerAck):
                 raise DemoSafetyError("broker port lacks exact verified fill receipt")
             receipt.validate(
