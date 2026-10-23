@@ -82,8 +82,8 @@ class PersistentDemoSafetyWatchdog:
             raise DemoSafetyError("watchdog state unavailable")
         return str(row[0])
 
-    def arm_attended(self, *, now: datetime, operator_token: str) -> None:
-        if operator_token != "P1-ARM-DEMO-WATCHDOG":
+    def arm_attended(self, *, now: datetime, confirmation_phrase: str) -> None:
+        if confirmation_phrase != "P1-ARM-DEMO-WATCHDOG":
             raise DemoSafetyError("human P1 watchdog activation required")
         if self.status() != "KILLED":
             raise DemoSafetyError("unsafe watchdog recovery requires P1 review")
