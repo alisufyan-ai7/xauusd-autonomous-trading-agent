@@ -184,8 +184,17 @@ def test_missing_or_stale_risk_event_cost_cannot_send(
     lambda b: setattr(b, "positions", ({"ticket": 77},)),
 ])
 def test_wrong_account_or_exposure_never_submits(tmp_path, monkeypatch, change):
-    with pytest.raises(DemoSafetyError):
-        run(tmp_path, monkeypatch, change=change)
+    try:
+        result, error, check, send, ledger, state = run(
+            tmp_path, monkeypatch, change=change
+        )
+    except DemoSafetyError:
+        # Invalid DEMO identity is rejected at initialization itself.
+        return
+    # Unknown exposure is rejected during the attended source-bound preflight.
+    assert result is None and error
+    assert check == 0 and send == 0 and ledger is None
+    assert state == "QUARANTINED"
 
 
 def test_caller_cannot_turn_math_receipt_into_broker_submission(tmp_path, monkeypatch):
