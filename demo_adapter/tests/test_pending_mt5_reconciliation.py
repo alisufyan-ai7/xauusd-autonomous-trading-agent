@@ -13,7 +13,7 @@ from xauusd_demo.pending_mt5_reconciliation import ReadOnlyPendingMT5Port
 
 NOW = datetime(2026, 10, 23, 12, tzinfo=UTC)
 FP = hashlib.sha256(
-    "Exness Technologies Ltd|Exness-MT5Trial15|321|USD".encode()
+    b"Exness Technologies Ltd|Exness-MT5Trial15|321|USD"
 ).hexdigest()
 
 
