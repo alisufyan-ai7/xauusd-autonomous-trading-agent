@@ -104,7 +104,7 @@ class FakeMT5:
         raise AssertionError("read-only port must never call order_check")
 
 
-class TestAdapter:
+class StubAdapter:
     def __init__(self, mt5):
         self._mt5=mt5
         self._identity=SimpleNamespace(account_id_sha256=FP)
@@ -132,7 +132,7 @@ class TestAdapter:
 
 def make_port():
     mt5=FakeMT5()
-    adapter=TestAdapter(mt5)
+    adapter=StubAdapter(mt5)
     source=Source()
     port=ReadOnlyS2CoordinatorPort(adapter=adapter,plan_source=source)
     return port,adapter,mt5,source
