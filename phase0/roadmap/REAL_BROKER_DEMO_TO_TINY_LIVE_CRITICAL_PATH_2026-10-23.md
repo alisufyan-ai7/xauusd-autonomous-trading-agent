@@ -1,5 +1,14 @@
 # Real Exness broker DEMO → conditional tiny LIVE: executable critical path
 
+## 2026-10-23 — CORRECTED VPS COLLECTOR ACTUALLY FAILED CLOSED; IMPORT PREFLIGHT PASSED
+
+**LATEST OWNER EVIDENCE, superseding the prior "corrected run output pending" note.** Read the [new immutable incident record](MT5_CORRECTED_CAPTURE_FAIL_CLOSED_2026-10-23.md) before interpreting any earlier progress narrative.
+
+The owner's existing corrected comprehensive PowerShell run loaded PR40 launcher at `a68063d22fa28c04f9c1f505dd3821af15a5e814` and collector source pin `10425e6180ef660226e298ef06a0fa423334332e`. Exact console: `PINNED_LOCAL_IMPORT_PREFLIGHT_PASS_NO_MT5` **PASS**; subsequently `{"error_type":"DemoSafetyError","no_retry_without_source_review":true,"order_check_calls":0,"order_send_calls":0,"output_location":"PRIVATE_LOCAL_ONLY","status":"FAIL_CLOSED_NO_ORDER"}` followed by PowerShell fail-closed. **This is NOT the earlier ModuleNotFoundError.** Actual MT5 initialize, exact account/flat exposure, money matrix, 7 bars, 4h historical/prospective samples are **UNKNOWN** from this transcript. No shareable completion JSON or SHA printed; 4h capture NOT ADMITTED. The printed private path is an intended location, not proof of files.
+
+Demonstrated defect: prior collector's sanitized exception output removed *all* failing-stage context, so its `failure.json` (if any) cannot recover the exact guard. In SAME PR40, a diagnostics-only offline change adds fixed failure-stage labels, booleans for already persisted private artifacts and privacy/no-order tests. This change is **not active in the original source pin** and is **not evidence that the original MT5 failure is fixed**; native CI must be assessed at the exact new HEAD. The one allowed next owner action is **local-only, no-MT5 inventory of existing captured private file names, sizes and optional row counts/hashes**; no blanket new 4h attempt or extra broker diagnostics. Preserve raw evidence only on VPS and do not publish account/ticket data. S2 hard Policy A execution denial, accepted main governance rule7 and LIVE NO_GO remain intact.
+
+
 **Owner priority reaffirmed 2026-10-23.** [ADR-2026-10-23-002](../decisions/ADR-2026-10-23-002-REAL_BROKER_DEMO_THEN_CONDITIONAL_TINY_LIVE.md). This is the **NEXT** integrated product milestone, not a claim of acceptance or activation. Status: **DEMO_REAL_BROKER_ORDER_NO_GO / LIVE_NO_GO**.
 
 ## Nonnegotiable product definition
