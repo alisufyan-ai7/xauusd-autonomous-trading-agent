@@ -476,3 +476,75 @@ def test_safe_guard_code_only_uses_fixed_approved_messages():
     assert probe._safe_guard_code(
         ValueError("ticket=PRIVATE_987")
     ) == "UNCLASSIFIED_REDACTED"
+
+
+@pytest.mark.parametrize(
+    ("anomaly", "guard"),
+    [
+        ("before", "HISTORICAL_TICK_BEFORE_START"),
+        ("after", "HISTORICAL_TICK_AFTER_END"),
+        ("out_of_order", "HISTORICAL_TICKS_OUT_OF_ORDER"),
+        ("bid_zero", "HISTORICAL_TICK_BID_NONPOSITIVE"),
+        ("ask_crossed", "HISTORICAL_TICK_ASK_NOT_ABOVE_BID"),
+    ],
+)
+def test_historical_tick_source_anomalies_keep_strict_fail_closed(anomaly, guard):
+    broker = FakeMT5()
+    start = NOW
+    end = NOW + timedelta(seconds=20)
+    first = {"time_msc": int((start + timedelta(seconds=2)).timestamp() * 1000),
+             "bid": 2700, "ask": 2700.5}
+    second = {"time_msc": int((start + timedelta(seconds=3)).timestamp() * 1000),
+              "bid": 2700.1, "ask": 2700.6}
+    if anomaly == "before":
+        first["time_msc"] = int((start - timedelta(milliseconds=10)).timestamp() * 1000)
+    elif anomaly == "after":
+        first["time_msc"] = int((end + timedelta(milliseconds=10)).timestamp() * 1000)
+    elif anomaly == "out_of_order":
+        second["time_msc"] = first["time_msc"] - 1
+    elif anomaly == "bid_zero":
+        first["bid"] = 0
+    else:
+        first["ask"] = first["bid"]
+    broker.copy_ticks_range = lambda *_args: [first, second]
+    saved = []
+    with pytest.raises(DemoSafetyError) as caught:
+        probe.tick_window(surface(broker), start, end, on_tick=saved.append)
+    assert probe._safe_guard_code(caught.value) == guard
+    assert not saved
+    assert "order_send" not in broker.calls
+    assert "order_check" not in broker.calls
+
+
+def test_historical_static_tick_request_uses_exact_whole_utc_seconds():
+    broker = FakeMT5()
+    original_copy = broker.copy_ticks_range
+    seen = []
+
+    def observe_tick_request(symbol, start, end, flags):
+        seen.append((start, end))
+        assert start.microsecond == 0 and end.microsecond == 0
+        assert end - start == timedelta(hours=4)
+        return original_copy(symbol, start, end, flags)
+
+    broker.copy_ticks_range = observe_tick_request
+    fractional = NOW + timedelta(microseconds=645123)
+    probe.collect_static(surface(broker), fractional)
+    assert len(seen) == 1
+    assert seen[0][0] == NOW - timedelta(hours=4)
+    assert seen[0][1] == NOW
+    assert "order_send" not in broker.calls
+
+
+def test_identical_millisecond_broker_ticks_are_not_falsely_unsorted():
+    broker = FakeMT5()
+    start, end = NOW, NOW + timedelta(seconds=20)
+    stamp = int((start + timedelta(seconds=1)).timestamp() * 1000)
+    broker.copy_ticks_range = lambda *_args: [
+        {"time_msc": stamp, "bid": 2700, "ask": 2700.5},
+        {"time_msc": stamp, "bid": 2700.1, "ask": 2700.5},
+    ]
+    observed = probe.tick_window(surface(broker), start, end)
+    assert observed["tick_count"] == 2
+    assert observed["max_intertick_gap_ms"] == 0
+    assert observed["independently_admitted_prospective_v11_evidence"] is False
