@@ -62,21 +62,31 @@ class ReadOnlyS2CoordinatorPort:
             raise DemoSafetyError("MT5 coordinator source not initialized")
         return self._adapter._mt5
 
-    def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
+    def inspect_closed_bar_plan(
+        self, now: datetime
+    ) -> BoundedTPBSubmission | None:
+        """Inspect TPB/S2 price binding without creating a coordinator intent."""
         self._current = None
         self._bound_mt5()
         plan = self._plan_source.observe_closed_bar_plan(now)
         if plan is None:
             return None
         candidate = translate_tpb_into_existing_s2(plan, now=now)
-        # Validate the exact pending STOP envelope with the same S2 builder.
-        # Quotes and session eligibility for real submission are separately
-        # source-bound, and this preview can never authorize an order.
+        # Quote-grid checks use the SAME S2 request builder, but never admit
+        # a real source or generate a durable PREPARING intent.
         self._adapter._build_request(
             candidate.pending_stop_request, now=now,
         )
         self._current = candidate
-        return candidate.proposal
+        return candidate
+
+    def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
+        # A read-only broker adapter MUST NOT expose a proposal to the live
+        # coordinator: doing so would insert PREPARING and then latch UNKNOWN
+        # after the intentional disabled submit, creating a phantom trade.
+        # Use inspect_closed_bar_plan() for a source/technical shadow instead.
+        self.inspect_closed_bar_plan(now)
+        return None
 
     def submit_qualified(
         self, proposal: VerifiedProposal, now: datetime
