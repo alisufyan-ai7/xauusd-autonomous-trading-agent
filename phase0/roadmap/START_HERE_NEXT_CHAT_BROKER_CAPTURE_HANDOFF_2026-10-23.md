@@ -1,5 +1,14 @@
 # START HERE — XAU/USD Autonomous Agent next-chat handoff (2026-10-23)
 
+## Owner override recorded 2026-10-23 — DEMO NOW, NOT A FOUR-HOUR PHASE; DYNAMIC KNOWN-POSITION MANAGEMENT
+
+Read [ADR-2026-10-23-003](../decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md). **The owner explicitly rejects a separate mandatory four-hour read-only wait before the future real Exness Pro DEMO pilot**, requests actual autonomous MT5 DEMO broker orders and continuous monitoring immediately once executable, and reaffirms human-inspired position management (early exit, tighten/trail SL, break-even, bounded TP changes). The historic v1.1 four-hour acceptance design remains immutable as an *older* protocol, **not a prerequisite for the revised future pilot**. Data collection should continue while a functioning approved demo agent operates; missing stop/fee/gap/slippage cannot be set to zero merely to permit entry.
+
+The owner also explicitly rejects treating **0.25% as an immutable future risk fraction**; do not conflate percentage planned cash loss and SL price distance. Earlier ADR V-10 documented review of capital-aware variable risk. **No replacement numerical cash-risk percentage or algorithm was provided**, so a versioned risk limit must be concretely specified, tested, and checked before enabling actual order sending. The legacy `RISK_RATE=0.0025` is still code, not erased by an ADR. Protect one 0.01-lot cap, fixed DEMO identity, broker-side protective stop, no widening/averaging, E1/P1 quarantine, existing S2 only; LIVE remains prohibited.
+
+**Actual blocking code must not be hidden:** `demo_adapter/src/xauusd_demo/mt5_demo.py` unconditionally denies before `order_check/order_send` with `FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED`; `s2_readonly_coordinator_port.py` intentionally emits no live proposals and always refuses to send. No VPS remote-access connector exists here: GitHub PR commits and Actions tests **do not deploy on Windows or execute real Exness MT5 orders**. The owner's standing DEMO intent already covers launch when the code becomes genuinely executable: avoid repeated permission questions and read-only-only diagnostic loops. Engineering priority is *complete one bound S2 order path + a locally executable, source-pinned Windows VPS release*, not another capture ceremony. **DO NOT falsely label the product as deployed.**
+
+
 ## 2026-10-23 13:37Z — LATEST OWNER VPS REAL EXNESS DEMO STATIC SOURCE **PASS**; FOUR-HOUR STILL NOT STARTED
 
 **This supersedes the previous 13:20Z static-only tick failure as the latest observation, but DOES NOT rewrite/close earlier immutable failures.** Read the new standalone [verified static broker evidence receipt](MT5_STATIC_READONLY_VERIFIED_PASS_2026-10-23.md) for exact fields/hashes.
