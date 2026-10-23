@@ -17,7 +17,7 @@ def test_one_comprehensive_launcher_never_calls_trading_api_or_mutates_terminal(
     assert "mt5_comprehensive_readonly.py" in text
     assert "--prospective-four-hours" in text
     assert "--confirm-owner-readonly" in text
-    assert "-ConfirmAttendedReadOnlyFourHourCapture" in text
+    assert "$ConfirmAttendedReadOnlyFourHourCapture" in text
     assert "git -C $Repo archive --format=zip" in text
     assert "git -C $Repo merge-base --is-ancestor $Pinned $Remote" in text
     assert "read-only" in text.lower()
