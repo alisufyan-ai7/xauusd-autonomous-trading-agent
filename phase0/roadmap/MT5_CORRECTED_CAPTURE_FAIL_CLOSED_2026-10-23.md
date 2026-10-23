@@ -1,5 +1,31 @@
 # Incident — corrected comprehensive Exness DEMO read-only collector failed closed (2026-10-23)
 
+## 2026-10-23 13:20 UTC — THIRD, ATTENDED, STATIC-ONLY EXNESS MT5 OBSERVATION: PRECISE STAGE LOCATED (FAIL CLOSED)
+
+**Owner console output, distinct immutable attempt (no prospective or order calls):**
+
+- Exact checkout-free PowerShell source reviewed from PR40 head `b42005212f8f4869b815af2fad3a523c2eaed55b`, static-only pinned collector `723e276ca32f80e6b705c8dd087a4325609c59e5`.
+- `PINNED_LOCAL_IMPORT_PREFLIGHT_PASS_NO_MT5`, `STATIC_ONLY_SOURCE_PIN=723e276ca32f80e6b705c8dd087a4325609c59e5`, `NO_PROSPECTIVE_4H__NO_ORDER_CHECK_SEND__NO_TRADE_SETTING_CHANGES`.
+- Private output directory `%LOCALAPPDATA%\\XAUUSD-BrokerEvidence\\static-diagnostic-20261023T132013Z-7a702da8c903494180c1ea4fbd1881c0`; raw content remains local.
+- Exact collector sanitized receipt (as provided): `{"error_type":"DemoSafetyError","failure_stage":"STATIC_HISTORICAL_BROKER_TICKS","no_retry_without_source_review":true,"order_check_calls":0,"order_send_calls":0,"output_location":"PRIVATE_LOCAL_ONLY","private_prospective_registration_present":false,"private_static_evidence_present":false,"safe_guard_code":"HISTORICAL_TICK_ORDER_OR_PRICE_INVALID","status":"FAIL_CLOSED_NO_ORDER"}`.
+- Operator `FAILURE_JSON_SHA256=84620F5EF9B6FBF7BEDFDBB35FB1CB59110008FCE8128E2F07598186339C0646`. PowerShell `STATIC_DIAGNOSTIC_FAIL_CLOSED__REVIEW_SANITIZED_STAGE_NO_RETRY` as expected. No printed finished summary hash.
+
+**Grounded significance:** this specific later run got past MT5 initialization, identity/zero-exposure checks, current symbol/quote sanity, 0.01-lot BUY/SELL real broker profit/margin calculations, the legacy monetary inspector, cash/deal/history retrieval, seven timeframe bar reads, and then **failed in the historical broker tick validator**. This gives a *later reproducible symptom*, not proof that the first corrected collector encountered exactly the same guard (that earlier source hid it). Those successful pre-tick checks were **not** durably sealed in a static evidence file and do not establish full Policy A costs or operational admission.
+
+**Why the precise bad tick is still UNKNOWN:** code in the original `tick_window` combined four alternatives in one `DemoSafetyError("invalid historical tick time/order/quote")`: tick time before start, after end, earlier than previous, bid ≤0, or ask ≤bid. The failure class alone does not distinguish them. MQL5 official tick docs show `COPY_TICKS_INFO` returns Bid/Ask changes, carries UTC tick millisecond timestamps and flags, and zero bid/ask changes may indicate empty market depth; do not treat invalid quotes as harmless (`https://www.mql5.com/en/docs/python_metatrader5/mt5copyticksrange_py`, `https://www.mql5.com/en/docs/series/copyticks`). Source review also found fractional second windows in the collector although the MT5 Python endpoint accepts datetime ranges; a rounding/boundary rejection is a **plausible unproven source bug**, not an established broker issue.
+
+### Corrective follow-up on SAME draft PR40 — offline only
+
+- Prospective/static tick requests are now aligned to **whole UTC seconds** without trimming, reordering, filling, or overriding bad tick quotes.
+- Tick checks now emit distinct fixed sanitized codes for `HISTORICAL_TICK_BEFORE_START`, `HISTORICAL_TICK_AFTER_END`, `HISTORICAL_TICKS_OUT_OF_ORDER`, `HISTORICAL_TICK_BID_NONPOSITIVE`, or `HISTORICAL_TICK_ASK_NOT_ABOVE_BID`. All remain **fail closed**.
+- Added **local-only, explicitly nonadmitted** `static_pre_tick_private.json` checkpoint to preserve successful initial account/monetary/history/seven-bar observations BEFORE potentially failing historical tick check. It is **NOT** `static_evidence.json` and is never final/Policy A admitted. Its presence boolean is safe to share; content remains private.
+- Synthetic tests cover all five bad tick categories, exact second boundaries, identical-ms legitimate broker ticks, and private incomplete checkpoint preservation/redaction; no MT5 attach in CI.
+- The synthetic test at earlier source `1b82ab285b88c00d26bba31d2d130f23519c7ba2` **FAILED**: the test incorrectly assumed no earlier *valid* tick was preserved when a *later* tick was out of order (1 of 353 tests), not an observed execution capability. Corrected assertion at `462ac5e94fbeb656f3415603f12e81fdc3c3bd58` explicitly allows an earlier valid raw tick while still rejecting the whole window; **do not erase the failed CI receipt**.
+- Source-pinned short static-only launcher `phase0/ops/pr40_existing_failure_static_stage_only_20261023.ps1` updated to fixed source `462ac5e94fbeb656f3415603f12e81fdc3c3bd58`; explicit owner attended invocation only, not 4h, not broker-order admission. **NO NEW VPS RUN** after the 13:20 UTC owner output. Verify complete Windows+Ubuntu native GitHub CI at current PR head before proposing a run.
+
+**All previous failures immutable.** No new authorization for demo send/check, external Python trading change, rule7 change, production merge or LIVE trading. Continue fail closed.
+
+
 
 ## 2026-10-23 follow-up — owner PRIVATE file inventory received and original hash independently reproduced
 
