@@ -171,7 +171,9 @@ def test_inspection_binds_same_s2_request_but_submit_never_sends():
     assert candidate is not None
     assert candidate.pending_stop_request.stop_loss==D("2695")
     assert not candidate.broker_execution_permitted
-    with pytest.raises(DemoSafetyError,match="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED"):
+    with pytest.raises(
+        DemoSafetyError, match="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED"
+    ):
         port.submit_qualified(candidate.proposal,NOW+timedelta(seconds=4))
     assert not mt5.calls
 
