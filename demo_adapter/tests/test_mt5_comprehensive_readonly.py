@@ -514,7 +514,12 @@ def test_historical_tick_source_anomalies_keep_strict_fail_closed(anomaly, guard
     with pytest.raises(DemoSafetyError) as caught:
         probe.tick_window(surface(broker), start, end, on_tick=saved.append)
     assert probe._safe_guard_code(caught.value) == guard
-    assert not saved
+    # A later rejected tick may follow previously written *valid* raw ticks;
+    # the entire window is still rejected, never marked admitted.
+    if anomaly == "out_of_order":
+        assert len(saved) == 1
+    else:
+        assert not saved
     assert "order_send" not in broker.calls
     assert "order_check" not in broker.calls
 
