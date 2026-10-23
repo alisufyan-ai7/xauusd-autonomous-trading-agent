@@ -1,5 +1,8 @@
 # XAU/USD Autonomous Trading Agent
 
+> **AGENT MANDATORY FIRST READ:** [AGENT_START_HERE.md](AGENT_START_HERE.md) — canonical owner product vision, October 21–23 decision precedence, 40-PR archival lineage, and precise current code/trading NO_GO. Read that document and query the **latest** GitHub branch/CI before using the below 2026-10-23 historical snapshot. The old reference to PR38 below is a point-in-time description; **one DRAFT PR40 is the current engineering candidate**, not an accepted main release. Historical 4-hour v1.1 protocol remains archived, but a standalone four-hour waiting phase is **not a mandatory pre-first-order requirement of the newer, separately qualified DEMO-first proposal**. Historic 0.25% is cash-risk %, **not the distance of the stop price**; no replacement numeric Risk Governor policy has been admitted. No broker DEMO order or VPS deployment has been verified. LIVE never authorized.
+
+
 ## Read first — current GitHub state and production objective (2026-10-23)
 
 **Production target:** Send genuine orders using the real MetaTrader 5 Python API to the owner's connected **Exness Pro DEMO broker account** on Windows ForexVPS. They are genuine broker-side DEMO orders, with virtual account funds; **NOT** mocked fills or paper trading. The agent autonomously selects objective XAUUSD TPB BUY/SELL/NO_TRADE, SL and TP under deterministic full Policy A. A later Exness Pro LIVE account at max 0.01 lot is only a separate, explicitly authorized, fully risk-admitted pilot; the desired 24–48h DEMO review never auto-promotes LIVE.
