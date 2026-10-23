@@ -1,5 +1,10 @@
 # XAU/USD Autonomous Trading Agent
 
+## Latest PR cleanup — one remaining code PR (2026-10-23)
+
+**26 superseded historical/stacked PRs were closed unmerged after preserving their exact source history in five archive branches. Exactly one draft main-based PR remains: [PR40](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/40).** Current accepted main is documentation-only `bf6c931fac208ed2b781a2d22734df1124dea1e6`; all trading code is in that UNMERGED PR40 review. [Exact archive/CI/closed-PR ledger](phase0/roadmap/CLOSED_PR_SOURCE_ARCHIVE_AND_V2_INTEGRATION_2026-10-23.md). The original 26-PR audit is a historical snapshot, not current open count. The objective is genuine Exness DEMO-server order execution through the real MT5 API, but the broker order gate is STILL CLOSED; real-money LIVE is separately prohibited.
+
+
 ## Read first — current GitHub state and production objective (2026-10-23)
 
 **Production target:** Send genuine orders using the real MetaTrader 5 Python API to the owner's connected **Exness Pro DEMO broker account** on Windows ForexVPS. They are genuine broker-side DEMO orders, with virtual account funds; **NOT** mocked fills or paper trading. The agent autonomously selects objective XAUUSD TPB BUY/SELL/NO_TRADE, SL and TP under deterministic full Policy A. A later Exness Pro LIVE account at max 0.01 lot is only a separate, explicitly authorized, fully risk-admitted pilot; the desired 24–48h DEMO review never auto-promotes LIVE.
