@@ -102,6 +102,16 @@ _SAFE_GUARD_CODES: dict[str, str] = {
     "empty or oversized tick source": "HISTORICAL_TICKS_EMPTY_OR_OVERSIZED",
     "invalid historical tick time/order/quote":
         "HISTORICAL_TICK_ORDER_OR_PRICE_INVALID",
+    "historical tick earlier than requested start":
+        "HISTORICAL_TICK_BEFORE_START",
+    "historical tick later than requested end":
+        "HISTORICAL_TICK_AFTER_END",
+    "historical tick timestamps out of order":
+        "HISTORICAL_TICKS_OUT_OF_ORDER",
+    "historical tick bid nonpositive":
+        "HISTORICAL_TICK_BID_NONPOSITIVE",
+    "historical tick ask not above bid":
+        "HISTORICAL_TICK_ASK_NOT_ABOVE_BID",
     "tick time_msc missing": "HISTORICAL_TICK_TIME_MISSING",
     "prospective quote slot missed": "PROSPECTIVE_SLOT_MISSED",
 }
@@ -407,6 +417,8 @@ def tick_window(
     latest: int | None = None
     digest = hashlib.sha256()
     previous = 0
+    start_ms = int(start.timestamp() * 1000)
+    end_ms = int(end.timestamp() * 1000)
     max_adjacent_tick_jump = Decimal(0)
     max_intertick_gap_ms = 0
     last_bid: Decimal | None = None
@@ -414,12 +426,18 @@ def tick_window(
         stamp = _millis(raw)
         bid = _decimal(_field(raw, "bid"), "tick bid")
         ask = _decimal(_field(raw, "ask"), "tick ask")
-        if (
-            stamp < int(start.timestamp() * 1000) or
-            stamp > int(end.timestamp() * 1000) or
-            stamp < previous or bid <= 0 or ask <= bid
-        ):
-            raise DemoSafetyError("invalid historical tick time/order/quote")
+        # Fail closed with one precise, source-reviewed reason. Do not trim,
+        # sort, round, forward-fill, interpolate or suppress unusable ticks.
+        if stamp < start_ms:
+            raise DemoSafetyError("historical tick earlier than requested start")
+        if stamp > end_ms:
+            raise DemoSafetyError("historical tick later than requested end")
+        if stamp < previous:
+            raise DemoSafetyError("historical tick timestamps out of order")
+        if bid <= 0:
+            raise DemoSafetyError("historical tick bid nonpositive")
+        if ask <= bid:
+            raise DemoSafetyError("historical tick ask not above bid")
         if previous:
             max_intertick_gap_ms = max(max_intertick_gap_ms, stamp - previous)
             if last_bid is not None:
@@ -480,8 +498,13 @@ def collect_static(
     stage("STATIC_SEVEN_TIMEFRAME_BARS")
     frames = rate_coverage(mt5)
     stage("STATIC_HISTORICAL_BROKER_TICKS")
+    # MT5 Python range inputs are datetime-based whereas tick.time_msc
+    # is millisecond-resolution. Pin historical bounds to *whole UTC
+    # seconds* to avoid an unverifiable fractional-second boundary.
+    # This is an observed four-hour context window, not v1.1 admission.
+    history_end = now.replace(microsecond=0)
     ticks = tick_window(
-        mt5, now - timedelta(hours=4), now,
+        mt5, history_end - timedelta(hours=4), history_end,
         on_tick=on_historical_tick,
     )
     stage("STATIC_FINAL_IDENTITY_AND_EXPOSURE")
@@ -746,7 +769,9 @@ def run(argv: list[str] | None = None) -> int:
             mark_stage("PROSPECTIVE_REGISTRATION")
             # Durable source/timing registration is written BEFORE the first
             # observation; unknown official event/session provenance is null.
-            start = datetime.now(UTC) + timedelta(seconds=3)
+            # Prospective registration must also use exact UTC seconds:
+            # no silent fractional-boundary tick rejection or backfill.
+            start = datetime.now(UTC).replace(microsecond=0) + timedelta(seconds=4)
             finish = start + timedelta(seconds=WINDOW_SECONDS)
             registration = {
                 "schema": "ONE_RUN_4H_SOURCE_PROSPECTIVE_REGISTRATION_V1",
