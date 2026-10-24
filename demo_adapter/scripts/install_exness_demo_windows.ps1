@@ -54,7 +54,10 @@ if ($LASTEXITCODE -ne 0 -or $HeadType -ne 'commit') {
 if (Test-Path -LiteralPath $Zip) { Remove-Item -LiteralPath $Zip -Force }
 New-Item -ItemType Directory -Path $Versions -Force | Out-Null
 try {
-    & git -C $RepoPath archive --format=zip "-o=$Zip" $SourceCommit
+    # Git's short -o option must not be followed by '=...': that would
+    # create an invalid '=C:/...' filename on Git for Windows.
+    # Pass the documented long option and path as two separate argv tokens.
+    & git -C $RepoPath archive --format=zip --output $Zip $SourceCommit
     if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Zip)) {
         throw 'Pinned source archive unavailable'
     }
