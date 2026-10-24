@@ -11,7 +11,7 @@ import json
 import os
 import time
 from contextlib import contextmanager
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Iterator
 
@@ -86,7 +86,7 @@ class ContinuousDemoWorker:
             os.fsync(log.fileno())
 
     def cycle(self, now: datetime) -> str:
-        if now.tzinfo is None or now.utcoffset() != 0:
+        if now.tzinfo is None or now.utcoffset() != timedelta(0):
             raise DemoSafetyError("service clock is not UTC")
         # The watchdog monitors the last successful main-loop heartbeat; it
         # cannot grant broker execution. A stale process halts rather than
