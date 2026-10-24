@@ -137,10 +137,14 @@ class OpenAIDemoAdvisor:
             raise DemoSafetyError("OpenAI response text missing or ambiguous")
         answer = json.loads(texts[0])
         if (
-            type(answer) is not dict or set(answer) != set(_DECISION_SCHEMA["required"])
+            type(answer) is not dict or set(answer) != {"direction", "regime", "reason_code"}
             or answer["direction"] not in ("BUY", "SELL", "NO_TRADE")
             or answer["regime"] not in ("TREND", "RANGE", "VOLATILE", "UNCERTAIN")
-            or answer["reason_code"] not in _DECISION_SCHEMA["properties"]["reason_code"]["enum"]
+            or answer["reason_code"] not in (
+                "STRUCTURE_SUPPORTS_ENTRY", "COUNTER_TREND",
+                "WEAK_MOMENTUM", "COST_OR_VOLATILITY",
+                "CONFLICTING_TIMEFRAMES", "INSUFFICIENT_EDGE",
+            )
         ):
             raise DemoSafetyError("OpenAI schema mismatch")
         return answer

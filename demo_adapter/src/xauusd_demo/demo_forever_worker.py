@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 from .continuous_coordinator import ContinuousDemoCoordinator, QualifiedDemoBrokerPort
-from .envelope import DemoSafetyError
 from .daily_broker_research import DailyBrokerResearch
+from .envelope import DemoSafetyError
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
 from .vps_alert_delivery import VPSDualAlertTransport
 

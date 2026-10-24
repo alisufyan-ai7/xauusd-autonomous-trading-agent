@@ -14,7 +14,7 @@ from __future__ import annotations
 import hashlib
 from datetime import datetime, timedelta
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
-from typing import Protocol, TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from xauusd_agent.features.v2_market_context import (
     ContextStatus,
@@ -185,7 +185,7 @@ class MT5ExperimentalTPBPlanSource:
                 },
             }
             if not self._advisor.approve(
-                setup_key=key, proposed_side=context["proposed_side"],
+                setup_key=key, proposed_side="BUY" if buy else "SELL",
                 observed_utc=now, market=context,
             ):
                 return self._no_trade(self._advisor.last_reason)
