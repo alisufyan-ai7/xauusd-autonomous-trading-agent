@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import sqlite3
+from decimal import Decimal, InvalidOperation
 import urllib.error
 import urllib.request
 from datetime import UTC, datetime, timedelta
@@ -57,11 +58,11 @@ _INSTRUCTIONS = (
 
 
 class OpenAIDemoAdvisor:
-    """Single-writer SQLite cache, strict per-day budget, HTTPS only."""
+    """Single-writer model cache, priced daily cash budget; not 32-review cap."""
 
     def __init__(
         self, path: Path, *, api_key: str | None = None,
-        model: str = "gpt-6-luna", max_requests_utc_day: int = 32,
+        model: str = "gpt-6-luna", daily_budget_usd: Decimal | None = None,
     ) -> None:
         self._key = api_key or os.environ.get("OPENAI_API_KEY", "")
         if not self._key:
@@ -70,10 +71,20 @@ class OpenAIDemoAdvisor:
             )
         if model not in ("gpt-6-luna", "gpt-6.1-sol"):
             raise DemoSafetyError("unreviewed OpenAI model")
-        if not 1 <= max_requests_utc_day <= 96:
-            raise DemoSafetyError("OpenAI daily call budget invalid")
+        try:
+            budget = (
+                daily_budget_usd if daily_budget_usd is not None
+                else Decimal(os.environ.get("XAUUSD_OPENAI_DAILY_BUDGET_USD", "2.00"))
+            )
+        except (ValueError, InvalidOperation) as exc:
+            raise DemoSafetyError("invalid OpenAI USD budget setting") from exc
+        if not budget.is_finite() or not Decimal("0.01") <= budget <= Decimal("100"):
+            raise DemoSafetyError("OpenAI daily USD budget must be 0.01..100")
         self._model = model
-        self._limit = max_requests_utc_day
+        self._budget = budget
+        # One conservative 1-cent reserved liability per call while a network
+        # request is outstanding; actual usage reduces the final charge.
+        self._reserved_usd = Decimal("0.01")
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path)
         self._db.execute("PRAGMA journal_mode=WAL")
@@ -83,6 +94,11 @@ class OpenAIDemoAdvisor:
             "setup_key TEXT PRIMARY KEY, utc_day TEXT NOT NULL, "
             "decision TEXT NOT NULL, reason TEXT NOT NULL, "
             "model TEXT NOT NULL)"
+        )
+        self._db.execute(
+            "CREATE TABLE IF NOT EXISTS ai_spend ("
+            "review_key TEXT PRIMARY KEY, utc_day TEXT NOT NULL, "
+            "charged_usd TEXT NOT NULL, requested_utc TEXT NOT NULL)"
         )
         self._db.commit()
         self.last_reason = "NOT_CALLED"
@@ -96,19 +112,25 @@ class OpenAIDemoAdvisor:
     def __exit__(self, *_: object) -> None:
         self.close()
 
-    def _request(self, market: dict[str, object]) -> dict[str, Any]:
+    def _invoke(
+        self, market: dict[str, object], *,
+        instructions: str, schema: dict[str, Any], name: str,
+    ) -> dict[str, Any]:
+        input_text = json.dumps(
+            market, sort_keys=True, separators=(",", ":"),
+        )
+        if len(input_text) > 16000:
+            raise DemoSafetyError("AI prompt unexpectedly large")
         payload = {
             "model": self._model,
-            "instructions": _INSTRUCTIONS,
-            "input": json.dumps(market, sort_keys=True, separators=(",", ":")),
+            "instructions": instructions,
+            "input": input_text,
             "store": False,
             "max_output_tokens": 200,
-            "text": {
-                "format": {
-                    "type": "json_schema", "name": "xauusd_demo_review",
-                    "strict": True, "schema": _DECISION_SCHEMA,
-                }
-            },
+            "text": {"format": {
+                "type": "json_schema", "name": name,
+                "strict": True, "schema": schema,
+            }},
         }
         req = urllib.request.Request(
             "https://api.openai.com/v1/responses",
@@ -136,18 +158,111 @@ class OpenAIDemoAdvisor:
         if len(texts) != 1:
             raise DemoSafetyError("OpenAI response text missing or ambiguous")
         answer = json.loads(texts[0])
-        if (
-            type(answer) is not dict or set(answer) != {"direction", "regime", "reason_code"}
-            or answer["direction"] not in ("BUY", "SELL", "NO_TRADE")
-            or answer["regime"] not in ("TREND", "RANGE", "VOLATILE", "UNCERTAIN")
-            or answer["reason_code"] not in (
-                "STRUCTURE_SUPPORTS_ENTRY", "COUNTER_TREND",
-                "WEAK_MOMENTUM", "COST_OR_VOLATILITY",
-                "CONFLICTING_TIMEFRAMES", "INSUFFICIENT_EDGE",
-            )
-        ):
+        if type(answer) is not dict:
+            raise DemoSafetyError("OpenAI JSON response not an object")
+        if set(answer) != set(schema["required"]):
             raise DemoSafetyError("OpenAI schema mismatch")
+        for field, allowed in schema["properties"].items():
+            if answer[field] not in allowed["enum"]:
+                raise DemoSafetyError("OpenAI JSON enumerations invalid")
+        # Model API usage is authoritative when available, not guessed from
+        # number of requests. Ignore cached-token discount conservatively.
+        usage = result.get("usage", {})
+        if not isinstance(usage, dict):
+            usage = {}
+        answer["_usage"] = usage
         return answer
+
+    def _request(self, market: dict[str, object]) -> dict[str, Any]:
+        return self._invoke(
+            market, instructions=_INSTRUCTIONS,
+            schema=_DECISION_SCHEMA, name="xauusd_demo_review",
+        )
+
+    def _position_request(self, market: dict[str, object]) -> dict[str, Any]:
+        return self._invoke(
+            market, instructions=(
+                "You evaluate an ALREADY OPEN, DEAL-VERIFIED Exness XAUUSD "
+                "DEMO position, with risk protected by actual broker SL. "
+                "Choose HOLD, EARLY_EXIT or TIGHTEN_TP based only on the "
+                "provided position's favorable/adverse movement, current "
+                "bid/ask, structure and regime. Reject speculative actions. "
+                "TIGHTEN_TP means move target inward, NEVER widen risk. "
+                "You cannot set prices, lot sizes or issue MT5 orders."
+            ),
+            schema={
+                "type": "object",
+                "properties": {
+                    "action": {"type": "string", "enum": [
+                        "HOLD", "EARLY_EXIT", "TIGHTEN_TP",
+                    ]},
+                    "reason_code": {"type": "string", "enum": [
+                        "STRUCTURE_INVALID", "VOLATILITY_SPIKE",
+                        "PROTECT_PROFIT", "TREND_CONTINUES", "NO_EDGE",
+                    ]},
+                },
+                "required": ["action", "reason_code"],
+                "additionalProperties": False,
+            },
+            name="xauusd_known_position_advice",
+        )
+
+    @staticmethod
+    def _usage_cost(usage: Any) -> Decimal | None:
+        if not isinstance(usage, dict):
+            return None
+        inp = usage.get("input_tokens")
+        out = usage.get("output_tokens")
+        if (
+            type(inp) is not int or type(out) is not int
+            or inp < 0 or out < 0 or inp > 200000 or out > 5000
+        ):
+            return None
+        # GPT-6 Luna Standard: USD0.10/1M input, USD0.50/1M output.
+        # Deliberately ignore cached discounts and bill higher bounded
+        # reservation on missing usage receipts.
+        return (
+            Decimal(inp) * Decimal("0.10")
+            + Decimal(out) * Decimal("0.50")
+        ) / Decimal(1000000)
+
+    def _reserve(
+        self, *, review_key: str, observed_utc: datetime,
+    ) -> bool:
+        day = observed_utc.astimezone(UTC).date().isoformat()
+        rows = self._db.execute(
+            "SELECT charged_usd FROM ai_spend WHERE utc_day=?", (day,),
+        ).fetchall()
+        spent = sum((Decimal(str(x[0])) for x in rows), Decimal(0))
+        if spent + self._reserved_usd > self._budget:
+            self.last_reason = "AI_DAILY_USD_BUDGET_PROTECTED"
+            return False
+        # Reservation is DURABLE before making an actual billable request.
+        # Across a power loss this protects against unknown-charge retries.
+        self._db.execute(
+            "INSERT INTO ai_spend VALUES (?,?,?,?)",
+            (
+                review_key, day, str(self._reserved_usd),
+                observed_utc.isoformat(),
+            ),
+        )
+        self._db.commit()
+        return True
+
+    def _actual_spend(
+        self, *, review_key: str, usage: Any,
+    ) -> None:
+        cost = self._usage_cost(usage)
+        if cost is None:
+            return
+        # Never understate a price if a future model differs from Luna.
+        if self._model != "gpt-6-luna":
+            return
+        self._db.execute(
+            "UPDATE ai_spend SET charged_usd=? WHERE review_key=?",
+            (str(cost), review_key),
+        )
+        self._db.commit()
 
     def approve(
         self, *, setup_key: str, proposed_side: str,
@@ -165,15 +280,17 @@ class OpenAIDemoAdvisor:
             self.last_reason = str(cached[1])
             return str(cached[0]) == proposed_side
         day = observed_utc.astimezone(UTC).date().isoformat()
-        used = self._db.execute(
-            "SELECT COUNT(*) FROM ai_reviews WHERE utc_day=?", (day,),
-        ).fetchone()[0]
-        if used >= self._limit:
-            self.last_reason = "AI_DAILY_BUDGET_EXHAUSTED"
+        if not self._reserve(
+            review_key="entry:" + setup_key, observed_utc=observed_utc,
+        ):
             return False
         outcome, reason = "NO_TRADE", "AI_UNAVAILABLE_OR_REJECTED"
         try:
             result = self._request(market)
+            self._actual_spend(
+                review_key="entry:" + setup_key,
+                usage=result.get("_usage"),
+            )
             outcome = result["direction"]
             reason = "AI_" + result["reason_code"]
             if outcome not in (proposed_side, "NO_TRADE"):
@@ -192,3 +309,47 @@ class OpenAIDemoAdvisor:
         self._db.commit()
         self.last_reason = reason
         return outcome == proposed_side
+
+    def manage_position(
+        self, *, review_key: str, observed_utc: datetime,
+        market: dict[str, object],
+    ) -> str:
+        """At most once per known-position M15 bar; shared USD cost budget."""
+        if not review_key.startswith("position:") or len(review_key) > 160:
+            raise DemoSafetyError("position advice key invalid")
+        if observed_utc.tzinfo is None or observed_utc.utcoffset() != timedelta(0):
+            raise DemoSafetyError("position review timestamp not UTC")
+        cached = self._db.execute(
+            "SELECT decision,reason FROM ai_reviews WHERE setup_key=?",
+            (review_key,),
+        ).fetchone()
+        if cached is not None:
+            self.last_reason = str(cached[1])
+            return str(cached[0])
+        if not self._reserve(
+            review_key=review_key, observed_utc=observed_utc,
+        ):
+            return "HOLD"
+        outcome, reason = "HOLD", "POSITION_AI_UNAVAILABLE"
+        try:
+            result = self._position_request(market)
+            self._actual_spend(
+                review_key=review_key, usage=result.get("_usage"),
+            )
+            outcome = str(result["action"])
+            reason = "AI_POSITION_" + str(result["reason_code"])
+            if outcome not in ("HOLD", "EARLY_EXIT", "TIGHTEN_TP"):
+                outcome, reason = "HOLD", "AI_INVALID_POSITION_ACTION"
+        except (
+            DemoSafetyError, ValueError, TypeError, OSError,
+            urllib.error.URLError, json.JSONDecodeError,
+        ):
+            pass
+        day = observed_utc.astimezone(UTC).date().isoformat()
+        self._db.execute(
+            "INSERT OR IGNORE INTO ai_reviews VALUES (?,?,?,?,?)",
+            (review_key, day, outcome, reason, self._model),
+        )
+        self._db.commit()
+        self.last_reason = reason
+        return outcome
