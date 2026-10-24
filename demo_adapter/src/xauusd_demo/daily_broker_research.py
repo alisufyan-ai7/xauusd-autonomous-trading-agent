@@ -16,8 +16,8 @@ from pathlib import Path
 from typing import Any
 
 from .envelope import DemoSafetyError
-from .research_quality import write_quality_snapshot
 from .mt5_demo import _decimal, _record
+from .research_quality import write_quality_snapshot
 
 
 class DailyBrokerResearch:
