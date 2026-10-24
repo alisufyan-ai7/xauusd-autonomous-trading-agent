@@ -42,6 +42,10 @@ class AIKnownPositionActions:
             "original_tp TEXT NOT NULL, current_tp TEXT NOT NULL, "
             "next_tp TEXT, stage TEXT NOT NULL, at_utc TEXT NOT NULL)"
         )
+        self._db.execute(
+            "CREATE TABLE IF NOT EXISTS ai_position_attempts ("
+            "review_key TEXT PRIMARY KEY)"
+        )
         self._db.commit()
         self._advisor = advisor
 
@@ -209,6 +213,14 @@ class AIKnownPositionActions:
         )
         if action == "HOLD":
             return "AI_HOLD"
+        review_key = f"position:{receipt.position_id}:{stamp + 900}"
+        cursor = self._db.execute(
+            "INSERT OR IGNORE INTO ai_position_attempts VALUES (?)",
+            (review_key,),
+        )
+        self._db.commit()
+        if cursor.rowcount != 1:
+            return "AI_POSITION_ACTION_ALREADY_ATTEMPTED"
         if action == "TIGHTEN_TP":
             # Model supplies the ACTION only; broker-tradable target is
             # deterministic and strictly nearer than previously recorded TP.

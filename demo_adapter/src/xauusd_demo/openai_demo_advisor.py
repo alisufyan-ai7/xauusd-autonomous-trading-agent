@@ -84,7 +84,10 @@ class OpenAIDemoAdvisor:
         self._budget = budget
         # One conservative 1-cent reserved liability per call while a network
         # request is outstanding; actual usage reduces the final charge.
-        self._reserved_usd = Decimal("0.01")
+        self._reserved_usd = (
+            Decimal("0.05") if model == "gpt-6.1-sol"
+            else Decimal("0.01")
+        )
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path)
         self._db.execute("PRAGMA journal_mode=WAL")
@@ -207,8 +210,7 @@ class OpenAIDemoAdvisor:
             name="xauusd_known_position_advice",
         )
 
-    @staticmethod
-    def _usage_cost(usage: Any) -> Decimal | None:
+    def _usage_cost(self, usage: Any) -> Decimal | None:
         if not isinstance(usage, dict):
             return None
         inp = usage.get("input_tokens")
@@ -221,9 +223,13 @@ class OpenAIDemoAdvisor:
         # GPT-6 Luna Standard: USD0.10/1M input, USD0.50/1M output.
         # Deliberately ignore cached discounts and bill higher bounded
         # reservation on missing usage receipts.
+        input_rate, output_rate = (
+            (Decimal("2.00"), Decimal("10.00"))
+            if self._model == "gpt-6.1-sol"
+            else (Decimal("0.10"), Decimal("0.50"))
+        )
         return (
-            Decimal(inp) * Decimal("0.10")
-            + Decimal(out) * Decimal("0.50")
+            Decimal(inp) * input_rate + Decimal(out) * output_rate
         ) / Decimal(1000000)
 
     def _reserve(
@@ -234,6 +240,14 @@ class OpenAIDemoAdvisor:
             "SELECT charged_usd FROM ai_spend WHERE utc_day=?", (day,),
         ).fetchall()
         spent = sum((Decimal(str(x[0])) for x in rows), Decimal(0))
+        existing = self._db.execute(
+            "SELECT 1 FROM ai_spend WHERE review_key=?", (review_key,),
+        ).fetchone()
+        if existing is not None:
+            # Power loss after a billable request but before the answer was
+            # committed: never repay/retry an uncertain provider outcome.
+            self.last_reason = "AI_PREVIOUS_REQUEST_OUTCOME_UNKNOWN"
+            return False
         if spent + self._reserved_usd > self._budget:
             self.last_reason = "AI_DAILY_USD_BUDGET_PROTECTED"
             return False
@@ -255,9 +269,8 @@ class OpenAIDemoAdvisor:
         cost = self._usage_cost(usage)
         if cost is None:
             return
-        # Never understate a price if a future model differs from Luna.
-        if self._model != "gpt-6-luna":
-            return
+        # Usage is source-reported; treat both allowed models at their
+        # conservative published Standard, non-cached USD/token rates.
         self._db.execute(
             "UPDATE ai_spend SET charged_usd=? WHERE review_key=?",
             (str(cost), review_key),

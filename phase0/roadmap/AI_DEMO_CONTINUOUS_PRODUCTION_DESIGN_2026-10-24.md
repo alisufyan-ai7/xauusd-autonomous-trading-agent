@@ -23,7 +23,7 @@ The owner wants a continuously running Exness **Pro MT5 DEMO-server** XAUUSD tra
 
 ## OpenAI API and model behavior
 
-Runtime calls OpenAI Responses API over TLS using `gpt-6-luna` by default, optional `gpt-6.1-sol` only after versioned review. Use JSON-schema strict response and `store:false`. One review per deterministic setup key, persisted in SQLite; max 32 calls/UTC day, no request for every 5s poll. AI returns only a direction approval/veto with a regime and bounded reason. Model outage, missing API key, disagreement or malformed response -> NO_TRADE. API credentials exist **on the VPS only**, not in GitHub or logs. The owner supplies the API key through the Windows account's DPAPI-protected secret prompt during upgrade. Exness session credentials remain in the terminal.
+Runtime calls OpenAI Responses API over TLS using `gpt-6-luna` by default, optional `gpt-6.1-sol` only after versioned review. Use JSON-schema strict response and `store:false`. One review per deterministic setup key, persisted in SQLite; no arbitrary review-count cap; configurable daily USD spending budget (default $2.00, conservative per-call reserve and actual token usage accounting), no request for every 5s poll. AI returns only a direction approval/veto with a regime and bounded reason. Model outage, missing API key, disagreement or malformed response -> NO_TRADE. API credentials exist **on the VPS only**, not in GitHub or logs. The owner supplies the API key through the Windows account's DPAPI-protected secret prompt during upgrade. Exness session credentials remain in the terminal.
 
 **Training means evidence-based research**, not claiming the foundation model retrains itself after each loss. The agent records net broker outcomes; separate prospective strategy challengers are tested with chronological splits, costs and adverse regimes. Only an independently admitted version changes the champion. Do not optimize against today's winning streak.
 
@@ -33,7 +33,7 @@ Runtime calls OpenAI Responses API over TLS using `gpt-6-luna` by default, optio
 - Existing all-cost Policy A still applies until an explicitly accepted, calibrated successor replaces it; its 0.25% historical cash cap is NOT fixed SL price distance.
 - One outstanding unfilled order OR one broker-known filled position; never close an unknown position, average down, widen risk or blindly repeat uncertain MT5 writes.
 - Protective broker SL/TP required on opening order. A protected known position may move its SL **strictly toward smaller risk**, with broker stop-level/freeze-level and quote freshness enforcement, durable intent, verified post-write receipt. An ambiguous result means no repeat.
-- Early exits, TP refinements and fully researched adaptive position management remain separate components to validate and integrate; a broker-owned known stop-management implementation is not evidence that all of these are live.
+- AI early exits and conservative inward TP refinements are implemented in the successor source through broker-authenticated known-position write-ahead intents and post-send reconciliation; the broader adaptive strategy continues to require research; a broker-owned known stop-management implementation is not evidence that all of these are live.
 
 ## VPS operational storage, alerts, and continuity
 
@@ -52,3 +52,11 @@ Source work remains in DRAFT PR40; **the user's currently running VPS build is o
 **Still necessary before a fully qualified autonomous release:** one end-to-end VPS check for AI API, real broker pending/fill/SLTP lifecycle, reliable news/holiday feed and alerts, robust unexpected process termination/restart behavior, commission/swap/tick slippage calibration and rollback. No step falsely marks a missing broker receipt PASS.
 
 **One owner-visible handoff:** exact PR HEAD, changed files, native CI result, on-VPS source pin, task state, broker order tickets / known positions (sanitized), current health and real pending work. A code commit alone must not be called actual VPS trading evidence.
+
+## 2026-10-24 implementation correction (newer than original summary)
+
+The earlier upgrade at source `067b529…` failed **before stopping the old service**. `ConvertTo-SecureString` rejected a DPAPI ciphertext read with `Get-Content -Raw` (trailing line ending was not removed). The corrected same-user encrypted-key loading trims only the ciphertext wrapper; it immediately verifies decryption, and reprompts locally if the old file is invalid. Never put API keys in chat/GitHub. The old deployed hidden Exness DEMO service remains running at `efab8be…` pending a tested upgrade.
+
+The arbitrary 32 API reviews/day restriction is replaced by `XAUUSD_OPENAI_DAILY_BUDGET_USD` (default `2.00`). The reviewer stores durable per-request liabilities **before network calls**, caches each setup/position M15-bar decision, bills based on provider token usage when returned, and avoids re-requesting an uncertain request after a process crash. There is no fixed review-count limit. A cost budget is not a broker trading limit.
+
+Known-position AI may propose `HOLD`, `EARLY_EXIT` or `TIGHTEN_TP` only after actual broker/deal authentication. It provides no unconstrained price or size; the deterministic manager checks stop/freeze geometry, sends a single known-position-only MT5 modification/close, and requires a broker response plus position/deal reconciliation. An unknown result freezes resubmission. Historical learning remains controlled research rather than automatic unsafe model weight changes or strategy promotion.
