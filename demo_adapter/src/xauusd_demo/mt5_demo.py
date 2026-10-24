@@ -400,10 +400,18 @@ class DemoMT5Adapter:
             sources.costs.calibration_id.upper().startswith("SYNTHETIC")
             or sources.costs.slippage_reserve_usd <= 0
             or sources.costs.gap_reserve_usd <= 0
-            or not sources.official_snapshots
-            or any(
-                "SYNTHETIC" in shot.parser_version.upper()
-                for shot in sources.official_snapshots
+            or sources.source_mode not in (
+                "OFFICIAL_SOURCE", "EXPERIMENTAL_DEMO_NY_PROXY",
+            )
+            or (
+                sources.source_mode == "OFFICIAL_SOURCE"
+                and (
+                    not sources.official_snapshots
+                    or any(
+                        "SYNTHETIC" in shot.parser_version.upper()
+                        for shot in sources.official_snapshots
+                    )
+                )
             )
         ):
             self._control.quarantine(
@@ -421,6 +429,7 @@ class DemoMT5Adapter:
                 session_verified_through_utc=sources.session_verified_through_utc,
                 shock_locked=sources.shock_locked,
                 normalized=sources.normalized,
+                source_mode=sources.source_mode,
             )
             if (
                 not full.mathematics_pass
