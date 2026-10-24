@@ -16,7 +16,6 @@ import hashlib
 import importlib
 import os
 import sys
-import urllib.request
 from contextlib import ExitStack
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -37,6 +36,7 @@ from .mt5_experimental_demo_sources import ExperimentalDemoCostSources
 from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
 from .mt5_tpb_strategy_source import MT5ExperimentalTPBPlanSource
 from .openai_demo_advisor import OpenAIDemoAdvisor
+from .openai_demo_connectivity import select_verified_model
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
 from .prospective_cash_journal import ProspectiveDemoCashJournal
 from .risk_binding import DEMO_LIFECYCLE_SCOPE, DemoRiskCalibration
@@ -143,6 +143,7 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
         ai = stack.enter_context(OpenAIDemoAdvisor(
             directory / "ai_reviews.sqlite",
             api_key=(os.environ.get("OPENAI_API_KEY") or None),
+            model=os.environ.get("XAUUSD_OPENAI_MODEL", "gpt-6-luna"),
         ))
         position_ai = stack.enter_context(AIKnownPositionActions(
             directory / "ai_position_actions.sqlite", advisor=ai,
@@ -195,14 +196,10 @@ def main(argv: list[str] | None = None) -> int:
             key = os.environ.get("OPENAI_API_KEY")
             if not key:
                 raise DemoSafetyError("OpenAI API key unavailable to service")
-            request = urllib.request.Request(
-                "https://api.openai.com/v1/models/gpt-6-luna",
-                headers={"Authorization": "Bearer " + key},
+            selected = select_verified_model(
+                key, preferred=os.environ.get("XAUUSD_OPENAI_MODEL") or None,
             )
-            with urllib.request.urlopen(request, timeout=10) as response:  # noqa: S310
-                if response.status != 200:
-                    raise DemoSafetyError("OpenAI API authentication denied")
-            print("OPENAI_API_AUTHENTICATED__NO_TRADE__NO_INFERENCE")
+            print("OPENAI_MODEL_READY:" + selected, flush=True)
             return 0
         mt5 = importlib.import_module('MetaTrader5')
         if args.preflight:

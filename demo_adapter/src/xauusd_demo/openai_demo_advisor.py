@@ -19,6 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from .envelope import DemoSafetyError
+from .openai_demo_connectivity import CANDIDATE_MODELS
 
 _DECISION_SCHEMA = {
     "type": "object",
@@ -69,7 +70,7 @@ class OpenAIDemoAdvisor:
             raise DemoSafetyError(
                 "OpenAI API key not configured on VPS; AI DEMO trading not armed"
             )
-        if model not in ("gpt-6-luna", "gpt-6.1-sol"):
+        if model not in CANDIDATE_MODELS:
             raise DemoSafetyError("unreviewed OpenAI model")
         try:
             budget = (
@@ -84,10 +85,12 @@ class OpenAIDemoAdvisor:
         self._budget = budget
         # One conservative 1-cent reserved liability per call while a network
         # request is outstanding; actual usage reduces the final charge.
-        self._reserved_usd = (
-            Decimal("0.05") if model == "gpt-6.1-sol"
-            else Decimal("0.01")
-        )
+        self._reserved_usd = {
+            "gpt-6-luna": Decimal("0.01"),
+            "gpt-6.1-sol": Decimal("0.05"),
+            "gpt-5-mini": Decimal("0.03"),
+            "gpt-4.1-mini": Decimal("0.03"),
+        }[model]
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path)
         self._db.execute("PRAGMA journal_mode=WAL")
@@ -129,7 +132,7 @@ class OpenAIDemoAdvisor:
             "instructions": instructions,
             "input": input_text,
             "store": False,
-            "max_output_tokens": 200,
+            "max_output_tokens": 512,
             "text": {"format": {
                 "type": "json_schema", "name": name,
                 "strict": True, "schema": schema,
@@ -223,11 +226,14 @@ class OpenAIDemoAdvisor:
         # GPT-6 Luna Standard: USD0.10/1M input, USD0.50/1M output.
         # Deliberately ignore cached discounts and bill higher bounded
         # reservation on missing usage receipts.
-        input_rate, output_rate = (
-            (Decimal("2.00"), Decimal("10.00"))
-            if self._model == "gpt-6.1-sol"
-            else (Decimal("0.10"), Decimal("0.50"))
-        )
+        # Rates per million tokens are deliberately conservative ceilings
+        # for the reviewed fallbacks, not a promise of actual billed totals.
+        input_rate, output_rate = {
+            "gpt-6-luna": (Decimal("0.10"), Decimal("0.50")),
+            "gpt-6.1-sol": (Decimal("2.00"), Decimal("10.00")),
+            "gpt-5-mini": (Decimal("0.50"), Decimal("3.00")),
+            "gpt-4.1-mini": (Decimal("0.80"), Decimal("3.20")),
+        }[self._model]
         return (
             Decimal(inp) * input_rate + Decimal(out) * output_rate
         ) / Decimal(1000000)
