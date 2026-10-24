@@ -16,7 +16,7 @@ from .continuous_coordinator import (
     VerifiedProposal,
 )
 from .envelope import DemoActivationPermit, DemoSafetyError
-from .mt5_demo import DemoMT5Adapter, SUBMISSION_CONFIRMATION
+from .mt5_demo import SUBMISSION_CONFIRMATION, DemoMT5Adapter
 from .risk_binding import DemoRiskCalibration
 from .s2_full_policy_probe import preview_s2_full_policy_tpb
 from .s2_order_sources import S2OrderSources
