@@ -88,7 +88,7 @@ def test_all_seven_frames_exclude_forming_and_source_calls_are_read_only():
     assert obs.bars[ContextTimeframe.M15][-1].close_time <= NOW
     for name, rows in obs.bars.items():
         assert rows and all(x.timeframe is name for x in rows)
-        assert all(a.open_time < b.open_time for a, b in zip(rows, rows[1:]))
+        assert all(a.open_time < b.open_time for a, b in zip(rows, rows[1:], strict=False))
         assert rows[-1].close_time <= NOW
 
 
