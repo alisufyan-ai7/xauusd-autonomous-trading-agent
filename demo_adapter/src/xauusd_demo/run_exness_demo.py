@@ -127,8 +127,12 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
             watchdog.arm_attended(
                 now=now, confirmation_phrase=WATCHDOG_ARM,
             )
-        else:
-            control.assert_active(permit=permit, identity=ident, now=now)
+            print(
+                "EXNESS_DEMO_ACTIVATED__ONE_TIME_ONLY__NO_ORDER_SENT",
+                flush=True,
+            )
+            return
+        control.assert_active(permit=permit, identity=ident, now=now)
         sources = ExperimentalDemoCostSources(mt5=mt5, cash_journal=cash)
         plan = MT5ExperimentalTPBPlanSource(
             broker_bars=ReadOnlyMT5SevenFrameSource(mt5),
