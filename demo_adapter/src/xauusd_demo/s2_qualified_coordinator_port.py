@@ -18,6 +18,7 @@ from .continuous_coordinator import (
 from .envelope import DemoActivationPermit, DemoSafetyError
 from .mt5_demo import SUBMISSION_CONFIRMATION, DemoMT5Adapter
 from .risk_binding import DemoRiskCalibration
+from .known_broker_protection import KnownDemoProtectionManager
 from .s2_full_policy_probe import preview_s2_full_policy_tpb
 from .s2_order_sources import S2OrderSources
 from .s2_readonly_coordinator_port import ReadOnlyS2CoordinatorPort, TPBReadOnlyPlanSource
@@ -45,11 +46,13 @@ class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
         sources: RealDemoOrderSource,
         activation: DemoActivationPermit,
         risk_calibration: DemoRiskCalibration,
+        protection_manager: KnownDemoProtectionManager | None = None,
     ) -> None:
         super().__init__(adapter=adapter, plan_source=plan_source)
         self._sources = sources
         self._activation = activation
         self._risk_calibration = risk_calibration
+        self._protection_manager = protection_manager
         self.last_reason = "NOT_YET_EVALUATED"
 
     def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
@@ -128,3 +131,16 @@ class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
         )
         self._current = None
         return receipt
+
+    def known_position_state(
+        self, receipt: QualifiedBrokerAck, now: datetime
+    ) -> str:
+        # Run actual known-position reconciliation and conservative protective
+        # stop management through the exact one-writer DEMO coordinator.
+        if self._protection_manager is None:
+            return super().known_position_state(receipt, now)
+        result = self._protection_manager.observe_and_manage(
+            receipt, now=now,
+        )
+        self.last_reason = result.action
+        return result.state

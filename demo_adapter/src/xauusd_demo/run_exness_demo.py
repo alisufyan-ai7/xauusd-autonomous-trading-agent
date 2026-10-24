@@ -28,6 +28,7 @@ from .control import ARM_CONFIRMATION, DemoControlStore
 from .demo_forever_worker import ContinuousDemoWorker
 from .envelope import DemoActivationPermit, DemoIdentity, DemoPolicy, DemoSafetyError
 from .ledger import DemoSubmissionLedger
+from .known_broker_protection import KnownDemoProtectionManager
 from .mt5_demo import DemoMT5Adapter
 from .mt5_experimental_demo_sources import ExperimentalDemoCostSources
 from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
@@ -139,6 +140,9 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
             directory / "ai_reviews.sqlite",
             api_key=(os.environ.get("OPENAI_API_KEY") or None),
         ))
+        protection = stack.enter_context(KnownDemoProtectionManager(
+            directory / "position_protection.sqlite", adapter=adapter,
+        ))
         sources = ExperimentalDemoCostSources(mt5=mt5, cash_journal=cash)
         plan = MT5ExperimentalTPBPlanSource(
             broker_bars=ReadOnlyMT5SevenFrameSource(mt5),
@@ -148,6 +152,7 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
         port = QualifiedS2CoordinatorPort(
             adapter=adapter, plan_source=plan, sources=sources,
             activation=permit, risk_calibration=calibration,
+            protection_manager=protection,
         )
         print(
             "EXNESS_DEMO_CONTINUOUS_SERVICE_ACTIVE__REAL_SERVER_VIRTUAL_MONEY"
