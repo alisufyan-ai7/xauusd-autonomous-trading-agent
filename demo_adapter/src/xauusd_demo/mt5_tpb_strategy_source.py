@@ -12,13 +12,12 @@ coordinator rejects that key on all future cycles, including restarts.
 from __future__ import annotations
 
 import hashlib
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from typing import Protocol
 
 from xauusd_agent.features.v2_market_context import (
     ContextStatus,
-    ContextTimeframe,
     review_market_context,
 )
 from xauusd_agent.features.v2_tpb_research import (
