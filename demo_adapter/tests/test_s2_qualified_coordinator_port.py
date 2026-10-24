@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import replace
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from decimal import Decimal as D
 
-import pytest
 
 from test_s2_qualified_pending_send import (
     BrokerPending, FP, COMPANY, SERVER, activation, cal, make_source,
