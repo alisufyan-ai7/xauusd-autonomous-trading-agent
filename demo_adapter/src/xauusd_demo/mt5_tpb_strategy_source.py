@@ -62,7 +62,7 @@ class MT5ExperimentalTPBPlanSource:
         self._fingerprint = account_fingerprint
         self.last_reason = "NOT_YET_OBSERVED"
 
-    def _no_trade(self, reason: str) -> None:
+    def _no_trade(self, reason: str) -> TPBStopPlan | None:
         self.last_reason = reason
         return None
 
