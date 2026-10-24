@@ -1,0 +1,102 @@
+{
+  "schema_version": "xauusd-demo-runtime-latest-observed-v1",
+  "as_of_utc": "2026-10-24T16:48:56.778902Z",
+  "evidence_type": "OWNER_SUPPLIED_WINDOWS_VPS_CONSOLE_OUTPUT",
+  "evidence_basis": "Actual pinned GitHub source, Exness DEMO preflight and Windows Task Scheduler output; not direct agent VPS access",
+  "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
+  "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
+  "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
+  "source_pr": 40,
+  "source_pr_state_at_record": "OPEN_DRAFT_UNMERGED",
+  "main_executable_source_contains_this_release": false,
+  "deployment": {
+    "mode": "EXNESS_PRO_MT5_DEMO_ONLY",
+    "real_money": false,
+    "symbol": "XAUUSD",
+    "host": "WINDOWS_FOREXVPS",
+    "scheduled_task": "XAUUSD Exness Pro DEMO Autonomous Trader",
+    "last_reported_task_state": "Running",
+    "single_existing_task_switched": true,
+    "old_source_commit": "efab8be64b97cad464932cf7cf6cac034134e800",
+    "python_mt5_package": "MetaTrader5==5.0.6090",
+    "native_powershell_parser": "PASS",
+    "python_packages": "PASS",
+    "account_verified": true,
+    "external_python_trading_enabled": true,
+    "preflight_positions": 0,
+    "preflight_pending_orders": 0,
+    "preflight_flat_twice": true
+  },
+  "ai": {
+    "preflight_model_catalog": "PASS",
+    "allowed_project_model_ids": [
+      "gpt-5.6-luna",
+      "gpt-5.6-terra",
+      "gpt-5.6-sol"
+    ],
+    "verified_structured_response_model": "gpt-5.6-luna",
+    "nontrading_structured_api_probe": "PASS",
+    "live_market_setup_inference_evidence": false,
+    "api_credential_source": "WINDOWS_CURRENT_USER_ENVIRONMENT_NOT_STORED_IN_GITHUB",
+    "daily_usd_budget_default": "2.00",
+    "arbitrary_32_reviews_per_day": false
+  },
+  "trading": {
+    "last_health": {
+      "action": "NO_ORDER",
+      "broker_mode": "EXNESS_DEMO_ONLY",
+      "reason": "NO_QUALIFIED_TPB_SETUP",
+      "state": "ACTIVE",
+      "strategy_status": "WAIT_FOR_NEXT_COMPLETED_M15_BAR",
+      "utc": "2026-10-24T16:48:56.778902+00:00"
+    },
+    "broker_poll_seconds": 5,
+    "signal_trigger": "NEW_COMPLETE_M15",
+    "multiframe": [
+      "W1",
+      "D1",
+      "H4",
+      "H1",
+      "M15",
+      "M5",
+      "M1"
+    ],
+    "time_of_day_entry_whitelist": false,
+    "unfilled_pending_stop_expiry_minutes": 45,
+    "max_new_order_submissions_per_utc_day_in_code": 3,
+    "max_lots": "0.01",
+    "real_demo_order_sent_evidenced": false,
+    "pending_ticket_evidenced": false,
+    "broker_fill_evidenced": false,
+    "broker_position_modify_evidenced": false,
+    "ai_early_exit_evidenced": false,
+    "realized_pnl_evidenced": false,
+    "profitability_proven": false
+  },
+  "operations": {
+    "health_json_path": "%LOCALAPPDATA%/XAUUSD-DemoService/health.json",
+    "cycle_log_path": "%LOCALAPPDATA%/XAUUSD-DemoService/cycles.jsonl",
+    "console_log_path": "%LOCALAPPDATA%/XAUUSD-DemoService/service-console.log",
+    "cycle_log_rotation": "4_MIB_CURRENT_PLUS_3_BACKUPS_IN_CODE",
+    "console_unbounded_during_single_long_run": "REQUIRES_MEASUREMENT_AND_IMPROVEMENT",
+    "durable_sqlite_retention": "PRESERVE",
+    "email_telegram_delivery_evidenced": false,
+    "recovery_drill_evidenced": false,
+    "first_24_48h_operation_review": "NOT_COMPLETED"
+  },
+  "source_status": {
+    "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
+    "offline_unit_tests_on_predecessor": "PASS_REPORTED_PREVIOUSLY_NOT_REAL_BROKER_PROOF",
+    "main_includes_trading_code": false,
+    "pr40_merge_authorization": "NOT_REQUESTED_OR_GRANTED"
+  },
+  "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
+  "accepted_owner_record": "phase0/decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md",
+  "limitations": [
+    "LAST_OBSERVED_STATE_IS_NOT_LIVE_HEARTBEAT",
+    "NO_REAL_DEMO_ORDER_RECEIPT_YET",
+    "NO_ACTUAL_MANAGEMENT_RECEIPT_YET",
+    "NO_LIVE_ACCOUNT_AUTHORIZATION",
+    "HISTORIC_GATE0_FAILURES_UNCHANGED"
+  ]
+}
