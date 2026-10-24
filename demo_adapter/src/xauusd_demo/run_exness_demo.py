@@ -16,6 +16,7 @@ import hashlib
 import importlib
 import os
 import sys
+import urllib.request
 from contextlib import ExitStack
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -178,12 +179,26 @@ def main(argv: list[str] | None = None) -> int:
     group.add_argument("--activate", action="store_true")
     group.add_argument("--run", action="store_true")
     group.add_argument("--preflight", action="store_true")
+    group.add_argument("--ai-preflight", action="store_true")
     args = parser.parse_args(argv)
     if os.name != "nt":
         print("DEMO_EXECUTION_REQUIRES_WINDOWS_FOREXVPS", file=sys.stderr)
         return 2
     directory = Path(os.environ.get("LOCALAPPDATA", "")) / "XAUUSD-DemoService"
     try:
+        if args.ai_preflight:
+            key = os.environ.get("OPENAI_API_KEY")
+            if not key:
+                raise DemoSafetyError("OpenAI API key unavailable to service")
+            request = urllib.request.Request(
+                "https://api.openai.com/v1/models/gpt-6-luna",
+                headers={"Authorization": "Bearer " + key},
+            )
+            with urllib.request.urlopen(request, timeout=10) as response:
+                if response.status != 200:
+                    raise DemoSafetyError("OpenAI API authentication denied")
+            print("OPENAI_API_AUTHENTICATED__NO_TRADE__NO_INFERENCE")
+            return 0
         mt5 = importlib.import_module('MetaTrader5')
         if args.preflight:
             with ExitStack() as stack:
