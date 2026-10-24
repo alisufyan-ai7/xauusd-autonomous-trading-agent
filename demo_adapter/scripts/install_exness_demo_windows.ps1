@@ -77,11 +77,17 @@ if (-not (Test-Path -LiteralPath $Entry)) {
 $PythonCandidates = New-Object 'System.Collections.Generic.List[string]'
 $PyLauncher = Get-Command 'py.exe' -ErrorAction SilentlyContinue
 if ($null -ne $PyLauncher) {
-    $FromLauncher = @(& $PyLauncher.Source -3.12 -c 'import sys; print(sys.executable)' 2>$null)
-    if ($LASTEXITCODE -eq 0) {
-        foreach ($Candidate in $FromLauncher) {
-            if ($Candidate) { $PythonCandidates.Add([string]$Candidate) }
+    # A broken/missing optional py launcher must not terminate discovery:
+    # Windows PowerShell 5.1 + Stop converts native stderr to an exception.
+    try {
+        $FromLauncher = @(& $PyLauncher.Source -3.12 -c 'import sys;print(sys.executable)' 2>$null)
+        if ($LASTEXITCODE -eq 0) {
+            foreach ($Candidate in $FromLauncher) {
+                if ($Candidate) { $PythonCandidates.Add([string]$Candidate) }
+            }
         }
+    } catch {
+        Write-Output 'PY_LAUNCHER_UNAVAILABLE__TRY_ALTERNATE_PYTHON'
     }
 }
 foreach ($Name in @('python.exe','python3.12.exe')) {
@@ -96,11 +102,20 @@ $PythonCandidates.Add((Join-Path $env:ProgramFiles 'Python312\python.exe'))
 $BasePython = $null
 foreach ($Candidate in ($PythonCandidates | Select-Object -Unique)) {
     if (-not (Test-Path -LiteralPath $Candidate -PathType Leaf)) { continue }
-    $VersionProof = @(& $Candidate -c 'import sys; print(str(sys.version_info.major) + "." + str(sys.version_info.minor) + "|" + str(sys.maxsize > 2**32))' 2>$null)
-    if ($LASTEXITCODE -ne 0) { continue }
-    if ((($VersionProof | Out-String).Trim()) -eq '3.12|True') {
-        $BasePython = $Candidate
-        break
+    # NO embedded quotes: PowerShell 5.1's Windows native-argument escaping
+    # otherwise changes a Python -c snippet into a SyntaxError.
+    # sys.maxsize exactly identifies the required 64-bit interpreter.
+    try {
+        $VersionProof = @(& $Candidate -c 'import sys;print(sys.version_info.major,sys.version_info.minor,sys.maxsize)' 2>$null)
+        if ($LASTEXITCODE -ne 0) { continue }
+        if ((($VersionProof | Out-String).Trim()) -eq '3 12 9223372036854775807') {
+            $BasePython = $Candidate
+            break
+        }
+    } catch {
+        # A broken candidate is not evidence that all installed Python
+        # interpreters are absent. Try the next one without altering PATH.
+        continue
     }
 }
 if ([string]::IsNullOrWhiteSpace($BasePython)) {
