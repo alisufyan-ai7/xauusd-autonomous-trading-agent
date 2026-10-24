@@ -26,6 +26,7 @@ from xauusd_agent.features.v2_tpb_research import (
 )
 from xauusd_agent.features.v2_tpb_stop_plan import TPBStopPlan
 
+from .demo_session_guard import assess_experimental_demo_window
 from .envelope import DemoSafetyError
 from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
 from .pending_entry_window_guard import screen_pending_entry_window
@@ -73,15 +74,22 @@ class MT5ExperimentalTPBPlanSource:
         # Broker session + authenticated multiagency source must cover the
         # *whole* 45-minute pending lifetime, not merely today's entry time.
         sources = self._sources.current_sources(now)
-        window = screen_pending_entry_window(
-            now=now,
-            expires_utc=feed.complete_m15_close_utc + timedelta(minutes=45),
-            session_verified_through_utc=sources.session_verified_through_utc,
-            snapshots=sources.official_snapshots,
-            shock_locked=sources.shock_locked,
-            normalized=sources.normalized,
-        )
-        if not window.allowed_to_proceed_to_other_gates:
+        expiry = feed.complete_m15_close_utc + timedelta(minutes=45)
+        if sources.source_mode == "EXPERIMENTAL_DEMO_NY_PROXY":
+            admitted = assess_experimental_demo_window(
+                now=now, pending_expires_utc=expiry,
+            ).allowed
+        elif sources.source_mode == "OFFICIAL_SOURCE":
+            admitted = screen_pending_entry_window(
+                now=now, expires_utc=expiry,
+                session_verified_through_utc=sources.session_verified_through_utc,
+                snapshots=sources.official_snapshots,
+                shock_locked=sources.shock_locked,
+                normalized=sources.normalized,
+            ).allowed_to_proceed_to_other_gates
+        else:
+            raise DemoSafetyError("unknown broker demo source mode")
+        if not admitted:
             return None
         review = review_market_context(
             bars=feed.bars,
@@ -89,8 +97,10 @@ class MT5ExperimentalTPBPlanSource:
             observed_at=now,
             session_clear=True,
             event_clear=True,
-            shock_clear=sources.shock_locked is False
-            and sources.normalized is True,
+            shock_clear=(
+                sources.source_mode == "EXPERIMENTAL_DEMO_NY_PROXY"
+                or (sources.shock_locked is False and sources.normalized is True)
+            ),
             broker_health_clear=True,
         )
         if review.status is not ContextStatus.CONTEXT_READY:
