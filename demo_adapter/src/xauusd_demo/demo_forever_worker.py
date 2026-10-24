@@ -19,6 +19,7 @@ from typing import Any
 
 from .continuous_coordinator import ContinuousDemoCoordinator, QualifiedDemoBrokerPort
 from .envelope import DemoSafetyError
+from .daily_broker_research import DailyBrokerResearch
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
 
 
@@ -76,6 +77,7 @@ class ContinuousDemoWorker:
         watchdog: PersistentDemoSafetyWatchdog,
         state_directory: Path,
         polling_seconds: float = 5.0,
+        research: DailyBrokerResearch | None = None,
     ) -> None:
         if not 1 <= polling_seconds <= 60:
             raise DemoSafetyError("worker poll interval must be 1..60 seconds")
@@ -84,6 +86,7 @@ class ContinuousDemoWorker:
         self._watchdog = watchdog
         self._folder = state_directory
         self._poll = polling_seconds
+        self._research = research
         self._last_audit: tuple[str, str, str, str] | None = None
         self._last_written: datetime | None = None
 
@@ -150,6 +153,9 @@ class ContinuousDemoWorker:
         if outcome.state != "ACTIVE":
             raise DemoSafetyError(f"coordinator quarantined: {outcome.reason}")
         self._watchdog.heartbeat(now=now)
+        if self._research is not None and now.minute == 1 and now.second < 10:
+            # Daily research only; broker fills remain the source of truth.
+            self._research.checkpoint(now)
         return outcome.action
 
     def serve(self) -> None:

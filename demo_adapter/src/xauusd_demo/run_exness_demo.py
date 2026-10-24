@@ -26,6 +26,7 @@ from .broker_money_readonly import EXPECTED_ACCOUNT_SHA256
 from .continuous_coordinator import ContinuousDemoCoordinator
 from .control import ARM_CONFIRMATION, DemoControlStore
 from .demo_forever_worker import ContinuousDemoWorker
+from .daily_broker_research import DailyBrokerResearch
 from .envelope import DemoActivationPermit, DemoIdentity, DemoPolicy, DemoSafetyError
 from .ledger import DemoSubmissionLedger
 from .known_broker_protection import KnownDemoProtectionManager
@@ -162,6 +163,10 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
         ContinuousDemoWorker(
             coordinator=coordinator, port=port, watchdog=watchdog,
             state_directory=directory, polling_seconds=5,
+            research=DailyBrokerResearch(
+                mt5=mt5, coordinator_db=directory / "coordinator.sqlite",
+                folder=directory / "research",
+            ),
         ).serve()
 
 
