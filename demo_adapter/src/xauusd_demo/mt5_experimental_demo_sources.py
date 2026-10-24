@@ -8,7 +8,7 @@ Exness Pro DEMO XAUUSD source is accepted and LIVE use is prohibited.
 from __future__ import annotations
 
 import hashlib
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from decimal import ROUND_CEILING, Decimal
 from typing import Any
 
