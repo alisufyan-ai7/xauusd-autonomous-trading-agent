@@ -27,3 +27,4 @@ class S2OrderSources:
     session_verified_through_utc: datetime | None
     shock_locked: bool | None
     normalized: bool | None
+    source_mode: str = "OFFICIAL_SOURCE"
