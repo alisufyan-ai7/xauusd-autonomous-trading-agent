@@ -167,6 +167,12 @@ class AIKnownPositionActions:
         minimum_distance: Decimal,
     ) -> str:
         """Read broker candle once per M15 close, AI call only on that bar."""
+        # Ensure the immutable journal row exists BEFORE the first
+        # write-ahead intent. A direct invocation must never silently UPDATE
+        # zero rows then mistake a broker close for an unrecorded action.
+        row = self._row(receipt, now)
+        if row[4] != "ACK" or Decimal(row[2]) != current_tp:
+            raise DemoSafetyError("position action journal not acknowledged")
         timeframe = getattr(mt5, "TIMEFRAME_M15", None)
         if timeframe is None:
             return "AI_M15_TIMEFRAME_UNAVAILABLE"
