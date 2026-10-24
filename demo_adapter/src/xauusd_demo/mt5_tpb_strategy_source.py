@@ -66,6 +66,7 @@ class MT5ExperimentalTPBPlanSource:
         self._fingerprint = account_fingerprint
         self._advisor = advisor
         self.last_reason = "NOT_YET_OBSERVED"
+        self._last_evaluated_m15: datetime | None = None
 
     def _no_trade(self, reason: str) -> TPBStopPlan | None:
         self.last_reason = reason
@@ -74,13 +75,20 @@ class MT5ExperimentalTPBPlanSource:
     def observe_closed_bar_plan(self, now: datetime) -> TPBStopPlan | None:
         if now.tzinfo is None or now.utcoffset() != timedelta(0):
             raise DemoSafetyError("TPB cycle requires UTC")
+        # New M15 candle is the strategy trigger; 5s position supervision
+        # does NOT require downloading W1..M1 history on each heartbeat.
+        recent = self._bars.latest_m15_close(now=now)
+        if recent is None or now - recent > timedelta(seconds=30):
+            return self._no_trade("WAIT_FOR_NEXT_COMPLETED_M15_BAR")
+        if recent == self._last_evaluated_m15:
+            return self._no_trade("M15_ALREADY_EVALUATED")
+        self._last_evaluated_m15 = recent
         try:
             feed = self._bars.capture(now=now)
         except DemoSafetyError:
-            # Market closed, stale quote, bad history or no bars -> NO_TRADE.
             return self._no_trade("MT5_HISTORY_OR_QUOTE_NOT_READY")
-        if now - feed.complete_m15_close_utc > timedelta(seconds=30):
-            return self._no_trade("WAIT_FOR_NEXT_COMPLETED_M15_BAR")
+        if feed.complete_m15_close_utc != recent:
+            return self._no_trade("M15_HISTORY_CHANGED_DURING_CAPTURE")
         # Broker session + authenticated multiagency source must cover the
         # *whole* 45-minute pending lifetime, not merely today's entry time.
         sources = self._sources.current_sources(now)

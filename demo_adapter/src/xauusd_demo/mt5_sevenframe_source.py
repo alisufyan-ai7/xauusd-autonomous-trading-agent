@@ -57,6 +57,22 @@ class ReadOnlyMT5SevenFrameSource:
     def __init__(self, mt5: Any) -> None:
         self._mt5 = mt5
 
+    def latest_m15_close(self, *, now: datetime) -> datetime | None:
+        """Cheap 1-bar probe; call full seven-frame capture only on new bar."""
+        mt5 = self._mt5
+        code = getattr(mt5, "TIMEFRAME_M15", None)
+        if code is None:
+            return None
+        rows = mt5.copy_rates_from_pos("XAUUSD", code, 1, 1)
+        if rows is None or len(rows) != 1:
+            return None
+        try:
+            latest = _utc(index(rows[0]["time"]), "latest M15 bar")
+        except (TypeError, KeyError, ValueError, OverflowError):
+            return None
+        close = latest + timedelta(minutes=15)
+        return close if close <= now else None
+
     def capture(self, *, now: datetime) -> SevenFrameObservation:
         if now.tzinfo is None or now.utcoffset() != timedelta(0):
             raise DemoSafetyError("seven-frame capture requires exact UTC")
