@@ -160,9 +160,9 @@ $SecretPath = '__SECRET__'
 $env:XAUUSD_OPENAI_MODEL = '__MODEL__'
 Set-Location -LiteralPath $Location
 try {
-    $Value = $env:OPENAI_API_KEY
+    $Value = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY','User')
     if ([string]::IsNullOrWhiteSpace($Value)) {
-        $Value = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY','User')
+        $Value = $env:OPENAI_API_KEY
     }
     if ([string]::IsNullOrWhiteSpace($Value) -and
         (Test-Path -LiteralPath $SecretPath -PathType Leaf)) {
