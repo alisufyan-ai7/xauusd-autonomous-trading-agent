@@ -12,6 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from operator import index
 from typing import Any
 
 from xauusd_agent.features.v2_market_context import ContextBar, ContextTimeframe
@@ -105,13 +106,13 @@ class ReadOnlyMT5SevenFrameSource:
             for row in raw:
                 try:
                     epoch = row["time"]
-                    stamp = _utc(int(epoch), "bar")
+                    stamp = _utc(index(epoch), "bar")
                     values = {
                         field: _decimal(row[field], field)
                         for field in ("open", "high", "low", "close")
                     }
                     vol = int(row["tick_volume"])
-                    if type(epoch) not in (int,) or vol < 0:
+                    if isinstance(epoch, bool) or vol < 0:
                         raise DemoSafetyError("invalid broker bar schema")
                     bar = ContextBar(
                         timeframe=name, open_time=stamp, tick_volume=vol,
