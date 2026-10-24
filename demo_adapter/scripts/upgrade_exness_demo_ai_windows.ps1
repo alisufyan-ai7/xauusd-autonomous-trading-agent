@@ -4,9 +4,9 @@ Upgrade the EXISTING hidden, interactive Windows ForexVPS Exness Pro DEMO
 trader to one source-pinned AI+management release. Never creates another
 task, switches accounts, or executes against LIVE. Must be flat at cutover.
 
-OpenAI API key is collected privately on this VPS through SecureString,
-stored encrypted with current Windows user's DPAPI, and injected only into
-the child service process. No GitHub/raw key storage or echoed secrets.
+OpenAI API key comes from the existing Windows user environment variable.
+A previous DPAPI encrypted file is a fallback only. No duplicate key or
+interactive prompt is introduced; never echo or upload any secret.
 #>
 [CmdletBinding()]
 param(
@@ -98,57 +98,54 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 New-Item -ItemType Directory -Force -Path $LogFolder | Out-Null
-function Get-LocalOpenAIKey {
-    $Ciphertext = (Get-Content -LiteralPath $KeyFile -Raw -ErrorAction Stop).Trim()
-    if ([string]::IsNullOrWhiteSpace($Ciphertext)) {
-        throw 'empty DPAPI ciphertext'
+function Get-ServiceOpenAIKey {
+    # An existing Windows user environment variable is the owner's intended
+    # credential source. No duplicate DPAPI secret is created or requested.
+    if (-not [string]::IsNullOrWhiteSpace($env:OPENAI_API_KEY)) {
+        return $env:OPENAI_API_KEY.Trim()
     }
-    $Secret = ConvertTo-SecureString -String $Ciphertext -ErrorAction Stop
-    $Address = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
-    try {
-        return [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Address)
-    } finally {
-        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Address)
+    $FromUser = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY', 'User')
+    if (-not [string]::IsNullOrWhiteSpace($FromUser)) {
+        return $FromUser.Trim()
     }
-}
-$HasWorkingKey = $false
-if (Test-Path -LiteralPath $KeyFile -PathType Leaf) {
-    try {
-        $CheckOnly = Get-LocalOpenAIKey
-        if ($CheckOnly -and $CheckOnly.Length -ge 20) {
-            $HasWorkingKey = $true
+    # Legacy compatibility only: prefer environment variables, never force a
+    # new interactive key prompt if the operator already provisioned one.
+    if (Test-Path -LiteralPath $KeyFile -PathType Leaf) {
+        $Encrypted = (Get-Content -LiteralPath $KeyFile -Raw -ErrorAction Stop).Trim()
+        $Secret = ConvertTo-SecureString -String $Encrypted -ErrorAction Stop
+        $Pointer = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
+        try {
+            return [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Pointer)
+        } finally {
+            [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Pointer)
         }
-        Remove-Variable CheckOnly -ErrorAction SilentlyContinue
-    } catch {
-        Write-Host 'INVALID_OR_LEGACY_DPAPI_DATA__PROMPT_FOR_LOCAL_REPLACEMENT'
     }
-}
-if (-not $HasWorkingKey) {
-    Write-Host 'Enter OpenAI key locally (hidden secure prompt). No key appears in GitHub.'
-    $SecureKey = Read-Host 'OpenAI API key' -AsSecureString
-    $Cipher = ConvertFrom-SecureString -SecureString $SecureKey
-    [System.IO.File]::WriteAllText($KeyFile, $Cipher.Trim(),
-        [System.Text.Encoding]::ASCII)
-    $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-    $Acl = Get-Acl -LiteralPath $KeyFile
-    $Acl.SetAccessRuleProtection($true,$false)
-    foreach ($Rule in @($Acl.Access)) { [void]$Acl.RemoveAccessRuleAll($Rule) }
-    $Access = New-Object System.Security.AccessControl.FileSystemAccessRule($CurrentUser,'FullControl','Allow')
-    $Acl.AddAccessRule($Access)
-    Set-Acl -LiteralPath $KeyFile -AclObject $Acl
-    $VerifiedKey = Get-LocalOpenAIKey
-    if (-not $VerifiedKey -or $VerifiedKey.Length -lt 20) {
-        throw 'newly encrypted API key failed DPAPI round trip'
-    }
-    Remove-Variable VerifiedKey -ErrorAction SilentlyContinue
-    Write-Host 'DPAPI_SECRET_ROUNDTRIP_PASS'
+    throw 'OPENAI_API_KEY unavailable to current Windows task user; configure its user environment variable'
 }
 try {
-    $env:OPENAI_API_KEY = Get-LocalOpenAIKey
-    & $Python -u -m xauusd_demo.run_exness_demo --ai-preflight
-    if ($LASTEXITCODE -ne 0) {
-        throw 'OpenAI model/key auth preflight failed; old task untouched'
+    $env:OPENAI_API_KEY = Get-ServiceOpenAIKey
+    if ([string]::IsNullOrWhiteSpace($env:OPENAI_API_KEY)) {
+        throw 'OPENAI_API_KEY empty'
     }
+    Write-Host 'OPENAI_KEY_FOUND_IN_CURRENT_WINDOWS_ACCOUNT__KEY_NOT_PRINTED'
+    # For THIS key/project, list available models and test an actual strict
+    # Responses API result (small non-trading paid inference). This avoids
+    # the previous false 404 from hard-coding /v1/models/gpt-6-luna.
+    $ModelProof = @(& $Python -u -m xauusd_demo.run_exness_demo --ai-preflight)
+    if ($LASTEXITCODE -ne 0) {
+        throw 'OpenAI project-model / strict Responses capability check failed; old task untouched'
+    }
+    $ModelLines = @($ModelProof | Where-Object {
+        [string]$_ -match '^OPENAI_MODEL_READY:(gpt-6-luna|gpt-6\\.1-sol|gpt-5-mini|gpt-4\\.1-mini)$'
+    })
+    if ($ModelLines.Count -ne 1) {
+        throw 'No single approved model confirmed by OpenAI preflight'
+    }
+    $SelectedModel = ([string]$ModelLines[0]).Split(':')[1]
+    if ($SelectedModel -notin @('gpt-6-luna','gpt-6.1-sol','gpt-5-mini','gpt-4.1-mini')) {
+        throw 'Unreviewed model selected'
+    }
+    Write-Host ('VERIFIED_OPENAI_API_MODEL=' + $SelectedModel)
 } finally {
     Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
 }
@@ -160,16 +157,29 @@ $Location = '__SRC__'
 $Python = '__PY__'
 $Log = '__LOG__'
 $SecretPath = '__SECRET__'
+$env:XAUUSD_OPENAI_MODEL = '__MODEL__'
 Set-Location -LiteralPath $Location
 try {
-    $Encrypted = (Get-Content -LiteralPath $SecretPath -Raw).Trim()
-    $Secret = ConvertTo-SecureString -String $Encrypted
-    $Address = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
-    try {
-        $env:OPENAI_API_KEY = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Address)
-    } finally {
-        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Address)
+    $Value = $env:OPENAI_API_KEY
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        $Value = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY','User')
     }
+    if ([string]::IsNullOrWhiteSpace($Value) -and
+        (Test-Path -LiteralPath $SecretPath -PathType Leaf)) {
+        $Encrypted = (Get-Content -LiteralPath $SecretPath -Raw).Trim()
+        $Secret = ConvertTo-SecureString -String $Encrypted
+        $Ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
+        try {
+            $Value = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Ptr)
+        } finally {
+            [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Ptr)
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        throw 'OPENAI_API_KEY not visible to scheduled task user'
+    }
+    $env:OPENAI_API_KEY = $Value.Trim()
+    Remove-Variable Value -ErrorAction SilentlyContinue
     if ((Test-Path -LiteralPath $Log) -and
         (Get-Item -LiteralPath $Log).Length -gt 4MB) {
         $Old = $Log + '.1'
@@ -187,7 +197,7 @@ try {
     Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
 }
 '@
-$RunnerBody = $RunnerBody.Replace('__SRC__',$Location).Replace('__PY__',$Python).Replace('__LOG__',$LogFile).Replace('__SECRET__',$KeyFile)
+$RunnerBody = $RunnerBody.Replace('__SRC__',$Location).Replace('__PY__',$Python).Replace('__LOG__',$LogFile).Replace('__SECRET__',$KeyFile).Replace('__MODEL__',$SelectedModel)
 $NewAction = New-ScheduledTaskAction -Execute 'powershell.exe' -WorkingDirectory $Location -Argument ('-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}"' -f $Runner)
 Write-Host 'STOPPING_ONLY_THE_EXISTING_DEMO_TASK_FOR_CONTROLLED_UPGRADE'
 Stop-ScheduledTask -TaskName $TaskName -ErrorAction Stop
