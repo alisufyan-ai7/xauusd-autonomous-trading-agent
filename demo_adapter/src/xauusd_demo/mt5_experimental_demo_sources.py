@@ -89,5 +89,5 @@ class ExperimentalDemoCostSources:
             session_verified_through_utc=None,
             shock_locked=False,
             normalized=True,
-            source_mode="EXPERIMENTAL_DEMO_NY_PROXY",
+            source_mode="EXPERIMENTAL_DEMO_BROKER_SESSION",
         )

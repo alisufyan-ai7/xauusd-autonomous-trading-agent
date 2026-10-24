@@ -80,7 +80,7 @@ class MT5ExperimentalTPBPlanSource:
         # *whole* 45-minute pending lifetime, not merely today's entry time.
         sources = self._sources.current_sources(now)
         expiry = feed.complete_m15_close_utc + timedelta(minutes=45)
-        if sources.source_mode == "EXPERIMENTAL_DEMO_NY_PROXY":
+        if sources.source_mode in ("EXPERIMENTAL_DEMO_NY_PROXY", "EXPERIMENTAL_DEMO_BROKER_SESSION"):
             admitted = assess_experimental_demo_window(
                 now=now, pending_expires_utc=expiry,
             ).allowed
@@ -103,7 +103,7 @@ class MT5ExperimentalTPBPlanSource:
             session_clear=True,
             event_clear=True,
             shock_clear=(
-                sources.source_mode == "EXPERIMENTAL_DEMO_NY_PROXY"
+                sources.source_mode in ("EXPERIMENTAL_DEMO_NY_PROXY", "EXPERIMENTAL_DEMO_BROKER_SESSION")
                 or (sources.shock_locked is False and sources.normalized is True)
             ),
             broker_health_clear=True,

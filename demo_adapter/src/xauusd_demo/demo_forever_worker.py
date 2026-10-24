@@ -84,14 +84,49 @@ class ContinuousDemoWorker:
         self._watchdog = watchdog
         self._folder = state_directory
         self._poll = polling_seconds
+        self._last_audit: tuple[str, str, str, str] | None = None
+        self._last_written: datetime | None = None
 
     def _write_audit(self, record: dict[str, object]) -> None:
+        """Log state transitions and 15-minute heartbeat, not every 5s poll.
+
+        Limit recent operator logs to about 16 MiB. Broker cash, order,
+        position and risk receipts remain in the durable SQLite ledger.
+        A heartbeat never replaces those immutable transaction records.
+        """
+        now = datetime.fromisoformat(str(record["utc"]))
+        identity = tuple(str(record.get(k, "")) for k in (
+            "state", "action", "reason", "strategy_status",
+        ))
+        critical = identity[0] != "ACTIVE" or identity[1] not in (
+            "NO_ORDER", "MONITOR_PENDING_ORDER", "MONITOR_KNOWN_POSITION",
+        )
+        if (
+            not critical
+            and identity == self._last_audit
+            and self._last_written is not None
+            and now - self._last_written < timedelta(minutes=15)
+        ):
+            return
         self._folder.mkdir(parents=True, exist_ok=True)
+        path = self._folder / "cycles.jsonl"
+        if path.exists() and path.stat().st_size >= 4 * 1024 * 1024:
+            for i in range(3, 0, -1):
+                old = self._folder / f"cycles.{i}.jsonl"
+                newer = self._folder / f"cycles.{i+1}.jsonl"
+                if old.exists():
+                    if i == 3:
+                        old.unlink()
+                    else:
+                        old.replace(newer)
+            path.replace(self._folder / "cycles.1.jsonl")
         entry = json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
-        with (self._folder / "cycles.jsonl").open("a", encoding="utf-8") as log:
+        with path.open("a", encoding="utf-8") as log:
             log.write(entry)
             log.flush()
             os.fsync(log.fileno())
+        self._last_audit = identity
+        self._last_written = now
 
     def cycle(self, now: datetime) -> str:
         if now.tzinfo is None or now.utcoffset() != timedelta(0):

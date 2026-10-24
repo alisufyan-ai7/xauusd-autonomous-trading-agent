@@ -402,6 +402,7 @@ class DemoMT5Adapter:
             or sources.costs.gap_reserve_usd <= 0
             or sources.source_mode not in (
                 "OFFICIAL_SOURCE", "EXPERIMENTAL_DEMO_NY_PROXY",
+                "EXPERIMENTAL_DEMO_BROKER_SESSION",
             )
             or (
                 sources.source_mode == "OFFICIAL_SOURCE"

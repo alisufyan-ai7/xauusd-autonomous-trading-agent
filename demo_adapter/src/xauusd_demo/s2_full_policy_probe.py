@@ -92,7 +92,7 @@ def preview_s2_full_policy_tpb(
     if mt5 is None:
         raise DemoSafetyError("initialized S2 MT5 source unavailable")
 
-    if source_mode == "EXPERIMENTAL_DEMO_NY_PROXY":
+    if source_mode in ("EXPERIMENTAL_DEMO_NY_PROXY", "EXPERIMENTAL_DEMO_BROKER_SESSION"):
         # Explicitly NOT verified US macro coverage or LIVE admission.
         demo_window = assess_experimental_demo_window(
             now=now, pending_expires_utc=request.expires_utc,
@@ -162,7 +162,7 @@ def preview_s2_full_policy_tpb(
         official_guard_pass=allowed_window,
         session_source_verified=(
             session_verified_through_utc is not None
-            or source_mode == "EXPERIMENTAL_DEMO_NY_PROXY"
+            or source_mode in ("EXPERIMENTAL_DEMO_NY_PROXY", "EXPERIMENTAL_DEMO_BROKER_SESSION")
         ),
     )
     # Post-calculation source-freshness and account fields are separately
