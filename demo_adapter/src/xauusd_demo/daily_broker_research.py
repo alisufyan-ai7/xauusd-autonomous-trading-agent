@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from .envelope import DemoSafetyError
+from .research_quality import write_quality_snapshot
 from .mt5_demo import _decimal, _record
 
 
@@ -107,3 +108,4 @@ class DailyBrokerResearch:
         older = sorted(folder.glob("????-??-??.json"))
         for past in older[:-45]:
             past.unlink()
+        write_quality_snapshot(folder)
