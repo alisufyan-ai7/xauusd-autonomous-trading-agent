@@ -50,12 +50,16 @@ class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
         self._sources = sources
         self._activation = activation
         self._risk_calibration = risk_calibration
+        self.last_reason = "NOT_YET_EVALUATED"
 
     def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
         # Killed/unknown terminal does not create phantom PREPARING intents.
         self._adapter._identity_guard(require_execution_enabled=True)
         candidate = self.inspect_closed_bar_plan(now)
         if candidate is None:
+            self.last_reason = getattr(
+                self._plan_source, "last_reason", "NO_COMPLETED_BAR_SIGNAL"
+            )
             return None
         context = self._sources.current_sources(now)
         review = preview_s2_full_policy_tpb(
@@ -71,7 +75,9 @@ class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
         )
         if not review.mathematics_pass:
             # Risk rejection is a valid NO_TRADE, not a pending broker order.
+            self.last_reason = "BROKER_FULL_POLICY_A_CASH_RISK_DENIED"
             return None
+        self.last_reason = "BROKER_SOURCE_BOUND_TPB_ELIGIBLE"
         return candidate.proposal
 
     def submit_qualified(
