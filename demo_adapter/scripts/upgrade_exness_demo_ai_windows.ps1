@@ -101,12 +101,12 @@ New-Item -ItemType Directory -Force -Path $LogFolder | Out-Null
 function Get-ServiceOpenAIKey {
     # An existing Windows user environment variable is the owner's intended
     # credential source. No duplicate DPAPI secret is created or requested.
-    if (-not [string]::IsNullOrWhiteSpace($env:OPENAI_API_KEY)) {
-        return $env:OPENAI_API_KEY.Trim()
-    }
     $FromUser = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY', 'User')
     if (-not [string]::IsNullOrWhiteSpace($FromUser)) {
         return $FromUser.Trim()
+    }
+    if (-not [string]::IsNullOrWhiteSpace($env:OPENAI_API_KEY)) {
+        return $env:OPENAI_API_KEY.Trim()
     }
     # Legacy compatibility only: prefer environment variables, never force a
     # new interactive key prompt if the operator already provisioned one.
@@ -136,7 +136,142 @@ try {
         throw 'OpenAI project-model / strict Responses capability check failed; old task untouched'
     }
     $ModelLines = @($ModelProof | Where-Object {
-        [string]$_ -match '^OPENAI_MODEL_READY:(gpt-6-luna|gpt-6\\.1-sol|gpt-5-mini|gpt-4\\.1-mini)$'
+        [string]$_ -match '^OPENAI_MODEL_READY:[a-zA-Z0-9.-]+
+    })
+    if ($ModelLines.Count -ne 1) {
+        throw 'No single approved model confirmed by OpenAI preflight'
+    }
+    $SelectedModel = ([string]$ModelLines[0]).Split(':')[1]
+    if ($SelectedModel -notin @('gpt-6-luna','gpt-6.1-sol','gpt-5-mini','gpt-4.1-mini')) {
+        throw 'Unreviewed model selected'
+    }
+    Write-Host ('VERIFIED_OPENAI_API_MODEL=' + $SelectedModel)
+} finally {
+    Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
+}
+
+# Pre-build runner and verify execution before replacing original script.
+$RunnerBody = @'
+$ErrorActionPreference = 'Stop'
+$Location = '__SRC__'
+$Python = '__PY__'
+$Log = '__LOG__'
+$SecretPath = '__SECRET__'
+$env:XAUUSD_OPENAI_MODEL = '__MODEL__'
+Set-Location -LiteralPath $Location
+try {
+    $Value = $env:OPENAI_API_KEY
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        $Value = [Environment]::GetEnvironmentVariable('OPENAI_API_KEY','User')
+    }
+    if ([string]::IsNullOrWhiteSpace($Value) -and
+        (Test-Path -LiteralPath $SecretPath -PathType Leaf)) {
+        $Encrypted = (Get-Content -LiteralPath $SecretPath -Raw).Trim()
+        $Secret = ConvertTo-SecureString -String $Encrypted
+        $Ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
+        try {
+            $Value = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Ptr)
+        } finally {
+            [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Ptr)
+        }
+    }
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        throw 'OPENAI_API_KEY not visible to scheduled task user'
+    }
+    $env:OPENAI_API_KEY = $Value.Trim()
+    Remove-Variable Value -ErrorAction SilentlyContinue
+    if ((Test-Path -LiteralPath $Log) -and
+        (Get-Item -LiteralPath $Log).Length -gt 4MB) {
+        $Old = $Log + '.1'
+        Remove-Item -LiteralPath $Old -Force -ErrorAction SilentlyContinue
+        Move-Item -LiteralPath $Log -Destination $Old
+    }
+    & $Python -u -m xauusd_demo.run_exness_demo --run *>> $Log
+    $Code = $LASTEXITCODE
+    Add-Content -LiteralPath $Log -Value ("EXIT_CODE={0}" -f $Code)
+    exit $Code
+} catch {
+    Add-Content -LiteralPath $Log -Value ("WORKER_ERROR_TYPE={0}" -f $_.Exception.GetType().Name)
+    exit 1
+} finally {
+    Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
+}
+'@
+$RunnerBody = $RunnerBody.Replace('__SRC__',$Location).Replace('__PY__',$Python).Replace('__LOG__',$LogFile).Replace('__SECRET__',$KeyFile).Replace('__MODEL__',$SelectedModel)
+$NewAction = New-ScheduledTaskAction -Execute 'powershell.exe' -WorkingDirectory $Location -Argument ('-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}"' -f $Runner)
+Write-Host 'STOPPING_ONLY_THE_EXISTING_DEMO_TASK_FOR_CONTROLLED_UPGRADE'
+Stop-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+for ($i=0; $i -lt 60; $i++) {
+    if ((Get-ScheduledTask -TaskName $TaskName).State -ne 'Running') { break }
+    Start-Sleep -Milliseconds 500
+}
+if ((Get-ScheduledTask -TaskName $TaskName).State -eq 'Running') {
+    throw 'Old task refused to stop; upgrade aborted'
+}
+$Existing = @()
+for ($i=0; $i -lt 30; $i++) {
+    $Existing = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" |
+        Where-Object { $_.ExecutablePath -and
+            [string]::Equals([string]$_.ExecutablePath,[string]$OldPython,[StringComparison]::OrdinalIgnoreCase)
+        })
+    if ($Existing.Count -eq 0) { break }
+    Start-Sleep -Milliseconds 500
+}
+if ($Existing.Count -gt 0) {
+    throw 'Old Python broker writer still alive; no second writer started'
+}
+$Switched = $false
+try {
+    # Repeat the broker-flat test after stopping the old process to close
+    # the race between the first preflight and an unexpected order.
+    & $Python -u -m xauusd_demo.run_exness_demo --preflight
+    if ($LASTEXITCODE -ne 0) { throw 'Broker not flat at actual upgrade instant' }
+    Set-Content -LiteralPath $Runner -Value $RunnerBody -Encoding UTF8
+    Set-ScheduledTask -TaskName $TaskName -Action $NewAction -ErrorAction Stop | Out-Null
+    $Switched = $true
+    $StartedUTC = [DateTime]::UtcNow
+    Start-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+    Start-Sleep -Seconds 12
+    $Running = Get-ScheduledTask -TaskName $TaskName
+    $Health = Join-Path $LogFolder 'health.json'
+    if (
+        $Running.State -ne 'Running' -or
+        -not (Test-Path -LiteralPath $Health) -or
+        (Get-Item -LiteralPath $Health).LastWriteTimeUtc -lt $StartedUTC.AddSeconds(-2)
+    ) {
+        throw 'New DEMO worker failed fresh-health startup; rollback required'
+    }
+    Write-Host 'EXNESS_AI_DEMO_UPGRADE_RUNNING'
+    Write-Host ('PINNED_HEAD=' + $SourceCommit)
+    Write-Host ('TASK=' + $TaskName)
+    Get-Content -LiteralPath $Health
+} catch {
+    Write-Host 'UPGRADE_FAILED_RESTORING_PREVIOUS_TASK_CONFIGURATION'
+    Stop-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
+    Set-Content -LiteralPath $Runner -Value $OriginalRunner -Encoding UTF8
+    Set-ScheduledTask -TaskName $TaskName -Action $OriginalAction -ErrorAction Stop | Out-Null
+    if ($OriginalTaskState -eq 'Running') {
+        # A new broker order may have been accepted before startup failed.
+        # Never restart the old trader until broker exposure is verified flat.
+        # Its durable coordinator still protects against blind duplicate orders.
+        & $OldPython -u -m xauusd_demo.run_exness_demo --preflight
+        if ($LASTEXITCODE -eq 0) {
+            $NewWorkers = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" |
+                Where-Object { $_.ExecutablePath -and
+                    [string]::Equals([string]$_.ExecutablePath,[string]$Python,[StringComparison]::OrdinalIgnoreCase)
+                })
+            if ($NewWorkers.Count -eq 0) {
+                Start-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+            } else {
+                Write-Warning 'New Python child remains alive; old task NOT restarted'
+            }
+        } else {
+            Write-Warning 'Account no longer broker-flat; old task NOT restarted'
+        }
+    }
+    throw
+}
+
     })
     if ($ModelLines.Count -ne 1) {
         throw 'No single approved model confirmed by OpenAI preflight'
