@@ -60,6 +60,11 @@ class MT5ExperimentalTPBPlanSource:
         self._bars = broker_bars
         self._sources = sources
         self._fingerprint = account_fingerprint
+        self.last_reason = "NOT_YET_OBSERVED"
+
+    def _no_trade(self, reason: str) -> None:
+        self.last_reason = reason
+        return None
 
     def observe_closed_bar_plan(self, now: datetime) -> TPBStopPlan | None:
         if now.tzinfo is None or now.utcoffset() != timedelta(0):
@@ -68,9 +73,9 @@ class MT5ExperimentalTPBPlanSource:
             feed = self._bars.capture(now=now)
         except DemoSafetyError:
             # Market closed, stale quote, bad history or no bars -> NO_TRADE.
-            return None
+            return self._no_trade("MT5_HISTORY_OR_QUOTE_NOT_READY")
         if now - feed.complete_m15_close_utc > timedelta(seconds=30):
-            return None
+            return self._no_trade("WAIT_FOR_NEXT_COMPLETED_M15_BAR")
         # Broker session + authenticated multiagency source must cover the
         # *whole* 45-minute pending lifetime, not merely today's entry time.
         sources = self._sources.current_sources(now)
@@ -90,7 +95,7 @@ class MT5ExperimentalTPBPlanSource:
         else:
             raise DemoSafetyError("unknown broker demo source mode")
         if not admitted:
-            return None
+            return self._no_trade("DEMO_SESSION_OR_NEWS_WINDOW_BLOCKED")
         review = review_market_context(
             bars=feed.bars,
             quote=feed.quote,
@@ -104,17 +109,21 @@ class MT5ExperimentalTPBPlanSource:
             broker_health_clear=True,
         )
         if review.status is not ContextStatus.CONTEXT_READY:
-            return None
+            return self._no_trade(
+                "MARKET_CONTEXT_" + (
+                    review.reasons[0] if review.reasons else "UNKNOWN"
+                )
+            )
         result = detect_tpb_research(
             context=review, frames=feed.bars, tick_size=feed.tick_size
         )
         if result.status is not TPBResearchStatus.TECHNICAL_HYPOTHESIS:
-            return None
+            return self._no_trade("TPB_" + result.reason)
         if any(x is None for x in (
             result.direction, result.entry, result.stop, result.tp1,
             result.target, result.hypothesis_id,
         )):
-            return None
+            return self._no_trade("TPB_LEVELS_INCOMPLETE")
         assert result.direction is not None
         assert result.entry is not None and result.stop is not None
         assert result.target is not None and result.tp1 is not None
@@ -128,7 +137,7 @@ class MT5ExperimentalTPBPlanSource:
             (buy and stop < entry < target and entry > feed.quote.ask)
             or (not buy and target < entry < stop and entry < feed.quote.bid)
         ):
-            return None
+            return self._no_trade("TPB_BROKER_ENTRY_GEOMETRY_UNQUALIFIED")
         # The experimental signal is separately cash+fee qualified again
         # by S2 at the actual broker order boundary.
         confirmed = feed.complete_m15_close_utc
@@ -139,6 +148,7 @@ class MT5ExperimentalTPBPlanSource:
                 + "|" + confirmed.isoformat() + "|" + str(entry)
             ).encode("ascii")
         ).hexdigest()
+        self.last_reason = "QUALIFIED_EXPERIMENTAL_TPB_CANDIDATE"
         return TPBStopPlan(
             setup_key=key, side="BUY" if buy else "SELL",
             entry_stop=entry, protective_stop=stop,
