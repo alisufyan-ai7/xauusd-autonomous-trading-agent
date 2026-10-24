@@ -21,6 +21,7 @@ from .continuous_coordinator import ContinuousDemoCoordinator, QualifiedDemoBrok
 from .envelope import DemoSafetyError
 from .daily_broker_research import DailyBrokerResearch
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
+from .vps_alert_delivery import VPSDualAlertTransport
 
 
 @contextmanager
@@ -78,6 +79,7 @@ class ContinuousDemoWorker:
         state_directory: Path,
         polling_seconds: float = 5.0,
         research: DailyBrokerResearch | None = None,
+        transport: VPSDualAlertTransport | None = None,
     ) -> None:
         if not 1 <= polling_seconds <= 60:
             raise DemoSafetyError("worker poll interval must be 1..60 seconds")
@@ -87,6 +89,9 @@ class ContinuousDemoWorker:
         self._folder = state_directory
         self._poll = polling_seconds
         self._research = research
+        self._transport = transport
+        self._last_status: datetime | None = None
+        self._last_alert_attempt: datetime | None = None
         self._last_audit: tuple[str, str, str, str] | None = None
         self._last_written: datetime | None = None
 
@@ -131,6 +136,38 @@ class ContinuousDemoWorker:
         self._last_audit = identity
         self._last_written = now
 
+
+    def _status(self, data: dict[str, object], now: datetime) -> None:
+        if (
+            self._last_status is not None
+            and now-self._last_status < timedelta(seconds=30)
+        ):
+            return
+        self._folder.mkdir(parents=True, exist_ok=True)
+        final = self._folder / "health.json"
+        tmp = self._folder / "health.json.tmp"
+        with tmp.open("w", encoding="utf-8") as stream:
+            json.dump(data, stream, sort_keys=True, separators=(",", ":"))
+            stream.flush()
+            os.fsync(stream.fileno())
+        tmp.replace(final)
+        self._last_status = now
+
+    def _alert_pending(self, now: datetime) -> None:
+        if self._transport is None or not self._transport.configured:
+            return
+        if (
+            self._last_alert_attempt is not None
+            and now-self._last_alert_attempt < timedelta(minutes=2)
+        ):
+            return
+        self._last_alert_attempt = now
+        for key in self._watchdog.pending_incident_keys():
+            try:
+                self._watchdog.deliver(key, self._transport)
+            except Exception:
+                break
+
     def cycle(self, now: datetime) -> str:
         if now.tzinfo is None or now.utcoffset() != timedelta(0):
             raise DemoSafetyError("service clock is not UTC")
@@ -153,6 +190,13 @@ class ContinuousDemoWorker:
         if outcome.state != "ACTIVE":
             raise DemoSafetyError(f"coordinator quarantined: {outcome.reason}")
         self._watchdog.heartbeat(now=now)
+        self._status({
+            "utc": now.isoformat(), "state": outcome.state,
+            "action": outcome.action, "reason": outcome.reason,
+            "strategy_status": str(getattr(self._port, "last_reason", ""))[:120],
+            "broker_mode": "EXNESS_DEMO_ONLY",
+        }, now)
+        self._alert_pending(now)
         if self._research is not None and now.minute == 1 and now.second < 10:
             # Daily research only; broker fills remain the source of truth.
             self._research.checkpoint(now)
@@ -168,5 +212,14 @@ class ContinuousDemoWorker:
             if self._watchdog.status() != "ACTIVE":
                 raise DemoSafetyError("watchdog not in ACTIVE state")
             while True:
-                self.cycle(datetime.now(UTC))
+                try:
+                    self.cycle(datetime.now(UTC))
+                except Exception as exc:
+                    instant = datetime.now(UTC)
+                    self._watchdog.queue_incident(
+                        observed_utc=instant, code="CONTINUOUS_WORKER_HALTED",
+                        explanation=type(exc).__name__,
+                    )
+                    self._alert_pending(instant)
+                    raise
                 time.sleep(self._poll)

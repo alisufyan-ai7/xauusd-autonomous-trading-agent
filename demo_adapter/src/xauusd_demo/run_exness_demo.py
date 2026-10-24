@@ -38,6 +38,7 @@ from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
 from .openai_demo_advisor import OpenAIDemoAdvisor
 from .prospective_cash_journal import ProspectiveDemoCashJournal
 from .risk_binding import DEMO_LIFECYCLE_SCOPE, DemoRiskCalibration
+from .vps_alert_delivery import VPSDualAlertTransport
 from .s2_qualified_coordinator_port import QualifiedS2CoordinatorPort
 
 PER_DAY = 3
@@ -167,6 +168,7 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
                 mt5=mt5, coordinator_db=directory / "coordinator.sqlite",
                 folder=directory / "research",
             ),
+            transport=VPSDualAlertTransport(),
         ).serve()
 
 

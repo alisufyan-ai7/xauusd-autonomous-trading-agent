@@ -192,3 +192,11 @@ class PersistentDemoSafetyWatchdog:
             "SELECT COUNT(*) FROM incident_outbox "
             "WHERE email_ok=0 OR telegram_ok=0"
         ).fetchone()[0])
+
+    def pending_incident_keys(self, *, limit: int = 8) -> tuple[str, ...]:
+        rows = self.conn.execute(
+            "SELECT incident_key FROM incident_outbox "
+            "WHERE email_ok=0 OR telegram_ok=0 ORDER BY rowid LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return tuple(str(x[0]) for x in rows)
