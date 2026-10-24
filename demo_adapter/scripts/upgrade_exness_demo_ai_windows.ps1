@@ -161,12 +161,17 @@ for ($i=0; $i -lt 60; $i++) {
 if ((Get-ScheduledTask -TaskName $TaskName).State -eq 'Running') {
     throw 'Old task refused to stop; upgrade aborted'
 }
-$Existing = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" |
-    Where-Object { $_.ExecutablePath -and
-        [string]::Equals([string]$_.ExecutablePath,[string]$OldPython,[StringComparison]::OrdinalIgnoreCase)
-    })
+$Existing = @()
+for ($i=0; $i -lt 30; $i++) {
+    $Existing = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" |
+        Where-Object { $_.ExecutablePath -and
+            [string]::Equals([string]$_.ExecutablePath,[string]$OldPython,[StringComparison]::OrdinalIgnoreCase)
+        })
+    if ($Existing.Count -eq 0) { break }
+    Start-Sleep -Milliseconds 500
+}
 if ($Existing.Count -gt 0) {
-    throw 'Old Python broker writer remains alive; never start two writers'
+    throw 'Old Python broker writer still alive; no second writer started'
 }
 $Switched = $false
 try {
@@ -199,7 +204,23 @@ try {
     Set-Content -LiteralPath $Runner -Value $OriginalRunner -Encoding UTF8
     Set-ScheduledTask -TaskName $TaskName -Action $OriginalAction -ErrorAction Stop | Out-Null
     if ($OriginalTaskState -eq 'Running') {
-        Start-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+        # A new broker order may have been accepted before startup failed.
+        # Never restart the old trader until broker exposure is verified flat.
+        # Its durable coordinator still protects against blind duplicate orders.
+        & $OldPython -u -m xauusd_demo.run_exness_demo --preflight
+        if ($LASTEXITCODE -eq 0) {
+            $NewWorkers = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" |
+                Where-Object { $_.ExecutablePath -and
+                    [string]::Equals([string]$_.ExecutablePath,[string]$Python,[StringComparison]::OrdinalIgnoreCase)
+                })
+            if ($NewWorkers.Count -eq 0) {
+                Start-ScheduledTask -TaskName $TaskName -ErrorAction Stop
+            } else {
+                Write-Warning 'New Python child remains alive; old task NOT restarted'
+            }
+        } else {
+            Write-Warning 'Account no longer broker-flat; old task NOT restarted'
+        }
     }
     throw
 }
