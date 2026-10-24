@@ -16,9 +16,9 @@ from .continuous_coordinator import (
     VerifiedProposal,
 )
 from .envelope import DemoActivationPermit, DemoSafetyError
+from .known_broker_protection import KnownDemoProtectionManager
 from .mt5_demo import SUBMISSION_CONFIRMATION, DemoMT5Adapter
 from .risk_binding import DemoRiskCalibration
-from .known_broker_protection import KnownDemoProtectionManager
 from .s2_full_policy_probe import preview_s2_full_policy_tpb
 from .s2_order_sources import S2OrderSources
 from .s2_readonly_coordinator_port import ReadOnlyS2CoordinatorPort, TPBReadOnlyPlanSource

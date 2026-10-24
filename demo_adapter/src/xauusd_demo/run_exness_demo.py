@@ -39,8 +39,8 @@ from .openai_demo_advisor import OpenAIDemoAdvisor
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
 from .prospective_cash_journal import ProspectiveDemoCashJournal
 from .risk_binding import DEMO_LIFECYCLE_SCOPE, DemoRiskCalibration
-from .vps_alert_delivery import VPSDualAlertTransport
 from .s2_qualified_coordinator_port import QualifiedS2CoordinatorPort
+from .vps_alert_delivery import VPSDualAlertTransport
 
 PER_DAY = 3
 SERVICE_ID = "XAUUSD-EXNESS-PRO-DEMO-AUTONOMOUS-V0-20261024"
@@ -194,7 +194,7 @@ def main(argv: list[str] | None = None) -> int:
                 "https://api.openai.com/v1/models/gpt-6-luna",
                 headers={"Authorization": "Bearer " + key},
             )
-            with urllib.request.urlopen(request, timeout=10) as response:
+            with urllib.request.urlopen(request, timeout=10) as response:  # noqa: S310
                 if response.status != 200:
                     raise DemoSafetyError("OpenAI API authentication denied")
             print("OPENAI_API_AUTHENTICATED__NO_TRADE__NO_INFERENCE")

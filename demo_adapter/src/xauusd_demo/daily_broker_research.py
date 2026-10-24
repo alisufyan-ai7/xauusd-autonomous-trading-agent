@@ -50,8 +50,8 @@ class DailyBrokerResearch:
         for (body,) in rows:
             try:
                 pos = json.loads(body)["position_id"]
-            except (ValueError, KeyError, TypeError):
-                raise DemoSafetyError("invalid durable broker research receipt")
+            except (ValueError, KeyError, TypeError) as exc:
+                raise DemoSafetyError("invalid durable broker research receipt") from exc
             if type(pos) is not int or pos <= 0:
                 raise DemoSafetyError("research position id invalid")
             position_ids.add(pos)

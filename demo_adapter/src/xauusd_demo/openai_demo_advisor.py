@@ -119,7 +119,7 @@ class OpenAIDemoAdvisor:
             },
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=8) as response:
+        with urllib.request.urlopen(req, timeout=8) as response:  # noqa: S310
             if response.status != 200:
                 raise DemoSafetyError("OpenAI API non-200 response")
             data = response.read(32768)

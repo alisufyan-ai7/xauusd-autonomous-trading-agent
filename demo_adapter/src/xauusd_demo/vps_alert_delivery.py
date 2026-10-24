@@ -1,5 +1,7 @@
 """Private SMTP and Telegram incident delivery; no account/order authority."""
+
 from __future__ import annotations
+
 import json
 import os
 import smtplib
@@ -7,7 +9,9 @@ import ssl
 import urllib.parse
 import urllib.request
 from email.message import EmailMessage
+
 from .envelope import DemoSafetyError
+
 
 class VPSDualAlertTransport:
     def __init__(self) -> None:
@@ -50,7 +54,7 @@ class VPSDualAlertTransport:
             payload, method="POST",
         )
         # Never print or log the URL: it includes the Telegram secret.
-        with urllib.request.urlopen(request, timeout=10) as response:
+        with urllib.request.urlopen(request, timeout=10) as response:  # noqa: S310
             reply = json.loads(response.read(4096))
         if reply.get("ok") is not True:
             raise DemoSafetyError("Telegram incident rejected")
