@@ -18,6 +18,7 @@ from decimal import Decimal
 from xauusd_agent.guards.v2_official_source_gate import VerifiedOfficialSnapshot
 from xauusd_agent.risk.full_policy_a import FullRiskDisposition
 
+from .demo_session_guard import assess_experimental_demo_window
 from .envelope import DemoOrderRequest, DemoSafetyError
 from .full_policy_broker_receipt import (
     BoundAdverseCost,
@@ -42,6 +43,7 @@ class BoundS2PolicyReview:
     broker_expiration_utc: datetime
     risk: BrokerPolicyReceipt
     execution_permitted: bool = False
+    source_mode: str = "OFFICIAL_SOURCE"
 
     def __post_init__(self) -> None:
         if self.execution_permitted:
@@ -64,6 +66,7 @@ def preview_s2_full_policy_tpb(
     session_verified_through_utc: datetime | None,
     shock_locked: bool | None,
     normalized: bool | None,
+    source_mode: str = "OFFICIAL_SOURCE",
 ) -> BoundS2PolicyReview:
     """Check one S2 pending STOP without enabling / submitting an order.
 
@@ -89,14 +92,24 @@ def preview_s2_full_policy_tpb(
     if mt5 is None:
         raise DemoSafetyError("initialized S2 MT5 source unavailable")
 
-    window = screen_pending_entry_window(
-        now=now, expires_utc=request.expires_utc,
-        session_verified_through_utc=session_verified_through_utc,
-        snapshots=official_snapshots, shock_locked=shock_locked,
-        normalized=normalized,
-    )
-    if not window.allowed_to_proceed_to_other_gates:
-        raise DemoSafetyError("STOP lifetime official/session admission denied")
+    if source_mode == "EXPERIMENTAL_DEMO_NY_PROXY":
+        # Explicitly NOT verified US macro coverage or LIVE admission.
+        demo_window = assess_experimental_demo_window(
+            now=now, pending_expires_utc=request.expires_utc,
+        )
+        allowed_window = demo_window.allowed
+    elif source_mode == "OFFICIAL_SOURCE":
+        verified_window = screen_pending_entry_window(
+            now=now, expires_utc=request.expires_utc,
+            session_verified_through_utc=session_verified_through_utc,
+            snapshots=official_snapshots, shock_locked=shock_locked,
+            normalized=normalized,
+        )
+        allowed_window = verified_window.allowed_to_proceed_to_other_gates
+    else:
+        raise DemoSafetyError("unknown S2 DEMO-only source policy")
+    if not allowed_window:
+        raise DemoSafetyError("STOP lifetime selected-session policy denied")
 
     # The ACTUAL S2 builder must agree with the levels used for Policy A.
     # No separate order-building implementation is introduced.
@@ -146,8 +159,11 @@ def preview_s2_full_policy_tpb(
         ),
         costs=calibrated_costs,
         expected_cost_sha256=pinned_cost_sha256,
-        official_guard_pass=window.allowed_to_proceed_to_other_gates,
-        session_source_verified=session_verified_through_utc is not None,
+        official_guard_pass=allowed_window,
+        session_source_verified=(
+            session_verified_through_utc is not None
+            or source_mode == "EXPERIMENTAL_DEMO_NY_PROXY"
+        ),
     )
     # Post-calculation source-freshness and account fields are separately
     # checked in the monetary calculator. No direct trading authorization.
@@ -161,4 +177,5 @@ def preview_s2_full_policy_tpb(
         request_id=request.request_id, broker_order_type=int(payload["type"]),
         broker_entry=entry, broker_stop=stop, broker_take_profit=tp,
         broker_expiration_utc=request.expires_utc, risk=calculated,
+        source_mode=source_mode,
     )
