@@ -14,7 +14,7 @@ from __future__ import annotations
 import hashlib
 from datetime import datetime, timedelta
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
-from typing import Protocol
+from typing import Protocol, TYPE_CHECKING
 
 from xauusd_agent.features.v2_market_context import (
     ContextStatus,
@@ -31,6 +31,9 @@ from .envelope import DemoSafetyError
 from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
 from .pending_entry_window_guard import screen_pending_entry_window
 from .s2_order_sources import S2OrderSources
+
+if TYPE_CHECKING:
+    from .openai_demo_advisor import OpenAIDemoAdvisor
 
 
 class CurrentVerifiedSources(Protocol):
@@ -54,12 +57,14 @@ class MT5ExperimentalTPBPlanSource:
         broker_bars: ReadOnlyMT5SevenFrameSource,
         sources: CurrentVerifiedSources,
         account_fingerprint: str,
+        advisor: OpenAIDemoAdvisor | None = None,
     ) -> None:
         if len(account_fingerprint) != 64:
             raise DemoSafetyError("strategy account fingerprint unbound")
         self._bars = broker_bars
         self._sources = sources
         self._fingerprint = account_fingerprint
+        self._advisor = advisor
         self.last_reason = "NOT_YET_OBSERVED"
 
     def _no_trade(self, reason: str) -> TPBStopPlan | None:
@@ -148,7 +153,35 @@ class MT5ExperimentalTPBPlanSource:
                 + "|" + confirmed.isoformat() + "|" + str(entry)
             ).encode("ascii")
         ).hexdigest()
-        self.last_reason = "QUALIFIED_EXPERIMENTAL_TPB_CANDIDATE"
+        if self._advisor is not None:
+            # Only after a technically sound completed-bar candidate exists.
+            # The AI cannot substitute prices, lot, SL/TP or the risk policy.
+            context = {
+                "symbol": "XAUUSD",
+                "setup": "TPB",
+                "proposed_side": "BUY" if buy else "SELL",
+                "entry": str(entry), "stop": str(stop),
+                "target": str(target), "spread": str(feed.broker_spread),
+                "utc": now.isoformat(),
+                "frames": {
+                    frame.value: [
+                        {
+                            "utc": bar.open_time.isoformat(),
+                            "open": str(bar.open), "high": str(bar.high),
+                            "low": str(bar.low), "close": str(bar.close),
+                            "volume": bar.tick_volume,
+                        }
+                        for bar in bars[-3:]
+                    ]
+                    for frame, bars in feed.bars.items()
+                },
+            }
+            if not self._advisor.approve(
+                setup_key=key, proposed_side=context["proposed_side"],
+                observed_utc=now, market=context,
+            ):
+                return self._no_trade(self._advisor.last_reason)
+        self.last_reason = "QUALIFIED_TPB_WITH_AI_CONFIRMATION"
         return TPBStopPlan(
             setup_key=key, side="BUY" if buy else "SELL",
             entry_stop=entry, protective_stop=stop,

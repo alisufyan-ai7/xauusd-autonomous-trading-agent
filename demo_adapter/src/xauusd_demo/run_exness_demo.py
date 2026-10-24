@@ -33,6 +33,7 @@ from .mt5_experimental_demo_sources import ExperimentalDemoCostSources
 from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
 from .mt5_tpb_strategy_source import MT5ExperimentalTPBPlanSource
 from .ops_safety_watchdog import PersistentDemoSafetyWatchdog
+from .openai_demo_advisor import OpenAIDemoAdvisor
 from .prospective_cash_journal import ProspectiveDemoCashJournal
 from .risk_binding import DEMO_LIFECYCLE_SCOPE, DemoRiskCalibration
 from .s2_qualified_coordinator_port import QualifiedS2CoordinatorPort
@@ -134,10 +135,15 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
             )
             return
         control.assert_active(permit=permit, identity=ident, now=now)
+        ai = stack.enter_context(OpenAIDemoAdvisor(
+            directory / "ai_reviews.sqlite",
+            api_key=(os.environ.get("OPENAI_API_KEY") or None),
+        ))
         sources = ExperimentalDemoCostSources(mt5=mt5, cash_journal=cash)
         plan = MT5ExperimentalTPBPlanSource(
             broker_bars=ReadOnlyMT5SevenFrameSource(mt5),
             sources=sources, account_fingerprint=EXPECTED_ACCOUNT_SHA256,
+            advisor=ai,
         )
         port = QualifiedS2CoordinatorPort(
             adapter=adapter, plan_source=plan, sources=sources,
