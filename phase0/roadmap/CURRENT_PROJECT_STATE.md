@@ -1,9 +1,10 @@
 # CURRENT PROJECT STATE — XAU/USD Autonomous Trading Agent
 
-> **CURRENT AGENT HANDOFF:** [AGENT_START_HERE.md](../../AGENT_START_HERE.md). This file contains preserved dated history; its early 2026-10-23 snapshot predates the 26-PR retirement and the owner DEMO-only governance amendment. Read that root index and query live [PR #40](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/40) before acting. No real broker order has been observed or deployed by this record. The latest objective is a continuous Exness Pro DEMO broker trader, not another mandatory four-hour study. Do not treat prior technical NO_GO as final product scope.
+> **LATEST CONFIRMED STATE (2026-10-24 16:48 UTC, SUCCESSFUL VPS UPGRADE):** [Machine status](CURRENT_DEMO_RUNTIME_STATUS.json) · [current actions](DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md) · [decision+source evidence](../decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md). Existing hidden Exness Pro **DEMO** scheduled task reported **Running** at exact `dfd193a4c9a6db00da81b806f2b160892eae30c9`, `gpt-5.6-luna` nontrading API model probe PASS, broker flat at cutover, first cycle `ACTIVE/NO_ORDER`. The executable remains in OPEN DRAFT/unmerged PR40. **No observed broker order/deal, live market AI setup decision, real broker position modification, profit or LIVE permission.** Do NOT rerun installation. The older dated reports below are preserved as historical states, NOT today's deployment truth.
 
 
-## 2026-10-23 — MAIN-BASED DOCS CONSOLIDATION CANDIDATE, NOT A CODE RELEASE
+
+## HISTORICAL SNAPSHOT — 2026-10-23 main-based docs consolidation, SUPERSEDED operational state
 
 [Read-first PR audit](OPEN_PR_CONSOLIDATION_AUDIT_2026-10-23.md): GitHub currently has **26 open DRAFT PRs**, arranged as three unmerged development families. Old v1.1/v1.2 research (#10–22,#28), attended S2 canary (#23–26) and failed alternative advisory (#29) require selective source reuse / evidence retention, **not wholesale merges**. Current V2 integration is the stacked #32→#38 lineage (PR32 has failed validation at its own HEAD; PR38 synthetic CI is green at its HEAD, but not a real VPS/broker pass). This DOC-ONLY branch copies **74 existing historical roadmap/decision/sanitized evidence-metadata blobs** directly from their exact GitHub source revisions without importing trading-capable code. It also adds the portfolio index and preserved owner decisions. No source PR is closed/merged yet.
 
@@ -12,7 +13,7 @@
 **Main governance conflict:** accepted `GOVERNANCE.md` rule 7 prohibits trading-capable implementation before Gate 0 closure. Later draft owner approval in principle for fast-tracked real broker DEMO cannot silently supersede it. Need a separately approved explicit scoped accepted rule update (if owner wants acceleration); none issued by this doc consolidation. Historic G0 failures intact. No real broker order/VPS access/merge verified.
 
 
-## NEXT PROPOSED PRODUCT SPEC — Autonomous XAUUSD Pro v2 (2026-10-22)
+## HISTORICAL DESIGN SNAPSHOT — Proposed autonomous XAUUSD Pro V2 on 2026-10-22 (do not use as current operation)
 
 **PR30 MERGED + V2 SPEC DRAFT:** Owner approved docs-only PR30 and GitHub confirmed merge to authoritative `main=51a7f7de395767a9ae1f9904f752bd74b3cdc010` (October21 UTC / October22 Pakistan time); original owner Pro-only and autonomous trading vision now permanently on main. This read-first note belongs to a **separate unmerged v2 specification proposal branch**, not an execution, strategy, trading or risk-policy grant.
 

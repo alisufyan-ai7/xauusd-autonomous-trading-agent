@@ -1,5 +1,8 @@
 # START HERE — XAU/USD Autonomous Agent next-chat handoff (2026-10-23)
 
+> **HISTORICAL OCTOBER 23 HANDOFF — SUPERSEDED.** The formerly requested four-hour/MT5 read-only script and "VPS result pending" statements below are the preserved history of that date, not a pending owner task. **Successful continuous Exness DEMO AI VPS activation was independently observed 2026-10-24 16:48:56 UTC** at exact `dfd193a4c9a6db00da81b806f2b160892eae30c9`, model `gpt-5.6-luna`, existing task Running, first `ACTIVE/NO_ORDER` heartbeat. No real broker order/fill yet. For current instructions use [machine state](CURRENT_DEMO_RUNTIME_STATUS.json), [2026-10-24 ADR](../decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md) and [next steps](DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md). Do **not** rerun historical 4-hour captures or the successful installer merely because old text says so.
+
+
 ## Owner override recorded 2026-10-23 — DEMO NOW, NOT A FOUR-HOUR PHASE; DYNAMIC KNOWN-POSITION MANAGEMENT
 
 Read [ADR-2026-10-23-003](../decisions/ADR-2026-10-23-003-OWNER_DEMO_FASTTRACK_CONTINUOUS_MANAGEMENT_AND_RISK_REVISION.md). **The owner explicitly rejects a separate mandatory four-hour read-only wait before the future real Exness Pro DEMO pilot**, requests actual autonomous MT5 DEMO broker orders and continuous monitoring immediately once executable, and reaffirms human-inspired position management (early exit, tighten/trail SL, break-even, bounded TP changes). The historic v1.1 four-hour acceptance design remains immutable as an *older* protocol, **not a prerequisite for the revised future pilot**. Data collection should continue while a functioning approved demo agent operates; missing stop/fee/gap/slippage cannot be set to zero merely to permit entry.
