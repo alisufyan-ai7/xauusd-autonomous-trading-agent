@@ -43,8 +43,9 @@ if (
     throw 'Existing pinned interactive DEMO task not in expected healthy state; no upgrade performed'
 }
 if (Test-Path -LiteralPath $Location) {
-    throw 'Target pinned version directory already exists. No overwrite or second writer.'
+    Write-Host 'EXISTING_PARTIAL_STAGE_FOUND__VERIFY_BEFORE_REUSE'
 }
+$PreviouslyStaged = Test-Path -LiteralPath $Location
 $OriginalAction = $Task.Actions[0]
 $OriginalRunner = Get-Content -LiteralPath $Runner -Raw
 $OriginalTaskState = $Task.State
@@ -57,22 +58,37 @@ if (-not (Test-Path -LiteralPath $Repo -PathType Container)) {
 if ($LASTEXITCODE -ne 0) { throw 'Source fetch failed' }
 & git -C $Repo merge-base --is-ancestor $SourceCommit FETCH_HEAD
 if ($LASTEXITCODE -ne 0) { throw 'Reviewed source no longer in integration lineage' }
-New-Item -ItemType Directory -Force -Path $Location | Out-Null
-try {
-    & git -C $Repo archive --format=zip --output $Zip $SourceCommit
-    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Zip)) {
-        throw 'Pinned source archive failed'
+if (-not $PreviouslyStaged) {
+    New-Item -ItemType Directory -Force -Path $Location | Out-Null
+    try {
+        & git -C $Repo archive --format=zip --output $Zip $SourceCommit
+        if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Zip)) {
+            throw 'Pinned source archive failed'
+        }
+        Expand-Archive -LiteralPath $Zip -DestinationPath $Location
+    } finally {
+        Remove-Item -LiteralPath $Zip -Force -ErrorAction SilentlyContinue
     }
-    Expand-Archive -LiteralPath $Zip -DestinationPath $Location
-} finally {
-    Remove-Item -LiteralPath $Zip -Force -ErrorAction SilentlyContinue
+} else {
+    $OldModule = Join-Path $Location 'demo_adapter\src\xauusd_demo\run_exness_demo.py'
+    if (-not (Test-Path -LiteralPath $OldModule)) {
+        throw 'Existing staged release incomplete; no task modified'
+    }
+    $ExpectedModule = @(& git -C $Repo show ("${SourceCommit}:demo_adapter/src/xauusd_demo/run_exness_demo.py"))
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to verify staged release' }
+    $OnDiskModule = @(Get-Content -LiteralPath $OldModule)
+    if (($ExpectedModule -join "`n") -ne ($OnDiskModule -join "`n")) {
+        throw 'Existing stage differs from source-pinned Git content'
+    }
 }
 if (-not (Test-Path (Join-Path $Location 'demo_adapter\src\xauusd_demo\run_exness_demo.py'))) {
     throw 'Source release lacks runnable service entrypoint'
 }
-& $OldPython -m venv (Join-Path $Location '.venv')
-if ($LASTEXITCODE -ne 0 -or -not (Test-Path $Python)) {
-    throw 'New isolated Python environment unavailable'
+if (-not (Test-Path -LiteralPath $Python -PathType Leaf)) {
+    & $OldPython -m venv (Join-Path $Location '.venv')
+    if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Python)) {
+        throw 'New isolated Python environment unavailable'
+    }
 }
 & $Python -m pip --disable-pip-version-check install --no-input --no-cache-dir -e $Location -e (Join-Path $Location 'demo_adapter') 'tzdata>=2025.2'
 if ($LASTEXITCODE -ne 0) { throw 'Pinned release dependency install failed' }
@@ -82,12 +98,37 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 New-Item -ItemType Directory -Force -Path $LogFolder | Out-Null
-if (-not (Test-Path -LiteralPath $KeyFile -PathType Leaf)) {
-    Write-Host 'Enter the OpenAI API key locally. It is NOT printed or pushed to GitHub.'
-    $Key = Read-Host 'OpenAI API key (secure prompt)' -AsSecureString
-    $Cipher = ConvertFrom-SecureString -SecureString $Key
-    Set-Content -LiteralPath $KeyFile -Value $Cipher -Encoding ASCII
-    # Remove inherited ACL entries; only the interactive account can read.
+function Get-LocalOpenAIKey {
+    $Ciphertext = (Get-Content -LiteralPath $KeyFile -Raw -ErrorAction Stop).Trim()
+    if ([string]::IsNullOrWhiteSpace($Ciphertext)) {
+        throw 'empty DPAPI ciphertext'
+    }
+    $Secret = ConvertTo-SecureString -String $Ciphertext -ErrorAction Stop
+    $Address = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
+    try {
+        return [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Address)
+    } finally {
+        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Address)
+    }
+}
+$HasWorkingKey = $false
+if (Test-Path -LiteralPath $KeyFile -PathType Leaf) {
+    try {
+        $CheckOnly = Get-LocalOpenAIKey
+        if ($CheckOnly -and $CheckOnly.Length -ge 20) {
+            $HasWorkingKey = $true
+        }
+        Remove-Variable CheckOnly -ErrorAction SilentlyContinue
+    } catch {
+        Write-Host 'INVALID_OR_LEGACY_DPAPI_DATA__PROMPT_FOR_LOCAL_REPLACEMENT'
+    }
+}
+if (-not $HasWorkingKey) {
+    Write-Host 'Enter OpenAI key locally (hidden secure prompt). No key appears in GitHub.'
+    $SecureKey = Read-Host 'OpenAI API key' -AsSecureString
+    $Cipher = ConvertFrom-SecureString -SecureString $SecureKey
+    [System.IO.File]::WriteAllText($KeyFile, $Cipher.Trim(),
+        [System.Text.Encoding]::ASCII)
     $CurrentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     $Acl = Get-Acl -LiteralPath $KeyFile
     $Acl.SetAccessRuleProtection($true,$false)
@@ -95,16 +136,12 @@ if (-not (Test-Path -LiteralPath $KeyFile -PathType Leaf)) {
     $Access = New-Object System.Security.AccessControl.FileSystemAccessRule($CurrentUser,'FullControl','Allow')
     $Acl.AddAccessRule($Access)
     Set-Acl -LiteralPath $KeyFile -AclObject $Acl
-}
-function Get-LocalOpenAIKey {
-    $Encrypted = Get-Content -LiteralPath $KeyFile -Raw
-    $Secret = ConvertTo-SecureString $Encrypted
-    $Address = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
-    try {
-        return [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Address)
-    } finally {
-        [System.Runtime.InteropServices.Marshal]::ZeroFreeBSTR($Address)
+    $VerifiedKey = Get-LocalOpenAIKey
+    if (-not $VerifiedKey -or $VerifiedKey.Length -lt 20) {
+        throw 'newly encrypted API key failed DPAPI round trip'
     }
+    Remove-Variable VerifiedKey -ErrorAction SilentlyContinue
+    Write-Host 'DPAPI_SECRET_ROUNDTRIP_PASS'
 }
 try {
     $env:OPENAI_API_KEY = Get-LocalOpenAIKey
@@ -125,8 +162,8 @@ $Log = '__LOG__'
 $SecretPath = '__SECRET__'
 Set-Location -LiteralPath $Location
 try {
-    $Encrypted = Get-Content -LiteralPath $SecretPath -Raw
-    $Secret = ConvertTo-SecureString $Encrypted
+    $Encrypted = (Get-Content -LiteralPath $SecretPath -Raw).Trim()
+    $Secret = ConvertTo-SecureString -String $Encrypted
     $Address = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
     try {
         $env:OPENAI_API_KEY = [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($Address)
