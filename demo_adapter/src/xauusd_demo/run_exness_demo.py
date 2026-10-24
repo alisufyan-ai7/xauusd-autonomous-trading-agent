@@ -154,6 +154,7 @@ def main(argv: list[str] | None = None) -> int:
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--activate", action="store_true")
     group.add_argument("--run", action="store_true")
+    group.add_argument("--preflight", action="store_true")
     args = parser.parse_args(argv)
     if os.name != "nt":
         print("DEMO_EXECUTION_REQUIRES_WINDOWS_FOREXVPS", file=sys.stderr)
@@ -161,7 +162,33 @@ def main(argv: list[str] | None = None) -> int:
     directory = Path(os.environ.get("LOCALAPPDATA", "")) / "XAUUSD-DemoService"
     try:
         import MetaTrader5 as mt5
-        serve(activate=bool(args.activate), directory=directory, mt5=mt5)
+        if args.preflight:
+            with ExitStack() as stack:
+                ledger = stack.enter_context(DemoSubmissionLedger(
+                    directory / "requests.sqlite",
+                    max_daily_submissions=PER_DAY,
+                ))
+                adapter = stack.enter_context(DemoMT5Adapter(
+                    _ident(), DemoPolicy(PER_DAY, _calibration().sha256()),
+                    ledger, module=mt5,
+                ))
+                health = adapter.preflight()
+                print(
+                    "EXNESS_DEMO_PREFLIGHT:"
+                    + str({
+                        "account_verified": health["demo_identity_match"],
+                        "external_python_enabled": health[
+                            "external_python_trading_enabled"
+                        ],
+                        "open_positions": health["open_positions"],
+                        "pending_orders": health["pending_orders"],
+                    }),
+                    flush=True,
+                )
+                if health["external_python_trading_enabled"] is not True:
+                    raise DemoSafetyError("external Python trading still disabled")
+        else:
+            serve(activate=bool(args.activate), directory=directory, mt5=mt5)
     except (DemoSafetyError, OSError, ValueError) as exc:
         # No private account, login, deal history, access token or raw quote.
         print(
