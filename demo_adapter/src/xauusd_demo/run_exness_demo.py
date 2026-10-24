@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import os
 import sys
 from contextlib import ExitStack
@@ -165,7 +166,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     directory = Path(os.environ.get("LOCALAPPDATA", "")) / "XAUUSD-DemoService"
     try:
-        import MetaTrader5 as mt5
+        mt5 = importlib.import_module('MetaTrader5')
         if args.preflight:
             with ExitStack() as stack:
                 ledger = stack.enter_context(DemoSubmissionLedger(
