@@ -7,8 +7,8 @@
   "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
   "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
   "source_pr": 40,
-  "source_pr_state_at_record": "OPEN_DRAFT_UNMERGED",
-  "main_executable_source_contains_this_release": false,
+  "source_pr_state_at_record": "MERGED_2026-10-24",
+  "main_executable_source_contains_this_release": true,
   "deployment": {
     "mode": "EXNESS_PRO_MT5_DEMO_ONLY",
     "real_money": false,
@@ -87,8 +87,14 @@
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
     "offline_unit_tests_on_predecessor": "PASS_REPORTED_PREVIOUSLY_NOT_REAL_BROKER_PROOF",
-    "main_includes_trading_code": false,
-    "pr40_merge_authorization": "NOT_REQUESTED_OR_GRANTED"
+    "main_includes_trading_code": true,
+    "pr40_merge_authorization": "OWNER_APPROVED_AND_COMPLETED_2026-10-24",
+    "pr40_merge_commit": "0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d",
+    "pr40_merged_head": "e3ffb9b94b9465d76d5b5e74692ab70fa0079dc4",
+    "vps_redeployed_after_merge": false,
+    "executable_at_merge_matches_last_reported_vps_source": true,
+    "latest_pr40_head_ci": "NO_PR_TRIGGERED_RESULTS_AT_EXACT_DOC_ONLY_HEAD",
+    "record_last_updated_utc_date": "2026-10-24"
   },
   "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
   "accepted_owner_record": "phase0/decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md",
