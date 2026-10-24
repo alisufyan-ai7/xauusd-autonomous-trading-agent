@@ -90,19 +90,32 @@ def test_known_profitable_broker_closed_deal_is_cash_reconciled(tmp_path: Path) 
         assert result.no_order_authority
 
 
-def test_negative_realized_cash_trade_quarantines_persistently(tmp_path: Path) -> None:
+def test_realized_loss_streak_persists_and_recovers_across_restart(
+    tmp_path: Path,
+) -> None:
     path = tmp_path / "loss.sqlite"
     loss = CashDeal("deal-3", DAY + timedelta(minutes=2), "SELL", D("-3"), MAGIC)
+    win = CashDeal("deal-4", DAY + timedelta(minutes=6), "BUY", D("5"), MAGIC)
     with ProspectiveDemoCashJournal(path) as journal:
         journal.observe(observation())
-        with pytest.raises(DemoSafetyError, match="losing trade"):
-            journal.observe(observation(
-                now=DAY + timedelta(minutes=3), cash=D("9997"),
-                deals=(deposit(), loss),
-            ))
+        after_loss = journal.observe(observation(
+            now=DAY + timedelta(minutes=3), cash=D("9997"),
+            deals=(deposit(), loss),
+        ))
+        assert after_loss.observed_day_loss == D("3")
+        assert after_loss.loss_equivalent_streak == D("1")
     with ProspectiveDemoCashJournal(path) as journal:
-        with pytest.raises(DemoSafetyError, match="quarantined"):
-            journal.observe(observation(now=DAY + timedelta(minutes=5)))
+        persisted = journal.observe(observation(
+            now=DAY + timedelta(minutes=5), cash=D("9997"),
+            deals=(deposit(), loss),
+        ))
+        assert persisted.loss_equivalent_streak == D("1")
+        recovered = journal.observe(observation(
+            now=DAY + timedelta(minutes=7), cash=D("10002"),
+            deals=(deposit(), loss, win),
+        ))
+        assert recovered.loss_equivalent_streak == D("0")
+        assert recovered.observed_day_loss == D("0")
 
 
 @pytest.mark.parametrize(
