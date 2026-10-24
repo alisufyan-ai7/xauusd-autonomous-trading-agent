@@ -15,6 +15,7 @@ from contextlib import contextmanager
 from datetime import UTC, datetime, timedelta
 from importlib import import_module
 from pathlib import Path
+from typing import Any
 
 from .continuous_coordinator import ContinuousDemoCoordinator, QualifiedDemoBrokerPort
 from .envelope import DemoSafetyError
@@ -34,11 +35,11 @@ def one_os_process_lock(path: Path) -> Iterator[None]:
             os.fsync(file.fileno())
         file.seek(0)
         if os.name == "nt":
-            windows_lock = import_module("msvcrt")
+            windows_lock: Any = import_module("msvcrt")
 
             try:
-                getattr(windows_lock, "locking")(
-                    file.fileno(), getattr(windows_lock, "LK_NBLCK"), 1
+                windows_lock.locking(
+                    file.fileno(), windows_lock.LK_NBLCK, 1
                 )
             except OSError as exc:
                 raise DemoSafetyError("another DEMO writer is already running") from exc
@@ -46,8 +47,8 @@ def one_os_process_lock(path: Path) -> Iterator[None]:
                 yield
             finally:
                 file.seek(0)
-                getattr(windows_lock, "locking")(
-                    file.fileno(), getattr(windows_lock, "LK_UNLCK"), 1
+                windows_lock.locking(
+                    file.fileno(), windows_lock.LK_UNLCK, 1
                 )
         else:
             import fcntl
