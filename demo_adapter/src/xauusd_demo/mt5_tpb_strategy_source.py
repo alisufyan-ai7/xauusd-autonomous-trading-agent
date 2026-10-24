@@ -169,7 +169,7 @@ class MT5ExperimentalTPBPlanSource:
         if self._advisor is not None:
             # Only after a technically sound completed-bar candidate exists.
             # The AI cannot substitute prices, lot, SL/TP or the risk policy.
-            context = {
+            context: dict[str, object] = {
                 "symbol": "XAUUSD",
                 "setup": "TPB",
                 "proposed_side": "BUY" if buy else "SELL",

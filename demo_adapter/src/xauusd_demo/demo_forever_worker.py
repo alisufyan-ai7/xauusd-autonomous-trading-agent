@@ -92,7 +92,7 @@ class ContinuousDemoWorker:
         self._transport = transport
         self._last_status: datetime | None = None
         self._last_alert_attempt: datetime | None = None
-        self._last_audit: tuple[str, str, str, str] | None = None
+        self._last_audit: tuple[str, ...] | None = None
         self._last_written: datetime | None = None
 
     def _write_audit(self, record: dict[str, object]) -> None:

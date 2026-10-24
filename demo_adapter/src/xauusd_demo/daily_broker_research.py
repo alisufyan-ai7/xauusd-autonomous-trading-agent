@@ -87,7 +87,7 @@ class DailyBrokerResearch:
                 "exits": len(owned),
                 "net_usd": str(amount),
             })
-        total = sum((Decimal(x["net_usd"]) for x in results), Decimal("0"))
+        total = sum((Decimal(str(x["net_usd"])) for x in results), Decimal("0"))
         wins = sum(Decimal(x["net_usd"]) > 0 for x in results)
         report = {
             "utc_day": day,

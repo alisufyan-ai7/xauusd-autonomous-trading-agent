@@ -53,7 +53,9 @@ class KnownDemoProtectionManager:
     def __exit__(self, *_: object) -> None:
         self._db.close()
 
-    def _record(self, receipt: QualifiedBrokerAck, now: datetime) -> tuple:
+    def _record(
+        self, receipt: QualifiedBrokerAck, now: datetime,
+    ) -> tuple[Any, ...]:
         row = self._db.execute(
             "SELECT account,initial_sl,original_tp,current_sl,next_sl,state "
             "FROM protection WHERE position_id=?",
@@ -81,7 +83,7 @@ class KnownDemoProtectionManager:
             or Decimal(row[2]) != receipt.take_profit
         ):
             raise DemoSafetyError("protection receipt identity mismatch")
-        return row
+        return tuple(row)
 
     def _write(
         self, receipt: QualifiedBrokerAck, state: str, now: datetime,

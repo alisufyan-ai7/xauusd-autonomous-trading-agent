@@ -13,7 +13,7 @@ import os
 import sqlite3
 import urllib.error
 import urllib.request
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -155,7 +155,7 @@ class OpenAIDemoAdvisor:
     ) -> bool:
         if len(setup_key) != 64 or proposed_side not in ("BUY", "SELL"):
             raise DemoSafetyError("invalid candidate sent to OpenAI")
-        if observed_utc.tzinfo is None or observed_utc.utcoffset().total_seconds() != 0:
+        if observed_utc.tzinfo is None or observed_utc.utcoffset() != timedelta(0):
             raise DemoSafetyError("AI setup timestamp not UTC")
         cached = self._db.execute(
             "SELECT decision,reason FROM ai_reviews WHERE setup_key=?",
@@ -163,7 +163,7 @@ class OpenAIDemoAdvisor:
         ).fetchone()
         if cached is not None:
             self.last_reason = str(cached[1])
-            return cached[0] == proposed_side
+            return str(cached[0]) == proposed_side
         day = observed_utc.astimezone(UTC).date().isoformat()
         used = self._db.execute(
             "SELECT COUNT(*) FROM ai_reviews WHERE utc_day=?", (day,),
