@@ -136,7 +136,7 @@ try {
         throw 'OpenAI project-model / strict Responses capability check failed; old task untouched'
     }
     $ModelLines = @($ModelProof | Where-Object {
-        [string]$_ -match '^OPENAI_MODEL_READY:[a-zA-Z0-9.-]+
+        ([string]$_).StartsWith('OPENAI_MODEL_READY:')
     })
     if ($ModelLines.Count -ne 1) {
         throw 'No single approved model confirmed by OpenAI preflight'

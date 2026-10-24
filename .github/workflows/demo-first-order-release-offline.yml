@@ -23,6 +23,31 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # Prevent Windows PowerShell 5.1 parser errors in actual VPS installers.
+      # Test parse all deployment scripts on a native Windows runner, before
+      # any Python package build or synthetic-only broker test.
+      - name: Parse DEMO Windows installation scripts with PowerShell AST
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $Files = @(Get-ChildItem -LiteralPath 'demo_adapter/scripts' -Filter '*.ps1' -File)
+          if ($Files.Count -lt 2) { throw 'Expected source-pinned Windows installers are missing' }
+          foreach ($File in $Files) {
+            $Tokens = $null
+            $ParseErrors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              $File.FullName, [ref]$Tokens, [ref]$ParseErrors
+            )
+            if (@($ParseErrors).Count -gt 0) {
+              foreach ($ErrorRecord in $ParseErrors) {
+                Write-Host ("{0}:{1} {2}" -f $File.Name,
+                  $ErrorRecord.Extent.StartLineNumber, $ErrorRecord.Message)
+              }
+              throw ('PowerShell parser rejected ' + $File.Name)
+            }
+            Write-Host ('POWERSHELL_AST_PASS=' + $File.Name)
+          }
       - name: Install isolated core + demo test dependencies
         run: |
           python -m pip install --upgrade pip
