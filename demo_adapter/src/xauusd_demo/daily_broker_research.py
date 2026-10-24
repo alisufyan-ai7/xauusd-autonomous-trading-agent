@@ -88,7 +88,7 @@ class DailyBrokerResearch:
                 "net_usd": str(amount),
             })
         total = sum((Decimal(str(x["net_usd"])) for x in results), Decimal("0"))
-        wins = sum(Decimal(x["net_usd"]) > 0 for x in results)
+        wins = sum(Decimal(str(x["net_usd"])) > 0 for x in results)
         report = {
             "utc_day": day,
             "account_type": "EXNESS_PRO_DEMO_ONLY",
