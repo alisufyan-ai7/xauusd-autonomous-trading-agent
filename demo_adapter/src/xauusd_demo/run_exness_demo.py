@@ -143,7 +143,7 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
         ai = stack.enter_context(OpenAIDemoAdvisor(
             directory / "ai_reviews.sqlite",
             api_key=(os.environ.get("OPENAI_API_KEY") or None),
-            model=os.environ.get("XAUUSD_OPENAI_MODEL", "gpt-6-luna"),
+            model=os.environ.get("XAUUSD_OPENAI_MODEL", "gpt-5.6-luna"),
         ))
         position_ai = stack.enter_context(AIKnownPositionActions(
             directory / "ai_position_actions.sqlite", advisor=ai,

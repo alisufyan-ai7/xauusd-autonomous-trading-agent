@@ -130,7 +130,7 @@ try {
     Write-Host 'OPENAI_KEY_FOUND_IN_CURRENT_WINDOWS_ACCOUNT__KEY_NOT_PRINTED'
     # For THIS key/project, list available models and test an actual strict
     # Responses API result (small non-trading paid inference). This avoids
-    # the previous false 404 from hard-coding /v1/models/gpt-6-luna.
+    # the previous false 404 from hard-coding an unallowed GPT-6 model.
     $ModelProof = @(& $Python -u -m xauusd_demo.run_exness_demo --ai-preflight)
     if ($LASTEXITCODE -ne 0) {
         throw 'OpenAI project-model / strict Responses capability check failed; old task untouched'
@@ -142,7 +142,7 @@ try {
         throw 'No single approved model confirmed by OpenAI preflight'
     }
     $SelectedModel = ([string]$ModelLines[0]).Split(':')[1]
-    if ($SelectedModel -notin @('gpt-6-luna','gpt-6.1-sol','gpt-5-mini','gpt-4.1-mini')) {
+    if ($SelectedModel -notin @('gpt-5.6-luna','gpt-5.6-terra','gpt-5.6-sol')) {
         throw 'Unreviewed model selected'
     }
     Write-Host ('VERIFIED_OPENAI_API_MODEL=' + $SelectedModel)

@@ -30,31 +30,31 @@ def test_luna_404_selects_project_visible_fallback(monkeypatch):
         assert api_key == "t"*25
         if path == "/v1/models":
             return {"data": [
-                {"id": "gpt-6-luna"},
-                {"id": "gpt-5-mini"},
+                {"id": "gpt-5.6-luna"},
+                {"id": "gpt-5.6-terra"},
                 {"id": "untrusted-model"},
             ]}
         assert path == "/v1/responses"
         names.append(payload["model"])
-        if payload["model"] == "gpt-6-luna":
+        if payload["model"] == "gpt-5.6-luna":
             raise urllib.error.HTTPError("", 404, "Not Found", {}, None)
         return _ok()
 
     monkeypatch.setattr(probe, "_json_request", fake)
-    assert probe.select_verified_model("t"*25) == "gpt-5-mini"
-    assert names == ["gpt-6-luna", "gpt-5-mini"]
+    assert probe.select_verified_model("t"*25) == "gpt-5.6-terra"
+    assert names == ["gpt-5.6-luna", "gpt-5.6-terra"]
 
 
 def test_project_entitlement_list_governs_model_choice(monkeypatch):
     names = []
     def fake(*, api_key, path, payload=None):
         if path == "/v1/models":
-            return {"data": [{"id": "gpt-4.1-mini"}]}
+            return {"data": [{"id": "gpt-5.6-sol"}]}
         names.append(payload["model"])
         return _ok()
     monkeypatch.setattr(probe, "_json_request", fake)
-    assert probe.select_verified_model("z"*25) == "gpt-4.1-mini"
-    assert names == ["gpt-4.1-mini"]
+    assert probe.select_verified_model("z"*25) == "gpt-5.6-sol"
+    assert names == ["gpt-5.6-sol"]
 
 
 def test_missing_approved_model_never_sends_inference(monkeypatch):
@@ -63,7 +63,7 @@ def test_missing_approved_model_never_sends_inference(monkeypatch):
             return {"data": [{"id": "non-admitted-model"}]}
         raise AssertionError("should never submit unreviewed model")
     monkeypatch.setattr(probe, "_json_request", fake)
-    with pytest.raises(DemoSafetyError, match="NO_REVIEWED"):
+    with pytest.raises(DemoSafetyError, match="NO_ALLOWED_GPT56"):
         probe.select_verified_model("t"*25)
 
 

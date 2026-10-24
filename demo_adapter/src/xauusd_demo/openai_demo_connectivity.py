@@ -17,7 +17,11 @@ from .envelope import DemoSafetyError
 # Preferred order: inexpensive Luna, stronger Sol, established mini APIs.
 # The live trader must pin this selected identifier, not silently switch.
 CANDIDATE_MODELS: tuple[str, ...] = (
-    "gpt-6-luna", "gpt-6.1-sol", "gpt-5-mini", "gpt-4.1-mini",
+    # Confirmed in the OWNER'S OpenAI API project allowlist (2026-10-24).
+    # Luna first for the least expensive frequent setup confirmation.
+    # Terra / Sol are permissible explicit fallbacks if actually listed
+    # by this key AND a strict Responses test succeeds.
+    "gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol",
 )
 
 _PING_SCHEMA: dict[str, Any] = {
@@ -84,7 +88,7 @@ def select_verified_model(
     choices = [name for name in candidates if name in names]
     if not choices:
         raise DemoSafetyError(
-            "OPENAI_PROJECT_HAS_NO_REVIEWED_STRUCTURED_MODEL"
+            "OPENAI_PROJECT_KEY_HAS_NO_ALLOWED_GPT56_MODEL_VISIBLE"
         )
 
     for model in choices:
@@ -96,7 +100,8 @@ def select_verified_model(
             ),
             "input": "Reply with status READY for API health verification.",
             "store": False,
-            "max_output_tokens": 256,
+            "max_output_tokens": 1024,
+            "reasoning": {"effort": "low"},
             "text": {
                 "format": {
                     "type": "json_schema",

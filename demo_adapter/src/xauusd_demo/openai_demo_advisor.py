@@ -63,7 +63,7 @@ class OpenAIDemoAdvisor:
 
     def __init__(
         self, path: Path, *, api_key: str | None = None,
-        model: str = "gpt-6-luna", daily_budget_usd: Decimal | None = None,
+        model: str = "gpt-5.6-luna", daily_budget_usd: Decimal | None = None,
     ) -> None:
         self._key = api_key or os.environ.get("OPENAI_API_KEY", "")
         if not self._key:
@@ -85,11 +85,12 @@ class OpenAIDemoAdvisor:
         self._budget = budget
         # One conservative 1-cent reserved liability per call while a network
         # request is outstanding; actual usage reduces the final charge.
+        # Reserve a bounded cost BEFORE each network request. Larger
+        # models receive higher initial liability; settle by API usage.
         self._reserved_usd = {
-            "gpt-6-luna": Decimal("0.01"),
-            "gpt-6.1-sol": Decimal("0.05"),
-            "gpt-5-mini": Decimal("0.03"),
-            "gpt-4.1-mini": Decimal("0.03"),
+            "gpt-5.6-luna": Decimal("0.01"),
+            "gpt-5.6-terra": Decimal("0.05"),
+            "gpt-5.6-sol": Decimal("0.10"),
         }[model]
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path)
@@ -223,16 +224,17 @@ class OpenAIDemoAdvisor:
             or inp < 0 or out < 0 or inp > 200000 or out > 5000
         ):
             return None
-        # GPT-6 Luna Standard: USD0.10/1M input, USD0.50/1M output.
+        # GPT-5.6 Standard rates are charged by the selected model.
         # Deliberately ignore cached discounts and bill higher bounded
         # reservation on missing usage receipts.
         # Rates per million tokens are deliberately conservative ceilings
         # for the reviewed fallbacks, not a promise of actual billed totals.
+        # Official GPT-5.6 STANDARD token rates, USD per million as at
+        # 2026-10-24. Ignore caching discounts (conservative estimate).
         input_rate, output_rate = {
-            "gpt-6-luna": (Decimal("0.10"), Decimal("0.50")),
-            "gpt-6.1-sol": (Decimal("2.00"), Decimal("10.00")),
-            "gpt-5-mini": (Decimal("0.50"), Decimal("3.00")),
-            "gpt-4.1-mini": (Decimal("0.80"), Decimal("3.20")),
+            "gpt-5.6-luna": (Decimal("0.20"), Decimal("1.20")),
+            "gpt-5.6-terra": (Decimal("2.00"), Decimal("12.00")),
+            "gpt-5.6-sol": (Decimal("4.00"), Decimal("20.00")),
         }[self._model]
         return (
             Decimal(inp) * input_rate + Decimal(out) * output_rate
