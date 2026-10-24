@@ -1,0 +1,73 @@
+name: demo-first-order-release-offline
+
+on:
+  pull_request:
+    paths:
+      - "demo_adapter/**"
+      - ".github/workflows/demo-first-order-release-offline.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  no-order-release-test:
+    name: no-order-synthetic-windows-or-linux-py312
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # Prevent Windows PowerShell 5.1 parser errors in actual VPS installers.
+      # Test parse all deployment scripts on a native Windows runner, before
+      # any Python package build or synthetic-only broker test.
+      - name: Parse DEMO Windows installation scripts with PowerShell AST
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $Files = @(Get-ChildItem -LiteralPath 'demo_adapter/scripts' -Filter '*.ps1' -File)
+          if ($Files.Count -lt 2) { throw 'Expected source-pinned Windows installers are missing' }
+          foreach ($File in $Files) {
+            $Tokens = $null
+            $ParseErrors = $null
+            [void][System.Management.Automation.Language.Parser]::ParseFile(
+              $File.FullName, [ref]$Tokens, [ref]$ParseErrors
+            )
+            if (@($ParseErrors).Count -gt 0) {
+              foreach ($ErrorRecord in $ParseErrors) {
+                Write-Host ("{0}:{1} {2}" -f $File.Name,
+                  $ErrorRecord.Extent.StartLineNumber, $ErrorRecord.Message)
+              }
+              throw ('PowerShell parser rejected ' + $File.Name)
+            }
+            Write-Host ('POWERSHELL_AST_PASS=' + $File.Name)
+          }
+      - name: Install isolated core + demo test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+          python -m pip install -e "./demo_adapter[dev]"
+      - name: Prove disabled execution in core wheel and demo package isolation
+        run: |
+          python scripts/verify_execution_disabled.py
+          python demo_adapter/scripts/verify_package_boundary.py
+      - name: Prove demo submission is blocked before the broker call
+        run: python demo_adapter/scripts/verify_first_order_release_gate.py
+      - name: Lint demo adapter and its release tests
+        working-directory: demo_adapter
+        run: python -m ruff check src tests scripts
+      - name: Strict typecheck the separated DEMO package
+        working-directory: demo_adapter
+        run: python -m mypy src/xauusd_demo
+      - name: Test S2 canary, read-only port and first-order release gate
+        working-directory: demo_adapter
+        run: python -m pytest -q tests
+      - name: Build separate DEMO wheel (never deploy)
+        working-directory: demo_adapter
+        run: python -m build

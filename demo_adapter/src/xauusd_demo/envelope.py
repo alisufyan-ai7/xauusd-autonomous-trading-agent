@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 import uuid
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from enum import StrEnum
 
@@ -99,6 +99,14 @@ class DemoOrderRequest:
     side: DemoSide
     volume_lots: Decimal
     stop_loss: Decimal
+    # STOP-only TPB fields; all existing S2 Policy A submission denial remains.
+    entry_stop: Decimal | None = None
+    take_profit: Decimal | None = None
+    expires_utc: datetime | None = None
+
+    @property
+    def is_tpb_stop(self) -> bool:
+        return self.entry_stop is not None
 
     def validate(self) -> None:
         try:
@@ -117,3 +125,30 @@ class DemoOrderRequest:
             raise DemoSafetyError("protective stop must be a finite Decimal")
         if self.stop_loss <= 0:
             raise DemoSafetyError("protective stop is required")
+        levels = (self.entry_stop, self.take_profit, self.expires_utc)
+        if any(x is not None for x in levels):
+            if any(x is None for x in levels):
+                raise DemoSafetyError("TPB STOP requires entry, TP and expiry")
+            assert self.entry_stop is not None
+            assert self.take_profit is not None
+            assert self.expires_utc is not None
+            if (
+                type(self.entry_stop) is not Decimal
+                or type(self.take_profit) is not Decimal
+                or not self.entry_stop.is_finite()
+                or not self.take_profit.is_finite()
+                or self.entry_stop <= 0 or self.take_profit <= 0
+                or self.expires_utc.tzinfo is None
+                or self.expires_utc.utcoffset() != timedelta(0)
+            ):
+                raise DemoSafetyError("incomplete TPB STOP prices or UTC expiry")
+            if (
+                (self.side is DemoSide.BUY and not (
+                    self.stop_loss < self.entry_stop < self.take_profit
+                ))
+                or (self.side is DemoSide.SELL and not (
+                    self.take_profit < self.entry_stop < self.stop_loss
+                ))
+            ):
+                raise DemoSafetyError("TPB STOP levels not ordered safely")
+

@@ -1,0 +1,205 @@
+"""Broker-observed seven-timeframe experimental TPB Zone-A strategy source.
+
+Uses the repository's V2 research detector (NOT a proven profitable champion)
+only after exact closed-bar/context source and independently supplied
+official-event/session screening. This produces an *experimental demo
+candidate*, never unmediated trading authority; the same S2 sender applies
+full broker money/fee/exposure checks at the actual order boundary.
+
+One bar can produce at most one deterministic setup key, and the persistent
+coordinator rejects that key on all future cycles, including restarts.
+"""
+from __future__ import annotations
+
+import hashlib
+from datetime import datetime, timedelta
+from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
+from typing import TYPE_CHECKING, Protocol
+
+from xauusd_agent.features.v2_market_context import (
+    ContextStatus,
+    review_market_context,
+)
+from xauusd_agent.features.v2_tpb_research import (
+    TPBResearchStatus,
+    detect_tpb_research,
+)
+from xauusd_agent.features.v2_tpb_stop_plan import TPBStopPlan
+
+from .demo_session_guard import assess_experimental_demo_window
+from .envelope import DemoSafetyError
+from .mt5_sevenframe_source import ReadOnlyMT5SevenFrameSource
+from .pending_entry_window_guard import screen_pending_entry_window
+from .s2_order_sources import S2OrderSources
+
+if TYPE_CHECKING:
+    from .openai_demo_advisor import OpenAIDemoAdvisor
+
+
+class CurrentVerifiedSources(Protocol):
+    def current_sources(self, now: datetime) -> S2OrderSources: ...
+
+
+def _grid(price: Decimal, tick: Decimal, *, up: bool) -> Decimal:
+    return (
+        (price / tick).to_integral_value(
+            rounding=ROUND_CEILING if up else ROUND_FLOOR,
+        ) * tick
+    )
+
+
+class MT5ExperimentalTPBPlanSource:
+    """Pure strategy output for one source-checked prospective M15 close."""
+
+    def __init__(
+        self,
+        *,
+        broker_bars: ReadOnlyMT5SevenFrameSource,
+        sources: CurrentVerifiedSources,
+        account_fingerprint: str,
+        advisor: OpenAIDemoAdvisor | None = None,
+    ) -> None:
+        if len(account_fingerprint) != 64:
+            raise DemoSafetyError("strategy account fingerprint unbound")
+        self._bars = broker_bars
+        self._sources = sources
+        self._fingerprint = account_fingerprint
+        self._advisor = advisor
+        self.last_reason = "NOT_YET_OBSERVED"
+        self._last_evaluated_m15: datetime | None = None
+
+    def _no_trade(self, reason: str) -> TPBStopPlan | None:
+        self.last_reason = reason
+        return None
+
+    def observe_closed_bar_plan(self, now: datetime) -> TPBStopPlan | None:
+        if now.tzinfo is None or now.utcoffset() != timedelta(0):
+            raise DemoSafetyError("TPB cycle requires UTC")
+        # New M15 candle is the strategy trigger; 5s position supervision
+        # does NOT require downloading W1..M1 history on each heartbeat.
+        recent = self._bars.latest_m15_close(now=now)
+        if recent is None or now - recent > timedelta(seconds=30):
+            return self._no_trade("WAIT_FOR_NEXT_COMPLETED_M15_BAR")
+        if recent == self._last_evaluated_m15:
+            return self._no_trade("M15_ALREADY_EVALUATED")
+        self._last_evaluated_m15 = recent
+        try:
+            feed = self._bars.capture(now=now)
+        except DemoSafetyError:
+            return self._no_trade("MT5_HISTORY_OR_QUOTE_NOT_READY")
+        if feed.complete_m15_close_utc != recent:
+            return self._no_trade("M15_HISTORY_CHANGED_DURING_CAPTURE")
+        # Broker session + authenticated multiagency source must cover the
+        # *whole* 45-minute pending lifetime, not merely today's entry time.
+        sources = self._sources.current_sources(now)
+        expiry = feed.complete_m15_close_utc + timedelta(minutes=45)
+        if sources.source_mode in (
+            "EXPERIMENTAL_DEMO_NY_PROXY", "EXPERIMENTAL_DEMO_BROKER_SESSION",
+        ):
+            admitted = assess_experimental_demo_window(
+                now=now, pending_expires_utc=expiry,
+            ).allowed
+        elif sources.source_mode == "OFFICIAL_SOURCE":
+            admitted = screen_pending_entry_window(
+                now=now, expires_utc=expiry,
+                session_verified_through_utc=sources.session_verified_through_utc,
+                snapshots=sources.official_snapshots,
+                shock_locked=sources.shock_locked,
+                normalized=sources.normalized,
+            ).allowed_to_proceed_to_other_gates
+        else:
+            raise DemoSafetyError("unknown broker demo source mode")
+        if not admitted:
+            return self._no_trade("DEMO_SESSION_OR_NEWS_WINDOW_BLOCKED")
+        review = review_market_context(
+            bars=feed.bars,
+            quote=feed.quote,
+            observed_at=now,
+            session_clear=True,
+            event_clear=True,
+            shock_clear=(
+                sources.source_mode in (
+                    "EXPERIMENTAL_DEMO_NY_PROXY",
+                    "EXPERIMENTAL_DEMO_BROKER_SESSION",
+                )
+                or (sources.shock_locked is False and sources.normalized is True)
+            ),
+            broker_health_clear=True,
+        )
+        if review.status is not ContextStatus.CONTEXT_READY:
+            return self._no_trade(
+                "MARKET_CONTEXT_" + (
+                    review.reasons[0] if review.reasons else "UNKNOWN"
+                )
+            )
+        result = detect_tpb_research(
+            context=review, frames=feed.bars, tick_size=feed.tick_size
+        )
+        if result.status is not TPBResearchStatus.TECHNICAL_HYPOTHESIS:
+            return self._no_trade("TPB_" + result.reason)
+        if any(x is None for x in (
+            result.direction, result.entry, result.stop, result.tp1,
+            result.target, result.hypothesis_id,
+        )):
+            return self._no_trade("TPB_LEVELS_INCOMPLETE")
+        assert result.direction is not None
+        assert result.entry is not None and result.stop is not None
+        assert result.target is not None and result.tp1 is not None
+        assert result.hypothesis_id is not None
+        buy = result.direction == "LONG"
+        entry = _grid(result.entry, feed.tick_size, up=buy)
+        stop = _grid(result.stop, feed.tick_size, up=not buy)
+        target = _grid(result.target, feed.tick_size, up=not buy)
+        tp1 = _grid(result.tp1, feed.tick_size, up=not buy)
+        if not (
+            (buy and stop < entry < target and entry > feed.quote.ask)
+            or (not buy and target < entry < stop and entry < feed.quote.bid)
+        ):
+            return self._no_trade("TPB_BROKER_ENTRY_GEOMETRY_UNQUALIFIED")
+        # The experimental signal is separately cash+fee qualified again
+        # by S2 at the actual broker order boundary.
+        confirmed = feed.complete_m15_close_utc
+        key = hashlib.sha256(
+            (
+                "XAUUSD-DEMO-EXPERIMENTAL-TPB-V0|"
+                + self._fingerprint + "|" + result.hypothesis_id
+                + "|" + confirmed.isoformat() + "|" + str(entry)
+            ).encode("ascii")
+        ).hexdigest()
+        if self._advisor is not None:
+            # Only after a technically sound completed-bar candidate exists.
+            # The AI cannot substitute prices, lot, SL/TP or the risk policy.
+            context: dict[str, object] = {
+                "symbol": "XAUUSD",
+                "setup": "TPB",
+                "proposed_side": "BUY" if buy else "SELL",
+                "entry": str(entry), "stop": str(stop),
+                "target": str(target), "spread": str(feed.broker_spread),
+                "utc": now.isoformat(),
+                "frames": {
+                    frame.value: [
+                        {
+                            "utc": bar.open_time.isoformat(),
+                            "open": str(bar.open), "high": str(bar.high),
+                            "low": str(bar.low), "close": str(bar.close),
+                            "volume": bar.tick_volume,
+                        }
+                        for bar in bars[-3:]
+                    ]
+                    for frame, bars in feed.bars.items()
+                },
+            }
+            if not self._advisor.approve(
+                setup_key=key, proposed_side="BUY" if buy else "SELL",
+                observed_utc=now, market=context,
+            ):
+                return self._no_trade(self._advisor.last_reason)
+        self.last_reason = "QUALIFIED_TPB_WITH_AI_CONFIRMATION"
+        return TPBStopPlan(
+            setup_key=key, side="BUY" if buy else "SELL",
+            entry_stop=entry, protective_stop=stop,
+            take_profit=target, tp1_informational=tp1,
+            confirmed_bar_utc=confirmed,
+            expires_utc=confirmed + timedelta(minutes=45),
+            proposal_expires_utc=confirmed + timedelta(seconds=30),
+        )

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from typing import Any
 
@@ -19,6 +19,7 @@ from .envelope import (
 )
 from .ledger import DemoSubmissionLedger
 from .risk_binding import DemoRiskCalibration, evaluate_bound_demo_risk
+from .s2_order_sources import S2OrderSources
 
 SUBMISSION_CONFIRMATION = "SUBMIT-BOUNDED-DEMO-XAUUSD"
 
@@ -168,7 +169,9 @@ class DemoMT5Adapter:
             "control_state": control_state,
         }
 
-    def _build_request(self, request: DemoOrderRequest) -> dict[str, Any]:
+    def _build_request(
+        self, request: DemoOrderRequest, *, now: datetime | None = None
+    ) -> dict[str, Any]:
         request.validate()
         assert self._mt5 is not None
 
@@ -191,6 +194,61 @@ class DemoMT5Adapter:
         bid = _decimal(tick.get("bid"), "bid")
         ask = _decimal(tick.get("ask"), "ask")
         stops_level = Decimal(int(info.get("trade_stops_level") or 0)) * point
+        if bid <= 0 or ask <= bid or point <= 0:
+            raise DemoSafetyError("invalid broker quote or point")
+        if request.is_tpb_stop:
+            assert request.entry_stop is not None
+            assert request.take_profit is not None
+            assert request.expires_utc is not None
+            effective = now or datetime.now(UTC)
+            if (
+                effective.tzinfo is None
+                or effective.utcoffset() != timedelta(0)
+                or not effective < request.expires_utc
+                or request.expires_utc - effective > timedelta(hours=1)
+            ):
+                raise DemoSafetyError("TPB STOP expiry not an eligible 4-bar window")
+            tick_size = _decimal(info.get("trade_tick_size"), "trade_tick_size")
+            if tick_size <= 0:
+                raise DemoSafetyError("symbol tick size unavailable")
+            for value in (
+                request.entry_stop, request.stop_loss, request.take_profit,
+            ):
+                steps = value / tick_size
+                if steps != steps.to_integral_value():
+                    raise DemoSafetyError("TPB STOP price not broker tick normalized")
+            buy = request.side is DemoSide.BUY
+            if (
+                (buy and (
+                    request.entry_stop <= ask + stops_level
+                    or request.entry_stop - request.stop_loss < stops_level
+                    or request.take_profit - request.entry_stop < stops_level
+                ))
+                or (not buy and (
+                    request.entry_stop >= bid - stops_level
+                    or request.stop_loss - request.entry_stop < stops_level
+                    or request.entry_stop - request.take_profit < stops_level
+                ))
+            ):
+                raise DemoSafetyError("TPB STOP violates market or protective levels")
+            order_type = (
+                int(self._mt5.ORDER_TYPE_BUY_STOP)
+                if buy else int(self._mt5.ORDER_TYPE_SELL_STOP)
+            )
+            return {
+                "action": int(self._mt5.TRADE_ACTION_PENDING),
+                "symbol": "XAUUSD",
+                "volume": float(request.volume_lots),
+                "type": order_type,
+                "price": float(request.entry_stop),
+                "sl": float(request.stop_loss),
+                "tp": float(request.take_profit),
+                "expiration": int(request.expires_utc.timestamp()),
+                "type_time": int(self._mt5.ORDER_TIME_SPECIFIED),
+                "deviation": self._policy.max_deviation_points,
+                "magic": 260101,
+                "comment": f"XAU-TPB {request.request_id[:8]}",
+            }
 
         if request.side is DemoSide.BUY:
             price = ask
@@ -241,6 +299,7 @@ class DemoMT5Adapter:
         confirmation_phrase: str,
         activation_permit: DemoActivationPermit | None = None,
         risk_calibration: DemoRiskCalibration | None = None,
+        full_policy_sources: S2OrderSources | None = None,
         now: datetime | None = None,
     ) -> dict[str, object]:
         if confirmation_phrase != SUBMISSION_CONFIRMATION:
@@ -278,11 +337,18 @@ class DemoMT5Adapter:
             )
             raise
 
-        mt5_request = self._build_request(request)
+        mt5_request = self._build_request(request, now=effective_now)
         assert self._mt5 is not None
 
+        # Broker margin calculator uses directional BUY/SELL economics even
+        # for a future STOP entry; the order submission type remains STOP.
+        # NEVER pass pending ORDER_TYPE_*_STOP as proof of current exposure.
+        margin_direction_type = (
+            int(self._mt5.ORDER_TYPE_BUY)
+            if request.side is DemoSide.BUY else int(self._mt5.ORDER_TYPE_SELL)
+        )
         margin_raw = self._mt5.order_calc_margin(
-            int(mt5_request["type"]),
+            margin_direction_type,
             "XAUUSD",
             float(request.volume_lots),
             float(mt5_request["price"]),
@@ -309,19 +375,83 @@ class DemoMT5Adapter:
             )
             raise
 
-        # HARD FAIL CLOSED until an independently reviewed runtime source supplies
-        # complete full Policy A cash-risk inputs (true stop-loss USD, period
-        # cashflows, day/week/inception baselines, committed risk and freshness).
-        # The earlier V1/M1 evaluation is NECESSARY BUT NOT SUFFICIENT.
-        # No caller-supplied Boolean or synthetic FullPolicyAInput can override
-        # the missing broker-authoritative reconciliation source.
-        self._control.quarantine(
-            reason="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED",
-            now=effective_now,
-        )
-        raise DemoSafetyError(
-            "full Policy A broker-reconciled USD cash-risk binding is not admitted"
-        )
+        # Existing old callers still fail without SOURCE INPUTS. This is no
+        # longer a permanent unconditional rejection: the SAME S2 sender may
+        # proceed for a STOP order only after it independently recomputes live
+        # full Policy A from MT5 cash history, official snapshots and broker
+        # stop-loss / margin for the exact request and exact UTC observation.
+        # A caller-supplied risk_pass Boolean or mathematical receipt is NEVER
+        # accepted as execution authority.
+        if full_policy_sources is None or not request.is_tpb_stop:
+            self._control.quarantine(
+                reason="FULL_POLICY_A_CASH_RISK_RUNTIME_BINDING_NOT_ADMITTED",
+                now=effective_now,
+            )
+            raise DemoSafetyError(
+                "full Policy A broker-reconciled USD cash-risk binding is not admitted"
+            )
+        from .s2_full_policy_probe import preview_s2_full_policy_tpb
+
+        sources = full_policy_sources
+        # Explicitly disallow synthetic provenance in a broker-order route.
+        # Positive adverse slip/gap reserves are mandatory; unavailable
+        # adverse costs do not become ZERO because this is virtual money.
+        if (
+            sources.costs.calibration_id.upper().startswith("SYNTHETIC")
+            or sources.costs.slippage_reserve_usd <= 0
+            or sources.costs.gap_reserve_usd <= 0
+            or sources.source_mode not in (
+                "OFFICIAL_SOURCE", "EXPERIMENTAL_DEMO_NY_PROXY",
+                "EXPERIMENTAL_DEMO_BROKER_SESSION",
+            )
+            or (
+                sources.source_mode == "OFFICIAL_SOURCE"
+                and (
+                    not sources.official_snapshots
+                    or any(
+                        "SYNTHETIC" in shot.parser_version.upper()
+                        for shot in sources.official_snapshots
+                    )
+                )
+            )
+        ):
+            self._control.quarantine(
+                reason="UNQUALIFIED_REAL_DEMO_SOURCE_PROVENANCE",
+                now=effective_now,
+            )
+            raise DemoSafetyError("real DEMO order source provenance is not admitted")
+        try:
+            full = preview_s2_full_policy_tpb(
+                self, request, now=effective_now,
+                cash_journal=sources.cash_journal,
+                calibrated_costs=sources.costs,
+                pinned_cost_sha256=sources.expected_cost_sha256,
+                official_snapshots=sources.official_snapshots,
+                session_verified_through_utc=sources.session_verified_through_utc,
+                shock_locked=sources.shock_locked,
+                normalized=sources.normalized,
+                source_mode=sources.source_mode,
+            )
+            if (
+                not full.mathematics_pass
+                or full.request_id != request.request_id
+                or full.broker_entry != _decimal(mt5_request.get("price"), "entry")
+                or full.broker_stop != request.stop_loss
+                or full.broker_take_profit != request.take_profit
+                or full.broker_order_type != int(mt5_request["type"])
+                or full.broker_expiration_utc != request.expires_utc
+            ):
+                raise DemoSafetyError("full source-bound Policy A denied STOP")
+            # One final broker/account/exposure check before order_check and
+            # intent-before-send. The two source readings are on the same MT5.
+            self._identity_guard(require_execution_enabled=True)
+            self._zero_exposure_guard()
+        except Exception:
+            self._control.quarantine(
+                reason="FULL_POLICY_A_SOURCE_OR_RISK_REJECTED",
+                now=effective_now,
+            )
+            raise
 
         check = self._mt5.order_check(mt5_request)
         if check is None:
@@ -357,11 +487,87 @@ class DemoMT5Adapter:
                 "demo submission outcome is uncertain; reconcile before any retry"
             )
 
-        result_row = _record(result, "order_send")
+        try:
+            result_row = _record(result, "order_send")
+            retcode = int(result_row.get("retcode", -1))
+        except (ValueError, TypeError, DemoSafetyError) as exc:
+            self._mark_uncertain_and_quarantine(
+                request_id=request.request_id,
+                detail="unparseable broker response after send",
+                now=effective_now,
+            )
+            raise DemoSafetyError(
+                "demo broker response unparseable; reconcile before any retry"
+            ) from exc
         done_code = int(self._mt5.TRADE_RETCODE_DONE)
-        retcode = int(result_row.get("retcode", -1))
+        if request.is_tpb_stop and retcode == getattr(
+            self._mt5, "TRADE_RETCODE_PLACED", None
+        ):
+            # PLACED is not a fill. Any unparseable post-send observation is
+            # uncertain, NOT an ordinary NO_TRADE: a real pending order may
+            # already be accepted by the server.
+            try:
+                ticket = result_row.get("order")
+                pending_rows = self._mt5.orders_get()
+                positions_rows = self._mt5.positions_get()
+                if (
+                    type(ticket) is not int or ticket <= 0
+                    or pending_rows is None or positions_rows is None
+                    or len(tuple(positions_rows)) != 0
+                    or len(tuple(pending_rows)) != 1
+                ):
+                    raise DemoSafetyError("pending STOP not singular/flat")
+                pending = _record(tuple(pending_rows)[0], "pending order")
+                if (
+                    pending.get("ticket") != ticket
+                    or pending.get("symbol") != "XAUUSD"
+                    or pending.get("magic") != 260101
+                    or pending.get("type") != mt5_request["type"]
+                    or _decimal(pending.get("volume_initial"), "pending lots")
+                    != request.volume_lots
+                    or _decimal(pending.get("price_open"), "pending entry")
+                    != request.entry_stop
+                    or _decimal(pending.get("sl"), "pending stop") != request.stop_loss
+                    or _decimal(pending.get("tp"), "pending target")
+                    != request.take_profit
+                    or pending.get("time_expiration") != mt5_request["expiration"]
+                    or pending.get("state") != getattr(
+                        self._mt5, "ORDER_STATE_PLACED", None
+                    )
+                ):
+                    raise DemoSafetyError("pending STOP differs from intent")
+                self._ledger.mark_acknowledged(
+                    request.request_id, mt5_retcode=retcode,
+                    order_ticket=str(ticket),
+                )
+            except Exception as exc:
+                if self._ledger.status(request.request_id) == "PREPARED":
+                    self._mark_uncertain_and_quarantine(
+                        request_id=request.request_id,
+                        detail="post-send pending STOP acknowledgment unreconciled",
+                        now=effective_now,
+                    )
+                raise DemoSafetyError(
+                    "pending STOP broker acknowledgment uncertain; no retry"
+                ) from exc
+            return {
+                "status": "PENDING_ACKNOWLEDGED",
+                "request_id": request.request_id,
+                "symbol": "XAUUSD",
+                "side": request.side.value,
+                "volume_lots": str(request.volume_lots),
+                "pending_order_ticket": ticket,
+                "entry_stop": str(request.entry_stop),
+                "protective_stop": str(request.stop_loss),
+                "take_profit": str(request.take_profit),
+                "expires_utc": request.expires_utc.isoformat(),
+                "mt5_retcode": retcode,
+                "risk_policy": risk.policy,
+                "control_state": self._control.snapshot().state.value,
+                "live_account_permitted": False,
+            }
 
-        if retcode != done_code:
+        if retcode != done_code or request.is_tpb_stop:
             self._mark_uncertain_and_quarantine(
                 request_id=request.request_id,
                 detail=f"non-final demo retcode={retcode}",
