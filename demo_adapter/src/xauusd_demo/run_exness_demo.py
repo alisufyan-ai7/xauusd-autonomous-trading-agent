@@ -23,6 +23,7 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+from .ai_known_position_actions import AIKnownPositionActions
 from .broker_money_readonly import EXPECTED_ACCOUNT_SHA256
 from .continuous_coordinator import ContinuousDemoCoordinator
 from .control import ARM_CONFIRMATION, DemoControlStore
@@ -143,8 +144,12 @@ def serve(*, activate: bool, directory: Path, mt5: Any) -> None:
             directory / "ai_reviews.sqlite",
             api_key=(os.environ.get("OPENAI_API_KEY") or None),
         ))
+        position_ai = stack.enter_context(AIKnownPositionActions(
+            directory / "ai_position_actions.sqlite", advisor=ai,
+        ))
         protection = stack.enter_context(KnownDemoProtectionManager(
             directory / "position_protection.sqlite", adapter=adapter,
+            ai_actions=position_ai,
         ))
         sources = ExperimentalDemoCostSources(mt5=mt5, cash_journal=cash)
         plan = MT5ExperimentalTPBPlanSource(

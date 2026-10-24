@@ -16,6 +16,7 @@ from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal
 from pathlib import Path
 from typing import Any
 
+from .ai_known_position_actions import AIKnownPositionActions
 from .continuous_coordinator import QualifiedBrokerAck
 from .envelope import DemoSafetyError
 from .known_position_reconciliation import (
@@ -32,7 +33,10 @@ class ProtectionResult:
 
 
 class KnownDemoProtectionManager:
-    def __init__(self, path: Path, *, adapter: DemoMT5Adapter) -> None:
+    def __init__(
+        self, path: Path, *, adapter: DemoMT5Adapter,
+        ai_actions: AIKnownPositionActions | None = None,
+    ) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(path)
         self._db.execute("PRAGMA journal_mode=WAL")
@@ -46,6 +50,7 @@ class KnownDemoProtectionManager:
         )
         self._db.commit()
         self._adapter = adapter
+        self._ai_actions = ai_actions
 
     def __enter__(self) -> KnownDemoProtectionManager:
         return self
@@ -146,14 +151,24 @@ class KnownDemoProtectionManager:
                 receipt, "ACKNOWLEDGED", now,
                 current=proposed, next_stop=None,
             )
+        effective_tp = receipt.take_profit
+        if self._ai_actions is not None:
+            effective_tp = self._ai_actions.current_tp(
+                receipt, now=now, broker_position=pos,
+            )
         binding = KnownPositionBinding(
             position_id=receipt.position_id, entry_order=receipt.order_ticket,
             entry_deal=receipt.entry_deal_ticket,
             account_fingerprint=account, side=receipt.side,
             volume=receipt.volume_lots, protective_sl=effective_stop,
-            protective_tp=receipt.take_profit, tick_size=receipt.tick_size,
+            protective_tp=effective_tp, tick_size=receipt.tick_size,
         )
         state = observe_known_mt5_position(mt5, binding=binding, now=now)
+        if self._ai_actions is not None:
+            self._ai_actions.reconcile_exit(
+                mt5, receipt, now=now,
+                current_stop=effective_stop, current_tp=effective_tp,
+            )
         if state != "OPEN":
             return ProtectionResult(state, "BROKER_POSITION_NOT_OPEN")
         if pos is None:
@@ -188,6 +203,20 @@ class KnownDemoProtectionManager:
             bid - receipt.entry_price if receipt.side == "BUY"
             else receipt.entry_price - ask
         )
+        if self._ai_actions is not None:
+            minimum_distance = max(
+                int(info.get("trade_stops_level") or 0),
+                int(info.get("trade_freeze_level") or 0), 3,
+            ) * _decimal(info.get("point"), "point")
+            ai_action = self._ai_actions.review_and_act(
+                mt5, receipt, position=pos, now=now, bid=bid, ask=ask,
+                current_stop=effective_stop, current_tp=effective_tp,
+                minimum_distance=minimum_distance,
+            )
+            if ai_action == "AI_EARLY_EXIT_BROKER_CONFIRMED":
+                return ProtectionResult("CLOSED", ai_action)
+            if ai_action == "AI_TP_REFINED_CONFIRMED":
+                return ProtectionResult("OPEN", ai_action)
         if favorable < risk * Decimal("1.2"):
             return ProtectionResult("OPEN", "WAIT_BREAKEVEN_THRESHOLD")
         point = _decimal(info.get("point"), "point")
@@ -234,7 +263,7 @@ class KnownDemoProtectionManager:
         payload = {
             "action": mt5.TRADE_ACTION_SLTP, "symbol": "XAUUSD",
             "position": pos["ticket"], "sl": float(proposed),
-            "tp": float(receipt.take_profit), "magic": 260101,
+            "tp": float(effective_tp), "magic": 260101,
         }
         try:
             check = _record(mt5.order_check(payload), "SLTP check")
@@ -256,7 +285,7 @@ class KnownDemoProtectionManager:
                 observed.get("identifier") != receipt.position_id
                 or _decimal(observed.get("sl"), "modified SL") != proposed
                 or _decimal(observed.get("tp"), "modified TP")
-                != receipt.take_profit
+                != effective_tp
             ):
                 raise DemoSafetyError("SLTP outcome not confirmed")
         except Exception as exc:
