@@ -99,6 +99,24 @@ def _week_key(t: datetime) -> str:
     return f"{year:04d}-W{week:02d}"
 
 
+def _loss_equivalent_streak(deals: tuple[CashDeal, ...]) -> Decimal:
+    """Conservative durable consecutive negative broker-deal cash proxy.
+
+    Exit/trade grouping is a future improvement. This never rewrites account
+    P/L or overrides the Full Policy A streak/day/week/drawdown gates. A
+    non-trading deposit/credit never resets a losing trading streak.
+    """
+    streak = 0
+    for deal in sorted(deals, key=lambda d: (d.time_utc, d.deal_id)):
+        if deal.kind not in DEAL_TRADES:
+            continue
+        if deal.amount < 0:
+            streak += 1
+        elif deal.amount > 0:
+            streak = 0
+    return Decimal(streak)
+
+
 class ProspectiveDemoCashJournal:
     """Single-writer, conservative DEMO campaign cash journal.
 
@@ -240,15 +258,9 @@ class ProspectiveDemoCashJournal:
             day_base = o.equity if newday != day_key else Decimal(day_start)
             week_base = o.equity if newweek != week_key else Decimal(week_start)
             high = max(Decimal(high_water), o.equity)
-            # Conservatively stop all further new risk after ANY losing
-            # broker deal. This is stricter than the frozen streak pause.
-            loss_deals = sum(int(d.amount < 0) for d in fresh)
-            if loss_deals:
-                self.conn.execute(
-                    "UPDATE cash_campaign SET paused=1 WHERE id=1"
-                )
-                self.conn.execute("COMMIT")
-                raise DemoSafetyError("a losing trade requires human campaign review")
+            # Ordinary trading losses are recorded; Full Policy A applies
+            # the bounded loss-streak, daily/weekly and drawdown limits on
+            # every subsequent order instead of an arbitrary first-loss kill.
             for d in fresh:
                 self.conn.execute(
                     "INSERT INTO seen_cash_deals VALUES (?,?,?,?,?)",
@@ -271,7 +283,7 @@ class ProspectiveDemoCashJournal:
                 observed_day_loss=max(Decimal(0), day_base - o.equity),
                 observed_week_loss=max(Decimal(0), week_base - o.equity),
                 observed_drawdown=max(Decimal(0), high - o.equity),
-                loss_equivalent_streak=Decimal(0),
+                loss_equivalent_streak=_loss_equivalent_streak(o.broker_deals),
             )
         except Exception:
             if self.conn.in_transaction:
