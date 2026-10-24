@@ -70,15 +70,44 @@ $Entry = Join-Path $Location 'demo_adapter\src\xauusd_demo\run_exness_demo.py'
 if (-not (Test-Path -LiteralPath $Entry)) {
     throw 'Pinned source lacks a real DEMO service entrypoint'
 }
-# Use the Python 3.12 already validated on this VPS; install a unique venv.
-$BasePython = Join-Path $RepoPath '.venv\Scripts\python.exe'
-if (-not (Test-Path -LiteralPath $BasePython)) {
-    throw 'Repository Python 3.12 venv not present'
+# Do not assume a per-repository .venv exists. The VPS has previously
+# demonstrated Python 3.12. Discover an actual 64-bit Python 3.12 installation
+# via the Windows py launcher, PATH, or standard install paths. No installs,
+# registry edits or PATH mutations are performed during discovery.
+$PythonCandidates = New-Object 'System.Collections.Generic.List[string]'
+$PyLauncher = Get-Command 'py.exe' -ErrorAction SilentlyContinue
+if ($null -ne $PyLauncher) {
+    $FromLauncher = @(& $PyLauncher.Source -3.12 -c 'import sys; print(sys.executable)' 2>$null)
+    if ($LASTEXITCODE -eq 0) {
+        foreach ($Candidate in $FromLauncher) {
+            if ($Candidate) { $PythonCandidates.Add([string]$Candidate) }
+        }
+    }
 }
-$PythonVersion = (& $BasePython -c 'import sys; print(".".join(map(str,sys.version_info[:2])))' | Out-String).Trim()
-if ($LASTEXITCODE -ne 0 -or $PythonVersion -ne '3.12') {
-    throw 'Python 3.12 exact version required'
+foreach ($Name in @('python.exe','python3.12.exe')) {
+    $Found = Get-Command $Name -ErrorAction SilentlyContinue
+    if ($null -ne $Found) { $PythonCandidates.Add([string]$Found.Source) }
 }
+$PythonCandidates.Add((Join-Path $RepoPath '.venv\Scripts\python.exe'))
+$PythonCandidates.Add('C:\Python312\python.exe')
+$PythonCandidates.Add('C:\Program Files\Python312\python.exe')
+$PythonCandidates.Add((Join-Path $env:LOCALAPPDATA 'Programs\Python\Python312\python.exe'))
+$PythonCandidates.Add((Join-Path $env:ProgramFiles 'Python312\python.exe'))
+$BasePython = $null
+foreach ($Candidate in ($PythonCandidates | Select-Object -Unique)) {
+    if (-not (Test-Path -LiteralPath $Candidate -PathType Leaf)) { continue }
+    $VersionProof = @(& $Candidate -c 'import sys; print(str(sys.version_info.major) + "." + str(sys.version_info.minor) + "|" + str(sys.maxsize > 2**32))' 2>$null)
+    if ($LASTEXITCODE -ne 0) { continue }
+    if ((($VersionProof | Out-String).Trim()) -eq '3.12|True') {
+        $BasePython = $Candidate
+        break
+    }
+}
+if ([string]::IsNullOrWhiteSpace($BasePython)) {
+    throw 'No 64-bit Python 3.12 found via launcher, PATH or common installed locations; source extracted but NOTHING activated.'
+}
+Write-Output 'PYTHON_312_64BIT_DISCOVERY_PASS'
+# Use a dedicated venv; never install packages into another application's Python.
 & $BasePython -m venv (Join-Path $Location '.venv')
 if ($LASTEXITCODE -ne 0 -or -not (Test-Path -LiteralPath $Python)) {
     throw 'Isolated Python venv install failed'
