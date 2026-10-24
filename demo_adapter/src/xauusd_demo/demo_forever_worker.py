@@ -98,6 +98,9 @@ class ContinuousDemoWorker:
             "utc": now.astimezone(UTC).isoformat(),
             "state": outcome.state, "action": outcome.action,
             "reason": outcome.reason,
+            "strategy_status": str(getattr(
+                self._port, "last_reason", "NOT_AVAILABLE"
+            ))[:120],
             "mode": "REAL_EXNESS_DEMO_SERVER_VIRTUAL_MONEY",
             "live_allowed": False,
         })
