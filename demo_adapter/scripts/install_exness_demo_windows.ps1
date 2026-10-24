@@ -159,7 +159,7 @@ $RunnerContent = $RunnerContent.Replace('__SRC_ROOT__',$Location).Replace('__PYT
 Set-Content -LiteralPath $Runner -Value $RunnerContent -Encoding UTF8 -Force
 # MT5 is in the interactive Exness DEMO desktop session; RDP disconnect is fine,
 # a full Windows logoff will stop an Interactive task until next login.
-$Action = New-ScheduledTaskAction -Execute 'powershell.exe' -WorkingDirectory $Location -Argument ('-NoProfile -NonInteractive -ExecutionPolicy Bypass -File "{0}"' -f $Runner)
+$Action = New-ScheduledTaskAction -Execute 'powershell.exe' -WorkingDirectory $Location -Argument ('-NoProfile -NonInteractive -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}"' -f $Runner)
 $Trigger = New-ScheduledTaskTrigger -AtLogOn -User $Account
 $Principal = New-ScheduledTaskPrincipal -UserId $Account -LogonType Interactive -RunLevel Highest
 $Settings = New-ScheduledTaskSettingsSet -RestartCount 3 -RestartInterval (New-TimeSpan -Minutes 1) -ExecutionTimeLimit (New-TimeSpan -Seconds 0) -MultipleInstances IgnoreNew -StartWhenAvailable
