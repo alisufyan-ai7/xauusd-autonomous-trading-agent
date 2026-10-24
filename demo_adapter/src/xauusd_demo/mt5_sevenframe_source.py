@@ -126,7 +126,7 @@ class ReadOnlyMT5SevenFrameSource:
             ordered.sort(key=lambda bar: bar.open_time)
             if len({bar.open_time for bar in ordered}) != len(ordered):
                 raise DemoSafetyError(f"{name.value} duplicated completed bar")
-            if any(a.open_time >= b.open_time for a, b in zip(ordered, ordered[1:])):
+            if any(a.open_time >= b.open_time for a, b in zip(ordered, ordered[1:], strict=False)):
                 raise DemoSafetyError(f"{name.value} bar timestamp ordering invalid")
             output[name] = tuple(ordered)
         m15 = output[ContextTimeframe.M15][-1].close_time
