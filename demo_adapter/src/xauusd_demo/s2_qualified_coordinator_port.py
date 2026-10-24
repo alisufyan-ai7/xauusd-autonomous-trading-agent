@@ -67,6 +67,7 @@ class QualifiedS2CoordinatorPort(ReadOnlyS2CoordinatorPort):
             session_verified_through_utc=context.session_verified_through_utc,
             shock_locked=context.shock_locked,
             normalized=context.normalized,
+            source_mode=context.source_mode,
         )
         if not review.mathematics_pass:
             # Risk rejection is a valid NO_TRADE, not a pending broker order.
