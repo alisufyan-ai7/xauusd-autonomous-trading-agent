@@ -51,16 +51,18 @@ def one_os_process_lock(path: Path) -> Iterator[None]:
                     file.fileno(), windows_lock.LK_UNLCK, 1
                 )
         else:
-            import fcntl
+            posix_lock: Any = import_module("fcntl")
 
             try:
-                fcntl.flock(file.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                posix_lock.flock(
+                    file.fileno(), posix_lock.LOCK_EX | posix_lock.LOCK_NB
+                )
             except OSError as exc:
                 raise DemoSafetyError("another DEMO writer is already running") from exc
             try:
                 yield
             finally:
-                fcntl.flock(file.fileno(), fcntl.LOCK_UN)
+                posix_lock.flock(file.fileno(), posix_lock.LOCK_UN)
 
 
 class ContinuousDemoWorker:
