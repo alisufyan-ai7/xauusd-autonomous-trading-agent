@@ -148,8 +148,13 @@ def test_source_exception_quarantines_and_does_not_place_order(tmp_path: Path) -
         assert port.send_attempts == 0
 
 
+@pytest.mark.parametrize("unavailable", [
+    "MT5 terminal is not connected",
+    "terminal_info returned no data",
+    "account_info returned no data",
+])
 def test_idle_mt5_disconnection_pauses_no_order_and_can_recheck_on_reconnect(
-    tmp_path: Path,
+    tmp_path: Path, unavailable: str,
 ) -> None:
     """Only exact idle terminal disconnect is a non-trading temporary pause."""
 
@@ -158,7 +163,7 @@ def test_idle_mt5_disconnection_pauses_no_order_and_can_recheck_on_reconnect(
 
         def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
             if not self.connected:
-                raise DemoSafetyError("MT5 terminal is not connected")
+                raise DemoSafetyError(unavailable)
             return self.proposal
 
     port = DisconnectingBroker()
@@ -169,7 +174,7 @@ def test_idle_mt5_disconnection_pauses_no_order_and_can_recheck_on_reconnect(
             result = c.cycle(port, now=NOW)
             assert result.state == "ACTIVE"
             assert result.action == "NO_ORDER"
-            assert result.reason == "MT5_DISCONNECTED_NO_ORDER"
+            assert result.reason == "MT5_SOURCE_TEMPORARILY_UNAVAILABLE"
             assert c.conn.execute("SELECT COUNT(*) FROM agent_cycles").fetchone()[0] == 0
             assert port.send_attempts == 0
 
