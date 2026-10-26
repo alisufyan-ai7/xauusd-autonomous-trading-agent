@@ -1,8 +1,8 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-26T15:58:51.5912242Z",
-  "evidence_type": "OWNER_SUPPLIED_READ_ONLY_SOURCE_AND_USER_SID_VERIFICATION",
-  "evidence_basis": "Owner-pasted 2026-10-26 15:58:51 UTC Windows PowerShell report: existing DEMO task Ready, current Windows SID matches task owner, four deployed release Python files match exact expected Git blob after CRLF->LF normalization, and no matching demo writer process. No MT5 broker connection or restart performed in this observation.",
+  "as_of_utc": "2026-10-26T16:51:43.8693743Z",
+  "evidence_type": "OWNER_SUPPLIED_GUARDED_READONLY_MT5_BROKER_VERIFICATION",
+  "evidence_basis": "Owner-pasted 2026-10-26 16:51 UTC guarded Python broker check via existing MT5 terminal; one temporary read-only MetaTrader5.initialize(path=already-running terminal), broker/account fingerprint, order/position/history, tick and M15 observation. MT5 shutdown after probe. No order_check/send, task restart or quarantine reset.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
   "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
@@ -29,7 +29,7 @@
     "latest_task_state": "Ready",
     "last_reported_task_state_as_of_utc": "2026-10-24T16:48:56.778902Z",
     "latest_task_result": 1,
-    "latest_task_observed_at_utc": "2026-10-26T15:58:51.5912242Z"
+    "latest_task_observed_at_utc": "2026-10-26T16:51:43.8693743Z"
   },
   "ai": {
     "preflight_model_catalog": "PASS",
@@ -76,8 +76,33 @@
     "ai_early_exit_evidenced": false,
     "realized_pnl_evidenced": false,
     "profitability_proven": false,
-    "last_broker_order_proof_as_of_utc": "2026-10-26T15:39:26.7854811Z",
-    "latest_journal_result": "NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDINGS_NO_FILLS_IN_LOCAL_SQLITE"
+    "last_broker_order_proof_as_of_utc": "2026-10-26T16:51:43.8693743Z",
+    "latest_journal_result": "NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDINGS_NO_FILLS_LOCALLY; MT5_ZERO_HISTORICAL_ORDERS_AND_DEALS_SINCE_2026_10_24_16_48Z",
+    "live_broker_readonly_observation": {
+      "observed_at_utc": "2026-10-26T16:51:43.8693743Z",
+      "broker_mode": "EXNESS_PINNED_DEMO_ONLY",
+      "mt5_package_version": "5.0.6090",
+      "temporary_readonly_initialize": "PASS_EXISTING_TERMINAL",
+      "terminal_connected": true,
+      "external_python_trading_enabled": true,
+      "account_fingerprint_pinned_match": true,
+      "exposure_query": "PASS",
+      "all_open_positions": 0,
+      "all_pending_orders": 0,
+      "broker_flat": true,
+      "all_broker_deals_since_deployment": 0,
+      "all_broker_history_orders_since_deployment": 0,
+      "since_utc": "2026-10-24T16:48:00Z",
+      "market_full_trading_mode": true,
+      "latest_tick_utc": "2026-10-26T16:51:45.855Z",
+      "latest_tick_age_seconds": 0.61,
+      "latest_completed_m15_close_utc": "2026-10-26T16:45:00Z",
+      "completed_m15_age_minutes": 6.77,
+      "probe_exit_code": 0,
+      "task_state_after_probe": "Ready",
+      "broker_order_mutations_performed": 0,
+      "caveat": "Positive single-time observation, no historical proof of 2026-10-25 disconnect root cause."
+    }
   },
   "operations": {
     "health_json_path": "%LOCALAPPDATA%/XAUUSD-DemoService/health.json",
@@ -122,12 +147,12 @@
       "process_inspection_limitation": "Matches exact pinned venv executable and --run command line; not a universal process or MT5 session inventory",
       "scheduled_task": "READY_NO_WRITER; INTERACTIVE_TASK_OWNER_SID_CONFIRMED; SOURCE_4_OF_4_NORMALIZED_BLOBS_VERIFIED",
       "source_hash_validation": "PASS_4_OF_4_GIT_BLOB_SHA_AFTER_CRLF_TO_LF_NORMALIZATION; RAW_BLOBS_DIFFER_DUE_TO_EOL",
-      "current_broker_exposure": "UNKNOWN_NOT_CHECKED_AT_2026_10_26_15_58_51Z",
+      "current_broker_exposure": "PINNED_DEMO_FLAT_2026_10_26_16_51Z",
       "sampled_cycle_reasons": "449 of 500 sampled records carried MT5_HISTORY_OR_QUOTE_NOT_READY; 51 WAIT_FOR_NEXT_COMPLETED_M15_BAR. Historical sampling window does not prove current broker feed.",
       "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
       "local_state_tree_bytes": 578598,
       "assessment": "DEMO_TASK_EXIT_1_COORDINATOR_QUARANTINED_SOURCE_OR_FEATURE_EXCEPTION_UNKNOWN_MT5_CAUSE",
-      "next_action": "READ_ONLY_PINNED_EXNESS_DEMO_BROKER_IDENTITY_EXPOSURE_AND_M15_FRESHNESS_PROBE_WITH_NO_RUNNING_WRITER; KEEP_COORDINATOR_QUARANTINED_UNTIL_CAUSE_AND_RECOVERY_QUALIFIED",
+      "next_action": "KEEP QUARANTINED; PREPARE REVIEWED ATTENDED DUAL-STORE COORDINATOR_AND_WATCHDOG_RECOVERY. PR41_UNMERGED_FUTURE_RUNTIME_DISCONNECT_PAUSE. NO ACTUAL ORIGINAL_EXCEPTION_MESSAGE_AVAILABLE.",
       "task_state": "Ready",
       "task_last_result": 1,
       "task_last_run_utc": "2026-10-24T16:48:48Z",
@@ -141,9 +166,11 @@
         "lf_normalized_match_count": 4,
         "source_code_integrity": "VERIFIED_FOR_FOUR_SELECTED_MODULES"
       },
-      "last_source_user_verification_utc": "2026-10-26T15:58:51.5912242Z"
+      "last_source_user_verification_utc": "2026-10-26T15:58:51.5912242Z",
+      "broker_flat_verified_utc": "2026-10-26T16:51:43.8693743Z",
+      "broker_tick_and_m15_live": true
     },
-    "worker_state": "STOPPED_READY_TASK_ZERO_MATCHING_WRITERS_2026_10_26_15_58_51Z"
+    "worker_state": "HALTED_COORDINATOR_QUARANTINED_BROKER_FLAT"
   },
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
@@ -192,9 +219,9 @@
     "NO_LIVE_ACCOUNT_AUTHORIZATION",
     "HISTORIC_GATE0_FAILURES_UNCHANGED",
     "2026_10_26_QUARANTINED_STALE_HEALTH_NO_MATCHING_WRITER",
-    "NO_CURRENT_BROKER_EXPOSURE_OBSERVATION",
     "2026_10_26_FAIL_SOURCE_EXCEPTION_EXACT_TEXT_NOT_RECORDED",
-    "2026_10_26_SOURCE_MATCH_FOR_FOUR_MODULES_VERIFIED_NOT_WHOLE_RELEASE"
+    "2026_10_26_SOURCE_MATCH_FOR_FOUR_MODULES_VERIFIED_NOT_WHOLE_RELEASE",
+    "2026_10_26_EXACT_CAUSE_OF_2026_10_25_QUARANTINE_UNCONFIRMED"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
