@@ -1,8 +1,8 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-26T15:39:26.7854811Z",
-  "evidence_type": "OWNER_SUPPLIED_READ_ONLY_POWERSHELL_DIAGNOSTIC",
-  "evidence_basis": "Sanitized owner-run Windows VPS task/health/cycle, source fingerprint attempt and existing SQLite SELECT reports. No direct GitHub connector access to broker or VPS; several diagnostic checks incomplete.",
+  "as_of_utc": "2026-10-26T15:48:22.9578323Z",
+  "evidence_type": "OWNER_SUPPLIED_READ_ONLY_POWERSHELL_FORENSICS_V2",
+  "evidence_basis": "Owner-run 2026-10-26 nontrading PowerShell forensic output reconciled with 15:39 diagnostic; actual Windows task Ready/LastTaskResult 1, no pinned worker/runner, coordinator QUARANTINED. No MT5 connection performed.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
   "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
@@ -26,8 +26,10 @@
     "preflight_positions": 0,
     "preflight_pending_orders": 0,
     "preflight_flat_twice": true,
-    "latest_task_state": "UNKNOWN_TASK_INSPECTION_FAILED_2026-10-26",
-    "last_reported_task_state_as_of_utc": "2026-10-24T16:48:56.778902Z"
+    "latest_task_state": "Ready",
+    "last_reported_task_state_as_of_utc": "2026-10-24T16:48:56.778902Z",
+    "latest_task_result": 1,
+    "latest_task_observed_at_utc": "2026-10-26T15:48:22.9578323Z"
   },
   "ai": {
     "preflight_model_catalog": "PASS",
@@ -86,9 +88,9 @@
     "durable_sqlite_retention": "PRESERVE",
     "email_telegram_delivery_evidenced": false,
     "recovery_drill_evidenced": false,
-    "first_24_48h_operation_review": "INCOMPLETE_HALTED_SERVICE_OBSERVED_2026-10-26",
+    "first_24_48h_operation_review": "FAIL_RUNTIME_QUARANTINED_NOT_COMPLETED",
     "latest_read_only_diagnostic": {
-      "observed_at_utc": "2026-10-26T15:39:26.7854811Z",
+      "observed_at_utc": "2026-10-26T15:48:22.9578323Z",
       "last_health_file_modified_utc": "2026-10-25T05:04:36.0368521Z",
       "last_health_observation": {
         "state": "ACTIVE",
@@ -118,15 +120,28 @@
       },
       "matching_exact_deployed_python_run_processes": 0,
       "process_inspection_limitation": "Matches exact pinned venv executable and --run command line; not a universal process or MT5 session inventory",
-      "scheduled_task": "INSPECTION_FAILED_RuntimeException; state and last execution result unknown",
-      "source_hash_validation": "All six file hash comparisons false; mismatch may reflect diagnostic hashing or deployed source, not independently resolved",
+      "scheduled_task": "EXISTS_READY_SINGLE_INTERACTIVE_ACTION_EXPECTED_RELEASE_RUNNER",
+      "source_hash_validation": "Four deployed Python files differ from Git blob SHA; all four contain CRLF. Normalized-content equality NOT checked. Treat as inconclusive, not evidence of tampering.",
       "current_broker_exposure": "UNKNOWN_NO_NEW_MT5_CONNECTION_CREATED",
       "sampled_cycle_reasons": "449 of 500 sampled records carried MT5_HISTORY_OR_QUOTE_NOT_READY; 51 WAIT_FOR_NEXT_COMPLETED_M15_BAR. Historical sampling window does not prove current broker feed.",
       "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
       "local_state_tree_bytes": 578598,
-      "assessment": "RUNTIME_HALTED_AND_COORDINATOR_QUARANTINED_CAUSE_NOT_YET_ISOLATED",
-      "next_action": "READ_ONLY_TASK_IDENTITY_SOURCE_HASH_AND_QUARANTINE_FORENSICS_BEFORE_ANY_RESTART_RESET_OR_DEPLOYMENT"
-    }
+      "assessment": "DEMO_TASK_EXIT_1_COORDINATOR_QUARANTINED_SOURCE_OR_FEATURE_EXCEPTION_UNKNOWN_MT5_CAUSE",
+      "next_action": "PRESERVE QUARANTINE. Verify SHA after CRLF normalization and broker flat/identity independently before separate attended recovery. Proposed idle-disconnect fix is NOT proven root cause.",
+      "task_state": "Ready",
+      "task_last_result": 1,
+      "task_last_run_utc": "2026-10-24T16:48:48Z",
+      "current_user_matches_task_owner": false,
+      "current_user_owner_comparison": "FALSE_FOR_DOMAIN_BACKSLASH_USERNAME_STRING_CHECK; REQUIRES SID/NORMALIZATION REVIEW, NOT PROOF OF WRONG USER",
+      "task_event_log": "UNAVAILABLE_Exception",
+      "deployed_git_blob_checks": {
+        "raw_match_count": 0,
+        "examined_files": 4,
+        "files_have_crlf": true,
+        "normalization_pending": true
+      }
+    },
+    "worker_state": "STOPPED_NO_PINNED_PYTHON_PROCESS_AND_NO_RUNNER"
   },
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
@@ -150,7 +165,9 @@
     "HISTORIC_GATE0_FAILURES_UNCHANGED",
     "2026_10_26_QUARANTINED_STALE_HEALTH_NO_MATCHING_WRITER",
     "2026_10_26_TASK_INFO_AND_SOURCE_HASH_CHECKS_INCONCLUSIVE",
-    "NO_CURRENT_BROKER_EXPOSURE_OBSERVATION"
+    "NO_CURRENT_BROKER_EXPOSURE_OBSERVATION",
+    "2026_10_26_PINNED_SOURCE_SHA_MISMATCH_IS_LIKELY_EOL_RELATED_NOT_YET_PROVEN",
+    "2026_10_26_FAIL_SOURCE_EXCEPTION_EXACT_TEXT_NOT_RECORDED"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
