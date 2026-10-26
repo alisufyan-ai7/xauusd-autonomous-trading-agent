@@ -1,13 +1,13 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-26T16:51:43.8693743Z",
-  "evidence_type": "OWNER_SUPPLIED_GUARDED_READONLY_MT5_BROKER_VERIFICATION",
-  "evidence_basis": "Owner-pasted 2026-10-26 16:51 UTC guarded Python broker check via existing MT5 terminal; one temporary read-only MetaTrader5.initialize(path=already-running terminal), broker/account fingerprint, order/position/history, tick and M15 observation. MT5 shutdown after probe. No order_check/send, task restart or quarantine reset.",
+  "as_of_utc": "2026-10-26T17:30:05.1878490Z",
+  "evidence_type": "OWNER_PASTED_ATTENDED_RECOVERY_AND_POSTSTART_M15_RESULT",
+  "evidence_basis": "Owner-executed source-pinned Windows PowerShell 5.1 recovery from merged PR42. Exact pin, one existing task/owner SID, private before-state backup and same-broker flat/identity checks all passed. Coordinator/watchdog rearmed, existing scheduled task restarted, fresh health at 17:23:03 UTC, next M15 evaluated 17:30:05 UTC, final task Running. Evidence is supplied VPS console output, not direct remote observation.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
-  "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
-  "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
-  "source_pr": 40,
-  "source_pr_state_at_record": "MERGED_2026-10-24",
+  "source_branch": "main",
+  "source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+  "source_pr": 42,
+  "source_pr_state_at_record": "MERGED_2026-10-26",
   "main_executable_source_contains_this_release": true,
   "deployment": {
     "mode": "EXNESS_PRO_MT5_DEMO_ONLY",
@@ -17,19 +17,22 @@
     "scheduled_task": "XAUUSD Exness Pro DEMO Autonomous Trader",
     "last_reported_task_state": "Running",
     "single_existing_task_switched": true,
-    "old_source_commit": "efab8be64b97cad464932cf7cf6cac034134e800",
+    "old_source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
     "python_mt5_package": "MetaTrader5==5.0.6090",
-    "native_powershell_parser": "PASS",
-    "python_packages": "PASS",
+    "native_powershell_parser": "PASS_GITHUB_NATIVE_WINDOWS_CI",
+    "python_packages": "PASS_OWNER_VPS_PIP_INSTALL",
     "account_verified": true,
     "external_python_trading_enabled": true,
     "preflight_positions": 0,
     "preflight_pending_orders": 0,
     "preflight_flat_twice": true,
-    "latest_task_state": "Ready",
-    "last_reported_task_state_as_of_utc": "2026-10-24T16:48:56.778902Z",
-    "latest_task_result": 1,
-    "latest_task_observed_at_utc": "2026-10-26T16:51:43.8693743Z"
+    "latest_task_state": "Running",
+    "last_reported_task_state_as_of_utc": "2026-10-26T17:30:05.1878490Z",
+    "latest_task_result": null,
+    "latest_task_observed_at_utc": "2026-10-26T17:30:05.1878490Z",
+    "last_deployed_source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+    "owner_approved_recovery_confirmation": "RECOVER-PINNED-EXNESS-DEMO-OWNER-ATTENDED",
+    "recovery_broker_flat_twice": true
   },
   "ai": {
     "preflight_model_catalog": "PASS",
@@ -47,12 +50,12 @@
   },
   "trading": {
     "last_health": {
-      "action": "NO_ORDER",
-      "broker_mode": "EXNESS_DEMO_ONLY",
-      "reason": "NO_QUALIFIED_TPB_SETUP",
+      "utc": "2026-10-26T17:23:03.5989700Z",
       "state": "ACTIVE",
+      "action": "NO_ORDER",
       "strategy_status": "WAIT_FOR_NEXT_COMPLETED_M15_BAR",
-      "utc": "2026-10-24T16:48:56.778902+00:00"
+      "broker_mode": "EXNESS_DEMO_ONLY",
+      "reason": "NO_QUALIFIED_TPB_SETUP"
     },
     "broker_poll_seconds": 5,
     "signal_trigger": "NEW_COMPLETE_M15",
@@ -77,7 +80,7 @@
     "realized_pnl_evidenced": false,
     "profitability_proven": false,
     "last_broker_order_proof_as_of_utc": "2026-10-26T16:51:43.8693743Z",
-    "latest_journal_result": "NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDINGS_NO_FILLS_LOCALLY; MT5_ZERO_HISTORICAL_ORDERS_AND_DEALS_SINCE_2026_10_24_16_48Z",
+    "latest_journal_result": "PRE_RECOVERY_NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDING_OR_FILL_RECEIPTS; AFTER_RESTART_M15_TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED_NO_ORDER. POST_17_30_BROKER_ORDER_COUNTS_NOT_FRESHLY_QUERIED.",
     "live_broker_readonly_observation": {
       "observed_at_utc": "2026-10-26T16:51:43.8693743Z",
       "broker_mode": "EXNESS_PINNED_DEMO_ONLY",
@@ -102,6 +105,16 @@
       "task_state_after_probe": "Ready",
       "broker_order_mutations_performed": 0,
       "caveat": "Positive single-time observation, no historical proof of 2026-10-25 disconnect root cause."
+    },
+    "latest_completed_m15_evaluation": {
+      "observed_at_utc": "2026-10-26T17:30:05.1878490Z",
+      "strategy_status": "TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED",
+      "classification": "NO_QUALIFIED_TPB_SETUP_NO_ORDER",
+      "direct_broker_completed_bar_analysis": true,
+      "ai_market_inference_proven": false,
+      "order_placed_proven": false,
+      "signal_stage": "DETERMINISTIC_TPB_REJECTION",
+      "validation": "OWNER_RUN_CYCLES_JSONL_EVIDENCE_NOT_AN_ORDER_RECEIPT"
     }
   },
   "operations": {
@@ -113,7 +126,7 @@
     "durable_sqlite_retention": "PRESERVE",
     "email_telegram_delivery_evidenced": false,
     "recovery_drill_evidenced": false,
-    "first_24_48h_operation_review": "FAIL_RUNTIME_QUARANTINED_NOT_COMPLETED",
+    "first_24_48h_operation_review": "RESTARTED_2026_10_26_17_23Z_FUTURE_SUSTAINED_REVIEW_PENDING",
     "latest_read_only_diagnostic": {
       "observed_at_utc": "2026-10-26T15:58:51.5912242Z",
       "last_health_file_modified_utc": "2026-10-25T05:04:36.0368521Z",
@@ -170,7 +183,30 @@
       "broker_flat_verified_utc": "2026-10-26T16:51:43.8693743Z",
       "broker_tick_and_m15_live": true
     },
-    "worker_state": "HALTED_COORDINATOR_QUARANTINED_BROKER_FLAT"
+    "worker_state": "RUNNING_2026_10_26_17_30Z_LATEST_OWNER_OBSERVATION",
+    "latest_recovery": {
+      "observed_last_at_utc": "2026-10-26T17:30:05.1878490Z",
+      "recovery_release_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+      "merged_pr": 42,
+      "supervisor": "RECOVERED_ACTIVE",
+      "watchdog": "RECOVERED_ACTIVE",
+      "pre_state_backup": "VERIFIED_LOCAL_PRIVATE_BEFORE_RECOVERY",
+      "backup_location_sanitized": "%LOCALAPPDATA%/XAUUSD-DemoRecoveryEvidence/20261026T172126Z",
+      "fresh_broker_flat_and_pinned_demo_account": "PASS_IMMEDIATELY_BEFORE_RECOVERY",
+      "historical_broker_orders_or_deals": "ZERO_SINCE_2026_10_24_16_48Z_AT_RECOVERY",
+      "old_version": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
+      "task": "EXISTING_INTERACTIVE_TASK_ONLY",
+      "task_last_observed": "Running",
+      "new_heartbeat_utc": "2026-10-26T17:23:03.5989700Z",
+      "new_heartbeat_state": "ACTIVE",
+      "new_heartbeat_action": "NO_ORDER",
+      "new_heartbeat_reason": "WAIT_FOR_NEXT_COMPLETED_M15_BAR",
+      "m15_evaluation_utc": "2026-10-26T17:30:05.1878490Z",
+      "m15_evaluation_result": "TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED",
+      "next_action": "READ_ONLY_FOLLOW_UP_AFTER_SUSTAINED_OPERATION_CHECK_M15_REJECTION_MIX_AI_EVIDENCE_AND_BROKER_JOURNALS_WITHOUT_RESTARTING",
+      "confidence_boundary": "POSITIVE_POINT_IN_TIME_VPS_RUNNING_AND_M15_PROOF_NOT_24H_UPTIME_OR_REAL_ORDER_PROOF"
+    },
+    "owner_attended_recovery_of_real_incident_evidenced": true
   },
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
@@ -179,15 +215,15 @@
     "pr40_merge_authorization": "OWNER_APPROVED_AND_COMPLETED_2026-10-24",
     "pr40_merge_commit": "0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d",
     "pr40_merged_head": "e3ffb9b94b9465d76d5b5e74692ab70fa0079dc4",
-    "vps_redeployed_after_merge": false,
+    "vps_redeployed_after_merge": true,
     "executable_at_merge_matches_last_reported_vps_source": true,
     "latest_pr40_head_ci": "NO_PR_TRIGGERED_RESULTS_AT_EXACT_DOC_ONLY_HEAD",
-    "record_last_updated_utc_date": "2026-10-24",
+    "record_last_updated_utc_date": "2026-10-26",
     "oct26_candidate": {
       "pr": 41,
       "branch": "fix/demo-idle-mt5-disconnect-20261026",
       "head": "9ea4cbdc4a70f315a3e482453c381a448d409e39",
-      "status": "MERGED_MAIN_NOT_YET_DEPLOYED",
+      "status": "MERGED_AND_INCLUDED_IN_VPS_PINNED_PR42_RECOVERY_SOURCE",
       "proposed_scope": "Only exact idle MT5 terminal disconnected, terminal_info returned no data, or account_info returned no data errors become NO_ORDER; all other identity/source/order/position faults retain quarantine. No recovery reset implemented.",
       "root_cause": "NOT_CONFIRMED_SINCE_2026_10_25_EXCEPTION_TEXT_NOT_LOGGED",
       "offline_github_checks": [
@@ -207,14 +243,14 @@
           "conclusion": "success"
         }
       ],
-      "tests_note": "All three exact latest PR41 head GitHub checks PASS; still no owner VPS deployment, no source exception root cause proof, and no coordinated coordinator/watchdog quarantine recovery.",
+      "tests_note": "All three PR41 Windows/Linux CI checks passed. Idle-only fix is now included in owner-deployed PR42 merged release; long-run correctness remains unproven.",
       "merge_commit": "b212715f8afad96a3af4edfdfb132681a4f74894"
     },
     "oct26_attended_recovery": {
       "pr": 42,
       "merge_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
       "exact_vps_source_commit_for_recovery": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
-      "status": "GITHUB_MERGED_OFFLINE_TESTED_OPERATOR_EXECUTION_PENDING",
+      "status": "OWNER_VPS_EXECUTION_VERIFIED_READY_RUNNING_M15_PASS",
       "changed_files": [
         "demo_adapter/scripts/attended_demo_recovery_core.py",
         "demo_adapter/scripts/attended_exness_demo_recovery_windows.ps1",
@@ -223,37 +259,38 @@
       "safety_gate_summary": "Source pin, same single stopped interactive scheduled task owner SID, private before-state SQLite backups, no pending/filled/prepared intents or order ledger rows, two checks of exact Exness DEMO identity/flat/order history/tick/M15, separately controlled coordinator and watchdog arm, no blind order retry.",
       "native_windows_ast": "PASS",
       "offline_windows_linux": "PASS",
-      "real_vps_run": "NOT_RUN",
+      "real_vps_run": "PASS_OWNER_CONSOLE_2026_10_26",
       "last_confirmed_broker_snapshot_utc": "2026-10-26T16:51:43.8693743Z",
-      "next_step": "OWNER_COPY_PASTE_EXACT_PINNED_SOURCE_BOOTSTRAP_FROM_APPROVED_WINDOWS_USER; VERIFY_OUTPUT_BEFORE_STATUS_CHANGED_TO_RUNNING",
-      "limitations": "No Windows VPS run yet; first heartbeat and next completed-M15 evaluation cannot be claimed until owner shares guarded output."
-    }
+      "next_step": "PRESERVE_RUNNING_EXISTING_TASK_OBSERVE_REAL_FUTURE_M15_EVALUATIONS_AND_AI_MARKET_INFERENCE_ONLY_WHEN_QUALIFIED",
+      "limitations": "One owner-supplied successful recovery and one post-start deterministic TPB rejection are proven. Sustained uptime, first actual OpenAI market inference, real DEMO order, pending/fill, known-position management, alert delivery, and profitability not established."
+    },
+    "latest_exact_commit_native_ci_state": "PR42_HEAD_WINDOWS_LINUX_OFFLINE_CHECKS_PASS_ON_7b14a05bbfe73b210b1ca17645b8f0f6c3948168"
   },
   "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
   "accepted_owner_record": "phase0/decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md",
   "limitations": [
-    "LAST_OBSERVED_STATE_IS_NOT_LIVE_HEARTBEAT",
     "NO_REAL_DEMO_ORDER_RECEIPT_YET",
     "NO_ACTUAL_MANAGEMENT_RECEIPT_YET",
     "NO_LIVE_ACCOUNT_AUTHORIZATION",
     "HISTORIC_GATE0_FAILURES_UNCHANGED",
-    "2026_10_26_QUARANTINED_STALE_HEALTH_NO_MATCHING_WRITER",
     "2026_10_26_FAIL_SOURCE_EXCEPTION_EXACT_TEXT_NOT_RECORDED",
     "2026_10_26_SOURCE_MATCH_FOR_FOUR_MODULES_VERIFIED_NOT_WHOLE_RELEASE",
     "2026_10_26_EXACT_CAUSE_OF_2026_10_25_QUARANTINE_UNCONFIRMED",
-    "2026_10_26_PR42_MERGED_BUT_NO_NEW_VPS_RECOVERY_EXECUTION"
+    "SINGLE_POINT_OWNER_SUPPLIED_RUNNING_HEARTBEAT_AND_ONE_M15_NOT_SUSTAINED_UPTIME",
+    "NO_POST_RECOVERY_RECHECK_OF_BROKER_EXPOSURE_AFTER_17_30Z",
+    "2026_10_25_ORIGINAL_SOURCE_EXCEPTION_ROOT_CAUSE_STILL_UNKNOWN"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
-    "update_scope": "GITHUB_ONLY_NEW_CHAT_CONTINUITY_AUDIT_NOT_VPS_INSPECTION",
+    "update_scope": "2026_10_26_OWNER_CONFIRMED_ACTUAL_ATTENDED_RECOVERY_OF_RUNNING_TASK",
     "pr40_verified_merged": true,
     "merge_commit": "0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d",
     "last_prior_documentation_commit": "a8763d0d4c59de96d77c9f17dc9754c95bd6c74a",
     "open_pull_requests_at_review": 0,
     "repo_visibility_at_review": "PUBLIC",
     "handoff": "phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md",
-    "next_observation": "READ_ONLY_RUNNING_TASK_HEALTH_AND_ACTUAL_OPEN_MARKET_M15_BROKER_EVIDENCE",
-    "no_new_vps_evidence": true
+    "next_observation": "READ_ONLY_SUSTAINED_RUNNING_HEARTBEAT_M15_DECISION_REJECTION_MIX_AI_REVIEWS_AND_BROKER_EXPOSURE",
+    "no_new_vps_evidence": false
   },
-  "last_verified_deployment_utc": "2026-10-24T16:48:56.778902Z"
+  "last_verified_deployment_utc": "2026-10-26T17:23:03.5989700Z"
 }
