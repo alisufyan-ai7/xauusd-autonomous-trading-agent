@@ -153,7 +153,33 @@
     "vps_redeployed_after_merge": false,
     "executable_at_merge_matches_last_reported_vps_source": true,
     "latest_pr40_head_ci": "NO_PR_TRIGGERED_RESULTS_AT_EXACT_DOC_ONLY_HEAD",
-    "record_last_updated_utc_date": "2026-10-24"
+    "record_last_updated_utc_date": "2026-10-24",
+    "oct26_candidate": {
+      "pr": 41,
+      "branch": "fix/demo-idle-mt5-disconnect-20261026",
+      "head": "7cd66386fde25e4292c8857e180214c7504b87aa",
+      "status": "DRAFT_UNMERGED_UNDEPLOYED",
+      "proposed_scope": "Only exact idle MT5 terminal disconnected source failure becomes NO_ORDER; all other identity/source/order/position faults retain quarantine.",
+      "root_cause": "NOT_CONFIRMED_SINCE_2026_10_25_EXCEPTION_TEXT_NOT_LOGGED",
+      "offline_github_checks": [
+        {
+          "name": "demo-admit",
+          "id": 40353856121,
+          "conclusion": "success"
+        },
+        {
+          "name": "demo-first-order-release-offline",
+          "id": 40353855861,
+          "conclusion": "success"
+        },
+        {
+          "name": "Validate records",
+          "id": 40353856019,
+          "conclusion": "success"
+        }
+      ],
+      "tests_note": "GitHub CI only, no native owner VPS broker verification or executable deployment."
+    }
   },
   "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
   "accepted_owner_record": "phase0/decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md",
