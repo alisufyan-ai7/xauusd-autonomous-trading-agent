@@ -148,6 +148,92 @@ def test_source_exception_quarantines_and_does_not_place_order(tmp_path: Path) -
         assert port.send_attempts == 0
 
 
+def test_idle_mt5_disconnection_pauses_no_order_and_can_recheck_on_reconnect(
+    tmp_path: Path,
+) -> None:
+    """Only exact idle terminal disconnect is a non-trading temporary pause."""
+
+    class DisconnectingBroker(FakeQualifiedBroker):
+        connected = False
+
+        def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
+            if not self.connected:
+                raise DemoSafetyError("MT5 terminal is not connected")
+            return self.proposal
+
+    port = DisconnectingBroker()
+    path = tmp_path / "idle-disconnect.sqlite"
+    with ContinuousDemoCoordinator(path, account_fingerprint=FP) as c:
+        c.arm_attended(confirmation=ARM, broker_flat_confirmed=True)
+        for _ in range(3):
+            result = c.cycle(port, now=NOW)
+            assert result.state == "ACTIVE"
+            assert result.action == "NO_ORDER"
+            assert result.reason == "MT5_DISCONNECTED_NO_ORDER"
+            assert c.conn.execute("SELECT COUNT(*) FROM agent_cycles").fetchone()[0] == 0
+            assert port.send_attempts == 0
+
+    # On restart this must not invent a prepared intent or grant trade authority.
+    with ContinuousDemoCoordinator(path, account_fingerprint=FP) as c:
+        assert c.status() == "ACTIVE"
+        port.connected = True
+        port.proposal = None
+        result = c.cycle(port, now=NOW)
+        assert result.state == "ACTIVE"
+        assert result.action == "NO_ORDER"
+        assert port.send_attempts == 0
+
+
+@pytest.mark.parametrize("message", [
+    "demo account fingerprint mismatch",
+    "account is not an MT5 demo account",
+    "demo server identity mismatch",
+    "external Python demo execution is not enabled",
+])
+def test_non_transient_identity_faults_still_quarantine(
+    tmp_path: Path, message: str,
+) -> None:
+    class IdentityFault(FakeQualifiedBroker):
+        def one_cycle_proposal(self, now: datetime) -> VerifiedProposal | None:
+            raise DemoSafetyError(message)
+
+    port = IdentityFault()
+    with ContinuousDemoCoordinator(
+        tmp_path / "identity.sqlite", account_fingerprint=FP,
+    ) as c:
+        c.arm_attended(confirmation=ARM, broker_flat_confirmed=True)
+        result = c.cycle(port, now=NOW)
+        assert result.state == "QUARANTINED"
+        assert port.send_attempts == 0
+        assert c.status() == "QUARANTINED"
+
+
+def test_existing_known_position_disconnect_cannot_be_ignored(
+    tmp_path: Path,
+) -> None:
+    class DisconnectKnownPosition(FakeQualifiedBroker):
+        disconnected = False
+
+        def known_position_state(
+            self, receipt: QualifiedBrokerAck, now: datetime,
+        ) -> str:
+            if self.disconnected:
+                raise DemoSafetyError("MT5 terminal is not connected")
+            return super().known_position_state(receipt, now)
+
+    port = DisconnectKnownPosition()
+    with ContinuousDemoCoordinator(
+        tmp_path / "known-position.sqlite", account_fingerprint=FP,
+    ) as c:
+        c.arm_attended(confirmation=ARM, broker_flat_confirmed=True)
+        assert c.cycle(port, now=NOW).action == "BROKER_ORDER_ACKNOWLEDGED"
+        port.disconnected = True
+        result = c.cycle(port, now=NOW)
+        assert result.state == "QUARANTINED"
+        assert result.reason == "UNKNOWN_POSITION"
+        assert port.send_attempts == 1
+
+
 def test_bad_or_expired_signal_and_forged_live_symbol_do_not_submit(tmp_path: Path):
     port = FakeQualifiedBroker()
     with ContinuousDemoCoordinator(tmp_path / "signal.sqlite", account_fingerprint=FP) as c:
