@@ -199,15 +199,15 @@
         {
           "name": "demo-first-order-release-offline",
           "id": 40364047759,
-          "conclusion": "in_progress_at_last_check"
+          "conclusion": "success"
         },
         {
           "name": "demo-admit",
           "id": 40364047707,
-          "conclusion": "in_progress_at_last_check"
+          "conclusion": "success"
         }
       ],
-      "tests_note": "GitHub CI only, no native owner VPS broker verification or executable deployment."
+      "tests_note": "All three exact latest PR41 head GitHub checks PASS; still no owner VPS deployment, no source exception root cause proof, and no coordinated coordinator/watchdog quarantine recovery."
     }
   },
   "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
