@@ -146,7 +146,7 @@ $acl = Get-Acl -LiteralPath $Vault
 $acl.SetAccessRuleProtection($true,$false)
 foreach ($sidstr in @($SID,'S-1-5-18','S-1-5-32-544')) {
     $targetSID = New-Object Security.Principal.SecurityIdentifier -ArgumentList $sidstr
-    $rule = New-Object Security.AccessControl.FileSystemAccessRule (
+    $rule = [Security.AccessControl.FileSystemAccessRule]::new(
         $targetSID,[Security.AccessControl.FileSystemRights]::FullControl,
         [Security.AccessControl.InheritanceFlags]'ContainerInherit, ObjectInherit',
         [Security.AccessControl.PropagationFlags]::None,
@@ -160,11 +160,8 @@ $task = Confirm-OneStoppedTask
 # One temporary read-only broker attachment. Recovery core independently
 # proves identity, zero positions/orders/history and fresh XAUUSD twice,
 # backs up all existing SQLite journals, then attended-rearms BOTH stores.
-& $NewPython -B $recovery --state $State --vault $Vault (
-    '--terminal'
-) ([string]$terminals[0].ExecutablePath) (
-    '--attended-confirmation'
-) $OwnerApproval
+$terminalPath = [string]$terminals[0].ExecutablePath
+& $NewPython -B $recovery --state $State --vault $Vault --terminal $terminalPath --attended-confirmation $OwnerApproval
 if ($LASTEXITCODE -ne 0) {
     throw 'RECOVERY_HOLD_REARM_NOT_AUTHORIZED_OR_BROKER_PROOF_FAILED'
 }
