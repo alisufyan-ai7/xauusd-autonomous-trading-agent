@@ -1,3 +1,5 @@
+> **2026-10-26 NEW CHAT CONTINUITY CHECKPOINT:** [Read this full recovered handoff first](phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md). GitHub PR #40 was MERGED and the repo has **zero open PRs** on the 2026-10-26 review. The **last VPS observation is STILL 2026-10-24**; do not confuse fresh GitHub/docs review with broker operation. Continue through **read-only task/health and genuine open-market signal/order evidence**, not by reinstalling. All older dated failure/NO_GO blocks below are retained historical evidence; consult the checkpoint and ADRs for accepted owner direction.
+
 > **GITHUB INTEGRATION COMPLETED (2026-10-24):** PR #40 merged into `main` at `0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d` with explicit owner authorization. This was a source merge, not a VPS deployment. Last owner-verified VPS binary remains `dfd193a4c9a6db00da81b806f2b160892eae30c9` and broker trading receipts remain unverified. [Merge decision](phase0/decisions/ADR-2026-10-24-002-PR40-EXNESS-DEMO-MAIN-MERGE.md). Dated draft/pre-deployment notes below are preserved for history.
 
 # START HERE — authoritative XAU/USD Autonomous Trading Agent contract

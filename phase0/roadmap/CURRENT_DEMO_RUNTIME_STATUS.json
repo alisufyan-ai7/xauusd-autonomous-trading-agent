@@ -104,5 +104,17 @@
     "NO_ACTUAL_MANAGEMENT_RECEIPT_YET",
     "NO_LIVE_ACCOUNT_AUTHORIZATION",
     "HISTORIC_GATE0_FAILURES_UNCHANGED"
-  ]
+  ],
+  "documentation_checkpoint": {
+    "updated_utc_date": "2026-10-26",
+    "update_scope": "GITHUB_ONLY_NEW_CHAT_CONTINUITY_AUDIT_NOT_VPS_INSPECTION",
+    "pr40_verified_merged": true,
+    "merge_commit": "0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d",
+    "last_prior_documentation_commit": "a8763d0d4c59de96d77c9f17dc9754c95bd6c74a",
+    "open_pull_requests_at_review": 0,
+    "repo_visibility_at_review": "PUBLIC",
+    "handoff": "phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md",
+    "next_observation": "READ_ONLY_RUNNING_TASK_HEALTH_AND_ACTUAL_OPEN_MARKET_M15_BROKER_EVIDENCE",
+    "no_new_vps_evidence": true
+  }
 }

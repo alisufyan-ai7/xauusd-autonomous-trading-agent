@@ -1,5 +1,7 @@
 # XAU/USD Autonomous Trading Agent
 
+> **NEW CHAT HANDOFF (2026-10-26):** Begin with [the durable continuity checkpoint](phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md) and [latest actual VPS evidence](phase0/roadmap/CURRENT_DEMO_RUNTIME_STATUS.json). PR #40 is **MERGED**, no open PRs as checked 2026-10-26; this documents a GitHub milestone, not fresh VPS uptime or broker order evidence. Current priority: **read-only observation of already-deployed Windows DEMO trader**; no reinstall.
+
 > **Agent first-read order (current as last observed 2026-10-24):** [AGENT_START_HERE.md](AGENT_START_HERE.md) → [machine runtime state](phase0/roadmap/CURRENT_DEMO_RUNTIME_STATUS.json) → [verified DEMO operations / next steps](phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md) → [2026-10-24 owner decision and VPS receipt](phase0/decisions/ADR-2026-10-24-001-CONTINUOUS-DEMO-VPS-ACTIVATION.md) → live GitHub [PR #40](https://github.com/alisufyan-ai7/xauusd-autonomous-trading-agent/pull/40). Reconcile the exact PR head and newer owner-provided VPS evidence before any command.
 
 ## Current verified product and deployment state
