@@ -131,6 +131,11 @@ def broker_flat(mt5: Any, now: datetime) -> None:
 def preserve_before_state(state: Path, vault: Path) -> None:
     require(vault.is_dir() and not any(vault.iterdir()), "PRIVATE_VAULT_NOT_EMPTY")
     for original in state.iterdir():
+        if original.is_dir():
+            # Research receipts are evidence too; the vault is outside state.
+            if original.name == "research":
+                shutil.copytree(original, vault / original.name)
+            continue
         if not original.is_file():
             continue
         if original.name.endswith(".sqlite"):
@@ -151,6 +156,7 @@ def preserve_before_state(state: Path, vault: Path) -> None:
         elif original.name != "openai_key.dpapi" and (
             original.suffix in (".json", ".jsonl", ".log")
             or original.name.startswith("service-console.log")
+            or original.name.endswith((".sqlite-wal", ".sqlite-shm"))
         ):
             shutil.copy2(original, vault / original.name)
     require(
