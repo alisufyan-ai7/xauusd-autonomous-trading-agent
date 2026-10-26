@@ -487,15 +487,21 @@ class ContinuousDemoCoordinator:
         try:
             proposal = port.one_cycle_proposal(now)
         except DemoSafetyError as exc:
-            # Only the exact, broker-port-reported *disconnected terminal*
-            # condition is an expected no-order pause while NO intent exists.
+            # Only these exact known MT5 connection/info-unavailable
+            # conditions are expected no-order pauses while NO intent exists.
             # Recheck the exact DEMO account fingerprint on every next cycle;
             # wrong account, wrong server, unknown exposure and all other
             # safety/source faults remain durably quarantined. Do not use
             # this branch while a known pending/filled/uncertain intent exists:
             # those states are handled by the earlier reconciliation path.
-            if str(exc) == "MT5 terminal is not connected":
-                return CycleResult("ACTIVE", "NO_ORDER", "MT5_DISCONNECTED_NO_ORDER")
+            if str(exc) in {
+                "MT5 terminal is not connected",
+                "terminal_info returned no data",
+                "account_info returned no data",
+            }:
+                return CycleResult(
+                    "ACTIVE", "NO_ORDER", "MT5_SOURCE_TEMPORARILY_UNAVAILABLE"
+                )
             self._quarantine("SOURCE_OR_FEATURE_EXCEPTION")
             return CycleResult("QUARANTINED", "NO_ORDER", type(exc).__name__)
         except Exception as exc:
