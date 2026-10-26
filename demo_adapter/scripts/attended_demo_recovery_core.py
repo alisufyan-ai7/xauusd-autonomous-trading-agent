@@ -12,9 +12,10 @@ import hashlib
 import json
 import shutil
 import sqlite3
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from urllib.parse import quote
 
 from xauusd_demo.broker_money_readonly import EXPECTED_ACCOUNT_SHA256
@@ -54,9 +55,13 @@ def require_idle_journals(state: Path) -> None:
         ) == ("QUARANTINED", "SOURCE_OR_FEATURE_EXCEPTION", EXPECTED_ACCOUNT_SHA256),
         "COORDINATOR_NOT_EXACT_SOURCE_QUARANTINE",
     )
-    for table in ("agent_cycles", "agent_pending_receipts", "agent_broker_receipts"):
+    for query in (
+        "SELECT COUNT(*) FROM agent_cycles",
+        "SELECT COUNT(*) FROM agent_pending_receipts",
+        "SELECT COUNT(*) FROM agent_broker_receipts",
+    ):
         require(
-            read_one(state, "coordinator.sqlite", "SELECT COUNT(*) FROM " + table) == (0,),
+            read_one(state, "coordinator.sqlite", query) == (0,),
             "EXISTING_ORDER_INTENT_OR_RECEIPT",
         )
     require(
