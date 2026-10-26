@@ -1,8 +1,8 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-24T16:48:56.778902Z",
-  "evidence_type": "OWNER_SUPPLIED_WINDOWS_VPS_CONSOLE_OUTPUT",
-  "evidence_basis": "Actual pinned GitHub source, Exness DEMO preflight and Windows Task Scheduler output; not direct agent VPS access",
+  "as_of_utc": "2026-10-26T15:39:26.7854811Z",
+  "evidence_type": "OWNER_SUPPLIED_READ_ONLY_POWERSHELL_DIAGNOSTIC",
+  "evidence_basis": "Sanitized owner-run Windows VPS task/health/cycle, source fingerprint attempt and existing SQLite SELECT reports. No direct GitHub connector access to broker or VPS; several diagnostic checks incomplete.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "source_branch": "integration/real-exness-demo-v2-single-lineage-20261023",
   "source_commit": "dfd193a4c9a6db00da81b806f2b160892eae30c9",
@@ -25,7 +25,9 @@
     "external_python_trading_enabled": true,
     "preflight_positions": 0,
     "preflight_pending_orders": 0,
-    "preflight_flat_twice": true
+    "preflight_flat_twice": true,
+    "latest_task_state": "UNKNOWN_TASK_INSPECTION_FAILED_2026-10-26",
+    "last_reported_task_state_as_of_utc": "2026-10-24T16:48:56.778902Z"
   },
   "ai": {
     "preflight_model_catalog": "PASS",
@@ -71,7 +73,9 @@
     "broker_position_modify_evidenced": false,
     "ai_early_exit_evidenced": false,
     "realized_pnl_evidenced": false,
-    "profitability_proven": false
+    "profitability_proven": false,
+    "last_broker_order_proof_as_of_utc": "2026-10-26T15:39:26.7854811Z",
+    "latest_journal_result": "NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDINGS_NO_FILLS_IN_LOCAL_SQLITE"
   },
   "operations": {
     "health_json_path": "%LOCALAPPDATA%/XAUUSD-DemoService/health.json",
@@ -82,7 +86,47 @@
     "durable_sqlite_retention": "PRESERVE",
     "email_telegram_delivery_evidenced": false,
     "recovery_drill_evidenced": false,
-    "first_24_48h_operation_review": "NOT_COMPLETED"
+    "first_24_48h_operation_review": "INCOMPLETE_HALTED_SERVICE_OBSERVED_2026-10-26",
+    "latest_read_only_diagnostic": {
+      "observed_at_utc": "2026-10-26T15:39:26.7854811Z",
+      "last_health_file_modified_utc": "2026-10-25T05:04:36.0368521Z",
+      "last_health_observation": {
+        "state": "ACTIVE",
+        "action": "NO_ORDER",
+        "reason": "NO_QUALIFIED_TPB_SETUP",
+        "strategy_status": "WAIT_FOR_NEXT_COMPLETED_M15_BAR"
+      },
+      "last_cycle_file_modified_utc": "2026-10-25T05:05:06.0661337Z",
+      "latest_cycle": {
+        "state": "QUARANTINED",
+        "action": "NO_ORDER",
+        "reason": "DemoSafetyError"
+      },
+      "coordinator_sqlite": {
+        "state": "QUARANTINED",
+        "reason": "SOURCE_OR_FEATURE_EXCEPTION",
+        "order_intents": 0,
+        "pending_ack_receipts": 0,
+        "filled_position_receipts": 0
+      },
+      "submission_ledger_records": 0,
+      "ai_market_review_records": 0,
+      "ai_spend_reservations": 0,
+      "watchdog_sqlite": {
+        "state": "ACTIVE",
+        "undelivered_incidents": 1
+      },
+      "matching_exact_deployed_python_run_processes": 0,
+      "process_inspection_limitation": "Matches exact pinned venv executable and --run command line; not a universal process or MT5 session inventory",
+      "scheduled_task": "INSPECTION_FAILED_RuntimeException; state and last execution result unknown",
+      "source_hash_validation": "All six file hash comparisons false; mismatch may reflect diagnostic hashing or deployed source, not independently resolved",
+      "current_broker_exposure": "UNKNOWN_NO_NEW_MT5_CONNECTION_CREATED",
+      "sampled_cycle_reasons": "449 of 500 sampled records carried MT5_HISTORY_OR_QUOTE_NOT_READY; 51 WAIT_FOR_NEXT_COMPLETED_M15_BAR. Historical sampling window does not prove current broker feed.",
+      "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
+      "local_state_tree_bytes": 578598,
+      "assessment": "RUNTIME_HALTED_AND_COORDINATOR_QUARANTINED_CAUSE_NOT_YET_ISOLATED",
+      "next_action": "READ_ONLY_TASK_IDENTITY_SOURCE_HASH_AND_QUARANTINE_FORENSICS_BEFORE_ANY_RESTART_RESET_OR_DEPLOYMENT"
+    }
   },
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
@@ -103,7 +147,10 @@
     "NO_REAL_DEMO_ORDER_RECEIPT_YET",
     "NO_ACTUAL_MANAGEMENT_RECEIPT_YET",
     "NO_LIVE_ACCOUNT_AUTHORIZATION",
-    "HISTORIC_GATE0_FAILURES_UNCHANGED"
+    "HISTORIC_GATE0_FAILURES_UNCHANGED",
+    "2026_10_26_QUARANTINED_STALE_HEALTH_NO_MATCHING_WRITER",
+    "2026_10_26_TASK_INFO_AND_SOURCE_HASH_CHECKS_INCONCLUSIVE",
+    "NO_CURRENT_BROKER_EXPOSURE_OBSERVATION"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
@@ -116,5 +163,6 @@
     "handoff": "phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md",
     "next_observation": "READ_ONLY_RUNNING_TASK_HEALTH_AND_ACTUAL_OPEN_MARKET_M15_BROKER_EVIDENCE",
     "no_new_vps_evidence": true
-  }
+  },
+  "last_verified_deployment_utc": "2026-10-24T16:48:56.778902Z"
 }
