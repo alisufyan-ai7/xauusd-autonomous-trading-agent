@@ -152,7 +152,7 @@
       "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
       "local_state_tree_bytes": 578598,
       "assessment": "DEMO_TASK_EXIT_1_COORDINATOR_QUARANTINED_SOURCE_OR_FEATURE_EXCEPTION_UNKNOWN_MT5_CAUSE",
-      "next_action": "KEEP QUARANTINED. REVIEW_PR41_CI_AND_PREPARE_SEPARATE_ATTENDED_EXACT_SOURCE_ONE_TASK_REDEPLOY_AND_COORDINATOR_WATCHDOG_RECOVERY_WITH_FRESH_DEMO_FLAT_PROOF.",
+      "next_action": "EXACT_MERGED_PR42_OWNER_ATTENDED_VPS_RECOVERY_REQUIRES_LOCAL_PASTED_COMMAND_4bb27ff5; MUST_FRESHLY_VERIFY_BROKER_AND_CAPTURE_NEW_RUNTIME_OUTPUT",
       "task_state": "Ready",
       "task_last_result": 1,
       "task_last_run_utc": "2026-10-24T16:48:48Z",
@@ -187,7 +187,7 @@
       "pr": 41,
       "branch": "fix/demo-idle-mt5-disconnect-20261026",
       "head": "9ea4cbdc4a70f315a3e482453c381a448d409e39",
-      "status": "DRAFT_UNMERGED_UNDEPLOYED",
+      "status": "MERGED_MAIN_NOT_YET_DEPLOYED",
       "proposed_scope": "Only exact idle MT5 terminal disconnected, terminal_info returned no data, or account_info returned no data errors become NO_ORDER; all other identity/source/order/position faults retain quarantine. No recovery reset implemented.",
       "root_cause": "NOT_CONFIRMED_SINCE_2026_10_25_EXCEPTION_TEXT_NOT_LOGGED",
       "offline_github_checks": [
@@ -207,7 +207,26 @@
           "conclusion": "success"
         }
       ],
-      "tests_note": "All three exact latest PR41 head GitHub checks PASS; still no owner VPS deployment, no source exception root cause proof, and no coordinated coordinator/watchdog quarantine recovery."
+      "tests_note": "All three exact latest PR41 head GitHub checks PASS; still no owner VPS deployment, no source exception root cause proof, and no coordinated coordinator/watchdog quarantine recovery.",
+      "merge_commit": "b212715f8afad96a3af4edfdfb132681a4f74894"
+    },
+    "oct26_attended_recovery": {
+      "pr": 42,
+      "merge_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+      "exact_vps_source_commit_for_recovery": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+      "status": "GITHUB_MERGED_OFFLINE_TESTED_OPERATOR_EXECUTION_PENDING",
+      "changed_files": [
+        "demo_adapter/scripts/attended_demo_recovery_core.py",
+        "demo_adapter/scripts/attended_exness_demo_recovery_windows.ps1",
+        "demo_adapter/tests/test_attended_demo_recovery.py"
+      ],
+      "safety_gate_summary": "Source pin, same single stopped interactive scheduled task owner SID, private before-state SQLite backups, no pending/filled/prepared intents or order ledger rows, two checks of exact Exness DEMO identity/flat/order history/tick/M15, separately controlled coordinator and watchdog arm, no blind order retry.",
+      "native_windows_ast": "PASS",
+      "offline_windows_linux": "PASS",
+      "real_vps_run": "NOT_RUN",
+      "last_confirmed_broker_snapshot_utc": "2026-10-26T16:51:43.8693743Z",
+      "next_step": "OWNER_COPY_PASTE_EXACT_PINNED_SOURCE_BOOTSTRAP_FROM_APPROVED_WINDOWS_USER; VERIFY_OUTPUT_BEFORE_STATUS_CHANGED_TO_RUNNING",
+      "limitations": "No Windows VPS run yet; first heartbeat and next completed-M15 evaluation cannot be claimed until owner shares guarded output."
     }
   },
   "next_steps_document": "phase0/roadmap/DEMO_RUNTIME_HANDOFF_AND_NEXT_STEPS_2026-10-24.md",
@@ -221,7 +240,8 @@
     "2026_10_26_QUARANTINED_STALE_HEALTH_NO_MATCHING_WRITER",
     "2026_10_26_FAIL_SOURCE_EXCEPTION_EXACT_TEXT_NOT_RECORDED",
     "2026_10_26_SOURCE_MATCH_FOR_FOUR_MODULES_VERIFIED_NOT_WHOLE_RELEASE",
-    "2026_10_26_EXACT_CAUSE_OF_2026_10_25_QUARANTINE_UNCONFIRMED"
+    "2026_10_26_EXACT_CAUSE_OF_2026_10_25_QUARANTINE_UNCONFIRMED",
+    "2026_10_26_PR42_MERGED_BUT_NO_NEW_VPS_RECOVERY_EXECUTION"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
