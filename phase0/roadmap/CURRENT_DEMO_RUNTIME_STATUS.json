@@ -152,7 +152,7 @@
       "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
       "local_state_tree_bytes": 578598,
       "assessment": "DEMO_TASK_EXIT_1_COORDINATOR_QUARANTINED_SOURCE_OR_FEATURE_EXCEPTION_UNKNOWN_MT5_CAUSE",
-      "next_action": "KEEP QUARANTINED; PREPARE REVIEWED ATTENDED DUAL-STORE COORDINATOR_AND_WATCHDOG_RECOVERY. PR41_UNMERGED_FUTURE_RUNTIME_DISCONNECT_PAUSE. NO ACTUAL ORIGINAL_EXCEPTION_MESSAGE_AVAILABLE.",
+      "next_action": "KEEP QUARANTINED. REVIEW_PR41_CI_AND_PREPARE_SEPARATE_ATTENDED_EXACT_SOURCE_ONE_TASK_REDEPLOY_AND_COORDINATOR_WATCHDOG_RECOVERY_WITH_FRESH_DEMO_FLAT_PROOF.",
       "task_state": "Ready",
       "task_last_result": 1,
       "task_last_run_utc": "2026-10-24T16:48:48Z",
@@ -186,25 +186,25 @@
     "oct26_candidate": {
       "pr": 41,
       "branch": "fix/demo-idle-mt5-disconnect-20261026",
-      "head": "7cd66386fde25e4292c8857e180214c7504b87aa",
+      "head": "9ea4cbdc4a70f315a3e482453c381a448d409e39",
       "status": "DRAFT_UNMERGED_UNDEPLOYED",
-      "proposed_scope": "Only exact idle MT5 terminal disconnected source failure becomes NO_ORDER; all other identity/source/order/position faults retain quarantine.",
+      "proposed_scope": "Only exact idle MT5 terminal disconnected, terminal_info returned no data, or account_info returned no data errors become NO_ORDER; all other identity/source/order/position faults retain quarantine. No recovery reset implemented.",
       "root_cause": "NOT_CONFIRMED_SINCE_2026_10_25_EXCEPTION_TEXT_NOT_LOGGED",
       "offline_github_checks": [
         {
-          "name": "demo-admit",
-          "id": 40353856121,
+          "name": "Validate records",
+          "id": 40364047718,
           "conclusion": "success"
         },
         {
           "name": "demo-first-order-release-offline",
-          "id": 40353855861,
-          "conclusion": "success"
+          "id": 40364047759,
+          "conclusion": "in_progress_at_last_check"
         },
         {
-          "name": "Validate records",
-          "id": 40353856019,
-          "conclusion": "success"
+          "name": "demo-admit",
+          "id": 40364047707,
+          "conclusion": "in_progress_at_last_check"
         }
       ],
       "tests_note": "GitHub CI only, no native owner VPS broker verification or executable deployment."
