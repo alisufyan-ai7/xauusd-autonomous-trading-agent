@@ -1,8 +1,8 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-26T17:30:05.1878490Z",
-  "evidence_type": "OWNER_PASTED_ATTENDED_RECOVERY_AND_POSTSTART_M15_RESULT",
-  "evidence_basis": "Owner-executed source-pinned Windows PowerShell 5.1 recovery from merged PR42. Exact pin, one existing task/owner SID, private before-state backup and same-broker flat/identity checks all passed. Coordinator/watchdog rearmed, existing scheduled task restarted, fresh health at 17:23:03 UTC, next M15 evaluated 17:30:05 UTC, final task Running. Evidence is supplied VPS console output, not direct remote observation.",
+  "as_of_utc": "2026-10-27T02:29:46.0795568Z",
+  "evidence_type": "OWNER_SUPPLIED_PARTIAL_READ_ONLY_TASK_PROCESS_AUDIT",
+  "evidence_basis": "Owner supplied 2026-10-27T02:29:46Z PowerShell diagnostic: existing Task Scheduler task Running, action count=1, pinned release matched, result=267009 (running), one runner, two matching module-name Python processes of which one pinned venv executable. Embedded Python SQLite/health analyzer failed before running due Windows native argument quotation stripping (NameError XAU_AUDIT_B64). Task remained Running. This evidence DOES NOT establish live heartbeat, controller state, broker exposure, duplicate actual writers, or AI/order counts.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "source_branch": "main",
   "source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
@@ -27,9 +27,9 @@
     "preflight_pending_orders": 0,
     "preflight_flat_twice": true,
     "latest_task_state": "Running",
-    "last_reported_task_state_as_of_utc": "2026-10-26T17:30:05.1878490Z",
-    "latest_task_result": null,
-    "latest_task_observed_at_utc": "2026-10-26T17:30:05.1878490Z",
+    "last_reported_task_state_as_of_utc": "2026-10-27T02:29:46.0795568Z",
+    "latest_task_result": 267009,
+    "latest_task_observed_at_utc": "2026-10-27T02:29:46.0795568Z",
     "last_deployed_source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
     "owner_approved_recovery_confirmation": "RECOVER-PINNED-EXNESS-DEMO-OWNER-ATTENDED",
     "recovery_broker_flat_twice": true
@@ -183,7 +183,7 @@
       "broker_flat_verified_utc": "2026-10-26T16:51:43.8693743Z",
       "broker_tick_and_m15_live": true
     },
-    "worker_state": "RUNNING_2026_10_26_17_30Z_LATEST_OWNER_OBSERVATION",
+    "worker_state": "TASK_RUNNING_AT_02_29Z_PROCESS_TOPOLOGY_AND_FRESH_HEARTBEAT_UNVERIFIED",
     "latest_recovery": {
       "observed_last_at_utc": "2026-10-26T17:30:05.1878490Z",
       "recovery_release_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
@@ -206,7 +206,25 @@
       "next_action": "READ_ONLY_FOLLOW_UP_AFTER_SUSTAINED_OPERATION_CHECK_M15_REJECTION_MIX_AI_EVIDENCE_AND_BROKER_JOURNALS_WITHOUT_RESTARTING",
       "confidence_boundary": "POSITIVE_POINT_IN_TIME_VPS_RUNNING_AND_M15_PROOF_NOT_24H_UPTIME_OR_REAL_ORDER_PROOF"
     },
-    "owner_attended_recovery_of_real_incident_evidenced": true
+    "owner_attended_recovery_of_real_incident_evidenced": true,
+    "latest_partial_audit": {
+      "observed_at_utc": "2026-10-27T02:29:46.0795568Z",
+      "task_state": "Running",
+      "action_count": 1,
+      "expected_release_action": true,
+      "task_last_result": 267009,
+      "task_last_run_utc": "2026-10-26T17:23:23.0000000Z",
+      "all_python_module_match_processes": 2,
+      "pinned_venv_python_processes": 1,
+      "existing_runner_processes": 1,
+      "windows_process_parentage": "NOT_YET_VERIFIED_POSSIBLE_VENV_INTERPRETER_LAUNCHER_CHAIN",
+      "health_json": "NOT_READ_PYTHON_BOOTSTRAP_FAILED",
+      "sqlite_journals": "NOT_READ_PYTHON_BOOTSTRAP_FAILED",
+      "python_diagnostic_error": "NameError_XAU_AUDIT_B64_NATIVE_WINDOWS_ARG_QUOTING",
+      "python_diagnostic_exit_code": 1,
+      "task_after_audit": "Running",
+      "next": "RUN_CORRECTED_BOOTSTRAP_WITH_BYTES_KEY_AND_CAPTURE_PID_PPID_THEN_READ_SQLITE_HEARTBEAT_AND_M15_WITHOUT_BROKER_MUTATION"
+    }
   },
   "source_status": {
     "last_exact_commit_native_ci_state": "NO_PR_TRIGGERED_WORKFLOW_RECORD_VERIFIED_FOR_EXACT_DEPLOYED_HEAD",
@@ -218,7 +236,7 @@
     "vps_redeployed_after_merge": true,
     "executable_at_merge_matches_last_reported_vps_source": true,
     "latest_pr40_head_ci": "NO_PR_TRIGGERED_RESULTS_AT_EXACT_DOC_ONLY_HEAD",
-    "record_last_updated_utc_date": "2026-10-26",
+    "record_last_updated_utc_date": "2026-10-27",
     "oct26_candidate": {
       "pr": 41,
       "branch": "fix/demo-idle-mt5-disconnect-20261026",
@@ -278,7 +296,9 @@
     "2026_10_26_EXACT_CAUSE_OF_2026_10_25_QUARANTINE_UNCONFIRMED",
     "SINGLE_POINT_OWNER_SUPPLIED_RUNNING_HEARTBEAT_AND_ONE_M15_NOT_SUSTAINED_UPTIME",
     "NO_POST_RECOVERY_RECHECK_OF_BROKER_EXPOSURE_AFTER_17_30Z",
-    "2026_10_25_ORIGINAL_SOURCE_EXCEPTION_ROOT_CAUSE_STILL_UNKNOWN"
+    "2026_10_25_ORIGINAL_SOURCE_EXCEPTION_ROOT_CAUSE_STILL_UNKNOWN",
+    "2026_10_27_READ_ONLY_TASK_RUNNING_BUT_HEALTH_SQLITE_AUDIT_FAILED_FROM_SCRIPT_QUOTING",
+    "2026_10_27_TWO_MATCHING_PYTHON_PROCESSES_PARENT_CHILD_STATUS_NOT_YET_VERIFIED"
   ],
   "documentation_checkpoint": {
     "updated_utc_date": "2026-10-26",
