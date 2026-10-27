@@ -1,8 +1,8 @@
 {
   "schema_version": "xauusd-demo-runtime-latest-observed-v1",
-  "as_of_utc": "2026-10-27T02:29:46.0795568Z",
-  "evidence_type": "OWNER_SUPPLIED_PARTIAL_READ_ONLY_TASK_PROCESS_AUDIT",
-  "evidence_basis": "Owner supplied 2026-10-27T02:29:46Z PowerShell diagnostic: existing Task Scheduler task Running, action count=1, pinned release matched, result=267009 (running), one runner, two matching module-name Python processes of which one pinned venv executable. Embedded Python SQLite/health analyzer failed before running due Windows native argument quotation stripping (NameError XAU_AUDIT_B64). Task remained Running. This evidence DOES NOT establish live heartbeat, controller state, broker exposure, duplicate actual writers, or AI/order counts.",
+  "as_of_utc": "2026-10-27T02:34:22.4550788Z",
+  "evidence_type": "OWNER_SUPPLIED_SUCCESSFUL_8H_READ_ONLY_VPS_RUNTIME_AUDIT",
+  "evidence_basis": "Owner-pasted 2026-10-27T02:34:22Z read-only PowerShell + pinned Python audit. Task Running, one task action, correct pinned PR42 release, one venv python process PID 6428 parent of base python PID 4992, single runner, last task result 267009 Running. Current active health, watchdog age zero, repeated completed-M15 substantive rejected setups; zero local order and AI journals; two incidents not fully delivered. No MT5 connection nor broker order executed during audit.",
   "repo": "alisufyan-ai7/xauusd-autonomous-trading-agent",
   "source_branch": "main",
   "source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
@@ -27,9 +27,9 @@
     "preflight_pending_orders": 0,
     "preflight_flat_twice": true,
     "latest_task_state": "Running",
-    "last_reported_task_state_as_of_utc": "2026-10-27T02:29:46.0795568Z",
+    "last_reported_task_state_as_of_utc": "2026-10-27T02:34:22.4550788Z",
     "latest_task_result": 267009,
-    "latest_task_observed_at_utc": "2026-10-27T02:29:46.0795568Z",
+    "latest_task_observed_at_utc": "2026-10-27T02:34:22.4550788Z",
     "last_deployed_source_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
     "owner_approved_recovery_confirmation": "RECOVER-PINNED-EXNESS-DEMO-OWNER-ATTENDED",
     "recovery_broker_flat_twice": true
@@ -50,12 +50,12 @@
   },
   "trading": {
     "last_health": {
-      "utc": "2026-10-26T17:23:03.5989700Z",
+      "utc": "2026-10-27T02:34:04.009458Z",
       "state": "ACTIVE",
       "action": "NO_ORDER",
+      "reason": "NO_QUALIFIED_TPB_SETUP",
       "strategy_status": "WAIT_FOR_NEXT_COMPLETED_M15_BAR",
-      "broker_mode": "EXNESS_DEMO_ONLY",
-      "reason": "NO_QUALIFIED_TPB_SETUP"
+      "broker_mode": "EXNESS_DEMO_ONLY"
     },
     "broker_poll_seconds": 5,
     "signal_trigger": "NEW_COMPLETE_M15",
@@ -80,7 +80,7 @@
     "realized_pnl_evidenced": false,
     "profitability_proven": false,
     "last_broker_order_proof_as_of_utc": "2026-10-26T16:51:43.8693743Z",
-    "latest_journal_result": "PRE_RECOVERY_NO_ORDER_INTENTS_NO_SUBMISSIONS_NO_PENDING_OR_FILL_RECEIPTS; AFTER_RESTART_M15_TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED_NO_ORDER. POST_17_30_BROKER_ORDER_COUNTS_NOT_FRESHLY_QUERIED.",
+    "latest_journal_result": "2026_10_27_02_34Z_LOCAL_ZERO_INTENTS_SUBMISSIONS_PENDING_RECEIPTS_POSITION_RECEIPTS_AI_REVIEWS_AI_SPEND; NO_FRESH_LIVE_MT5_BROKER_HISTORY_QUERY",
     "live_broker_readonly_observation": {
       "observed_at_utc": "2026-10-26T16:51:43.8693743Z",
       "broker_mode": "EXNESS_PINNED_DEMO_ONLY",
@@ -107,14 +107,14 @@
       "caveat": "Positive single-time observation, no historical proof of 2026-10-25 disconnect root cause."
     },
     "latest_completed_m15_evaluation": {
-      "observed_at_utc": "2026-10-26T17:30:05.1878490Z",
+      "observed_at_utc": "2026-10-27T02:30:02.820459Z",
       "strategy_status": "TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED",
-      "classification": "NO_QUALIFIED_TPB_SETUP_NO_ORDER",
+      "classification": "DETERMINISTIC_TPB_NO_TRADE",
       "direct_broker_completed_bar_analysis": true,
       "ai_market_inference_proven": false,
       "order_placed_proven": false,
       "signal_stage": "DETERMINISTIC_TPB_REJECTION",
-      "validation": "OWNER_RUN_CYCLES_JSONL_EVIDENCE_NOT_AN_ORDER_RECEIPT"
+      "validation": "OWNER_RUN_SANITIZED_READ_ONLY_CYCLES_JSONL_ONLY"
     }
   },
   "operations": {
@@ -126,7 +126,7 @@
     "durable_sqlite_retention": "PRESERVE",
     "email_telegram_delivery_evidenced": false,
     "recovery_drill_evidenced": false,
-    "first_24_48h_operation_review": "RESTARTED_2026_10_26_17_23Z_FUTURE_SUSTAINED_REVIEW_PENDING",
+    "first_24_48h_operation_review": "8H_READ_ONLY_RUNNING_AND_M15_PASS_2026_10_27_02_34Z__FURTHER_SUSTAINED_PROOF_PENDING",
     "latest_read_only_diagnostic": {
       "observed_at_utc": "2026-10-26T15:58:51.5912242Z",
       "last_health_file_modified_utc": "2026-10-25T05:04:36.0368521Z",
@@ -165,7 +165,7 @@
       "console_last_incident_category": "WORKER_ERROR_TYPE_RemoteException",
       "local_state_tree_bytes": 578598,
       "assessment": "DEMO_TASK_EXIT_1_COORDINATOR_QUARANTINED_SOURCE_OR_FEATURE_EXCEPTION_UNKNOWN_MT5_CAUSE",
-      "next_action": "EXACT_MERGED_PR42_OWNER_ATTENDED_VPS_RECOVERY_REQUIRES_LOCAL_PASTED_COMMAND_4bb27ff5; MUST_FRESHLY_VERIFY_BROKER_AND_CAPTURE_NEW_RUNTIME_OUTPUT",
+      "next_action": "PRESERVE_RUNNING_WORKER. REVIEW_TWO_UNDELIVERED_HISTORICAL_INCIDENTS_AND_ALERT_CONFIG_WITHOUT_SEND; CONTINUE_READ_ONLY_MARKET_DATA_GAP_COUNTS_AND_LONG_RUN_MONITORING",
       "task_state": "Ready",
       "task_last_result": 1,
       "task_last_run_utc": "2026-10-24T16:48:48Z",
@@ -183,7 +183,7 @@
       "broker_flat_verified_utc": "2026-10-26T16:51:43.8693743Z",
       "broker_tick_and_m15_live": true
     },
-    "worker_state": "TASK_RUNNING_AT_02_29Z_PROCESS_TOPOLOGY_AND_FRESH_HEARTBEAT_UNVERIFIED",
+    "worker_state": "RUNNING_AS_OF_2026_10_27_02_34Z_ONE_PINNED_VENV_PARENT_AND_ONE_BASE_PYTHON_CHILD",
     "latest_recovery": {
       "observed_last_at_utc": "2026-10-26T17:30:05.1878490Z",
       "recovery_release_commit": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
@@ -224,6 +224,49 @@
       "python_diagnostic_exit_code": 1,
       "task_after_audit": "Running",
       "next": "RUN_CORRECTED_BOOTSTRAP_WITH_BYTES_KEY_AND_CAPTURE_PID_PPID_THEN_READ_SQLITE_HEARTBEAT_AND_M15_WITHOUT_BROKER_MUTATION"
+    },
+    "latest_8h_health_audit": {
+      "observed_at_utc": "2026-10-27T02:34:22.4550788Z",
+      "source_pin": "4bb27ff5ecae3d1e7dad0bd6e2354812a6a2c573",
+      "running_task": true,
+      "expected_release": true,
+      "task_action_count": 1,
+      "task_last_result": 267009,
+      "one_logical_python_process_chain": true,
+      "pin_launcher_pid": 6428,
+      "base_interpreter_pid": 4992,
+      "runner_count": 1,
+      "health_utc": "2026-10-27T02:34:04.009458Z",
+      "health_age_seconds": 20,
+      "coordinator_state": "ACTIVE",
+      "coordinator_reason": "OWNER_ATTENDED_ARM",
+      "control_state": "ACTIVE",
+      "control_reason": "OWNER_GATED_ACTIVATION",
+      "watchdog_state": "ACTIVE",
+      "watchdog_reason": "P1_ARM",
+      "watchdog_heartbeat_age_seconds": 0,
+      "audit_records_last_8h": 86,
+      "rejection_counts": {
+        "WAIT_FOR_NEXT_COMPLETED_M15_BAR": 32,
+        "M15_ALREADY_EVALUATED": 27,
+        "TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED": 24,
+        "MARKET_CONTEXT_M15_RECENT_GAP": 3
+      },
+      "substantive_audit_events": 27,
+      "latest_substantive_evaluation_utc": "2026-10-27T02:30:02.820459Z",
+      "latest_substantive_strategy_status": "TPB_DOWNTREND_STRUCTURE_NOT_CONFIRMED",
+      "local_order_intents": 0,
+      "local_pending_receipts": 0,
+      "local_position_receipts": 0,
+      "local_broker_submission_rows": 0,
+      "openai_market_reviews": 0,
+      "openai_spend_rows": 0,
+      "incident_rows_total": 2,
+      "incident_rows_undelivered_both": 2,
+      "audit_exit_code": 0,
+      "task_state_after": "Running",
+      "assessment": "PASS_TRADING_ENGINE_SOURCE_AND_M15_EVALUATION_AND_CONTROLS__ALERT_DELIVERY_NOT_VERIFIED",
+      "limitations": "Raw Exness order/deal history was NOT rechecked by this read-only SQLite audit. 2 undelivered incidents may be prior persisted alerts. No qualified TPB candidates or actual OpenAI market decisions evidenced. M15_RECENT_GAP requires time-scoped inspection before declaring a source defect."
     }
   },
   "source_status": {
@@ -297,19 +340,20 @@
     "SINGLE_POINT_OWNER_SUPPLIED_RUNNING_HEARTBEAT_AND_ONE_M15_NOT_SUSTAINED_UPTIME",
     "NO_POST_RECOVERY_RECHECK_OF_BROKER_EXPOSURE_AFTER_17_30Z",
     "2026_10_25_ORIGINAL_SOURCE_EXCEPTION_ROOT_CAUSE_STILL_UNKNOWN",
-    "2026_10_27_READ_ONLY_TASK_RUNNING_BUT_HEALTH_SQLITE_AUDIT_FAILED_FROM_SCRIPT_QUOTING",
-    "2026_10_27_TWO_MATCHING_PYTHON_PROCESSES_PARENT_CHILD_STATUS_NOT_YET_VERIFIED"
+    "2026_10_27_TWO_UNDELIVERED_INCIDENTS_ALERT_DELIVERY_UNPROVEN",
+    "2026_10_27_LIVE_BROKER_HISTORY_NOT_RECHECKED_BY_8H_AUDIT",
+    "2026_10_27_OPENAI_MARKET_INFERENCE_ZERO_BECAUSE_TPB_DETERMINISTIC_REJECTION"
   ],
   "documentation_checkpoint": {
-    "updated_utc_date": "2026-10-26",
-    "update_scope": "2026_10_26_OWNER_CONFIRMED_ACTUAL_ATTENDED_RECOVERY_OF_RUNNING_TASK",
+    "updated_utc_date": "2026-10-27",
+    "update_scope": "OWNER_SUPPLIED_SUCCESSFUL_8H_READ_ONLY_RUNNING_AUDIT",
     "pr40_verified_merged": true,
     "merge_commit": "0c525c8bce8cc13182dd455cf05dd3c7ce3afb3d",
     "last_prior_documentation_commit": "a8763d0d4c59de96d77c9f17dc9754c95bd6c74a",
     "open_pull_requests_at_review": 0,
     "repo_visibility_at_review": "PUBLIC",
     "handoff": "phase0/roadmap/NEW_CHAT_CONTINUITY_CHECKPOINT_2026-10-26.md",
-    "next_observation": "READ_ONLY_SUSTAINED_RUNNING_HEARTBEAT_M15_DECISION_REJECTION_MIX_AI_REVIEWS_AND_BROKER_EXPOSURE",
+    "next_observation": "READ_ONLY_INCIDENT_DELIVERY_TRANSPORT_CONFIG_AND_CONTINUOUS_HEALTH_REVIEW",
     "no_new_vps_evidence": false
   },
   "last_verified_deployment_utc": "2026-10-26T17:23:03.5989700Z"
